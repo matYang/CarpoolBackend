@@ -10,10 +10,11 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.junit.Test;
 
-import badstudent.common.Common;
-import badstudent.common.EmailCrypto;
-import badstudent.common.ImgCrypto;
-import badstudent.common.SessionCrypto;
+import carpool.common.Common;
+import carpool.common.EmailCrypto;
+import carpool.common.ImgCrypto;
+import carpool.common.SessionCrypto;
+
 
 
 public class EncryptionTest {

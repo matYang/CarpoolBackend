@@ -8,20 +8,21 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-import badstudent.common.Common;
-import badstudent.common.Constants;
-import badstudent.common.Constants.paymentMethod;
-import badstudent.database.DaoBasic;
-import badstudent.database.DaoDMMessage;
-import badstudent.database.DaoTransaction;
-import badstudent.database.DaoUser;
-import badstudent.dbservice.DMMessageDaoService;
-import badstudent.exception.message.MessageNotFoundException;
-import badstudent.model.DMMessage;
-import badstudent.model.Location;
-import badstudent.model.Notification;
-import badstudent.model.Transaction;
-import badstudent.model.User;
+import carpool.common.Common;
+import carpool.common.Constants;
+import carpool.common.Constants.paymentMethod;
+import carpool.database.DaoBasic;
+import carpool.database.DaoDMMessage;
+import carpool.database.DaoTransaction;
+import carpool.database.DaoUser;
+import carpool.dbservice.DMMessageDaoService;
+import carpool.exception.message.MessageNotFoundException;
+import carpool.model.DMMessage;
+import carpool.model.Location;
+import carpool.model.Notification;
+import carpool.model.Transaction;
+import carpool.model.User;
+
 
 public class DaoDMMessageTest {
 

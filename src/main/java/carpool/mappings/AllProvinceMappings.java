@@ -1,0 +1,113 @@
+package carpool.mappings;
+
+import carpool.mappings.上海.上海Mappings;
+import carpool.mappings.云南.云南Mappings;
+import carpool.mappings.内蒙古.内蒙古Mappings;
+import carpool.mappings.北京.北京Mappings;
+import carpool.mappings.台湾.台湾Mappings;
+import carpool.mappings.吉林.吉林Mappings;
+import carpool.mappings.四川.四川Mappings;
+import carpool.mappings.天津.天津Mappings;
+import carpool.mappings.宁夏.宁夏Mappings;
+import carpool.mappings.安徽.安徽Mappings;
+import carpool.mappings.山东.山东Mappings;
+import carpool.mappings.山西.山西Mappings;
+import carpool.mappings.广东.广东Mappings;
+import carpool.mappings.广西.广西Mappings;
+import carpool.mappings.新疆.新疆Mappings;
+import carpool.mappings.江苏.江苏Mappings;
+import carpool.mappings.江西.江西Mappings;
+import carpool.mappings.河北.河北Mappings;
+import carpool.mappings.河南.河南Mappings;
+import carpool.mappings.浙江.浙江Mappings;
+import carpool.mappings.海南.海南Mappings;
+import carpool.mappings.湖北.湖北Mappings;
+import carpool.mappings.湖南.湖南Mappings;
+import carpool.mappings.澳门.澳门Mappings;
+import carpool.mappings.甘肃.甘肃Mappings;
+import carpool.mappings.福建.福建Mappings;
+import carpool.mappings.西藏.西藏Mappings;
+import carpool.mappings.贵州.贵州Mappings;
+import carpool.mappings.辽宁.辽宁Mappings;
+import carpool.mappings.重庆.重庆Mappings;
+import carpool.mappings.陕西.陕西Mappings;
+import carpool.mappings.青海.青海Mappings;
+import carpool.mappings.香港.香港Mappings;
+import carpool.mappings.黑龙江.黑龙江Mappings;
+
+public class AllProvinceMappings extends MappingBase {
+
+    @Override
+    protected void initMappings() {
+    	subAreaMappings.put("北京", new 北京Mappings());
+        subAreaMappings.put("上海", new 上海Mappings());
+        subAreaMappings.put("天津", new 天津Mappings());
+        subAreaMappings.put("江苏", new 江苏Mappings());
+        subAreaMappings.put("浙江", new 浙江Mappings());
+        subAreaMappings.put("重庆", new 重庆Mappings());
+        subAreaMappings.put("宁夏", new 宁夏Mappings());
+        subAreaMappings.put("安徽", new 安徽Mappings());
+        subAreaMappings.put("广东", new 广东Mappings());
+        subAreaMappings.put("新疆", new 新疆Mappings());
+        subAreaMappings.put("甘肃", new 甘肃Mappings());
+        subAreaMappings.put("青海", new 青海Mappings());
+        subAreaMappings.put("云南", new 云南Mappings());
+        subAreaMappings.put("广西", new 广西Mappings());
+        subAreaMappings.put("江西", new 江西Mappings());
+        subAreaMappings.put("海南", new 海南Mappings());
+        subAreaMappings.put("福建", new 福建Mappings());
+        subAreaMappings.put("贵州", new 贵州Mappings());
+        subAreaMappings.put("西藏", new 西藏Mappings());
+        subAreaMappings.put("四川", new 四川Mappings());
+        subAreaMappings.put("山东", new 山东Mappings());
+        subAreaMappings.put("山西", new 山西Mappings());
+        subAreaMappings.put("河北", new 河北Mappings());
+        subAreaMappings.put("河南", new 河南Mappings());
+        subAreaMappings.put("湖北", new 湖北Mappings());
+        subAreaMappings.put("湖南", new 湖南Mappings());
+        subAreaMappings.put("陕西", new 陕西Mappings());
+        subAreaMappings.put("内蒙古", new 内蒙古Mappings());
+        subAreaMappings.put("台湾", new 台湾Mappings());
+        subAreaMappings.put("吉林", new 吉林Mappings());
+        subAreaMappings.put("澳门", new 澳门Mappings());
+        subAreaMappings.put("辽宁", new 辽宁Mappings());
+        subAreaMappings.put("香港", new 香港Mappings());
+        subAreaMappings.put("黑龙江", new 黑龙江Mappings());
+        
+        provinceList.add("北京");
+        provinceList.add("上海");
+        provinceList.add("天津");
+        provinceList.add("重庆");
+        provinceList.add("江苏");
+        provinceList.add("广东");
+        provinceList.add("陕西");
+        provinceList.add("湖北");
+        provinceList.add("辽宁");
+        provinceList.add("浙江");
+        provinceList.add("黑龙江");
+        provinceList.add("四川");
+        provinceList.add("福建");
+        provinceList.add("山西");
+        provinceList.add("安徽");
+        provinceList.add("云南");
+        provinceList.add("甘肃");
+        provinceList.add("河北");
+        provinceList.add("江西");
+        provinceList.add("湖南");
+        provinceList.add("吉林");
+        provinceList.add("新疆");
+        provinceList.add("河南");
+        provinceList.add("山东");
+        provinceList.add("贵州");
+        provinceList.add("广西");
+        provinceList.add("内蒙古");
+        provinceList.add("青海");
+        provinceList.add("宁夏");
+        provinceList.add("海南");
+        provinceList.add("西藏");
+        provinceList.add("香港");
+        provinceList.add("澳门");
+        provinceList.add("台湾");
+    }
+
+}

@@ -1,0 +1,13 @@
+package carpool.mappings.陕西.延安市.延安区;
+
+import carpool.mappings.MappingBase;
+
+public class 延安区Mappings extends MappingBase {
+
+    @Override
+    protected void initMappings() {
+        subAreaMappings.put("延安大学",null);
+
+    }
+
+}

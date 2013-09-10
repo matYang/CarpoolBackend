@@ -8,21 +8,22 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-import badstudent.common.Common;
-import badstudent.common.Constants;
-import badstudent.database.DaoBasic;
-import badstudent.database.DaoNotification;
-import badstudent.dbservice.DMMessageDaoService;
-import badstudent.dbservice.NotificationDaoService;
-import badstudent.dbservice.TransactionDaoService;
-import badstudent.dbservice.UserDaoService;
-import badstudent.exception.notification.NotificationNotFoundException;
-import badstudent.exception.notification.NotificationOwnerNotMatchException;
-import badstudent.model.DMMessage;
-import badstudent.model.Location;
-import badstudent.model.Notification;
-import badstudent.model.Transaction;
-import badstudent.model.User;
+import carpool.common.Common;
+import carpool.common.Constants;
+import carpool.database.DaoBasic;
+import carpool.database.DaoNotification;
+import carpool.dbservice.DMMessageDaoService;
+import carpool.dbservice.NotificationDaoService;
+import carpool.dbservice.TransactionDaoService;
+import carpool.dbservice.UserDaoService;
+import carpool.exception.notification.NotificationNotFoundException;
+import carpool.exception.notification.NotificationOwnerNotMatchException;
+import carpool.model.DMMessage;
+import carpool.model.Location;
+import carpool.model.Notification;
+import carpool.model.Transaction;
+import carpool.model.User;
+
 
 public class NotificationDaoServiceTest {
 	

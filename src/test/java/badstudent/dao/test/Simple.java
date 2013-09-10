@@ -4,11 +4,12 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import badstudent.common.Common;
-import badstudent.common.EmailHandler;
-import badstudent.dbservice.UserDaoService;
-import badstudent.mappings.MappingManager;
-import badstudent.model.Location;
+import carpool.common.Common;
+import carpool.common.EmailHandler;
+import carpool.dbservice.UserDaoService;
+import carpool.mappings.MappingManager;
+import carpool.model.Location;
+
 
 public class Simple {
 	@Test

@@ -10,19 +10,20 @@ import org.restlet.data.Cookie;
 import org.restlet.data.CookieSetting;
 import org.restlet.util.Series;
 
-import badstudent.common.Common;
-import badstudent.common.Constants;
-import badstudent.common.SessionCrypto;
-import badstudent.database.DaoBasic;
-import badstudent.database.DaoUser;
-import badstudent.dbservice.UserDaoService;
-import badstudent.exception.user.UserNotFoundException;
-import badstudent.model.DMMessage;
-import badstudent.model.Location;
-import badstudent.model.Notification;
-import badstudent.model.Transaction;
-import badstudent.model.User;
-import badstudent.resources.userResource.UserCookieResource;
+import carpool.common.Common;
+import carpool.common.Constants;
+import carpool.common.SessionCrypto;
+import carpool.database.DaoBasic;
+import carpool.database.DaoUser;
+import carpool.dbservice.UserDaoService;
+import carpool.exception.user.UserNotFoundException;
+import carpool.model.DMMessage;
+import carpool.model.Location;
+import carpool.model.Notification;
+import carpool.model.Transaction;
+import carpool.model.User;
+import carpool.resources.userResource.UserCookieResource;
+
 
 public class SessionControlTest {
 

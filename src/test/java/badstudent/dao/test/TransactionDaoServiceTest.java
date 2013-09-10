@@ -7,26 +7,27 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-import badstudent.common.Common;
-import badstudent.common.Constants;
-import badstudent.common.Constants.paymentMethod;
-import badstudent.database.DaoBasic;
-import badstudent.database.DaoDMMessage;
-import badstudent.database.DaoTransaction;
-import badstudent.database.DaoUser;
-import badstudent.dbservice.NotificationDaoService;
-import badstudent.dbservice.TransactionDaoService;
-import badstudent.dbservice.UserDaoService;
-import badstudent.exception.transaction.TransactionAccessViolationException;
-import badstudent.exception.transaction.TransactionNotFoundException;
-import badstudent.exception.transaction.TransactionOwnerNotMatchException;
-import badstudent.exception.transaction.TransactionStateViolationException;
-import badstudent.exception.user.UserNotFoundException;
-import badstudent.model.DMMessage;
-import badstudent.model.Location;
-import badstudent.model.Notification;
-import badstudent.model.Transaction;
-import badstudent.model.User;
+import carpool.common.Common;
+import carpool.common.Constants;
+import carpool.common.Constants.paymentMethod;
+import carpool.database.DaoBasic;
+import carpool.database.DaoDMMessage;
+import carpool.database.DaoTransaction;
+import carpool.database.DaoUser;
+import carpool.dbservice.NotificationDaoService;
+import carpool.dbservice.TransactionDaoService;
+import carpool.dbservice.UserDaoService;
+import carpool.exception.transaction.TransactionAccessViolationException;
+import carpool.exception.transaction.TransactionNotFoundException;
+import carpool.exception.transaction.TransactionOwnerNotMatchException;
+import carpool.exception.transaction.TransactionStateViolationException;
+import carpool.exception.user.UserNotFoundException;
+import carpool.model.DMMessage;
+import carpool.model.Location;
+import carpool.model.Notification;
+import carpool.model.Transaction;
+import carpool.model.User;
+
 
 public class TransactionDaoServiceTest {
 

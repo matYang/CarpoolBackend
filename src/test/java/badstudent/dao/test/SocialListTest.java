@@ -5,15 +5,16 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-import badstudent.common.Constants;
-import badstudent.database.DaoBasic;
-import badstudent.database.DaoUser;
-import badstudent.exception.user.UserNotFoundException;
-import badstudent.model.DMMessage;
-import badstudent.model.Location;
-import badstudent.model.Notification;
-import badstudent.model.Transaction;
-import badstudent.model.User;
+import carpool.common.Constants;
+import carpool.database.DaoBasic;
+import carpool.database.DaoUser;
+import carpool.exception.user.UserNotFoundException;
+import carpool.model.DMMessage;
+import carpool.model.Location;
+import carpool.model.Notification;
+import carpool.model.Transaction;
+import carpool.model.User;
+
 import static org.junit.Assert.*;
 
 public class SocialListTest {
