@@ -12,10 +12,10 @@ import org.restlet.util.Series;
 
 import carpool.common.Common;
 import carpool.common.Constants;
-import carpool.common.SessionCrypto;
 import carpool.database.DaoBasic;
 import carpool.database.DaoUser;
 import carpool.dbservice.UserDaoService;
+import carpool.encryption.SessionCrypto;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.DMMessage;
 import carpool.model.Location;

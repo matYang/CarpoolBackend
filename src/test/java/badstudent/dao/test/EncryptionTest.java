@@ -11,9 +11,9 @@ import javax.crypto.NoSuchPaddingException;
 import org.junit.Test;
 
 import carpool.common.Common;
-import carpool.common.EmailCrypto;
-import carpool.common.ImgCrypto;
-import carpool.common.SessionCrypto;
+import carpool.encryption.EmailCrypto;
+import carpool.encryption.ImgCrypto;
+import carpool.encryption.SessionCrypto;
 
 
 

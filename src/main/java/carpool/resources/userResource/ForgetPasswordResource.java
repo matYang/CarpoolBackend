@@ -21,9 +21,9 @@ import org.json.JSONObject;
 
 import carpool.common.Common;
 import carpool.common.Constants;
-import carpool.common.EmailCrypto;
 import carpool.common.JSONFactory;
 import carpool.dbservice.*;
+import carpool.encryption.EmailCrypto;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;

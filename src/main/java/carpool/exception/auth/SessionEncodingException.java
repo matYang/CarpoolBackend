@@ -1,14 +1,24 @@
 package carpool.exception.auth;
 
-public class SessionEncodingException extends Exception {
+import carpool.exception.PesudoException;
+
+public class SessionEncodingException extends PesudoException {
 
 	private static final long serialVersionUID = 1L;
 
-	public	SessionEncodingException(){
+	protected String exceptionType = "SessionEncoding";
+
+	public SessionEncodingException(){
         super();
     }
-
+	
+	public SessionEncodingException(String exceptionText){
+		super(exceptionText);
+	}
+	
+	@Override
     public int getCode() {
-        return -1;
+        return 11;
     }
+	
 }

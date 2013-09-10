@@ -36,9 +36,9 @@ import org.imgscalr.Scalr;
 
 import carpool.common.Common;
 import carpool.common.Constants;
-import carpool.common.ImgCrypto;
 import carpool.common.JSONFactory;
 import carpool.dbservice.*;
+import carpool.encryption.ImgCrypto;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;

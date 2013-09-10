@@ -1,15 +1,24 @@
 package carpool.exception.notification;
 
-public class NotificationOwnerNotMatchException extends Exception {
+import carpool.exception.PesudoException;
+
+public class NotificationOwnerNotMatchException extends PesudoException {
 
 	private static final long serialVersionUID = 1L;
+	
+	protected String exceptionType = "NotificationOwnerNotMatch";
 	
 	public NotificationOwnerNotMatchException(){
         super();
     }
-
+	
+	public NotificationOwnerNotMatchException(String exceptionText){
+		super(exceptionText);
+	}
+	
+	@Override
     public int getCode() {
-        return -1;
+        return 9;
     }
 
 }

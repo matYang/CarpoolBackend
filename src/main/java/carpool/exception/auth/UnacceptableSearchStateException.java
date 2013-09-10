@@ -1,16 +1,24 @@
 package carpool.exception.auth;
 
-public class UnacceptableSearchStateException extends Exception {
+import carpool.exception.PesudoException;
+
+public class UnacceptableSearchStateException extends PesudoException {
 
 	private static final long serialVersionUID = 1L;
 
+	protected String exceptionType = "UnacceptableSearchState";
 
 	public UnacceptableSearchStateException(){
         super();
     }
-
-
+	
+	public UnacceptableSearchStateException(String exceptionText){
+		super(exceptionText);
+	}
+	
+	@Override
     public int getCode() {
-        return -1;
+        return 12;
     }
+	
 }

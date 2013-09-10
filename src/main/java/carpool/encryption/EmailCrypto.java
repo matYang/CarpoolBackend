@@ -1,4 +1,4 @@
-package carpool.common;
+package carpool.encryption;
 
 import java.security.SecureRandom;
 import java.security.Security;

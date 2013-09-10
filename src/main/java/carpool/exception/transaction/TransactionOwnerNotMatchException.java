@@ -1,15 +1,24 @@
 package carpool.exception.transaction;
 
-public class TransactionOwnerNotMatchException extends Exception {
+import carpool.exception.PesudoException;
+
+public class TransactionOwnerNotMatchException extends PesudoException {
 
 	private static final long serialVersionUID = 1L;
+	
+	protected String exceptionType = "TransactionOwnerNotMatchFound";
 	
 	public TransactionOwnerNotMatchException(){
         super();
     }
-
+	
+	public TransactionOwnerNotMatchException(String exceptionText){
+		super(exceptionText);
+	}
+	
+	@Override
     public int getCode() {
-        return -1;
+        return 5;
     }
 
 }

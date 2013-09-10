@@ -9,6 +9,7 @@ import carpool.asyncRelayExecutor.ExecutorProvider;
 import carpool.common.*;
 import carpool.common.Constants.gender;
 import carpool.database.*;
+import carpool.encryption.EmailCrypto;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.*;

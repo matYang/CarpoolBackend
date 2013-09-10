@@ -1,15 +1,24 @@
 package carpool.exception.user;
 
-public class UserNotFoundException extends Exception {
+import carpool.exception.PesudoException;
 
+public class UserNotFoundException extends PesudoException {
+	
 	private static final long serialVersionUID = 1L;
+	
+	protected String exceptionType = "UserNotFound";
 
 	public UserNotFoundException(){
         super();
     }
-
-    public int getCode() {
-        return -1;
+	
+	public UserNotFoundException(String exceptionText){
+        super(exceptionText);
     }
-    
+
+	@Override
+    public int getCode() {
+        return 1;
+    }
+	
 }

@@ -1,22 +1,32 @@
 package carpool.exception.transaction;
 
 import carpool.common.Constants.transactionState;
+import carpool.exception.PesudoException;
 
-public class TransactionStateViolationException extends Exception {
+public class TransactionStateViolationException extends PesudoException {
 
 	private static final long serialVersionUID = 1L;
 	
 	private transactionState curState;
 	private transactionState expectedState;
 	
+	protected String exceptionType = "TransactionStateViolation";
+	
 	public TransactionStateViolationException(transactionState curState, transactionState expectedState){
         super();
         this.curState = curState;
         this.expectedState = expectedState;
     }
-
+	
+	public TransactionStateViolationException(transactionState curState, transactionState expectedState, String exceptionText){
+        super(exceptionText);
+        this.curState = curState;
+        this.expectedState = expectedState;
+    }
+	
+	@Override
     public int getCode() {
-        return -1;
+        return 7;
     }
     
     public transactionState getCurState(){

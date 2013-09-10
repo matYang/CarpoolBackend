@@ -1,4 +1,4 @@
-package carpool.common;
+package carpool.encryption;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
