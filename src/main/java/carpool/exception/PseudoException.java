@@ -1,18 +1,18 @@
 package carpool.exception;
 
-public class PesudoException extends Exception{
+public class PseudoException extends Exception{
 
 	private static final long serialVersionUID = 1L;
 	private String exceptionText;
 	
 	protected String exceptionType = "Pesudo";
 
-	public PesudoException(){
+	public PseudoException(){
         super();
         this.exceptionText = "Unspecified";
     }
 	
-	public PesudoException(String exceptionText){
+	public PseudoException(String exceptionText){
 		super();
 		this.exceptionText = exceptionText;
 	}

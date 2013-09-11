@@ -13,10 +13,10 @@ import carpool.common.Constants.gender;
 import carpool.common.Constants.messageState;
 import carpool.common.Constants.messageType;
 import carpool.common.Constants.paymentMethod;
-import carpool.interfaces.PesudoModel;
+import carpool.interfaces.PseudoModel;
 
 
-public class DMMessage implements PesudoModel{
+public class DMMessage implements PseudoModel{
 	
 	public final int category = Constants.category_DM;
 	

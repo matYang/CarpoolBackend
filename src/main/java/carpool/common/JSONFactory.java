@@ -24,7 +24,7 @@ import carpool.model.User;
 //serves as the converter on API data return
 public class JSONFactory {
 	
-	public static JSONObject toJSON(PesudoModel obj){
+	public static JSONObject toJSON(PseudoModel obj){
 		if (obj == null){
 			Common.d("JSONFactory::toJSON_Model receving null obj");
 		}
@@ -82,7 +82,7 @@ public class JSONFactory {
 		return json;
 	}
 	
-	public static JSONArray toJSON(ArrayList<? extends PesudoModel> objs){
+	public static JSONArray toJSON(ArrayList<? extends PseudoModel> objs){
 		JSONArray jsonObjs = new JSONArray();
 		if (objs == null){
 			Common.d("JSONFactory::toJSON_ArrayList receving null objs");

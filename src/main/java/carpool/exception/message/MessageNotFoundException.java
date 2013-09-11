@@ -1,8 +1,8 @@
 package carpool.exception.message;
 
-import carpool.exception.PesudoException;
+import carpool.exception.PseudoException;
 
-public class MessageNotFoundException extends PesudoException {
+public class MessageNotFoundException extends PseudoException {
 
 	private static final long serialVersionUID = 1L;
 	

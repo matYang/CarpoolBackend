@@ -2,7 +2,7 @@ package carpool.model;
 
 import org.json.JSONObject;
 
-import carpool.interfaces.PesudoModel;
+import carpool.interfaces.PseudoModel;
 import carpool.mappings.MappingManager;
 
 
@@ -11,7 +11,7 @@ import carpool.mappings.MappingManager;
  */
 
 
-public class Location implements PesudoModel{
+public class Location implements PseudoModel{
     private String province;
     private String city;
     private String region;

@@ -1,8 +1,8 @@
-package carpool.exception.auth;
+package carpool.exception.validation;
 
-import carpool.exception.PesudoException;
+import carpool.exception.PseudoException;
 
-public class UnacceptableSearchStateException extends PesudoException {
+public class UnacceptableSearchStateException extends PseudoException {
 
 	private static final long serialVersionUID = 1L;
 

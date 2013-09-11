@@ -1,12 +1,12 @@
 package carpool.exception.auth;
 
-import carpool.exception.PesudoException;
+import carpool.exception.PseudoException;
 
-public class UnexpectedCookieException extends PesudoException {
+public class UnexpectedCookieException extends PseudoException {
 
 	private static final long serialVersionUID = 1L;
 
-	protected String exceptionType = "UnacceptableSearchState";
+	protected String exceptionType = "UnexpectedCookieState";
 
 	public UnexpectedCookieException(){
         super();

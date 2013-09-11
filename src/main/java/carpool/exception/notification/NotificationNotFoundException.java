@@ -1,8 +1,8 @@
 package carpool.exception.notification;
 
-import carpool.exception.PesudoException;
+import carpool.exception.PseudoException;
 
-public class NotificationNotFoundException extends PesudoException {
+public class NotificationNotFoundException extends PseudoException {
 
 	private static final long serialVersionUID = 1L;
 	

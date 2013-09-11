@@ -2,8 +2,6 @@ package carpool.resources.userResource;
 
 import java.util.ArrayList;
 
-import org.restlet.ext.json.JsonRepresentation;
-import org.restlet.representation.Representation;
 import org.restlet.resource.*;
 import org.restlet.util.Series;
 import org.restlet.data.Cookie;
@@ -11,14 +9,11 @@ import org.restlet.data.CookieSetting;
 import org.restlet.engine.header.Header;
 import org.restlet.data.Status;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.dbservice.*;
 import carpool.encryption.SessionCrypto;
+import carpool.exception.auth.AccountAuthenticationException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.mappings.*;
@@ -37,7 +32,7 @@ public class UserCookieResource extends ServerResource{
 	 */
 	public static boolean validateCookieSession(int id, Series<Cookie> cookies) throws Exception{
 		if (id == -1){
-			return false;
+			throw new AccountAuthenticationException("UserCookieResource:: validateCookieSession:: Invalid ID, ID is -1");
 		}
 		ArrayList<String> sessionString = new ArrayList<String>();
 		boolean login = false;
@@ -50,7 +45,7 @@ public class UserCookieResource extends ServerResource{
 			throw new DuplicateSessionCookieException();
 		}
 		if (sessionString.size() == 0){
-			login = false;
+			throw new AccountAuthenticationException("UserCookieResource:: validateCookieSession:: Session Not Exist");
 		}
 		else{
 			try{
@@ -61,6 +56,9 @@ public class UserCookieResource extends ServerResource{
 				e.printStackTrace();
 				throw new SessionEncodingException();
 			}
+		}
+		if (!login){
+			throw new AccountAuthenticationException("UserCookieResource:: validateCookieSession:: Session Validation Failed");
 		}
 		return login;
 	}

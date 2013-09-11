@@ -1,8 +1,8 @@
 package carpool.exception.message;
 
-import carpool.exception.PesudoException;
+import carpool.exception.PseudoException;
 
-public class MessageOwnerNotMatchException extends PesudoException {
+public class MessageOwnerNotMatchException extends PseudoException {
 
 	private static final long serialVersionUID = 1L;
 	

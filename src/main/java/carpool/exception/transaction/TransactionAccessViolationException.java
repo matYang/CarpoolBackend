@@ -1,9 +1,9 @@
 package carpool.exception.transaction;
 
 import carpool.common.Constants.transactionState;
-import carpool.exception.PesudoException;
+import carpool.exception.PseudoException;
 
-public class TransactionAccessViolationException extends PesudoException {
+public class TransactionAccessViolationException extends PseudoException {
 
 	private static final long serialVersionUID = 1L;
 	

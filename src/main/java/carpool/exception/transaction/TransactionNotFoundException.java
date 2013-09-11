@@ -1,8 +1,8 @@
 package carpool.exception.transaction;
 
-import carpool.exception.PesudoException;
+import carpool.exception.PseudoException;
 
-public class TransactionNotFoundException extends PesudoException {
+public class TransactionNotFoundException extends PseudoException {
 
 	private static final long serialVersionUID = 1L;
 	

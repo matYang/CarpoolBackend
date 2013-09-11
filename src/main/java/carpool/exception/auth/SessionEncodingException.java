@@ -1,8 +1,8 @@
 package carpool.exception.auth;
 
-import carpool.exception.PesudoException;
+import carpool.exception.PseudoException;
 
-public class SessionEncodingException extends PesudoException {
+public class SessionEncodingException extends PseudoException {
 
 	private static final long serialVersionUID = 1L;
 

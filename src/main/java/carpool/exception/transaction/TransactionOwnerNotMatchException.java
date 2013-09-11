@@ -1,8 +1,8 @@
 package carpool.exception.transaction;
 
-import carpool.exception.PesudoException;
+import carpool.exception.PseudoException;
 
-public class TransactionOwnerNotMatchException extends PesudoException {
+public class TransactionOwnerNotMatchException extends PseudoException {
 
 	private static final long serialVersionUID = 1L;
 	

@@ -15,7 +15,7 @@ import carpool.common.JSONFactory;
 import carpool.common.Constants.gender;
 import carpool.common.Constants.userSearchState;
 import carpool.common.Constants.userState;
-import carpool.interfaces.PesudoModel;
+import carpool.interfaces.PseudoModel;
 
 
 /**
@@ -57,7 +57,7 @@ import carpool.interfaces.PesudoModel;
  */
 
 
-public class User implements PesudoModel{
+public class User implements PseudoModel{
 
     private int userId;
     private String password;

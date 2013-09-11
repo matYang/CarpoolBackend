@@ -21,19 +21,21 @@ import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.common.JSONFactory;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.mappings.*;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 
 
 
-public class ChangePasswordResource extends ServerResource{
+public class ChangePasswordResource extends PseudoResource{
 
 	//parses passwords from a JSONObject format of {oldPassword: oldPassword, newPassword: newPassword, confirmNewPassword: confirmNewPassword}
 	//return String array length of 2, [0] storing the oldPassword, [1] storing the newPassword, returns null of the password format is not correct
-	private String[] parseJSON(Representation entity){
+	protected String[] parseJSON(Representation entity){
 		JSONObject jsonPasswords = null;
 		String[] passwords = new String[2];
 		
@@ -52,19 +54,9 @@ public class ChangePasswordResource extends ServerResource{
 				passwords = null;
 			}
 			
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			return null;
-		} catch (NullPointerException e){
-			  e.printStackTrace();
-			  Common.d("likely invalid location string format");
-			  return null;
 		}
 
 		return passwords;
@@ -80,82 +72,38 @@ public class ChangePasswordResource extends ServerResource{
 	public Representation changePassword(Representation entity) {
 		int userId = -1;
 		String[] passwords = new String[2];
-		JSONObject response = new JSONObject();
+		JSONObject response = new JSONObject();	
 		
-		if (entity != null && entity.getSize() < Constants.max_userLength){
-			try {
-				userId = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"),"utf-8"));
-				if (UserCookieResource.validateCookieSession(userId, this.getRequest().getCookies())){
-					userId = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"),"utf-8"));
-					passwords = parseJSON(entity);
-					if (passwords != null){
-						boolean passwordChaneged = UserDaoService.changePassword(userId, passwords[0], passwords[1]);
-						if (passwordChaneged){
-							setStatus(Status.SUCCESS_OK);
-						}
-						else{
-							setStatus(Status.CLIENT_ERROR_CONFLICT);
-						}
-						response = JSONFactory.toJSON(passwordChaneged);
-					}
-					else{
-						setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-					}
+		try {
+			checkEntity(entity);
+			userId = Integer.parseInt(getReqAttr("id"));		
+			validateAuthentication(userId);
+
+			passwords = parseJSON(entity);
+			if (passwords != null){
+				boolean passwordChaneged = UserDaoService.changePassword(userId, passwords[0], passwords[1]);
+				if (passwordChaneged){
+					setStatus(Status.SUCCESS_OK);
 				}
 				else{
-					setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+					setStatus(Status.CLIENT_ERROR_CONFLICT);
 				}
-			} catch (UserNotFoundException e){
-	        	e.printStackTrace();
-				setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-	        } catch (DuplicateSessionCookieException e1){
-				//TODO clear cookies, set name and value
-				e1.printStackTrace();
-				this.getResponse().getCookieSettings().clear();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (SessionEncodingException e){
-				//TODO modify session where needed
-				e.printStackTrace();
-				this.getResponse().getCookieSettings().clear();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (Exception e) {
-				e.printStackTrace();
+				response = JSONFactory.toJSON(passwordChaneged);
+			}
+			else{
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			}
-		}
-		else if (entity == null){
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		}
-		else{
-			setStatus(Status.CLIENT_ERROR_REQUEST_ENTITY_TOO_LARGE);
-		}
-		
+
+		} catch (PseudoException e){
+			doPseudoException(e);
+        } catch (Exception e1){
+        	doException(e1);
+		} 
+
 		Representation result = new JsonRepresentation(response);
 		
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
+		addCORSHeader();
 		return result;
-	}
-
-	
-	
-	//needed here since backbone will try to send OPTIONS before POST
-	@Options
-	public Representation takeOptions(Representation entity) {
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
-
-		/*send anything back will be fine, browser only expects a response
-		Message message = new Message();
-		Representation result = new JsonRepresentation(message);*/
-
-		return null;
 	}
 
 

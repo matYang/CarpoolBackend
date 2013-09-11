@@ -1,8 +1,8 @@
 package carpool.exception.user;
 
-import carpool.exception.PesudoException;
+import carpool.exception.PseudoException;
 
-public class UserNotFoundException extends PesudoException {
+public class UserNotFoundException extends PseudoException {
 	
 	private static final long serialVersionUID = 1L;
 	

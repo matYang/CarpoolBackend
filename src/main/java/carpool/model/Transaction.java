@@ -14,13 +14,13 @@ import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.common.Constants.paymentMethod;
 import carpool.common.Constants.transactionState;
-import carpool.interfaces.PesudoModel;
+import carpool.interfaces.PseudoModel;
 import carpool.mappings.MappingManager;
 
 
 
 
-public class Transaction implements PesudoModel{
+public class Transaction implements PseudoModel{
 		
 	public final int category = Constants.category_DM;
 	

@@ -9,12 +9,12 @@ import org.json.JSONObject;
 import carpool.common.Common;
 import carpool.common.Constants.notificationEvent;
 import carpool.common.Constants.notificationType;
-import carpool.interfaces.PesudoModel;
+import carpool.interfaces.PseudoModel;
 
 
 
 
-public class Notification implements PesudoModel{
+public class Notification implements PseudoModel{
 		
 	private int notificationId;
 	private notificationType notificationType;
