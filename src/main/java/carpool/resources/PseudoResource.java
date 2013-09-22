@@ -65,8 +65,30 @@ public class PseudoResource extends ServerResource{
 		}
 	}
 	
-	public void validateAuthentication(int userId) throws Exception{
-		UserCookieResource.validateCookieSession(userId, this.getRequest().getCookies());
+	public boolean validateAuthentication(int userId) throws PseudoException{
+		return UserCookieResource.validateCookieSession(userId, this.getRequest().getCookies());
+	}
+	
+	public void clearUserCookies(){
+		Series<CookieSetting> cookieSettings = this.getResponse().getCookieSettings(); 
+        cookieSettings.clear(); 
+	}
+	
+	public void addAuthenticationSession(int userId) throws PseudoException{
+		Series<CookieSetting> cookieSettings = this.getResponse().getCookieSettings(); 
+		CookieSetting newCookie = UserCookieResource.openCookieSession(userId);
+		cookieSettings.add(newCookie);
+		this.setCookieSettings(cookieSettings);
+	}
+	
+	public void closeAuthenticationSession(int userId) throws PseudoException{
+		Series<Cookie> cookies = this.getRequest().getCookies();
+		UserCookieResource.closeCookieSession(cookies);
+	}
+	
+	public String getSessionString() throws PseudoException{
+		Series<Cookie> cookies = this.getRequest().getCookies();
+		return UserCookieResource.getSessionString(cookies);
 	}
 	
 	public String getReqAttr(String fieldName) throws UnsupportedEncodingException{
@@ -110,7 +132,7 @@ public class PseudoResource extends ServerResource{
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				break;
 			case 14:
-				//Authentication
+				//AccountAuthentication
 				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
 				break;
 			case 15:
@@ -130,6 +152,25 @@ public class PseudoResource extends ServerResource{
 	public void doException(Exception e){
 		e.printStackTrace();
 		setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+	}
+	
+	public void printResult(Representation result){
+		try {
+            Common.d(result.getText());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+	}
+	
+	public Representation buildQuickResponse(String responseText){
+		JSONObject response = new JSONObject();	
+		response = JSONFactory.toJSON(responseText);
+		return new JsonRepresentation(response);
+	}
+	
+	public Representation quickRespond(String responseText){
+		addCORSHeader();
+		return buildQuickResponse(responseText);
 	}
 
     //needed here since backbone will try to send OPTIONS to /id before PUT or DELETE

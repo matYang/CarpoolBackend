@@ -14,10 +14,11 @@ import org.restlet.data.Status;
 
 import carpool.common.Common;
 import carpool.common.Constants;
+import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserResource;
 
 
-public class FeedBackResource extends ServerResource{
+public class FeedBackResource extends PseudoResource{
 	
 	private static final String fileName = "feedBack.txt";
 
@@ -58,29 +59,9 @@ public class FeedBackResource extends ServerResource{
 			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 		}
 
-		
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
-		return "";
-	}
-
-	
-	
-	//needed here since backbone will try to send OPTIONS before POST
-	@Options
-	public Representation takeOptions(Representation entity) {
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
-
-
+		this.addCORSHeader();
+		setStatus(Status.SUCCESS_OK);
 		return null;
 	}
-
 
 }

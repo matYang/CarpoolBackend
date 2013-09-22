@@ -12,12 +12,12 @@ import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.common.Constants.paymentMethod;
 import carpool.database.DaoBasic;
-import carpool.database.DaoDMMessage;
+import carpool.database.DaoMessage;
 import carpool.database.DaoTransaction;
 import carpool.database.DaoUser;
-import carpool.dbservice.DMMessageDaoService;
+import carpool.dbservice.MessageDaoService;
 import carpool.exception.message.MessageNotFoundException;
-import carpool.model.DMMessage;
+import carpool.model.Message;
 import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
@@ -30,10 +30,10 @@ public class DaoDMMessageTest {
 	private final Calendar calender2 = Common.DateToCalendar(new Date(7777777));
 	private final Calendar calender3 = Common.DateToCalendar(new Date(8888888));
 	private final Calendar calender4 = Common.DateToCalendar(new Date(9999999));
-	private final DMMessage default1 = new DMMessage(11,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
+	private final Message default1 = new Message(11,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
 			new Location("a a a a"),calender1,calender2,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
 			5,false,true,new ArrayList<Transaction>(),calender3);
-	private final DMMessage default2 = new DMMessage(1,2,"ImgPath2","Name2",30,40,"phone2","email2","qq2",Constants.paymentMethod.all,
+	private final Message default2 = new Message(1,2,"ImgPath2","Name2",30,40,"phone2","email2","qq2",Constants.paymentMethod.all,
 			new Location("a2 a2 a2 a2"),calender2,calender3,"note2",Constants.messageType.help,Constants.gender.both,
 			Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calender4);
 
@@ -41,25 +41,25 @@ public class DaoDMMessageTest {
 	public void messageTransaction(){
 		init();
 		Calendar calender = Calendar.getInstance();
-		User defaultUser1 = new User(0, "password", "name", 0, 0,0, new ArrayList<DMMessage>(),
-				new ArrayList<DMMessage>(),new ArrayList<User>(),new ArrayList<Transaction>(),
+		User defaultUser1 = new User(0, "password", "name", 0, 0,0, new ArrayList<Message>(),
+				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
 				"phone", "email", "qq","imgPath",new Location("a a a a"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,
 				calender,calender,"paypal");
-		User defaultUser2 = new User(1, "password", "name1", 0, 0,0, new ArrayList<DMMessage>(),
-				new ArrayList<DMMessage>(),new ArrayList<User>(),new ArrayList<Transaction>(),
+		User defaultUser2 = new User(1, "password", "name1", 0, 0,0, new ArrayList<Message>(),
+				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
 				"phone1", "email1", "qq1","imgPath1",new Location("a2 a2 a2 a2"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,
 				calender,calender,"paypal");
-		DMMessage default1 = new DMMessage(11,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
+		Message default1 = new Message(11,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
 				new Location("a a a a"),calender,calender,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
 				5,false,true,new ArrayList<Transaction>(),calender);
-		DMMessage default2 = new DMMessage(1,2,"ImgPath2","Name2",30,40,"phone2","email2","qq2",Constants.paymentMethod.all,
+		Message default2 = new Message(1,2,"ImgPath2","Name2",30,40,"phone2","email2","qq2",Constants.paymentMethod.all,
 				new Location("a2 a2 a2 a2"),calender,calender,"note2",Constants.messageType.help,Constants.gender.both,
 				Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calender);
-		DMMessage default3 = new DMMessage(1,1,"ImgPath2","Name3",30,40,"phone3","email3","qq2",Constants.paymentMethod.all,
+		Message default3 = new Message(1,1,"ImgPath2","Name3",30,40,"phone3","email3","qq2",Constants.paymentMethod.all,
 				new Location("a2 a2 a2 a2"),calender,calender,"note2",Constants.messageType.help,Constants.gender.both,
 				Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calender);
 		Transaction defaultT1 = new Transaction(111, 2, 1, "initUserImgPath", "initUserName",
@@ -74,15 +74,15 @@ public class DaoDMMessageTest {
 		} catch (Exception e) {
 			assertTrue(false);
 		}
-		DaoDMMessage.addMessageToDatabase(default1);
-		DaoDMMessage.addMessageToDatabase(default2);
-		DaoDMMessage.addMessageToDatabase(default3);
+		DaoMessage.addMessageToDatabase(default1);
+		DaoMessage.addMessageToDatabase(default2);
+		DaoMessage.addMessageToDatabase(default3);
 		DaoTransaction.addTransactionToDatabase(defaultT1);
 		DaoTransaction.addTransactionToDatabase(defaultT2);
 		try {
-			assertTrue(DMMessageDaoService.getRelatedTransactions(1).size()==1);
-			assertTrue(DMMessageDaoService.getRelatedTransactions(2).size()==0);
-			assertTrue(DMMessageDaoService.getRelatedTransactions(3).size()==1);
+			assertTrue(MessageDaoService.getRelatedTransactions(1).size()==1);
+			assertTrue(MessageDaoService.getRelatedTransactions(2).size()==0);
+			assertTrue(MessageDaoService.getRelatedTransactions(3).size()==1);
 		} catch (MessageNotFoundException e) {
 			assertTrue(false);
 		}
@@ -102,17 +102,17 @@ public class DaoDMMessageTest {
 			e1.printStackTrace();
 			assertTrue(false);
 		}
-		int oldid = DaoDMMessage.addMessageToDatabase(default1).getMessageId();
+		int oldid = DaoMessage.addMessageToDatabase(default1).getMessageId();
 		default2.setMessageId(oldid);
 		try {
-			DaoDMMessage.UpdateMessageInDatabase(default2);
+			DaoMessage.UpdateMessageInDatabase(default2);
 		} catch (MessageNotFoundException e) {
 			Common.d("Message Not Found");
 			assertTrue(false);
 		}
-		DMMessage msg = null;
+		Message msg = null;
 		try {
-			msg = DaoDMMessage.getMessageById(1);
+			msg = DaoMessage.getMessageById(1);
 		} catch (MessageNotFoundException e) {
 			Common.d("Message Not Found");
 			assertTrue(false);
@@ -151,9 +151,9 @@ public class DaoDMMessageTest {
 			e1.printStackTrace();
 			assertTrue(false);
 		}
-		DMMessage msg = DaoDMMessage.addMessageToDatabase(default1);
+		Message msg = DaoMessage.addMessageToDatabase(default1);
 		try {
-			msg = DaoDMMessage.getMessageById(msg.getMessageId());
+			msg = DaoMessage.getMessageById(msg.getMessageId());
 		} catch (MessageNotFoundException e) {
 			Common.d("Message Not Found");
 			assertTrue(false);
@@ -188,8 +188,8 @@ public class DaoDMMessageTest {
 		init();
 		//init user
 		ArrayList<String> group = new ArrayList<String>();
-		User defaultUser1 = new User(0, "password", "name", 0, 0,0, new ArrayList<DMMessage>(),
-				new ArrayList<DMMessage>(),new ArrayList<User>(),new ArrayList<Transaction>(),
+		User defaultUser1 = new User(0, "password", "name", 0, 0,0, new ArrayList<Message>(),
+				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
 				"phone", "email", "qq","imgPath",new Location("a a a a"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,
@@ -201,8 +201,8 @@ public class DaoDMMessageTest {
 		} catch (Exception e) {
 			assertTrue(false);
 		}
-		User defaultUser2 = new User(0, "password3", "name3", 2, 2,2, new ArrayList<DMMessage>(),
-				new ArrayList<DMMessage>(),new ArrayList<User>(),new ArrayList<Transaction>(),
+		User defaultUser2 = new User(0, "password3", "name3", 2, 2,2, new ArrayList<Message>(),
+				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),22,Constants.gender.female,
 				"phone3", "email3", "qq3","imgPath3",new Location("a3 a3 a3 a3"),true,true,true,true,
 				Constants.userState.invalid,Constants.userSearchState.regionAsk,
@@ -215,8 +215,8 @@ public class DaoDMMessageTest {
 		} catch (Exception e) {
 			assertTrue(false);
 		}
-		User defaultUser3 = new User(0, "password4", "name4", 3, 3,3, new ArrayList<DMMessage>(),
-				new ArrayList<DMMessage>(),new ArrayList<User>(),new ArrayList<Transaction>(),
+		User defaultUser3 = new User(0, "password4", "name4", 3, 3,3, new ArrayList<Message>(),
+				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),23,Constants.gender.female,
 				"phone4", "email4", "qq4","imgPath4",new Location("a4 a4 a4 a4"),true,true,true,true,
 				Constants.userState.invalid,Constants.userSearchState.regionAsk,
@@ -231,27 +231,27 @@ public class DaoDMMessageTest {
 		}
 		//init user finish
 		//init Message
-		DMMessage default1 = new DMMessage(1,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
+		Message default1 = new Message(1,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
 				new Location("a a a a"),calender2,calender4,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
 				5,false,true,new ArrayList<Transaction>(),calender3);
-		DMMessage default2 = new DMMessage(2,1,"ImgPath2","Name2",30,40,"phone2","email2","qq2",Constants.paymentMethod.all,
+		Message default2 = new Message(2,1,"ImgPath2","Name2",30,40,"phone2","email2","qq2",Constants.paymentMethod.all,
 				new Location("a2 a2 a2 a2"),calender1,calender2,"note2",Constants.messageType.ask,Constants.gender.both,
 				Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calender4);
-		DMMessage default3 = new DMMessage(3,2,"ImgPath3","Name3",30,40,"phone3","email3","qq3",Constants.paymentMethod.all,
+		Message default3 = new Message(3,2,"ImgPath3","Name3",30,40,"phone3","email3","qq3",Constants.paymentMethod.all,
 				new Location("a3 a3 a3 a3"),calender3,calender4,"note3",Constants.messageType.help,Constants.gender.both,
 				Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calender4);
-		DMMessage default4 = new DMMessage(3,3,"ImgPath4","Name4",30,40,"phone4","email4","qq4",Constants.paymentMethod.all,
+		Message default4 = new Message(3,3,"ImgPath4","Name4",30,40,"phone4","email4","qq4",Constants.paymentMethod.all,
 				new Location("a4 a4 a4 a4"),calender1,calender4,"note4",Constants.messageType.ask,Constants.gender.both,
 				Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calender4);
-		DaoDMMessage.addMessageToDatabase(default1);
-		DaoDMMessage.addMessageToDatabase(default2);
-		DaoDMMessage.addMessageToDatabase(default3);
-		DaoDMMessage.addMessageToDatabase(default4);
+		DaoMessage.addMessageToDatabase(default1);
+		DaoMessage.addMessageToDatabase(default2);
+		DaoMessage.addMessageToDatabase(default3);
+		DaoMessage.addMessageToDatabase(default4);
 		//init Message finish
-		ArrayList<DMMessage> results = DaoDMMessage.searchMessageRegion("a a a bla", Common.toSQLDateTime(calender3), Constants.messageType.ask.code+"");
+		ArrayList<Message> results = DaoMessage.searchMessageRegion("a a a bla", Common.toSQLDateTime(calender3), Constants.messageType.ask.code+"");
 		assertTrue(results.get(0).getOwnerImgPath().equals("ImgPath"));
 
-		assertTrue(DaoDMMessage.searchMessageSingle("%", Common.toSQLDateTime(calender4), "%").size()==4);
+		assertTrue(DaoMessage.searchMessageSingle("%", Common.toSQLDateTime(calender4), "%").size()==4);
 		init();
 	}
 

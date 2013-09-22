@@ -18,11 +18,13 @@ import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.common.JSONFactory;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 
 
 
-public class UserResource extends ServerResource{
+public class UserResource extends PseudoResource{
 
 	/*set the response header to allow for CORS*/
 	public static Series<Header> addHeader(Series<Header> responseHeaders){
@@ -39,23 +41,13 @@ public class UserResource extends ServerResource{
 
 	//passes received JSON into message
 	//note that this parseJSON assumes the user does not exist yet, it is different from the parseJSON in UserResource
-	private User parseJSON(Representation entity){
+	protected User parseJSON(Representation entity){
 		JSONObject jsonUser = null;
+		User user = null;
+		
 		try {
 			jsonUser = (new JsonRepresentation(entity)).getJsonObject();
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
 
-		Common.d("@Post::receive jsonUser: " +  jsonUser.toString());
-		
-
-		User user = null;
-		try {
 			String password = jsonUser.getString("password");
 			int gender = jsonUser.getInt("gender");
 			String email = jsonUser.getString("email");
@@ -70,16 +62,6 @@ public class UserResource extends ServerResource{
 				user = new User(password,Constants.gender.values()[gender],email, location);
 			}
 			
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			return null;
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return null;
-		} catch (NullPointerException e){
-			e.printStackTrace();
-			Common.d("likely invalid location string format");
-			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -108,11 +90,7 @@ public class UserResource extends ServerResource{
 		
 		Representation result = new JsonRepresentation(jsonArray);
 
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
+		this.addCORSHeader();
 		return result;
 	}
 	
@@ -123,7 +101,8 @@ public class UserResource extends ServerResource{
 		JSONObject newJsonUser = new JSONObject();
 		User creationFeedBack = null;
 		
-		if (entity != null && entity.getSize() < Constants.max_userLength){
+		try{
+			this.checkEntity(entity);
 			User newUser = parseJSON(entity);
 			
 			//if available, add the message
@@ -136,14 +115,6 @@ public class UserResource extends ServerResource{
 						creationFeedBack.prepareTopBarUser();
 						
 						boolean emailSent = UserDaoService.sendActivationEmail(creationFeedBack.getUserId(), creationFeedBack.getEmail());
-						/*
-						if (emailSent){
-							setStatus(Status.SUCCESS_OK);
-						}
-						else{
-							setStatus(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY);
-						}
-						*/
 						newJsonUser = JSONFactory.toJSON(creationFeedBack);
 					}
 					else{
@@ -159,41 +130,14 @@ public class UserResource extends ServerResource{
 				Common.d("Registration null user recorded");
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			}
+		} catch(PseudoException e){
+			this.doPseudoException(e);
 		}
-		else if (entity == null){
-			Common.d("Registration null entity recorded");
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		}
-		else{
-			setStatus(Status.CLIENT_ERROR_REQUEST_ENTITY_TOO_LARGE);
-		}
+
 		Representation result = new JsonRepresentation(newJsonUser);
 		
-		/*set the response header*/
-		Series<Header> responseHeaders = addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
+		this.addCORSHeader(); 
 		return result;
 	}
-
-	
-	
-	//needed here since backbone will try to send OPTIONS before POST
-	@Options
-	public Representation takeOptions(Representation entity) {
-		/*set the response header*/
-		Series<Header> responseHeaders = addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
-
-		/*send anything back will be fine, browser only expects a response
-		Message message = new Message();
-		Representation result = new JsonRepresentation(message);*/
-
-		return new JsonRepresentation(new JSONObject());
-	}
-
 
 }

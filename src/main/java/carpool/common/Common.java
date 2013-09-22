@@ -12,7 +12,7 @@ import java.util.TimeZone;
 
 import carpool.mappings.AllProvinceMappings;
 import carpool.mappings.MappingBase;
-import carpool.model.DMMessage;
+import carpool.model.Message;
 import carpool.model.User;
 
 
@@ -62,8 +62,8 @@ public class Common {
 		}
 	}
 	
-	public static void removeFromWatchList(ArrayList<DMMessage> list,int id){
-		for(DMMessage msg : list){
+	public static void removeFromWatchList(ArrayList<Message> list,int id){
+		for(Message msg : list){
 			if(msg.getMessageId()==id){
 				list.remove(msg);
 				break;

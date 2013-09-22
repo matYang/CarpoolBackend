@@ -23,13 +23,15 @@ import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.common.JSONFactory;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.mappings.*;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 
 
 
-public class ResendActivationEmailResource extends ServerResource{
+public class ResendActivationEmailResource extends PseudoResource{
 
 	@Get
 	public Representation reSendUserEmail(){
@@ -39,7 +41,7 @@ public class ResendActivationEmailResource extends ServerResource{
         boolean isSent = false;;
         
         try {
-        	userId = Integer.parseInt(java.net.URLDecoder.decode(getQuery().getValues("userId"),"utf-8"));
+        	userId = Integer.parseInt(this.getReqAttr("userId"));
         	
         	isActivated = UserDaoService.isUserEmailActivated(userId);
         	
@@ -58,25 +60,15 @@ public class ResendActivationEmailResource extends ServerResource{
         		setStatus(Status.CLIENT_ERROR_CONFLICT);
         	}
         	
-		} catch(UserNotFoundException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-		} catch (UnsupportedEncodingException e2){
-			e2.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+		} catch(PseudoException e){
+			this.doPseudoException(e);
 		} catch (Exception e) {
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+			this.doException(e);
 		}
         
         
         Representation result = new JsonRepresentation(response);
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-
+        this.addCORSHeader();
         return result;
 		
 	}

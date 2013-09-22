@@ -820,7 +820,7 @@ public class UserDaoService{
 	 * @return	null if there are any errors, eg. id does not exist, return empty ArrayList if no message watched
 	 * @throws user not found exception if the user id does not exist
 	 */
-	public static ArrayList<DMMessage> getWatchedMessaegs(int id) throws UserNotFoundException{
+	public static ArrayList<Message> getWatchedMessaegs(int id) throws UserNotFoundException{
 		User user = DaoUser.getUserById(id);
 		if(user==null){
 			return null;
@@ -837,10 +837,10 @@ public class UserDaoService{
 	 * @return	return the watched message if the message is already in the watch list or it was not in the watch list but now added, null if any errors
 	 * @throws user not found exception if the user id does not exist
 	 */
-	public static DMMessage watchMessage(int id, int targetMessageId) throws UserNotFoundException{
+	public static Message watchMessage(int id, int targetMessageId) throws UserNotFoundException{
 		User user = DaoUser.getUserById(id);
 		try {
-			DMMessage msg = DaoDMMessage.getMessageById(targetMessageId);
+			Message msg = DaoMessage.getMessageById(targetMessageId);
 			if(user.getWatchList().contains(msg)){
 				return msg;
 			}
@@ -872,7 +872,7 @@ public class UserDaoService{
 	public static boolean deWatchMessage(int userId, int targetMessageId) throws UserNotFoundException{
 		User user = DaoUser.getUserById(userId);
 		try {
-			DMMessage msg = DaoDMMessage.getMessageById(targetMessageId);
+			Message msg = DaoMessage.getMessageById(targetMessageId);
 			Common.removeFromWatchList(user.getWatchList(), msg.getMessageId());
 			DaoUser.UpdateUserInDatabase(user);
 			return true;
@@ -891,7 +891,7 @@ public class UserDaoService{
 	 * @return	null if any errors occurs, if nothing is wrong, return an ArrayList of DMMessage Objects constructed by the specified constructor in DMMessage
 	 * @throws UserNotFoundException
 	 */
-	public static ArrayList<DMMessage> getHistoryMessageByUserId(int id) throws UserNotFoundException{
+	public static ArrayList<Message> getHistoryMessageByUserId(int id) throws UserNotFoundException{
 		User user = DaoUser.getUserById(id);
 		if(user==null){
 			throw new UserNotFoundException();

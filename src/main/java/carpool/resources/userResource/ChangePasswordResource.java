@@ -1,34 +1,14 @@
 package carpool.resources.userResource;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.*;
-import org.restlet.util.Series;
-import org.restlet.engine.header.Header;
 import org.restlet.data.Status;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
-import carpool.exception.auth.DuplicateSessionCookieException;
-import carpool.exception.auth.SessionEncodingException;
-import carpool.exception.user.UserNotFoundException;
-import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
-
 
 
 public class ChangePasswordResource extends PseudoResource{
@@ -58,7 +38,6 @@ public class ChangePasswordResource extends PseudoResource{
 			e.printStackTrace();
 			return null;
 		}
-
 		return passwords;
 	}
 	
@@ -72,38 +51,41 @@ public class ChangePasswordResource extends PseudoResource{
 	public Representation changePassword(Representation entity) {
 		int userId = -1;
 		String[] passwords = new String[2];
-		JSONObject response = new JSONObject();	
+		String quickResponseText = null;
 		
 		try {
-			checkEntity(entity);
-			userId = Integer.parseInt(getReqAttr("id"));		
-			validateAuthentication(userId);
+			this.checkEntity(entity);
+			userId = Integer.parseInt(this.getReqAttr("id"));		
+			this.validateAuthentication(userId);
 
 			passwords = parseJSON(entity);
 			if (passwords != null){
 				boolean passwordChaneged = UserDaoService.changePassword(userId, passwords[0], passwords[1]);
 				if (passwordChaneged){
 					setStatus(Status.SUCCESS_OK);
+					quickResponseText = "Password has been changed";
 				}
 				else{
 					setStatus(Status.CLIENT_ERROR_CONFLICT);
+					quickResponseText = "Password change failed, please try again later";
 				}
-				response = JSONFactory.toJSON(passwordChaneged);
 			}
 			else{
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+				quickResponseText = "Invalid passwod format";
 			}
-
 		} catch (PseudoException e){
-			doPseudoException(e);
-        } catch (Exception e1){
-        	doException(e1);
-		} 
-
-		Representation result = new JsonRepresentation(response);
+			this.doPseudoException(e);
+			quickResponseText = "Password change failed with exception type " + e.getExeceptionType() + " text: " + e.getExceptionText();
+        } catch (Exception e){
+        	this.doException(e);
+        	quickResponseText = "Password change failed with exception " + e.toString();
+		}
 		
-		addCORSHeader();
-		return result;
+		this.addCORSHeader();
+		return this.quickRespond(quickResponseText);
+
+		
 	}
 
 

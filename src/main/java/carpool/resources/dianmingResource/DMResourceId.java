@@ -22,57 +22,40 @@ import carpool.common.Constants;
 import carpool.common.JSONFactory;
 import carpool.common.Constants.messageState;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.message.MessageOwnerNotMatchException;
 import carpool.mappings.*;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserCookieResource;
 import carpool.resources.userResource.UserResource;
 
 
 
-public class DMResourceId extends ServerResource{
+public class DMResourceId extends PseudoResource{
 
-	//passes received json into message
-		//note that this parseJSON
-		private DMMessage parseJSON(Representation entity, int messageId, int userId){
-			JSONObject jsonMessage = null;
-			try {
-				jsonMessage = (new JsonRepresentation(entity)).getJsonObject();
-			} catch (JSONException e) {
-				e.printStackTrace();
-				return null;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return null;
-			}
 
+	private Message parseJSON(Representation entity, int messageId, int userId){
+		JSONObject jsonMessage = null;
+		Message message = null;
+		
+		try {
+			jsonMessage = (new JsonRepresentation(entity)).getJsonObject();
 			Common.d("@Post::receive jsonMessage: " +  jsonMessage.toString());
-
-			DMMessage message = null;
-			try {
-				message = new DMMessage(messageId, jsonMessage.getInt("ownerId"), Constants.paymentMethod.values()[jsonMessage.getInt("paymentMethod")], 
-						new Location(jsonMessage.getJSONObject("location").getString("province"), jsonMessage.getJSONObject("location").getString("city"), jsonMessage.getJSONObject("location").getString("region"),jsonMessage.getJSONObject("location").getString("university")), Common.parseDateString(jsonMessage.getString("startTime")), Common.parseDateString(jsonMessage.getString("endTime")), 
-						jsonMessage.getString("note"), Constants.messageType.values()[jsonMessage.getInt("type")], Constants.gender.values()[jsonMessage.getInt("genderRequirement")], jsonMessage.getInt("price"));
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			  catch (NullPointerException e){
-				  e.printStackTrace();
-				  Common.d("likely invalid location string format");
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (Exception e){
-				  e.printStackTrace();
-				  Common.d("DMResourceId:: parseJSON error, likely invalid gender format");
-			}
-
-			return message;
+			
+			message = new Message(messageId, jsonMessage.getInt("ownerId"), Constants.paymentMethod.values()[jsonMessage.getInt("paymentMethod")], 
+					new Location(jsonMessage.getJSONObject("location").getString("province"), jsonMessage.getJSONObject("location").getString("city"), jsonMessage.getJSONObject("location").getString("region"),jsonMessage.getJSONObject("location").getString("university")), Common.parseDateString(jsonMessage.getString("startTime")), Common.parseDateString(jsonMessage.getString("endTime")), 
+					jsonMessage.getString("note"), Constants.messageType.values()[jsonMessage.getInt("type")], Constants.gender.values()[jsonMessage.getInt("genderRequirement")], jsonMessage.getInt("price"));
+		} catch (Exception e){
+			  e.printStackTrace();
+			  Common.d("DMResourceId:: parseJSON error, likely invalid gender format");
 		}
+
+		return message;
+	}
 		
 		
 
@@ -83,61 +66,31 @@ public class DMResourceId extends ServerResource{
     public Representation getMessageById() {
     	int id = -1;
     	int messageId = -1;
-        boolean goOn = false;
         JSONObject jsonObject = new JSONObject();
         
         try {
-			messageId = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"),"utf-8"));
-			id = Integer.parseInt(java.net.URLDecoder.decode(getQuery().getValues("userId"),"utf-8"));
+        	messageId = Integer.parseInt(this.getReqAttr("id"));
+			id = Integer.parseInt(this.getQueryVal("userId"));
 			
-			if (UserCookieResource.validateCookieSession(id, this.getRequest().getCookies())){
-				goOn = true;
-			}
-			else{
-				goOn = false;
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-			}
+			this.validateAuthentication(id);
 			
-			if (goOn){
-	        	DMMessage message = DMMessageDaoService.getMessageById(messageId);
-	        	if (message != null){
-	                jsonObject = JSONFactory.toJSON(message);
-	                setStatus(Status.SUCCESS_OK);
-	        	}
-	        	else{
-	        		setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-	        	}
-	        }
+        	Message message = MessageDaoService.getMessageById(messageId);
+        	if (message != null){
+                jsonObject = JSONFactory.toJSON(message);
+                setStatus(Status.SUCCESS_OK);
+        	}
+        	else{
+        		setStatus(Status.CLIENT_ERROR_FORBIDDEN);
+        	}
 			
-		} catch (MessageNotFoundException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-		} catch (DuplicateSessionCookieException e1){
-			//TODO clear cookies, set name and value
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (UnsupportedEncodingException e2) {
-			e2.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (Exception e) {
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+		} catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch (Exception e){
+			this.doException(e);
 		}
         
-        
         Representation result = new JsonRepresentation(jsonObject);
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-
+        this.addCORSHeader();
         return result;
     }
     
@@ -147,84 +100,45 @@ public class DMResourceId extends ServerResource{
     public Representation updateMessage(Representation entity) {
         int id = -1;
         int messageId = -1;
-        boolean goOn = true;
         JSONObject newJsonMessage = new JSONObject();
         
 		try {
-			messageId = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"), "utf-8"));
-			id = Integer.parseInt(java.net.URLDecoder.decode(getQuery().getValues("userId"),"utf-8"));
+			this.checkEntity(entity);
 			
-			if (UserCookieResource.validateCookieSession(id, this.getRequest().getCookies())){
-				goOn = true;
-			}
-			else{
-				goOn = false;
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-			}
+			messageId = Integer.parseInt(this.getReqAttr("id"));
+			id = Integer.parseInt(this.getQueryVal("userId"));
 			
-			if (goOn && entity!= null && entity.getSize() < Constants.max_DMMessageLength){
-		        DMMessage message = parseJSON(entity, messageId, id);
-		        if (message != null){
-		        	if (message.isMessageValid() && message.getOwnerId() == id){
-			        	//if available, update the message
-			            DMMessage updateFeedBack = DMMessageDaoService.updateMessage(message);
-			            if (updateFeedBack != null){
-			                newJsonMessage = JSONFactory.toJSON(updateFeedBack);
-			                setStatus(Status.SUCCESS_OK);
-			            }
-			            else{
-			            	setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-			            }
-		        	}
-		        	else{
-		        		setStatus(Status.CLIENT_ERROR_CONFLICT);
-		        	}
-		        }
-		        else{
-		        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		        }
-	        }
-	        else if (entity == null){
-	        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+			this.validateAuthentication(id);
+			
+	        Message message = parseJSON(entity, messageId, id);
+	        if (message != null){
+	        	if (message.isMessageValid() && message.getOwnerId() == id){
+		        	//if available, update the message
+		            Message updateFeedBack = MessageDaoService.updateMessage(message);
+		            if (updateFeedBack != null){
+		                newJsonMessage = JSONFactory.toJSON(updateFeedBack);
+		                setStatus(Status.SUCCESS_OK);
+		            }
+		            else{
+		            	setStatus(Status.CLIENT_ERROR_FORBIDDEN);
+		            }
+	        	}
+	        	else{
+	        		setStatus(Status.CLIENT_ERROR_CONFLICT);
+	        	}
 	        }
 	        else{
-	        	setStatus(Status.CLIENT_ERROR_REQUEST_ENTITY_TOO_LARGE);
+	        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 	        }
 			
-			
-		} catch (MessageOwnerNotMatchException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_ACCEPTABLE);
-		} catch (MessageNotFoundException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-		} catch (DuplicateSessionCookieException e1){
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		}catch(Exception e1){
-			e1.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+		} catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch (Exception e){
+			this.doException(e);
 		}
         
-        
-        
-        
         Representation result =  new JsonRepresentation(newJsonMessage);
-        //set the response header
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        }  
-
+        this.addCORSHeader();
         return result;
     }
     
@@ -233,82 +147,31 @@ public class DMResourceId extends ServerResource{
     @Delete
     public Representation deleteMessage() {
     	boolean deleted = false;
-    	boolean goOn = true;
-    	
     	int id = -1;
     	int messageId = -1;
 		try {
-			messageId = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"), "utf-8"));
-			id = Integer.parseInt(java.net.URLDecoder.decode(getQuery().getValues("userId"),"utf-8"));
+			messageId = Integer.parseInt(this.getReqAttr("id"));
+			id = Integer.parseInt(this.getQueryVal("userId"));
 			
-			if (UserCookieResource.validateCookieSession(id, this.getRequest().getCookies())){
-				goOn = true;
+			this.validateAuthentication(id);
+
+			deleted = MessageDaoService.deleteMessage(messageId, id);
+			if (deleted){
+			  	setStatus(Status.SUCCESS_OK);
+			   	Common.d("@Delete with id: " + messageId);
 			}
 			else{
-				goOn = false;
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+			   	setStatus(Status.CLIENT_ERROR_CONFLICT);
 			}
 			
-			//not full user here
-			if (goOn){
-		   		 deleted = DMMessageDaoService.deleteMessage(messageId, id);
-		   		 if (deleted){
-			       	 setStatus(Status.SUCCESS_OK);
-			       	 Common.d("@Delete with id: " + messageId);
-			     }
-			     else{
-			       	 setStatus(Status.CLIENT_ERROR_CONFLICT);
-			     }
-			}
-			
-        } catch (MessageOwnerNotMatchException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_ACCEPTABLE);
-		} catch (MessageNotFoundException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-		} catch (DuplicateSessionCookieException e1){
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch(NumberFormatException e){
-        	e.printStackTrace();
-        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-        } catch(UnsupportedEncodingException e1){
-			e1.printStackTrace();
-        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch(Exception e2){
-			e2.printStackTrace();
-        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+        } catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch (Exception e){
+			this.doException(e);
 		}
 		
-	      
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-
+	    this.addCORSHeader();
         return null;
-    }
-
-
-
-    //needed here since backbone will try to send OPTIONS to /id before PUT or DELETE
-    @Options
-    public Representation takeOptions(Representation entity) {
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-        //send anything back will be fine, browser just expects a response
-        return new JsonRepresentation(new JSONObject());
     }
 
 }

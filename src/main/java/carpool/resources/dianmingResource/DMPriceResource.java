@@ -83,10 +83,10 @@ public class DMPriceResource extends ServerResource{
 		        int newPrice = parseJSON(entity);
 		        if (newPrice != -1){
 		        	//avoid this in future designs
-		        	DMMessage message = DMMessageDaoService.getMessageById(messageId);
-		        	if (DMMessage.isPriceValid(newPrice, message.getStartTime(), message.getEndTime())){
+		        	Message message = MessageDaoService.getMessageById(messageId);
+		        	if (Message.isPriceValid(newPrice, message.getStartTime(), message.getEndTime())){
 			        	//if valid, update the message
-			            newPrice = DMMessageDaoService.updatePrice(newPrice, messageId, id);
+			            newPrice = MessageDaoService.updatePrice(newPrice, messageId, id);
 			            if (newPrice != -1){
 			                response = JSONFactory.toJSON(newPrice);
 			                setStatus(Status.SUCCESS_OK);

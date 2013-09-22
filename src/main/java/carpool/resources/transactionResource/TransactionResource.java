@@ -22,46 +22,32 @@ import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.common.JSONFactory;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserCookieResource;
 import carpool.resources.userResource.UserResource;
 
 
 
-public class TransactionResource extends ServerResource{
+public class TransactionResource extends PseudoResource{
 
 	//passes received json into message
 	//note that this parseJSON
-	private Transaction parseJSON(Representation entity, int userId){
+	protected Transaction parseJSON(Representation entity, int userId){
 		JSONObject jsonTransaction = null;
-		try {
-			jsonTransaction = (new JsonRepresentation(entity)).getJsonObject();
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		Common.d("@Post::receive jsonTransaction: " +  jsonTransaction.toString());
 
 		Transaction transaction = null;
 		try {
+			jsonTransaction = (new JsonRepresentation(entity)).getJsonObject();
+			Common.d("@Post::receive jsonTransaction: " +  jsonTransaction.toString());
+			
 			transaction = new Transaction(jsonTransaction.getInt("initUserId"), jsonTransaction.getInt("targetUserId"), jsonTransaction.getInt("messageId"), Constants.paymentMethod.values()[jsonTransaction.getInt("paymentMethod")], 
 					jsonTransaction.getInt("price"), jsonTransaction.getString("requestInfo"),  Common.parseDateString(jsonTransaction.getString("startTime")), 
 					Common.parseDateString(jsonTransaction.getString("endTime")), new Location(jsonTransaction.getJSONObject("location").getString("province"), jsonTransaction.getJSONObject("location").getString("city"), jsonTransaction.getJSONObject("location").getString("region"),jsonTransaction.getJSONObject("location").getString("university")) );
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		  catch (NullPointerException e){
-			e.printStackTrace();
-			Common.d("likely invalid location string format");
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -76,7 +62,6 @@ public class TransactionResource extends ServerResource{
 	 */
 	public Representation getAllTransactions() {
 		
-
 		ArrayList<Transaction> allTransactions = TransactionDaoService.getAllTransactions();
 		JSONArray jsonArray = new JSONArray();
 		
@@ -89,12 +74,7 @@ public class TransactionResource extends ServerResource{
 		}
 		
 		Representation result = new JsonRepresentation(jsonArray);
-
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
+		this.addCORSHeader();
 		return result;
 	}
 
@@ -104,96 +84,51 @@ public class TransactionResource extends ServerResource{
 	public Representation createTransaction(Representation entity) {
 		
 		int id = -1;
-        boolean goOn = true;
         JSONObject newJsonTransaction = new JSONObject();
         
 		try {
-			id = Integer.parseInt(java.net.URLDecoder.decode(getQuery().getValues("userId"),"utf-8"));
-			if (UserCookieResource.validateCookieSession(id, this.getRequest().getCookies())){
-				goOn = true;
-			}
-			else{
-				goOn = false;
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-			}
+			this.checkEntity(entity);
 			
-			if (goOn && entity!= null && entity.getSize() < Constants.max_TransactionLength){
-		        Transaction transaction = parseJSON(entity, id);
-		        if (transaction != null){
-		        	if (transaction.getInitUserId() == id){
-			        	//check the state of the message, and if the transaction matches the message
-		        		DMMessage message = DMMessageDaoService.getMessageById(transaction.getMessageId());
-		        		if (message.isMessageValid() && message.getStartTime().compareTo(transaction.getStartTime()) == 0 && message.getEndTime().compareTo(transaction.getEndTime()) == 0){
-		        			Transaction creationFeedBack = TransactionDaoService.createNewTransaction(transaction);
-				            if (creationFeedBack != null){
-				                newJsonTransaction = JSONFactory.toJSON(creationFeedBack);
-				                setStatus(Status.SUCCESS_OK);
-				            }
-				            else{
-				            	setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-				            }
-		        		}
-		        		else{
-		        			setStatus(Status.CLIENT_ERROR_CONFLICT);
+			id = Integer.parseInt(this.getQueryVal("userId"));
+			this.validateAuthentication(id);
+			
+	        Transaction transaction = parseJSON(entity, id);
+	        if (transaction != null){
+	        	if (transaction.getInitUserId() == id){
+		        	//check the state of the message, and if the transaction matches the message
+	        		Message message = MessageDaoService.getMessageById(transaction.getMessageId());
+	        		if (message.isMessageValid() && message.getStartTime().compareTo(transaction.getStartTime()) == 0 && message.getEndTime().compareTo(transaction.getEndTime()) == 0){
+	        			Transaction creationFeedBack = TransactionDaoService.createNewTransaction(transaction);
+			            if (creationFeedBack != null){
+			                newJsonTransaction = JSONFactory.toJSON(creationFeedBack);
+			                setStatus(Status.SUCCESS_OK);
 			            }
-		        	}
-		        	else{
-		        		setStatus(Status.CLIENT_ERROR_CONFLICT);
-		        	}
-		        }
-		        else{
-		        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		        }
-	        }
-	        else if (entity == null){
-	        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+			            else{
+			            	setStatus(Status.CLIENT_ERROR_FORBIDDEN);
+			            }
+	        		}
+	        		else{
+	        			setStatus(Status.CLIENT_ERROR_CONFLICT);
+		            }
+	        	}
+	        	else{
+	        		setStatus(Status.CLIENT_ERROR_CONFLICT);
+	        	}
 	        }
 	        else{
-	        	setStatus(Status.CLIENT_ERROR_REQUEST_ENTITY_TOO_LARGE);
+	        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 	        }
 			
-			
-		} catch (DuplicateSessionCookieException e1){
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		}catch(Exception e1){
-			e1.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+		} catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch(Exception e){
+			this.doException(e);
 		}
         
-        
         Representation result =  new JsonRepresentation(newJsonTransaction);
-        //set the response header
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        }  
-
+        this.addCORSHeader();
         return result;
 		
-	}
-
-	
-	
-	//needed here since backbone will try to send OPTIONS before POST
-	@Options
-	public Representation takeOptions(Representation entity) {
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
-
-		return new JsonRepresentation(new JSONObject());
 	}
 
 

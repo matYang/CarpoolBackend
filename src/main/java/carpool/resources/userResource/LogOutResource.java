@@ -26,16 +26,18 @@ import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.common.JSONFactory;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 import carpool.resources.dianmingResource.DMResource;
 
 
 
 
-public class LogOutResource extends ServerResource{
+public class LogOutResource extends PseudoResource{
 
 
 	@Put
@@ -45,82 +47,27 @@ public class LogOutResource extends ServerResource{
 		boolean loggedin = false;
 		boolean logout = false;
 		
-		if (entity != null){
+
+		Series<Cookie> cookies = this.getRequest().getCookies();
+		try {
+			this.checkEntity(entity);
+			id = Integer.parseInt(this.getReqAttr("id"));
 			
-			Series<Cookie> cookies = this.getRequest().getCookies();
-			try {
-				id = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"),"utf-8"));
-				loggedin = UserCookieResource.validateCookieSession(id, cookies);
-				
-				//if logged in, then logout, if logout fail, return conflict .if not logged-in, return success
-				if (loggedin){
-					logout = UserCookieResource.closeCookieSession(cookies);
-					if (!logout){
-						setStatus(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY);
-					}
-					else{
-						setStatus(Status.SUCCESS_OK);
-					}
-					jsonObject = JSONFactory.toJSON(new User());
-				}
-				
-			} catch (UserNotFoundException e){
-	        	e.printStackTrace();
-				setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-	        } catch (DuplicateSessionCookieException e1){
-				//TODO clear cookies, set name and value
-				e1.printStackTrace();
-				this.getResponse().getCookieSettings().clear();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (SessionEncodingException e){
-				//TODO modify session where needed
-				e.printStackTrace();
-				this.getResponse().getCookieSettings().clear();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (NumberFormatException | UnsupportedEncodingException e1) {
-				Common.d("id conversion error at LoginResource, number format exception or unsuported encoding exception");
-				e1.printStackTrace();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (Exception e) {
-				Common.d("cookie validation error at Login Resource, cookie expcetion");
-				e.printStackTrace();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			}
+			this.closeAuthenticationSession(id);
+			jsonObject = JSONFactory.toJSON(new User());
 			
+		} catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch (Exception e) {
+			this.doException(e);
 		}
-		else if (entity == null){
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		}
-		else{
-        	setStatus(Status.CLIENT_ERROR_REQUEST_ENTITY_TOO_LARGE);
-        }
-		
+
 		Representation result = new JsonRepresentation(jsonObject);
 
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-
+        this.addCORSHeader();
         return result;
 	}
 
-    @Options
-    public Representation takeOptions(Representation entity) {
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-
-        //send anything back will be fine, browser just expects a response
-        DMMessage message = new DMMessage();
-        Representation result = new JsonRepresentation(message);
-        Common.d("exiting Options request");
-        setStatus(Status.SUCCESS_OK);
-        return result;
-    }
 	
 }
 

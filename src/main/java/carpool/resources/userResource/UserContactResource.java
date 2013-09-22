@@ -26,14 +26,15 @@ import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.mappings.*;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 
 
 
-public class UserContactResource extends ServerResource{
+public class UserContactResource extends PseudoResource{
 
 	//parses contact information from a JSONObject consisting of name, age, gender, phone, qq
 	//return JSONObject if all fields are valid, null if not
-	private JSONObject parseJSON(Representation entity){
+	protected JSONObject parseJSON(Representation entity){
 		JSONObject jsonContact = null;
 		
 		try {
@@ -52,18 +53,9 @@ public class UserContactResource extends ServerResource{
 				return jsonContact;
 			}
 			
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (NullPointerException e){
-			e.printStackTrace();
-			Common.d("likely invalid location string format");
 		} catch (Exception e){
 			e.printStackTrace();
-			Common.d("UserContactResource:: parseJSON error, likely invalid gender format");
+			Common.d("UserContactResource:: parseJSON error, likely invalid format");
 		}
 
 		return null;
@@ -82,82 +74,38 @@ public class UserContactResource extends ServerResource{
 		JSONObject contact = new JSONObject();
 		User topBarUser = new User();
 		
-		if (entity != null && entity.getSize() < Constants.max_userLength){
-			try {
-				userId = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"),"utf-8"));
-				if (UserCookieResource.validateCookieSession(userId, this.getRequest().getCookies())){
-					contact = parseJSON(entity);
-					if (contact != null){
-						topBarUser = UserDaoService.changeContactInfo(userId, contact.getString("name"), contact.getInt("age"), Constants.gender.values()[contact.getInt("gender")], contact.getString("phone"), contact.getString("qq"));
-						if (topBarUser != null){
-							response = JSONFactory.toJSON(topBarUser);
-							setStatus(Status.SUCCESS_OK);
-						}
-						else{
-							setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-						}
-					}
-					else{
-						Common.d("parsed contact is null");
-						setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-					}
+		try {
+			this.checkEntity(entity);
+			
+			userId = Integer.parseInt(this.getReqAttr("id"));
+			this.validateAuthentication(userId);
+			
+			contact = parseJSON(entity);
+			if (contact != null){
+				topBarUser = UserDaoService.changeContactInfo(userId, contact.getString("name"), contact.getInt("age"), Constants.gender.values()[contact.getInt("gender")], contact.getString("phone"), contact.getString("qq"));
+				if (topBarUser != null){
+					response = JSONFactory.toJSON(topBarUser);
+					setStatus(Status.SUCCESS_OK);
 				}
 				else{
-					setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+					setStatus(Status.CLIENT_ERROR_FORBIDDEN);
 				}
-			} catch (UserNotFoundException e){
-	        	e.printStackTrace();
-				setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-	        } catch (DuplicateSessionCookieException e1){
-				//TODO clear cookies, set name and value
-				e1.printStackTrace();
-				this.getResponse().getCookieSettings().clear();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (SessionEncodingException e){
-				//TODO modify session where needed
-				e.printStackTrace();
-				this.getResponse().getCookieSettings().clear();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (Exception e) {
-				e.printStackTrace();
+			}
+			else{
+				Common.d("parsed contact is null");
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			}
-		}
-		else if (entity == null){
-			Common.d("contact info entity null");
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		}
-		else{
-			setStatus(Status.CLIENT_ERROR_REQUEST_ENTITY_TOO_LARGE);
+
+		} catch (UserNotFoundException e){
+        	this.doPseudoException(e);
+        } catch (Exception e) {
+			this.doException(e);
 		}
 		
 		Representation result = new JsonRepresentation(response);
 		
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
+		this.addCORSHeader(); 
 		return result;
 	}
-
 	
-	
-	//needed here since backbone will try to send OPTIONS before POST
-	@Options
-	public Representation takeOptions(Representation entity) {
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
-
-		/*send anything back will be fine, browser only expects a response
-		Message message = new Message();
-		Representation result = new JsonRepresentation(message);*/
-
-		return null;
-	}
-
-
 }

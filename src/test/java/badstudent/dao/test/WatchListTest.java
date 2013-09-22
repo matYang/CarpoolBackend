@@ -13,12 +13,12 @@ import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.common.Constants.userSearchState;
 import carpool.database.DaoBasic;
-import carpool.database.DaoDMMessage;
+import carpool.database.DaoMessage;
 import carpool.database.DaoUser;
 import carpool.dbservice.UserDaoService;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
-import carpool.model.DMMessage;
+import carpool.model.Message;
 import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
@@ -28,22 +28,22 @@ import carpool.model.User;
 public class WatchListTest {
 	
 	private Calendar calender = Calendar.getInstance();
-	private User defaultUser1 = new User(0, "password", "name", 0, 0,0, new ArrayList<DMMessage>(),
-			new ArrayList<DMMessage>(),new ArrayList<User>(),new ArrayList<Transaction>(),
+	private User defaultUser1 = new User(0, "password", "name", 0, 0,0, new ArrayList<Message>(),
+			new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 			new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
 			"phone", "email", "qq","imgPath",new Location("a a a a"),false,false,false,false,
 			Constants.userState.normal,Constants.userSearchState.universityAsk,
 			calender,calender,"paypal");
-	private User defaultUser2 = new User(1, "password", "name1", 0, 0,0, new ArrayList<DMMessage>(),
-			new ArrayList<DMMessage>(),new ArrayList<User>(),new ArrayList<Transaction>(),
+	private User defaultUser2 = new User(1, "password", "name1", 0, 0,0, new ArrayList<Message>(),
+			new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 			new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
 			"phone1", "email1", "qq1","imgPath1",new Location("a2 a2 a2 a2"),false,false,false,false,
 			Constants.userState.normal,Constants.userSearchState.universityAsk,
 			calender,calender,"paypal");
-	private DMMessage default1 = new DMMessage(11,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
+	private Message default1 = new Message(11,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
 			new Location("a a a a"),calender,calender,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
 			5,false,true,new ArrayList<Transaction>(),calender);
-	private DMMessage default2 = new DMMessage(1,1,"ImgPath2","Name2",30,40,"phone2","email2","qq2",Constants.paymentMethod.all,
+	private Message default2 = new Message(1,1,"ImgPath2","Name2",30,40,"phone2","email2","qq2",Constants.paymentMethod.all,
 			new Location("a2 a2 a2 a2"),calender,calender,"note2",Constants.messageType.help,Constants.gender.both,
 			Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calender);
 	
@@ -52,8 +52,8 @@ public class WatchListTest {
     	DaoBasic.clearBothDatabase();
     	try{
     		DaoUser.addUserToDatabase(defaultUser1);
-    		DaoDMMessage.addMessageToDatabase(default1);
-    		DaoDMMessage.addMessageToDatabase(default2);
+    		DaoMessage.addMessageToDatabase(default1);
+    		DaoMessage.addMessageToDatabase(default2);
     	}catch(Exception e){
     		e.printStackTrace();
     		assertTrue(false);
@@ -61,7 +61,7 @@ public class WatchListTest {
     
         //addBothMessagesToOneWatchList
     
-    	ArrayList<DMMessage> Watch = new ArrayList<DMMessage>();
+    	ArrayList<Message> Watch = new ArrayList<Message>();
     	Watch.add(default1);
     	Watch.add(default2);
     	defaultUser2.setWatchList(Watch);
@@ -84,9 +84,9 @@ public class WatchListTest {
 		
 		//MoveMessageFromOnesWatchListToAnother
     	
-    	ArrayList<DMMessage> watch1 = new ArrayList<DMMessage>(1);
+    	ArrayList<Message> watch1 = new ArrayList<Message>(1);
     	watch1.add(user.getWatchList().get(0));
-    	ArrayList<DMMessage> watch2 = new ArrayList<DMMessage>(1);
+    	ArrayList<Message> watch2 = new ArrayList<Message>(1);
     	watch2.add(user.getWatchList().get(1));
     	try {
     		user.setWatchList(watch1);
@@ -116,7 +116,7 @@ public class WatchListTest {
     	
     	//remove a message make sure Watch is removed
     	try {
-			DaoDMMessage.deleteMessageFromDatabase(1);
+			DaoMessage.deleteMessageFromDatabase(1);
 			user = DaoUser.getUserById(2);
 			assertTrue(user.getWatchList().size()==0);
 		} catch (Exception e) {

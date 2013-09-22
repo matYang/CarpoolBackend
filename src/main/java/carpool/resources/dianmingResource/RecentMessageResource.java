@@ -27,12 +27,13 @@ import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.mappings.*;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserCookieResource;
 import carpool.resources.userResource.UserResource;
 
 
 
-public class RecentMessageResource extends ServerResource{
+public class RecentMessageResource extends PseudoResource{
 
 	@Get
 	/**
@@ -41,8 +42,7 @@ public class RecentMessageResource extends ServerResource{
 	 */
 	public Representation getRecentMessages() {
 		
-
-		ArrayList<DMMessage> recentMessages = DMMessageDaoService.getRecentMessages();
+		ArrayList<Message> recentMessages = MessageDaoService.getRecentMessages();
 		JSONArray jsonArray = new JSONArray();
 		
 		if (recentMessages == null){
@@ -54,12 +54,7 @@ public class RecentMessageResource extends ServerResource{
 		}
 		
 		Representation result = new JsonRepresentation(jsonArray);
-
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
+		this.addCORSHeader();
 		return result;
 	}
 

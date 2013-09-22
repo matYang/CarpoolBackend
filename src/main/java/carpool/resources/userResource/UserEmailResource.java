@@ -21,12 +21,14 @@ import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.common.JSONFactory;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
 import carpool.mappings.*;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 
 
 
-public class UserEmailResource extends ServerResource{
+public class UserEmailResource extends PseudoResource{
 
 	
 	@Get 
@@ -40,7 +42,7 @@ public class UserEmailResource extends ServerResource{
         String email = "";
         
         try {
-        	email = java.net.URLDecoder.decode(getQuery().getValues("email"),"utf-8");
+        	email = this.getQueryVal("email");
         	isFormatCorrect = Common.isEmailFormatValid(email);
         	if (isFormatCorrect){
         		isAvailable = UserDaoService.isEmailAvailable(email);
@@ -51,41 +53,13 @@ public class UserEmailResource extends ServerResource{
         		setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
         	}
         	
-		} catch (UnsupportedEncodingException e2) {
-			e2.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 		} catch (Exception e) {
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+			this.doException(e);
 		}
         
         Representation result = new JsonRepresentation(jsonObject);
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-
+        this.addCORSHeader();
         return result;
     }
-
-	
-	
-	//needed here since backbone will try to send OPTIONS before POST
-	@Options
-	public Representation takeOptions(Representation entity) {
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
-
-		/*send anything back will be fine, browser only expects a response
-		Message message = new Message();
-		Representation result = new JsonRepresentation(message);*/
-
-		return null;
-	}
-
 
 }

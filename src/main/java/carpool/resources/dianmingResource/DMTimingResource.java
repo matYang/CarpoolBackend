@@ -23,150 +23,84 @@ import carpool.common.JSONFactory;
 import carpool.common.Constants.gender;
 import carpool.common.Constants.messageState;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.message.MessageOwnerNotMatchException;
 import carpool.mappings.*;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserCookieResource;
 import carpool.resources.userResource.UserResource;
 
 
 
-public class DMTimingResource extends ServerResource{
+public class DMTimingResource extends PseudoResource{
 
-	//passes received json into message
-		//note that this parseJSON 
-		private ArrayList<Calendar> parseJSON(Representation entity){
-			JSONObject jsonMessage = null;
-			ArrayList<Calendar> newTiming = new ArrayList<Calendar>();
-			try {
-				jsonMessage = (new JsonRepresentation(entity)).getJsonObject();
-				newTiming.add(Common.parseDateString(jsonMessage.getString("startTime")));
-				newTiming.add(Common.parseDateString(jsonMessage.getString("endTime")));
-			} catch (JSONException e) {
-				e.printStackTrace();
-				return null;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return null;
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-				return null;
-			} catch (NullPointerException e){
-				e.printStackTrace();
-			  return null;
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (Exception e){
-				e.printStackTrace();
-				Common.d("DMMessage TimingResource:: parseJSON error, likely invalid format");
-				return null;
-			}
-
-			return newTiming;
+	protected ArrayList<Calendar> parseJSON(Representation entity){
+		JSONObject jsonMessage = null;
+		ArrayList<Calendar> newTiming = new ArrayList<Calendar>();
+		try {
+			jsonMessage = (new JsonRepresentation(entity)).getJsonObject();
+			newTiming.add(Common.parseDateString(jsonMessage.getString("startTime")));
+			newTiming.add(Common.parseDateString(jsonMessage.getString("endTime")));
+		} catch (Exception e){
+			e.printStackTrace();
+			Common.d("DMMessage TimingResource:: parseJSON error, likely invalid format");
+			return null;
 		}
-		
+
+		return newTiming;
+	}
 	
     @Put 
     public Representation updateMessage(Representation entity) {
         int id = -1;
         int messageId = -1;
-        boolean goOn = true;
         JSONArray response = new JSONArray();
         
 		try {
-			messageId = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"), "utf-8"));
-			id = Integer.parseInt(java.net.URLDecoder.decode(getQuery().getValues("userId"),"utf-8"));
+			this.checkEntity(entity);
 			
-			if (UserCookieResource.validateCookieSession(id, this.getRequest().getCookies())){
-				goOn = true;
-			}
-			else{
-				goOn = false;
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-			}
+			messageId = Integer.parseInt(this.getReqAttr("id"));
+			id = Integer.parseInt(this.getQueryVal("userId"));
 			
-			if (goOn && entity!= null && entity.getSize() < Constants.max_userLength){
-		        ArrayList<Calendar> newTiming = parseJSON(entity);
-		        if (newTiming != null){
-		        	if (DMMessage.isTimeValid(newTiming.get(0), newTiming.get(1))){
-			        	//if valid, update the message
-			            newTiming = DMMessageDaoService.updateTime(newTiming.get(0), newTiming.get(1), messageId, id);
-			            if (newTiming != null){
-			            	ArrayList<JSONObject> jsonCals = new ArrayList<JSONObject>();
-			            	for (int i = 0; i < newTiming.size(); i++){
-			            		jsonCals.add(JSONFactory.toJSON(Common.CalendarToUTCString(newTiming.get(i))));
-			            	}
-			                response = new JSONArray(jsonCals);
-			                setStatus(Status.SUCCESS_OK);
-			            }
-			            else{
-			            	setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-			            }
-		        	}
-		        	else{
-		        		setStatus(Status.CLIENT_ERROR_CONFLICT);
-		        	}
-		        }
-		        else{
-		        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		        }
-	        }
-	        else if (entity == null){
-	        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+			this.validateAuthentication(id);
+			
+	        ArrayList<Calendar> newTiming = parseJSON(entity);
+	        if (newTiming != null){
+	        	if (Message.isTimeValid(newTiming.get(0), newTiming.get(1))){
+		        	//if valid, update the message
+		            newTiming = MessageDaoService.updateTime(newTiming.get(0), newTiming.get(1), messageId, id);
+		            if (newTiming != null){
+		            	ArrayList<JSONObject> jsonCals = new ArrayList<JSONObject>();
+		            	for (int i = 0; i < newTiming.size(); i++){
+		            		jsonCals.add(JSONFactory.toJSON(Common.CalendarToUTCString(newTiming.get(i))));
+		            	}
+		                response = new JSONArray(jsonCals);
+		                setStatus(Status.SUCCESS_OK);
+		            }
+		            else{
+		            	setStatus(Status.CLIENT_ERROR_FORBIDDEN);
+		            }
+	        	}
+	        	else{
+	        		setStatus(Status.CLIENT_ERROR_CONFLICT);
+	        	}
 	        }
 	        else{
-	        	setStatus(Status.CLIENT_ERROR_REQUEST_ENTITY_TOO_LARGE);
+	        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 	        }
-			
-		} catch (MessageOwnerNotMatchException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_ACCEPTABLE);
-		} catch (MessageNotFoundException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (DuplicateSessionCookieException e1){
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch(Exception e1){
-			e1.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+		} catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch (Exception e){
+			this.doException(e);
 		}
         
-        
-        
         Representation result =  new JsonRepresentation(response);
-        //set the response header
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        }  
-
+        this.addCORSHeader();
         return result;
-    }
-    
-  
-    //needed here since backbone will try to send OPTIONS to /id before PUT or DELETE
-    @Options
-    public Representation takeOptions(Representation entity) {
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-        //send anything back will be fine, browser just expects a response
-        return new JsonRepresentation(new JSONObject());
     }
 
 }

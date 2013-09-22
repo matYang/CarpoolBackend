@@ -15,7 +15,7 @@ import carpool.common.Constants.userState;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
-import carpool.model.DMMessage;
+import carpool.model.Message;
 import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
@@ -239,7 +239,7 @@ public class DaoUser {
 		Location location = new Location(locationString);
 		user = new User(rs.getInt("userId"),rs.getString("password"), rs.getString("name"),
 				rs.getInt("level"), rs.getInt("averageScore"), rs.getInt("totalTranscations"),
-				new ArrayList<DMMessage>(),new ArrayList<DMMessage>(),new ArrayList<User>(),
+				new ArrayList<Message>(),new ArrayList<Message>(),new ArrayList<User>(),
 				new ArrayList<Transaction>(),new ArrayList<Notification>(),universityGroup,
 				rs.getInt("age"), gender.fromInt(rs.getInt("gender")), rs.getString("phone"),
 				rs.getString("email"),rs.getString("qq"), rs.getString("imgPath"),location,
@@ -253,13 +253,13 @@ public class DaoUser {
 	}
 
 	private static User addHistoryListToUser(User user) {
-		ArrayList<DMMessage> historyList = new ArrayList<DMMessage>();
+		ArrayList<Message> historyList = new ArrayList<Message>();
 		String query = "SELECT * from Message WHERE ownerId = ?";
 		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, user.getUserId());
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
-				historyList.add(DaoDMMessage.createMessageByResultSet(rs));
+				historyList.add(DaoMessage.createMessageByResultSet(rs));
 			}
 		}catch(SQLException e){
 			Common.d(e.getMessage());
@@ -269,7 +269,7 @@ public class DaoUser {
 			stmt.setInt(1, user.getUserId());
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
-				historyList.add(DaoDMMessage.createMessageByResultSet(rs));
+				historyList.add(DaoMessage.createMessageByResultSet(rs));
 			}
 		}catch(SQLException e){
 			Common.d(e.getMessage());
@@ -281,7 +281,7 @@ public class DaoUser {
 	private static void updateWatchList(User user) {
 		String query = "DELETE from WatchList where User_userId = " + user.getUserId();
 		String query2 = "INSERT INTO WatchList (User_userId,Message_messageId) VALUES";
-		for(DMMessage msg : user.getWatchList()){
+		for(Message msg : user.getWatchList()){
 			query2 = query2 + "("+user.getUserId() + "," + msg.getMessageId() + "),";
 		}
 		query2 = query2.substring(0,query2.length()-1);
@@ -298,13 +298,13 @@ public class DaoUser {
 	}
 
 	private static User addWatchListToUser(User user) {
-		ArrayList<DMMessage> watchLsit = new ArrayList<DMMessage>();
+		ArrayList<Message> watchLsit = new ArrayList<Message>();
 		String query = "SELECT * FROM Message JOIN WatchList ON (Message.messageId = WatchList.Message_messageId AND WatchList.User_userId = ?);";
 		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, user.getUserId());
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
-				watchLsit.add(DaoDMMessage.createMessageByResultSet(rs));
+				watchLsit.add(DaoMessage.createMessageByResultSet(rs));
 			}
 		} catch (SQLException e) {
 			Common.d(e.getMessage());
