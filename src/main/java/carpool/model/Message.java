@@ -35,7 +35,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	/*****
 	 * Carpool Details
 	 *****/
-	private boolean isRroundTrip;
+	private boolean isRoundTrip;
 	
 	private Location departure_Location;
 	private Calendar departure_Time;
@@ -79,7 +79,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		super();
 		this.messageId = messageId;
 		this.ownerId = ownerId;
-		this.isRroundTrip = isRroundTrip;
+		this.isRoundTrip = isRroundTrip;
 		this.departure_Location = departure_Location;
 		this.departure_Time = departure_Time;
 		this.departure_seatsNumber = departure_seatsNumber;
@@ -126,7 +126,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		this.messageId = messageId;
 		this.ownerId = ownerId;
 		this.owner = owner;
-		this.isRroundTrip = isRroundTrip;
+		this.isRoundTrip = isRroundTrip;
 		this.departure_Location = departure_Location;
 		this.departure_Time = departure_Time;
 		this.departure_seatsNumber = departure_seatsNumber;
@@ -188,13 +188,13 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	}
 
 
-	public boolean isRroundTrip() {
-		return isRroundTrip;
+	public boolean isRoundTrip() {
+		return isRoundTrip;
 	}
 
 
-	public void setRroundTrip(boolean isRroundTrip) {
-		this.isRroundTrip = isRroundTrip;
+	public void setRoundTrip(boolean isRoundTrip) {
+		this.isRoundTrip = isRoundTrip;
 	}
 
 
@@ -388,7 +388,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 			jsonMessage.put("owner", this.getOwner());
 			jsonMessage.put("transactionList", this.getTransactionList());
 			
-			jsonMessage.put("isRroundTrip", this.isRroundTrip());
+			jsonMessage.put("isRoundTrip", this.isRoundTrip());
 			jsonMessage.put("departure_Location", this.getDeparture_Location().toJSON());
 			jsonMessage.put("departure_Time", DateUtility.CalendarToUTCString(this.getDeparture_Time()));
 			jsonMessage.put("departure_seatsNumber", this.getDeparture_seatsNumber());
@@ -422,8 +422,8 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	public String toString() {
 		return "Message [category=" + category + ", messageId=" + messageId
 				+ ", ownerId=" + ownerId + ", owner=" + owner
-				+ ", transactionList=" + transactionList + ", isRroundTrip="
-				+ isRroundTrip + ", departure_Location=" + departure_Location
+				+ ", transactionList=" + transactionList + ", isRoundTrip="
+				+ isRoundTrip + ", departure_Location=" + departure_Location
 				+ ", departure_Time=" + departure_Time
 				+ ", departure_seatsNumber=" + departure_seatsNumber
 				+ ", departure_seatsBooked=" + departure_seatsBooked
