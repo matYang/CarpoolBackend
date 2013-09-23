@@ -98,7 +98,7 @@ public class TransactionResource extends PseudoResource{
 	        	if (transaction.getInitUserId() == id){
 		        	//check the state of the message, and if the transaction matches the message
 	        		Message message = MessageDaoService.getMessageById(transaction.getMessageId());
-	        		if (message.isMessageValid() && message.getStartTime().compareTo(transaction.getStartTime()) == 0 && message.getEndTime().compareTo(transaction.getEndTime()) == 0){
+	        		if (message.validate() && message.getStartTime().compareTo(transaction.getStartTime()) == 0 && message.getEndTime().compareTo(transaction.getEndTime()) == 0){
 	        			Transaction creationFeedBack = TransactionDaoService.createNewTransaction(transaction);
 			            if (creationFeedBack != null){
 			                newJsonTransaction = JSONFactory.toJSON(creationFeedBack);

@@ -108,7 +108,7 @@ public class ForgetPasswordResource extends PseudoResource{
 			
 			isValid = UserDaoService.isResetPasswordValid(userId, authCode);
 			if (isValid){
-				if (User.isPasswordFormatValid(newPassword) && newPassword.equals(confirmNewPassword)){
+				if (Validator.isPasswordFormatValid(newPassword) && newPassword.equals(confirmNewPassword)){
 					passwordChanged = UserDaoService.resetUserPassword(userId, newPassword);
 					
 					if (passwordChanged){

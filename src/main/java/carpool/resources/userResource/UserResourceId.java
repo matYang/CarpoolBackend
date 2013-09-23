@@ -70,7 +70,7 @@ public class UserResourceId extends PseudoResource{
 			
 			
 			//no DB interaction is necessary here
-			if (User.isPasswordFormatValid(password) && User.isAgeValid(age) && User.isGenderValid(Constants.gender.values()[gender]) && Validator.isPhoneFormatValid(phone) && Validator.isEmailFormatValid(email) && Validator.isQqFormatValid(qq) && Location.isLocationVaild(location)){
+			if (Validator.isPasswordFormatValid(password) && Validator.isAgeValid(age) && Constants.gender.values()[gender] != null && Validator.isPhoneFormatValid(phone) && Validator.isEmailFormatValid(email) && Validator.isQqFormatValid(qq) && Location.isLocationVaild(location)){
 				user = new User(userId, password, name, level, averageScore, totalTransition, new ArrayList<Message>(), new ArrayList<Message>(), new ArrayList<User>(), new ArrayList<Transaction>(), new ArrayList<Notification>(), new ArrayList<String>(), age, Constants.gender.values()[gender], phone, email, qq, imgPath, location, emailActivated, phoneActivated, true, true, state, searchState, lastLogin, creationTime, paypal );
 			}
 			
@@ -136,7 +136,7 @@ public class UserResourceId extends PseudoResource{
 			
 	        User user = parseJSON(entity);
 	        if (user != null){
-	        	if (user.isUserValid()){
+	        	if (user.validate()){
 		        	//if available, update the User, before the password is changed to the goofy password
 		            User updateFeedBack = UserDaoService.updateUser(user, id);
 		            if (updateFeedBack != null){

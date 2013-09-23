@@ -113,7 +113,7 @@ public class DMResourceId extends PseudoResource{
 			
 	        Message message = parseJSON(entity, messageId, id);
 	        if (message != null){
-	        	if (message.isMessageValid() && message.getOwnerId() == id){
+	        	if (message.validate() && message.getOwnerId() == id){
 		        	//if available, update the message
 		            Message updateFeedBack = MessageDaoService.updateMessage(message);
 		            if (updateFeedBack != null){

@@ -227,7 +227,7 @@ public class UserDaoService{
 	public static User isLoginUserValid(String email, String password) throws UserNotFoundException{
 		try {
 			User user = DaoUser.getUserByEmail(email);
-			if(!user.isUserValid()){
+			if(!user.validate()){
 				DebugLog.d("user not valid");
 				return null;
 			}

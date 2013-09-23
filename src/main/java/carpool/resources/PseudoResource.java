@@ -143,6 +143,13 @@ public class PseudoResource extends ServerResource{
 				//InformationValidation
 				setStatus(Status.CLIENT_ERROR_CONFLICT);
 				break;
+			case 17:
+				//LocationException
+				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+			case 18:
+				//ValidationException
+				//TODO add response
+				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			default:
 				setStatus(Status.SERVER_ERROR_INTERNAL);
 				break;

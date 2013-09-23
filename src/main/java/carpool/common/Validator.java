@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import carpool.constants.Constants;
+import carpool.constants.Constants.userSearchState;
 import carpool.mappings.AllProvinceMappings;
 import carpool.mappings.MappingBase;
 
@@ -74,5 +75,45 @@ public class Validator {
 		}
 		return false;
 	}
+
+	/**
+	 * check if age is valid
+	 * @param age
+	 * @return true if age is valid
+	 */
+	public static boolean isAgeValid(int age){
+	    if(age>5 && age<99){
+	        return true;
+	    }
+	    return false;
+	}
+
+	/**
+	 * check if user's name is in a valid format
+	 * @param userName
+	 * @return true if name is valid
+	 */
+	public static boolean isNameFormatValid(String userName){
+	    if (userName == null || userName.length() == 0 || userName.length() > Constants.maxUserNameLength){
+	        return false;
+	    }
+	    //check for @
+	    if (userName.indexOf("@") >= 0){
+	        return false;
+	    }
+	
+	    return false;
+	}
+
+	/**
+	 * check if password is in a valid format
+	 */
+	public static boolean isPasswordFormatValid(String password){
+	    if (password == null || password.length() == 0 || password.length() > Constants.maxPasswordLength){
+	        return false;
+	    }
+	    return true;
+	}
+
 
 }

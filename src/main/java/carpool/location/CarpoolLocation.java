@@ -1,6 +1,7 @@
 package carpool.location;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import carpool.exception.location.LocationException;

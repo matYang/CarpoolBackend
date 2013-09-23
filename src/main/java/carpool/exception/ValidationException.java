@@ -22,7 +22,7 @@ public class ValidationException extends PseudoException{
 	
 	@Override
     public int getCode() {
-        return 15;
+        return 18;
     }
 	
 }

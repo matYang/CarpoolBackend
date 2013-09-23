@@ -5,6 +5,8 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.*;
 import org.restlet.data.Status;
 import org.json.JSONObject;
+
+import carpool.common.Validator;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.model.*;
@@ -26,7 +28,7 @@ public class ChangePasswordResource extends PseudoResource{
 			String newPassword = jsonPasswords.getString("newPassword");
 			String confirmNewPassword = jsonPasswords.getString("confirmNewPassword");
 			//no DB interaction here
-			if (User.isPasswordFormatValid(oldPassword) && User.isPasswordFormatValid(newPassword) && User.isPasswordFormatValid(confirmNewPassword) && newPassword.equals(confirmNewPassword)){
+			if (Validator.isPasswordFormatValid(oldPassword) && Validator.isPasswordFormatValid(newPassword) && Validator.isPasswordFormatValid(confirmNewPassword) && newPassword.equals(confirmNewPassword)){
 				passwords[0] = oldPassword;
 				passwords[1] = newPassword;
 			}
