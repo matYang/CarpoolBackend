@@ -17,7 +17,7 @@ import carpool.database.DaoUser;
 import carpool.dbservice.UserDaoService;
 import carpool.encryption.SessionCrypto;
 import carpool.exception.user.UserNotFoundException;
-import carpool.model.DMMessage;
+import carpool.model.Message;
 import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
@@ -33,8 +33,8 @@ public class SessionControlTest {
 		
 		Calendar calender = Calendar.getInstance();
 		
-		User defaultUser = new User(1, "1", "name", 0, 0,0, new ArrayList<DMMessage>(),
-				new ArrayList<DMMessage>(),new ArrayList<User>(),new ArrayList<Transaction>(),
+		User defaultUser = new User(1, "1", "name", 0, 0,0, new ArrayList<Message>(),
+				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
 				"phone", "uwse@me.com", "qq","imgPath",new Location("a a a a"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,

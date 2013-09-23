@@ -39,15 +39,17 @@ import carpool.common.Constants;
 import carpool.common.JSONFactory;
 import carpool.dbservice.*;
 import carpool.encryption.ImgCrypto;
+import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 
 
 
 
-public class ImgResource extends ServerResource{
+public class ImgResource extends PseudoResource{
 
 	@Get 
 	public Representation getImage(Representation entity){
@@ -58,57 +60,30 @@ public class ImgResource extends ServerResource{
         String imgPath = "";
         
         try {
-			id = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"),"utf-8"));
-			if (UserCookieResource.validateCookieSession(id, this.getRequest().getCookies())){
-				goOn = true;
-			}
-			else{
-				goOn = false;
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-			}
+			id = Integer.parseInt(this.getReqAttr("id"));
+			this.validateAuthentication(id);
 			Common.d("API::GetImage:: " + id);
 			
-			if (goOn){
-	        	imgPath = UserDaoService.getImagePath(id);
-	        	if (imgPath != null){
-	        		setStatus(Status.SUCCESS_OK);
-	        		jsonObject = JSONFactory.toJSON(imgPath);
-	        	}
-	        	else{
-	        		setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-	        	}
-	        	
-	        }
+        	imgPath = UserDaoService.getImagePath(id);
+        	if (imgPath != null){
+        		setStatus(Status.SUCCESS_OK);
+        		jsonObject = JSONFactory.toJSON(imgPath);
+        	}
+        	else{
+        		setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+        	}
+
 			
-		} catch (UserNotFoundException e){
-        	e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-        } catch (DuplicateSessionCookieException e1){
-			//TODO clear cookies, set name and value
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (UnsupportedEncodingException e2) {
-			e2.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (Exception e) {
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+		} catch (PseudoException e){
+        	this.doPseudoException(e);
+        }  catch (Exception e) {
+			this.doException(e);
 		}
         
         
         Representation result = new JsonRepresentation(jsonObject);
         
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
+        this.addCORSHeader(); 
         return result;
 		
 	}
@@ -119,131 +94,67 @@ public class ImgResource extends ServerResource{
 		JSONObject jsonObject = new JSONObject();
 		int id = -1;
 		String imgPath = "";
-		boolean goOn = false;
 		boolean imgPathSet = false;
 		boolean previousImgRemoved = false;
-		
-		if (entity != null && entity.getSize() < Constants.max_imageSize){
 			
-			try {
-				id = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"),"utf-8"));
-				String imageNameId = id + "" + Calendar.getInstance().getTimeInMillis();
+		try {
+			this.checkEntity(entity);
+			id = Integer.parseInt(this.getReqAttr("id"));
+			String imageNameId = id + "" + Calendar.getInstance().getTimeInMillis();
+			
+			//give a god damn encrypted image name
+			String encryptedString = ImgCrypto.encrypt(imageNameId);
+			
+        	
+			this.validateAuthentication(id);
+			imgPath = Constants.imagePathPrefix + encryptedString +  Constants.imagePathSufix;
+			
+			MediaType mediaType = entity.getMediaType();
+			if (mediaType.equals(MediaType.IMAGE_BMP) || mediaType.equals(MediaType.IMAGE_PNG) || mediaType.equals(MediaType.IMAGE_JPEG)){
+				InputStream inputStream = entity.getStream(); 
 				
-				//give a god damn encrypted image name
-				String encryptedString = ImgCrypto.encrypt(imageNameId);
-				
-	        	
-				if (encryptedString != null && UserCookieResource.validateCookieSession(id, this.getRequest().getCookies())){
-					goOn = true;
-				}
-				else if (encryptedString == null){
-					goOn = false;
-					setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+                BufferedImage bufferedImage = ImageIO.read(inputStream);
+                
+                bufferedImage = Scalr.resize(bufferedImage, Scalr.Method.SPEED, Scalr.Mode.FIT_TO_WIDTH, 150, 100, Scalr.OP_ANTIALIAS);
+                
+                ImageIO.write(bufferedImage, "png", new File(imgPath));
+                
+                String previousPath = UserDaoService.getImagePath(id);
+                imgPathSet = UserDaoService.setImagePath(id, imgPath);
+                previousImgRemoved = Common.removePreviousImg(previousPath);
+                
+                if (!previousImgRemoved){
+                	//TODO should change to log, set log4j
+                	Common.d("image not removed, path: " + previousPath);
+                }
+                
+                //once new image path is set, operation successfully, have an image cleaner later on
+				if (imgPathSet){
+					jsonObject = JSONFactory.toJSON(imgPath);
+					setStatus(Status.SUCCESS_OK);
 				}
 				else{
-					goOn = false;
-					setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+					setStatus(Status.CLIENT_ERROR_CONFLICT);
 				}
-				
-				if (goOn){
-					imgPath = Constants.imagePathPrefix + encryptedString +  Constants.imagePathSufix;
-					
-					MediaType mediaType = entity.getMediaType();
-					if (mediaType.equals(MediaType.IMAGE_BMP) || mediaType.equals(MediaType.IMAGE_PNG) || mediaType.equals(MediaType.IMAGE_JPEG)){
-						InputStream inputStream = entity.getStream(); 
-						
-	                    BufferedImage bufferedImage = ImageIO.read(inputStream);
-	                    
-	                    bufferedImage = Scalr.resize(bufferedImage, Scalr.Method.SPEED, Scalr.Mode.FIT_TO_WIDTH, 150, 100, Scalr.OP_ANTIALIAS);
-	                    
-	                    ImageIO.write(bufferedImage, "png", new File(imgPath));
-	                    
-	                    String previousPath = UserDaoService.getImagePath(id);
-	                    imgPathSet = UserDaoService.setImagePath(id, imgPath);
-	                    previousImgRemoved = Common.removePreviousImg(previousPath);
-	                    
-	                    if (!previousImgRemoved){
-	                    	//TODO should change to log, set log4j
-	                    	Common.d("image not removed, path: " + previousPath);
-	                    }
-	                    
-	                    //once new image path is set, operation successfully, have an image cleaner later on
-						if (imgPathSet){
-							jsonObject = JSONFactory.toJSON(imgPath);
-							setStatus(Status.SUCCESS_OK);
-						}
-						else{
-							setStatus(Status.CLIENT_ERROR_CONFLICT);
-						}
-					}
-					else{
-						setStatus(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY);
-					}
-				}
-	        } catch (UserNotFoundException e){
-	        	e.printStackTrace();
-				setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-	        } catch (DuplicateSessionCookieException e1){
-				//TODO clear cookies, set name and value
-				e1.printStackTrace();
-				this.getResponse().getCookieSettings().clear();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (SessionEncodingException e){
-				//TODO modify session where needed
-				e.printStackTrace();
-				this.getResponse().getCookieSettings().clear();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (FileNotFoundException e) { 
-				e.printStackTrace(); 
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-	        } catch (IOException e) { 
-	        	e.printStackTrace(); 
-	        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-	        } catch (Exception e1) {
-	            e1.printStackTrace();
-	            setStatus(Status.SERVER_ERROR_INTERNAL);
-	        }
+			}
+			else{
+				setStatus(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY);
+			}
 
-		}
-		else if (entity == null){
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		}
-		else{
-        	setStatus(Status.CLIENT_ERROR_REQUEST_ENTITY_TOO_LARGE);
+        } catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch (Exception e) {
+            this.doException(e);
         }
-		
+
 		
 		Representation result = new JsonRepresentation(jsonObject);
 
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-
-        try {
-            Common.d(result.getText());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+		this.addCORSHeader();
+		this.printResult(result);
         return result;
 	}
 
-    @Options
-    public Representation takeOptions(Representation entity) {
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-
-        //send anything back will be fine, browser just expects a response
-        DMMessage message = new DMMessage();
-        Representation result = new JsonRepresentation(message);
-        Common.d("exiting Options request");
-        setStatus(Status.SUCCESS_OK);
-        return result;
-    }
 	
 }
 

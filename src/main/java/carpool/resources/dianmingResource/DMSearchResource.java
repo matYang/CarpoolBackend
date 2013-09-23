@@ -24,6 +24,8 @@ import carpool.common.JSONFactory;
 import carpool.common.Constants.messageType;
 import carpool.common.Constants.userSearchState;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
+import carpool.exception.auth.AccountAuthenticationException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.message.MessageNotFoundException;
@@ -31,12 +33,13 @@ import carpool.exception.user.UserNotFoundException;
 import carpool.exception.validation.UnacceptableSearchStateException;
 import carpool.mappings.*;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserCookieResource;
 import carpool.resources.userResource.UserResource;
 
 
 
-public class DMSearchResource extends ServerResource{
+public class DMSearchResource extends PseudoResource{
 
 	@Get
 	public Representation getAllMessages() {
@@ -44,25 +47,32 @@ public class DMSearchResource extends ServerResource{
 		JSONArray response = new JSONArray();
 		
 		try {
-			int userId = Integer.parseInt(java.net.URLDecoder.decode(getQuery().getValues("userId"), "utf-8"));
+			int userId = Integer.parseInt(this.getQueryVal("userId"));
 			
-			
-			Location location = new Location(getQuery().getValues("location"));
-			Calendar date = Common.parseDateString(getQuery().getValues("date"));
-			String searchStateString = getQuery().getValues("searchState");
+			Location location = new Location(this.getQueryVal("location"));
+			Calendar date = Common.parseDateString(this.getQueryVal("date"));
+			String searchStateString = this.getQueryVal("searchState");
 			userSearchState searchState = Constants.userSearchState.values()[Integer.parseInt(searchStateString)];
 			
 			
 			//not checking for date..because an invalid date will have no search result anyways
 			if (Location.isLocationVaild(location) && User.isSearchStateValid(searchState)){
-				boolean login = UserCookieResource.validateCookieSession(userId, this.getRequest().getCookies());
-				ArrayList<DMMessage> searchResult = new ArrayList<DMMessage>();
+				boolean login = false;
+				try{
+					this.validateAuthentication(userId);
+					login = true;
+				}
+				catch (AccountAuthenticationException e){
+					login = false;
+				}
+						
+				ArrayList<Message> searchResult = new ArrayList<Message>();
 				
 				//if not loged in only basic search can be used
 				if (!login){
 					//only basic userState types
 					if(searchState == Constants.userSearchState.universityAsk || searchState == Constants.userSearchState.universityHelp || searchState == Constants.userSearchState.regionAsk || searchState == Constants.userSearchState.regionHelp){
-						searchResult = DMMessageDaoService.primaryMessageSearch(location, date, searchState);
+						searchResult = MessageDaoService.primaryMessageSearch(location, date, searchState);
 						if (searchResult == null){
 							setStatus(Status.SERVER_ERROR_INTERNAL);
 						}
@@ -78,7 +88,7 @@ public class DMSearchResource extends ServerResource{
 				}
 				//if logged in, extended search used to record search state
 				else{
-					searchResult = DMMessageDaoService.extendedMessageSearch(location, date, searchState, userId);
+					searchResult = MessageDaoService.extendedMessageSearch(location, date, searchState, userId);
 					if (searchResult == null){
 						setStatus(Status.SERVER_ERROR_INTERNAL);
 					}
@@ -93,30 +103,14 @@ public class DMSearchResource extends ServerResource{
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			}
 			
-		} catch(UserNotFoundException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-		} catch(UnacceptableSearchStateException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (ParseException e) {
-			e.printStackTrace();
-			Common.d("DMSearchResource:: ParseException, likely dateString foramt error");
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (Exception e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+		} catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch (Exception e){
+			this.doException(e);
 		}
-
-		
 		
 		Representation result = new JsonRepresentation(response);
-
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
+		this.addCORSHeader();
 		return result;
 	}
 

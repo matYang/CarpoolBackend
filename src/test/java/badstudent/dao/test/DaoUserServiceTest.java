@@ -12,11 +12,11 @@ import carpool.common.Constants.paymentMethod;
 import carpool.database.DaoBasic;
 import carpool.database.DaoTransaction;
 import carpool.database.DaoUser;
-import carpool.dbservice.DMMessageDaoService;
+import carpool.dbservice.MessageDaoService;
 import carpool.dbservice.NotificationDaoService;
 import carpool.dbservice.UserDaoService;
 import carpool.exception.user.UserNotFoundException;
-import carpool.model.DMMessage;
+import carpool.model.Message;
 import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
@@ -29,8 +29,8 @@ public class DaoUserServiceTest {
 	@Test
 	public void updateTest(){
 		DaoBasic.clearBothDatabase();
-		User defaultUser = new User(1, "password", "name", 0, 0,0, new ArrayList<DMMessage>(),
-				new ArrayList<DMMessage>(),new ArrayList<User>(),new ArrayList<Transaction>(),
+		User defaultUser = new User(1, "password", "name", 0, 0,0, new ArrayList<Message>(),
+				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
 				"phone", "email", "qq","imgPath",new Location("a a a a"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,
@@ -131,8 +131,8 @@ public class DaoUserServiceTest {
 	@Test
 	public void redisSessionTest(){
 		DaoBasic.clearBothDatabase();
-		User defaultUser = new User(1, "password", "name", 0, 0,0, new ArrayList<DMMessage>(),
-				new ArrayList<DMMessage>(),new ArrayList<User>(),new ArrayList<Transaction>(),
+		User defaultUser = new User(1, "password", "name", 0, 0,0, new ArrayList<Message>(),
+				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
 				"phone", "email", "qq","imgPath",new Location("a a a a"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,
@@ -149,19 +149,19 @@ public class DaoUserServiceTest {
 	@Test
 	public void listsTest(){
 		DaoBasic.clearBothDatabase();
-		User defaultUser = new User(1, "password", "name", 0, 0,0, new ArrayList<DMMessage>(),
-				new ArrayList<DMMessage>(),new ArrayList<User>(),new ArrayList<Transaction>(),
+		User defaultUser = new User(1, "password", "name", 0, 0,0, new ArrayList<Message>(),
+				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
 				"phone", "email", "qq","imgPath",new Location("a a a a"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,
 				calender,calender,"paypal");
-		User defaultUser2 = new User(2, "password2", "name2", 1, 1,1, new ArrayList<DMMessage>(),
-				new ArrayList<DMMessage>(),new ArrayList<User>(),new ArrayList<Transaction>(),
+		User defaultUser2 = new User(2, "password2", "name2", 1, 1,1, new ArrayList<Message>(),
+				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),21,Constants.gender.female,
 				"phone2", "email2", "qq2","imgPath2",new Location("a2 a2 a2 a2"),true,true,true,true,
 				Constants.userState.invalid,Constants.userSearchState.regionAsk,
 				calender,calender,"paypal2");
-		DMMessage default1 = new DMMessage(1,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
+		Message default1 = new Message(1,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
 				new Location("a a a a"),calender,calender,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
 				5,false,true,new ArrayList<Transaction>(),calender);
 		Transaction defaultT1 = new Transaction(111, 2, 1, "initUserImgPath", "initUserName",
@@ -169,7 +169,7 @@ public class DaoUserServiceTest {
 				"requestInfo", "responseInfo", calender, calender, new Location("a a a a"), false, false, Constants.transactionState.init, true, calender);
 		UserDaoService.createNewUser(defaultUser);
 		UserDaoService.createNewUser(defaultUser2);
-		DMMessageDaoService.createNewMessage(default1);
+		MessageDaoService.createNewMessage(default1);
 		DaoTransaction.addTransactionToDatabase(defaultT1);
 		try {
 			UserDaoService.watchUser(1, 2);
@@ -208,8 +208,8 @@ public class DaoUserServiceTest {
 	//@Test
 	public void EmailActivationTest(){
 		DaoBasic.clearBothDatabase();
-		User defaultUser = new User(1, "password", "name", 0, 0,0, new ArrayList<DMMessage>(),
-				new ArrayList<DMMessage>(),new ArrayList<User>(),new ArrayList<Transaction>(),
+		User defaultUser = new User(1, "password", "name", 0, 0,0, new ArrayList<Message>(),
+				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
 				"phone", "hahaha", "qq","imgPath",new Location("a a a a"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,

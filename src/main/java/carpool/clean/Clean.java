@@ -33,7 +33,7 @@ public class Clean{
 		return calendar;
 	}
 
-	public static void writeMessageToFile(DMMessage message){
+	public static void writeMessageToFile(Message message){
 		BufferedWriter bw = null;
 
 		try {

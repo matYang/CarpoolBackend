@@ -9,14 +9,14 @@ import carpool.common.Constants.gender;
 import carpool.common.Constants.messageType;
 import carpool.common.Constants.paymentMethod;
 import carpool.common.Constants.userSearchState;
-import carpool.database.DaoDMMessage;
+import carpool.database.DaoMessage;
 import carpool.database.DaoTransaction;
 import carpool.database.DaoUser;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.message.MessageOwnerNotMatchException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.exception.validation.UnacceptableSearchStateException;
-import carpool.model.DMMessage;
+import carpool.model.Message;
 import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
@@ -24,24 +24,24 @@ import carpool.model.User;
 
 
 
-public class DMMessageDaoService{
+public class MessageDaoService{
 	
 	
 	/**
 	 * get all the DM messages from dataBase, used for testing only
 	 * @return	if any error occurs, return null
 	 */
-	public static ArrayList<DMMessage> getAllMessages() {
-		return DaoDMMessage.getAll();
+	public static ArrayList<Message> getAllMessages() {
+		return DaoMessage.getAll();
 	}
 	
 	/**
 	 * gets the recently posted messages, length specified by Constants.max_recents (currently 3)
 	 * @return if any error occurs, return null
 	 */
-	public static ArrayList<DMMessage> getRecentMessages() {
-		ArrayList<DMMessage> all = DaoDMMessage.getAll();
-		ArrayList<DMMessage> retVal = new ArrayList<DMMessage>();
+	public static ArrayList<Message> getRecentMessages() {
+		ArrayList<Message> all = DaoMessage.getAll();
+		ArrayList<Message> retVal = new ArrayList<Message>();
 		for(int i=0;i<Constants.max_recents;i++){
 			retVal.add(all.get(all.size()-1-i));
 		}
@@ -60,7 +60,7 @@ public class DMMessageDaoService{
 	 * @return ArrayList of DMMessage search results, return null if any error or exceptions occur
 	 * @throws UnacceptableSearchStateException
 	 */
-	public static ArrayList<DMMessage> primaryMessageSearch(Location location,Calendar date, userSearchState searchState) throws UnacceptableSearchStateException{
+	public static ArrayList<Message> primaryMessageSearch(Location location,Calendar date, userSearchState searchState) throws UnacceptableSearchStateException{
 		//universityAsk(0), universityHelp(1), regionAsk(2), regionHelp(3), universityGroupAsk(4), universityGroupHelp(5);
 		int remainder = searchState.code % 2;
 		messageType type = messageType.ask;
@@ -68,9 +68,9 @@ public class DMMessageDaoService{
 			type = messageType.help;
 		}
 		if(searchState.code<2){
-			return DaoDMMessage.searchMessageSingle(location.toString(),Common.toSQLDateTime(date),type.code+"");
+			return DaoMessage.searchMessageSingle(location.toString(),Common.toSQLDateTime(date),type.code+"");
 		}else if(searchState.code<4){
-			return DaoDMMessage.searchMessageRegion(location.toString(),Common.toSQLDateTime(date),type.code+"");
+			return DaoMessage.searchMessageRegion(location.toString(),Common.toSQLDateTime(date),type.code+"");
 		}else{
 			throw new UnacceptableSearchStateException();
 		}
@@ -87,7 +87,7 @@ public class DMMessageDaoService{
 	 * @throws UnacceptableSearchStateException
 	 * @throws UserNotFoundException
 	 */
-	public static ArrayList<DMMessage> extendedMessageSearch(Location location,Calendar date, userSearchState searchState, int userId) throws UserNotFoundException{
+	public static ArrayList<Message> extendedMessageSearch(Location location,Calendar date, userSearchState searchState, int userId) throws UserNotFoundException{
 		//universityAsk(0), universityHelp(1), regionAsk(2), regionHelp(3), universityGroupAsk(4), universityGroupHelp(5);
 		if(searchState.code<4){
 			try {
@@ -104,9 +104,9 @@ public class DMMessageDaoService{
 			}
 			User user = DaoUser.getUserById(userId);
 			String group = user.getUniversityGroupString();
-			ArrayList<DMMessage> retVal = new ArrayList<DMMessage>();
+			ArrayList<Message> retVal = new ArrayList<Message>();
 			for(String str : group.split("-")){
-				retVal.addAll(DaoDMMessage.searchMessageSingle(str, Common.toSQLDateTime(date), type.code+""));
+				retVal.addAll(DaoMessage.searchMessageSingle(str, Common.toSQLDateTime(date), type.code+""));
 			}
 			return retVal;
 		}
@@ -122,11 +122,11 @@ public class DMMessageDaoService{
 	 * @param userId
 	 * @return	the full DMMessage that is just created in database, use  the full DMMessage constructor for this, null if any errors occurred
 	 */
-	public static DMMessage createNewMessage(DMMessage newMessage){
+	public static Message createNewMessage(Message newMessage){
 		newMessage.setCreationTime(Calendar.getInstance());
 		//sent follower New Post Notification
 		sendFollowerNewPostNotification(newMessage);
-		return DaoDMMessage.addMessageToDatabase(newMessage);
+		return DaoMessage.addMessageToDatabase(newMessage);
 	}
 	
 	/**
@@ -135,8 +135,8 @@ public class DMMessageDaoService{
 	 * @return	null if operation fails, eg id does not exist, otherwise return the message
 	 * @throws MessageNotFoundException throw this if messageId is not found in database
 	 */
-	public static DMMessage getMessageById(int messageId) throws MessageNotFoundException{
-		return DaoDMMessage.getMessageById(messageId);
+	public static Message getMessageById(int messageId) throws MessageNotFoundException{
+		return DaoMessage.getMessageById(messageId);
 	}
 	
 	/**
@@ -151,12 +151,12 @@ public class DMMessageDaoService{
 	 * @throws MessageNotFoundException
 	 * @throws MessageOwnerNotMatchException
 	 */
-	public static DMMessage updateMessage(DMMessage message) throws MessageNotFoundException, MessageOwnerNotMatchException{
-		DMMessage oldMessage = DaoDMMessage.getMessageById(message.getMessageId());
+	public static Message updateMessage(Message message) throws MessageNotFoundException, MessageOwnerNotMatchException{
+		Message oldMessage = DaoMessage.getMessageById(message.getMessageId());
 		if(oldMessage.getOwnerId()!=message.getOwnerId()){
 			throw new MessageOwnerNotMatchException();
 		}
-		DaoDMMessage.UpdateMessageInDatabase(message);
+		DaoMessage.UpdateMessageInDatabase(message);
 		sendMessageUpDateNotification(message);
 		return message;
 	}
@@ -175,7 +175,7 @@ public class DMMessageDaoService{
 	 * @return true if message exists and deleted, false if message does not exist or delete failed
 	 */
 	public static boolean deleteMessage(int messageId, int ownerId) throws MessageNotFoundException, MessageOwnerNotMatchException{
-		DMMessage oldMessage = DaoDMMessage.getMessageById(messageId);
+		Message oldMessage = DaoMessage.getMessageById(messageId);
 		if(oldMessage.getOwnerId()!=ownerId){
 			throw new MessageOwnerNotMatchException();
 		}
@@ -188,7 +188,7 @@ public class DMMessageDaoService{
 		}
 		oldMessage.setHistoryDeleted(true);
 		oldMessage.setState(Constants.messageState.deleted);
-		DaoDMMessage.UpdateMessageInDatabase(oldMessage);
+		DaoMessage.UpdateMessageInDatabase(oldMessage);
 		// send watching message deleted Notification
 		sendMessageDeleteNotification(oldMessage);
 		return true;
@@ -205,12 +205,12 @@ public class DMMessageDaoService{
 	 * @throws MessageOwnerNotMatchException
 	 */
 	public static String updateNote(String newNote, int messageId, int ownerId) throws MessageNotFoundException, MessageOwnerNotMatchException{
-		DMMessage oldMessge = DaoDMMessage.getMessageById(messageId);
+		Message oldMessge = DaoMessage.getMessageById(messageId);
 		if(oldMessge.getOwnerId()!=ownerId){
 			throw new MessageOwnerNotMatchException();
 		}
 		oldMessge.setNote(newNote);
-		DaoDMMessage.UpdateMessageInDatabase(oldMessge);
+		DaoMessage.UpdateMessageInDatabase(oldMessge);
 		sendMessageUpDateNotification(oldMessge);
 		return newNote;
 	}
@@ -225,12 +225,12 @@ public class DMMessageDaoService{
 	 * @throws MessageOwnerNotMatchException
 	 */
 	public static gender updateGender(gender newGender, int messageId, int ownerId) throws MessageNotFoundException, MessageOwnerNotMatchException{
-		DMMessage oldMessge = DaoDMMessage.getMessageById(messageId);
+		Message oldMessge = DaoMessage.getMessageById(messageId);
 		if(oldMessge.getOwnerId()!=ownerId){
 			throw new MessageOwnerNotMatchException();
 		}
 		oldMessge.setGenderRequirement(newGender);
-		DaoDMMessage.UpdateMessageInDatabase(oldMessge);
+		DaoMessage.UpdateMessageInDatabase(oldMessge);
 		sendMessageUpDateNotification(oldMessge);
 		return newGender;
 	}
@@ -245,12 +245,12 @@ public class DMMessageDaoService{
 	 * @throws MessageOwnerNotMatchException
 	 */
 	public static Location updateLocation(Location newLocation, int messageId, int ownerId) throws MessageNotFoundException, MessageOwnerNotMatchException{
-		DMMessage oldMessge = DaoDMMessage.getMessageById(messageId);
+		Message oldMessge = DaoMessage.getMessageById(messageId);
 		if(oldMessge.getOwnerId()!=ownerId){
 			throw new MessageOwnerNotMatchException();
 		}
 		oldMessge.setLocation(newLocation);
-		DaoDMMessage.UpdateMessageInDatabase(oldMessge);
+		DaoMessage.UpdateMessageInDatabase(oldMessge);
 		sendMessageUpDateNotification(oldMessge);
 		return newLocation;
 	}
@@ -265,12 +265,12 @@ public class DMMessageDaoService{
 	 * @throws MessageOwnerNotMatchException
 	 */
 	public static int updatePrice(int newPrice, int messageId, int ownerId) throws MessageNotFoundException,MessageOwnerNotMatchException{
-		DMMessage oldMessge = DaoDMMessage.getMessageById(messageId);
+		Message oldMessge = DaoMessage.getMessageById(messageId);
 		if(oldMessge.getOwnerId()!=ownerId){
 			throw new MessageOwnerNotMatchException();
 		}
 		oldMessge.setPrice(newPrice);
-		DaoDMMessage.UpdateMessageInDatabase(oldMessge);
+		DaoMessage.UpdateMessageInDatabase(oldMessge);
 		sendMessageUpDateNotification(oldMessge);
 		return newPrice;
 	}
@@ -288,13 +288,13 @@ public class DMMessageDaoService{
 	 * @throws MessageOwnerNotMatchException
 	 */
 	public static ArrayList<Calendar> updateTime(Calendar startTime, Calendar endTime, int messageId, int ownerId) throws MessageNotFoundException, MessageOwnerNotMatchException{
-		DMMessage oldMessge = DaoDMMessage.getMessageById(messageId);
+		Message oldMessge = DaoMessage.getMessageById(messageId);
 		if(oldMessge.getOwnerId()!=ownerId){
 			throw new MessageOwnerNotMatchException();
 		}
 		oldMessge.setStartTime(startTime);
 		oldMessge.setEndTime(endTime);
-		DaoDMMessage.UpdateMessageInDatabase(oldMessge);
+		DaoMessage.UpdateMessageInDatabase(oldMessge);
 		ArrayList<Calendar> retVal = new ArrayList<Calendar>();
 		retVal.add(startTime);
 		retVal.add(endTime);
@@ -312,12 +312,12 @@ public class DMMessageDaoService{
 	 * @throws MessageOwnerNotMatchException
 	 */
 	public static paymentMethod updatePaymentMethod(paymentMethod newPaymentMethod, int messageId, int ownerId) throws MessageNotFoundException, MessageOwnerNotMatchException{
-		DMMessage oldMessge = DaoDMMessage.getMessageById(messageId);
+		Message oldMessge = DaoMessage.getMessageById(messageId);
 		if(oldMessge.getOwnerId()!=ownerId){
 			throw new MessageOwnerNotMatchException();
 		}
 		oldMessge.setPaymentMethod(newPaymentMethod);
-		DaoDMMessage.UpdateMessageInDatabase(oldMessge);
+		DaoMessage.UpdateMessageInDatabase(oldMessge);
 		sendMessageUpDateNotification(oldMessge);
 		return newPaymentMethod;
 	}
@@ -329,11 +329,11 @@ public class DMMessageDaoService{
 	 * @throws MessageNotFoundException
 	 */
 	public static ArrayList<Transaction> getRelatedTransactions(int messageId) throws MessageNotFoundException {
-		DMMessageDaoService.getMessageById(messageId);
+		MessageDaoService.getMessageById(messageId);
 		return DaoTransaction.getTransactionByMessage(messageId);
 	}
 	
-	private static void sendMessageUpDateNotification(DMMessage msg){
+	private static void sendMessageUpDateNotification(Message msg){
 		//send watching message modified Notification
 		ArrayList<Notification> notifications = new ArrayList<Notification>();
 		for(User user : DaoUser.getUserWhoWatchedMessage(msg.getMessageId())){
@@ -345,7 +345,7 @@ public class DMMessageDaoService{
 		NotificationDaoService.createNewNotificationQueue(notifications);
 	}
 	
-	private static void sendMessageDeleteNotification(DMMessage msg){
+	private static void sendMessageDeleteNotification(Message msg){
 		//send watching message modified Notification
 		ArrayList<Notification> notifications = new ArrayList<Notification>();
 		for(User user : DaoUser.getUserWhoWatchedMessage(msg.getMessageId())){
@@ -357,7 +357,7 @@ public class DMMessageDaoService{
 		NotificationDaoService.createNewNotificationQueue(notifications);
 	}
 	
-	private static void sendFollowerNewPostNotification(DMMessage msg){
+	private static void sendFollowerNewPostNotification(Message msg){
 		ArrayList<Notification> notifications = new ArrayList<Notification>();
 		for(User user : DaoUser.getUserWhoWatchedUser(msg.getOwnerId())){
 			Notification n = new Notification(-1, Constants.notificationType.on_user, Constants.notificationEvent.followerNewPost,

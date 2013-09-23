@@ -11,7 +11,7 @@ import carpool.common.Constants.gender;
 import carpool.common.Constants.paymentMethod;
 import carpool.common.Constants.userState;
 import carpool.interfaces.*;
-import carpool.model.DMMessage;
+import carpool.model.Message;
 import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;

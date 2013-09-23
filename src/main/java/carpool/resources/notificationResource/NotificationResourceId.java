@@ -16,16 +16,18 @@ import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.common.JSONFactory;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.notification.NotificationNotFoundException;
 import carpool.exception.notification.NotificationOwnerNotMatchException;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserCookieResource;
 import carpool.resources.userResource.UserResource;
 
 
-public class NotificationResourceId extends ServerResource{
+public class NotificationResourceId extends PseudoResource{
 	
 
     @Get 
@@ -35,64 +37,31 @@ public class NotificationResourceId extends ServerResource{
     public Representation getNotificationById() {
     	int id = -1;
     	int notificationId = -1;
-        boolean goOn = false;
         JSONObject jsonObject = new JSONObject();
         
         try {
-			notificationId = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"),"utf-8"));
-			id = Integer.parseInt(java.net.URLDecoder.decode(getQuery().getValues("userId"),"utf-8"));
+        	notificationId = Integer.parseInt(this.getReqAttr("id"));
+			id = Integer.parseInt(this.getQueryVal("userId"));
 			
-			if (UserCookieResource.validateCookieSession(id, this.getRequest().getCookies())){
-				goOn = true;
-			}
-			else{
-				goOn = false;
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-			}
+			this.validateAuthentication(id);
 			
-			if (goOn){
-	        	Notification notification = NotificationDaoService.getUserNotificationById(notificationId, id);
-	        	if (notification != null){
-	                jsonObject = JSONFactory.toJSON(notification);
-	                setStatus(Status.SUCCESS_OK);
-	        	}
-	        	else{
-	        		setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-	        	}
-	        }
+        	Notification notification = NotificationDaoService.getUserNotificationById(notificationId, id);
+        	if (notification != null){
+                jsonObject = JSONFactory.toJSON(notification);
+                setStatus(Status.SUCCESS_OK);
+        	}
+        	else{
+        		setStatus(Status.CLIENT_ERROR_FORBIDDEN);
+        	}
 			
-		} catch (NotificationOwnerNotMatchException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_ACCEPTABLE);
-		} catch (NotificationNotFoundException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-		} catch (DuplicateSessionCookieException e1){
-			//TODO clear cookies, set name and value
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (UnsupportedEncodingException e2) {
-			e2.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (Exception e) {
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+		} catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch(Exception e){
+			this.doException(e);
 		}
         
-        
         Representation result = new JsonRepresentation(jsonObject);
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-
+        this.addCORSHeader();
         return result;
     }
     
@@ -103,69 +72,30 @@ public class NotificationResourceId extends ServerResource{
         int userId = -1;
         int notificationId = -1;
         boolean checked = false;
-        boolean goOn = true;
         
 		try {
-			notificationId = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"), "utf-8"));
-			userId = Integer.parseInt(java.net.URLDecoder.decode(getQuery().getValues("userId"),"utf-8"));
+			this.checkEntity(entity);
 			
-			if (UserCookieResource.validateCookieSession(userId, this.getRequest().getCookies())){
-				goOn = true;
-			}
-			else{
-				goOn = false;
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-			}
+			notificationId = Integer.parseInt(this.getReqAttr("id"));
+			userId = Integer.parseInt(this.getQueryVal("userId"));
 			
-			if (goOn && entity!= null && entity.getSize() < Constants.max_NotificationLength){
+			this.validateAuthentication(userId);
 				
-				checked = NotificationDaoService.checkNotification(notificationId, userId);
-		   		 if (checked){
-			       	 setStatus(Status.SUCCESS_OK);
-			       	 Common.d("@Checked notification with id: " + notificationId);
-			     }
-			     else{
-			       	 setStatus(Status.CLIENT_ERROR_CONFLICT);
-			     }
-		        
-	        }
-	        else if (entity == null){
-	        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-	        }
-	        else{
-	        	setStatus(Status.CLIENT_ERROR_REQUEST_ENTITY_TOO_LARGE);
-	        }
-			
-		} catch (NotificationOwnerNotMatchException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_ACCEPTABLE);
-		} catch (NotificationNotFoundException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-		} catch (DuplicateSessionCookieException e1){
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		}catch(Exception e1){
-			e1.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+			checked = NotificationDaoService.checkNotification(notificationId, userId);
+			if (checked) {
+				setStatus(Status.SUCCESS_OK);
+				Common.d("@Checked notification with id: " + notificationId);
+			} else {
+				setStatus(Status.CLIENT_ERROR_CONFLICT);
+			}
+
+		} catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch(Exception e){
+			this.doException(e);
 		}
 
-        
-        //set the response header
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        }  
-
+		this.addCORSHeader();
         return null;
     }
     
@@ -174,82 +104,31 @@ public class NotificationResourceId extends ServerResource{
     @Delete
     public Representation deleteNotification() {
     	boolean deleted = false;
-    	boolean goOn = true;
     	
     	int id = -1;
     	int notificationId = -1;
 		try {
-			notificationId = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"), "utf-8"));
-			id = Integer.parseInt(java.net.URLDecoder.decode(getQuery().getValues("userId"),"utf-8"));
+			notificationId = Integer.parseInt(this.getReqAttr("id"));
+			id = Integer.parseInt(this.getQueryVal("userId"));
 			
-			if (UserCookieResource.validateCookieSession(id, this.getRequest().getCookies())){
-				goOn = true;
-			}
-			else{
-				goOn = false;
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-			}
-			
-			//not full user here
-			if (goOn){
-		   		 deleted = NotificationDaoService.deleteNotification(notificationId, id);
-		   		 if (deleted){
-			       	 setStatus(Status.SUCCESS_OK);
-			       	 Common.d("@Delete with id: " + notificationId);
-			     }
-			     else{
-			       	 setStatus(Status.CLIENT_ERROR_CONFLICT);
-			     }
+			this.validateAuthentication(id);
+
+			deleted = NotificationDaoService.deleteNotification(notificationId, id);
+			if (deleted) {
+				setStatus(Status.SUCCESS_OK);
+				Common.d("@Delete with id: " + notificationId);
+			} else {
+				setStatus(Status.CLIENT_ERROR_CONFLICT);
 			}
 			
-        } catch (NotificationOwnerNotMatchException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_ACCEPTABLE);
-		} catch (NotificationNotFoundException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-		} catch (DuplicateSessionCookieException e1){
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch(NumberFormatException e){
-        	e.printStackTrace();
-        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-        } catch(UnsupportedEncodingException e1){
-			e1.printStackTrace();
-        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch(Exception e2){
-			e2.printStackTrace();
-        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+        } catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch(Exception e){
+			this.doException(e);
 		}
 		
-	      
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-
+		this.addCORSHeader();
         return null;
-    }
-
-
-
-    //needed here since backbone will try to send OPTIONS to /id before PUT or DELETE
-    @Options
-    public Representation takeOptions(Representation entity) {
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-        //send anything back will be fine, browser just expects a response
-        return new JsonRepresentation(new JSONObject());
     }
 
 }

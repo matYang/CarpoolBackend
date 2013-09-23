@@ -13,6 +13,7 @@ import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.dbservice.*;
 import carpool.encryption.SessionCrypto;
+import carpool.exception.PseudoException;
 import carpool.exception.auth.AccountAuthenticationException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
@@ -30,7 +31,7 @@ public class UserCookieResource extends ServerResource{
 	 * @return  true or false the current user has an active login session, if so, login the user and send data back, if not, open login modal window
 	 * @throws Exception 
 	 */
-	public static boolean validateCookieSession(int id, Series<Cookie> cookies) throws Exception{
+	public static boolean validateCookieSession(int id, Series<Cookie> cookies) throws PseudoException{
 		if (id == -1){
 			throw new AccountAuthenticationException("UserCookieResource:: validateCookieSession:: Invalid ID, ID is -1");
 		}
@@ -69,7 +70,7 @@ public class UserCookieResource extends ServerResource{
 	 * @return
 	 * @throws Exception
 	 */
-	public static String getSessionString(Series<Cookie> cookies) throws Exception{
+	public static String getSessionString(Series<Cookie> cookies) throws PseudoException{
 		ArrayList<String> sessionString = new ArrayList<String>();
 		String newEncryptedString = "";
 		for( Cookie cookie : cookies){ 
@@ -102,7 +103,7 @@ public class UserCookieResource extends ServerResource{
 	 * @param cookies
 	 * @return  success or failure to start the session
 	 */
-	public static CookieSetting openCookieSession(int id) throws Exception{
+	public static CookieSetting openCookieSession(int id) throws PseudoException{
 		// generate session string and stores session in Redis
         String sessionString = UserDaoService.generateUserSession(id);
         String encryptedString = "";
@@ -132,7 +133,7 @@ public class UserCookieResource extends ServerResource{
 	 * @param request
 	 * @return  if the session is successful or not
 	 */
-	public static boolean closeCookieSession(Series<Cookie> cookies) throws Exception{
+	public static boolean closeCookieSession(Series<Cookie> cookies) throws PseudoException{
 		ArrayList<String> sessionString = new ArrayList<String>();
 		boolean logout = false;
 		for( Cookie cookie : cookies){ 

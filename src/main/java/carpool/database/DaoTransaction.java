@@ -10,7 +10,7 @@ import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
-import carpool.model.DMMessage;
+import carpool.model.Message;
 import carpool.model.Location;
 import carpool.model.Transaction;
 

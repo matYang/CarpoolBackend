@@ -20,15 +20,17 @@ import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.common.JSONFactory;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 
 
 
 
-public class SessionRedirect extends ServerResource{
+public class SessionRedirect extends PseudoResource{
 	
 		
 	@Get
@@ -39,9 +41,9 @@ public class SessionRedirect extends ServerResource{
 		JSONObject jsonObject = new JSONObject();
 		String sessionString = "";
 		
-		Series<Cookie> cookies = this.getRequest().getCookies();
+
 		try {
-			sessionString = UserCookieResource.getSessionString(cookies);
+			sessionString = this.getSessionString();
 			
 			Common.d("session redirect receving session string: " + sessionString);
 			
@@ -57,35 +59,16 @@ public class SessionRedirect extends ServerResource{
 				jsonObject = JSONFactory.toJSON(new User());
 			}
 		
-		}  catch (DuplicateSessionCookieException e1){
-			//TODO clear cookies, set name and value
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (Exception e) {
-			Common.d("cookie validation error at Login Resource, cookie expcetion");
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+		}  catch (PseudoException e){
+			this.doPseudoException(e);
+		}  catch (Exception e) {
+			this.doException(e);
 		}
 
 		Representation result = new JsonRepresentation(jsonObject);
         
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		}
-		
-        try {
-            Common.d(result.getText());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        this.addCORSHeader();
+		this.printResult(result);
         return result;
 	}
 

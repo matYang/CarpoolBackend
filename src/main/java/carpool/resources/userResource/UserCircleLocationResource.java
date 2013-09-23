@@ -21,15 +21,17 @@ import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.common.JSONFactory;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.mappings.*;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 
 
 
-public class UserCircleLocationResource extends ServerResource{
+public class UserCircleLocationResource extends PseudoResource{
 	
 	
 	@Get 
@@ -42,52 +44,27 @@ public class UserCircleLocationResource extends ServerResource{
 		ArrayList<Location> locations = new ArrayList<Location>();
 		
 		try {
-			userId = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"),"utf-8"));
-			if (UserCookieResource.validateCookieSession(userId, this.getRequest().getCookies())){
-				locations = UserDaoService.getUniversityGroup(userId);
-				if (locations != null){
-					response = JSONFactory.toJSON(locations);
-					setStatus(Status.SUCCESS_OK);
-				}
-				else{
-					setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-				}
+			userId = Integer.parseInt(this.getReqAttr("id"));
+			this.validateAuthentication(userId);
+			
+			locations = UserDaoService.getUniversityGroup(userId);
+			if (locations != null){
+				response = JSONFactory.toJSON(locations);
+				setStatus(Status.SUCCESS_OK);
 			}
 			else{
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+				setStatus(Status.CLIENT_ERROR_FORBIDDEN);
 			}
-		} catch (UserNotFoundException e){
-        	e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-        } catch (DuplicateSessionCookieException e1){
-			//TODO clear cookies, set name and value
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch(UnsupportedEncodingException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch(IOException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (Exception e) {
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+			
+		} catch (PseudoException e){
+        	this.doException(e);
+        } catch (Exception e) {
+			this.doException(e);
 		}
 
-		
 		Representation result = new JsonRepresentation(response);
 		
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
+		this.addCORSHeader();
 		return result;
     }
 
@@ -103,66 +80,37 @@ public class UserCircleLocationResource extends ServerResource{
 		Location location = new Location();
 		Location updatedLocation = new Location();
 		
-		if (entity != null && entity.getSize() < Constants.max_userLength){
-			try {
-				userId = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"),"utf-8"));
-				if (UserCookieResource.validateCookieSession(userId, this.getRequest().getCookies())){
-					location = UserSingleLocationResource.parseJSON(java.net.URLDecoder.decode(getQuery().getValues("location"),"utf-8"));
-					if (location != null){
-						updatedLocation = UserDaoService.addLocationToUniversityGroup(userId, location);
-						if (updatedLocation != null){
-							response = JSONFactory.toJSON(updatedLocation);
-							setStatus(Status.SUCCESS_OK);
-						}
-						else{
-							setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-						}
-					}
-					else{
-						setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-					}
+		try {
+			this.checkEntity(entity);
+			
+			userId = Integer.parseInt(this.getReqAttr("id"));
+			this.validateAuthentication(userId);
+			
+			location = UserSingleLocationResource.parseJSON(this.getQueryVal("location"));
+			if (location != null){
+				updatedLocation = UserDaoService.addLocationToUniversityGroup(userId, location);
+				if (updatedLocation != null){
+					response = JSONFactory.toJSON(updatedLocation);
+					setStatus(Status.SUCCESS_OK);
 				}
 				else{
-					setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+					setStatus(Status.CLIENT_ERROR_FORBIDDEN);
 				}
-			} catch (UserNotFoundException e){
-	        	e.printStackTrace();
-				setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-	        } catch (DuplicateSessionCookieException e1){
-				//TODO clear cookies, set name and value
-				e1.printStackTrace();
-				this.getResponse().getCookieSettings().clear();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (SessionEncodingException e){
-				//TODO modify session where needed
-				e.printStackTrace();
-				this.getResponse().getCookieSettings().clear();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch(UnsupportedEncodingException e){
-				e.printStackTrace();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch(IOException e){
-				e.printStackTrace();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (Exception e) {
-				e.printStackTrace();
+			}
+			else{
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			}
+
+		} catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch (Exception e) {
+			this.doException(e);
 		}
-		else if (entity == null){
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		}
-		else{
-			setStatus(Status.CLIENT_ERROR_REQUEST_ENTITY_TOO_LARGE);
-		}
+
 		
 		Representation result = new JsonRepresentation(response);
 		
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
+		this.addCORSHeader(); 
 		return result;
 	}
 	
@@ -173,74 +121,31 @@ public class UserCircleLocationResource extends ServerResource{
 		Location updatedLocation = new Location();
 		
 		try {
-			userId = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"),"utf-8"));
-			if (UserCookieResource.validateCookieSession(userId, this.getRequest().getCookies())){
-				location = UserSingleLocationResource.parseJSON(java.net.URLDecoder.decode(getQuery().getValues("location"),"utf-8"));
-				if (location != null){
-					updatedLocation = UserDaoService.removeLocationFromUniversityGroup(userId, location);
-					if (updatedLocation != null){
-						setStatus(Status.SUCCESS_OK);
-					}
-					else{
-						setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-					}
+			userId = Integer.parseInt(this.getReqAttr("id"));
+			this.validateAuthentication(userId);
+			
+			location = UserSingleLocationResource.parseJSON(this.getQueryVal("location"));
+			if (location != null){
+				updatedLocation = UserDaoService.removeLocationFromUniversityGroup(userId, location);
+				if (updatedLocation != null){
+					setStatus(Status.SUCCESS_OK);
 				}
 				else{
-					setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+					setStatus(Status.CLIENT_ERROR_FORBIDDEN);
 				}
 			}
 			else{
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			}
-		} catch (UserNotFoundException e){
-        	e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-        } catch (DuplicateSessionCookieException e1){
-			//TODO clear cookies, set name and value
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch(UnsupportedEncodingException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch(IOException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (Exception e) {
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+
+		} catch (PseudoException e){
+        	this.doPseudoException(e);
+        }  catch (Exception e) {
+			this.doException(e);
 		}
 		
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
+		this.addCORSHeader();
 		return null;
     }
-
-	
-	
-	//needed here since backbone will try to send OPTIONS before POST
-	@Options
-	public Representation takeOptions(Representation entity) {
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
-
-		/*send anything back will be fine, browser only expects a response
-		Message message = new Message();
-		Representation result = new JsonRepresentation(message);*/
-
-		return null;
-	}
-
 
 }

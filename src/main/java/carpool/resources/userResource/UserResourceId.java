@@ -23,35 +23,28 @@ import carpool.common.JSONFactory;
 import carpool.common.Constants.userSearchState;
 import carpool.common.Constants.userState;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.mappings.*;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 
 
 
-public class UserResourceId extends ServerResource{
+public class UserResourceId extends PseudoResource{
 
     //this parseJSON parses received json into messages
     //it assumes that an id is present
-	private User parseJSON(Representation entity){
+	protected User parseJSON(Representation entity){
 		JSONObject jsonUser = null;
+		User user = null;
+		
 		try {
 			jsonUser = (new JsonRepresentation(entity)).getJsonObject();
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		Common.d("@Post::receive jsonMessage: " +  jsonUser.toString());
-		
-
-		User user = null;
-		try {
+			Common.d("@Post::receive jsonMessage: " +  jsonUser.toString());
+			
 			int userId = jsonUser.getInt("userId");
 			String password = jsonUser.getString("password");
 			String name = jsonUser.getString("name");
@@ -76,25 +69,12 @@ public class UserResourceId extends ServerResource{
 			
 			//no DB interaction is necessary here
 			if (User.isPasswordFormatValid(password) && User.isAgeValid(age) && User.isGenderValid(Constants.gender.values()[gender]) && Common.isPhoneFormatValid(phone) && Common.isEmailFormatValid(email) && Common.isQqFormatValid(qq) && Location.isLocationVaild(location)){
-				user = new User(userId, password, name, level, averageScore, totalTransition, new ArrayList<DMMessage>(), new ArrayList<DMMessage>(), new ArrayList<User>(), new ArrayList<Transaction>(), new ArrayList<Notification>(), new ArrayList<String>(), age, Constants.gender.values()[gender], phone, email, qq, imgPath, location, emailActivated, phoneActivated, true, true, state, searchState, lastLogin, creationTime, paypal );
+				user = new User(userId, password, name, level, averageScore, totalTransition, new ArrayList<Message>(), new ArrayList<Message>(), new ArrayList<User>(), new ArrayList<Transaction>(), new ArrayList<Notification>(), new ArrayList<String>(), age, Constants.gender.values()[gender], phone, email, qq, imgPath, location, emailActivated, phoneActivated, true, true, state, searchState, lastLogin, creationTime, paypal );
 			}
 			
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-			return null;
-		} catch (JSONException e) {
-			e.printStackTrace();
-			return null;
-		}
-		  catch (NullPointerException e){
+		}catch (Exception e){
 			  e.printStackTrace();
-			  Common.d("likely invalid location string format");
-			  return null;
-		} catch (ParseException e) {
-			e.printStackTrace();
-		} catch (Exception e){
-			  e.printStackTrace();
-			  Common.d("UserIdResouce:: parseJSON error, likely invalid gender format");
+			  Common.d("UserIdResouce:: parseJSON error, likely invalid format");
 		}
 
 		return user;
@@ -108,63 +88,33 @@ public class UserResourceId extends ServerResource{
     public Representation getUerById() {
         int id = -1;
         int intendedUserId = -1;
-        boolean goOn = false;
         JSONObject jsonObject = new JSONObject();
         
         try {
-			id = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"),"utf-8"));
-			intendedUserId = Integer.parseInt(java.net.URLDecoder.decode(getQuery().getValues("intendedUserId"),"utf-8"));
+			id = Integer.parseInt(this.getReqAttr("id"));
+			intendedUserId = Integer.parseInt(this.getQueryVal("intendedUserId"));
 			
-			if (UserCookieResource.validateCookieSession(id, this.getRequest().getCookies())){
-				goOn = true;
-			}
-			else{
-				goOn = false;
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-			}
+			this.validateAuthentication(id);
 			Common.d("API::GetUserById:: " + id);
 			
-			if (goOn){
-				//used for personal page, able to retrieve any user's information
-	        	User user = UserDaoService.getUserById(intendedUserId);
-	        	if (user != null){
-	            	//TODO user.setPassword(Message.goofyPasswordTrickHackers);
-	                jsonObject = JSONFactory.toJSON(user);
-
-	        	}
-	        	else{
-	        		setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-	        	}
-	        }
+			//used for personal page, able to retrieve any user's information
+	    	User user = UserDaoService.getUserById(intendedUserId);
+	    	if (user != null){
+	        	//TODO user.setPassword(Message.goofyPasswordTrickHackers);
+	            jsonObject = JSONFactory.toJSON(user);
+	    	}
+	    	else{
+	    		setStatus(Status.CLIENT_ERROR_FORBIDDEN);
+	    	}
 			
-		} catch (UserNotFoundException e){
-        	e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-        } catch (DuplicateSessionCookieException e1){
-			//TODO clear cookies, set name and value
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (UnsupportedEncodingException e2) {
-			e2.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (Exception e) {
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+		} catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch (Exception e) {
+			this.doException(e);
 		}
         
         Representation result = new JsonRepresentation(jsonObject);
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-
+        this.addCORSHeader();
         return result;
     }
 
@@ -177,145 +127,65 @@ public class UserResourceId extends ServerResource{
         JSONObject newJsonUser = new JSONObject();
         
 		try {
-			id = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"), "utf-8"));
-			if (UserCookieResource.validateCookieSession(id, this.getRequest().getCookies())){
-				goOn = true;
-			}
-			else{
-				goOn = false;
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-			}
+			this.checkEntity(entity);
 			
-			if (goOn && entity!= null && entity.getSize() < Constants.max_userLength){
-		        User user = parseJSON(entity);
-		        if (user != null){
-		        	if (user.isUserValid()){
-			        	//if available, update the User, before the password is changed to the goofy password
-			            User updateFeedBack = UserDaoService.updateUser(user, id);
-			            if (updateFeedBack != null){
-			            	//goofy password sent to front end instead of real password
-			                //TODO user.setPassword(Message.goofyPasswordTrickHackers);
-			                newJsonUser = JSONFactory.toJSON(updateFeedBack);
-			                Common.d("@Put::resources::updateUser: newJsonUser" + newJsonUser.toString());
-			                setStatus(Status.SUCCESS_OK);
-			            }
-			            else{
-			            	setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-			            }
-		        	}
-		        	else{
-		        		setStatus(Status.CLIENT_ERROR_CONFLICT);
-		        	}
-		        }
-		        else{
-		        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		        }
-	        }
-	        else if (entity == null){
-	        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+			id = Integer.parseInt(this.getReqAttr("id"));
+			this.validateAuthentication(id);
+			
+	        User user = parseJSON(entity);
+	        if (user != null){
+	        	if (user.isUserValid()){
+		        	//if available, update the User, before the password is changed to the goofy password
+		            User updateFeedBack = UserDaoService.updateUser(user, id);
+		            if (updateFeedBack != null){
+		                newJsonUser = JSONFactory.toJSON(updateFeedBack);
+		                Common.d("@Put::resources::updateUser: newJsonUser" + newJsonUser.toString());
+		                setStatus(Status.SUCCESS_OK);
+		            }
+		            else{
+		            	setStatus(Status.CLIENT_ERROR_FORBIDDEN);
+		            }
+	        	}
+	        	else{
+	        		setStatus(Status.CLIENT_ERROR_CONFLICT);
+	        	}
 	        }
 	        else{
-	        	setStatus(Status.CLIENT_ERROR_REQUEST_ENTITY_TOO_LARGE);
+	        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 	        }
-		} catch (UserNotFoundException e){
-        	e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-        } catch (DuplicateSessionCookieException e1){
-			//TODO clear cookies, set name and value
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch(Exception e1){
-			e1.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+
+		} catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch(Exception e){
+			this.doException(e);
 		}
         
         Representation result =  new JsonRepresentation(newJsonUser);
-        //set the response header
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        }  
-
+        this.addCORSHeader();
         return result;
     }
     
     //now front end sending delete must expose authCode as a parameter, must not equal to initial authCode -1
     @Delete
     public Representation deleteUser() {
-    	boolean deleted = false;
     	boolean goOn = true;
     	
     	int id = -1;
 		try {
-			id = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"), "utf-8"));
-			if (UserCookieResource.validateCookieSession(id, this.getRequest().getCookies())){
-				goOn = true;
-			}
-			else{
-				goOn = false;
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-			}
-			//not full user here
-			if (goOn){
-		   		 UserDaoService.deleteUser(id);
-			     setStatus(Status.SUCCESS_OK);
-			     Common.d("@Delete with id: " + id);
-			}
-        } catch (UserNotFoundException e){
-        	e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-        } catch (DuplicateSessionCookieException e1){
-			//TODO clear cookies, set name and value
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch(NumberFormatException e){
-        	e.printStackTrace();
-        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-        } catch(UnsupportedEncodingException e1){
-			e1.printStackTrace();
-        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch(Exception e2){
-			e2.printStackTrace();
-        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+			id = Integer.parseInt(this.getReqAttr("id"));
+			this.validateAuthentication(id);
+				
+			UserDaoService.deleteUser(id);
+			setStatus(Status.SUCCESS_OK);
+
+        } catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch(Exception e){
+			this.doException(e);
 		}
 		
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-
+		this.addCORSHeader();
         return null;
-    }
-
-
-
-    //needed here since backbone will try to send OPTIONS to /id before PUT or DELETE
-    @Options
-    public Representation takeOptions(Representation entity) {
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-        //send anything back will be fine, browser just expects a response
-
-        return new JsonRepresentation(new JSONObject());
     }
 
 }

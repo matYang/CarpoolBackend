@@ -14,10 +14,11 @@ import org.json.JSONArray;
 import carpool.common.JSONFactory;
 import carpool.dbservice.*;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserResource;
 
 
-public class NotificationResource extends ServerResource{
+public class NotificationResource extends PseudoResource{
 
 	@Get
 	/**
@@ -38,12 +39,7 @@ public class NotificationResource extends ServerResource{
 		}
 		
 		Representation result = new JsonRepresentation(jsonArray);
-
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
+		this.addCORSHeader();
 		return result;
 	}
 

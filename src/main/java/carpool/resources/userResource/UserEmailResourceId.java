@@ -22,15 +22,17 @@ import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.common.JSONFactory;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.mappings.*;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 
 
 
-public class UserEmailResourceId extends ServerResource{
+public class UserEmailResourceId extends PseudoResource{
 
 
 	@Put
@@ -38,110 +40,50 @@ public class UserEmailResourceId extends ServerResource{
 	 * @param entity   
 	 */
 	public Representation changeEmail(Representation entity) {
-		Series<Cookie> cookies = this.getRequest().getCookies();
 		JSONObject jsonString = new JSONObject();
 		boolean emailChanged = false;
 
-		
-		if (entity != null && entity.getSize() < Constants.max_userLength){
+
+		try {
+			this.checkEntity(entity);
 			
-			try {
-				int userId = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"),"utf-8"));
-				String email = java.net.URLDecoder.decode(getQuery().getValues("email"),"utf-8");
-				//TODO: maybe better to also send back old email and check against it
-				//though placing userId in post entity, when checking cookie session the id is still effectively verified
-				if (UserCookieResource.validateCookieSession(userId, cookies)){
-					String sessionString = UserCookieResource.getSessionString(cookies);
-		        	if (Common.isEmailFormatValid(email)){
-		        		if (UserDaoService.isEmailAvailable(email)){
-		    				emailChanged = UserDaoService.changeEmail(userId, email, sessionString);
-		    				if (emailChanged){
-		    					setStatus(Status.SUCCESS_OK);
-		    					boolean logout = UserCookieResource.closeCookieSession(cookies);
-		    					if (!logout){
-		    						setStatus(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY);
-		    					}
-		    				}
-		    				else{
-		    					setStatus(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY);
-		    				}
-		    				jsonString = JSONFactory.toJSON(emailChanged);
-		        		}
-		        		else{
-		        			setStatus(Status.CLIENT_ERROR_CONFLICT);
-		        		}
-		        	}
-		        	else{
-		        		setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		        	}
-				}
-				else{
-					setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-				}
-			} catch (UserNotFoundException e){
-	        	e.printStackTrace();
-				setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-	        } catch (DuplicateSessionCookieException e1){
-				//TODO clear cookies, set name and value
-				e1.printStackTrace();
-				this.getResponse().getCookieSettings().clear();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (SessionEncodingException e){
-				//TODO modify session where needed
-				e.printStackTrace();
-				this.getResponse().getCookieSettings().clear();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (JSONException e) {
-				e.printStackTrace();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (NullPointerException e){
-				  e.printStackTrace();
-				  setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (IOException e) {
-				e.printStackTrace();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			} catch (Exception e) {
-				e.printStackTrace();
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			}
-		}
-		else if (entity == null){
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		}
-		else{
-			setStatus(Status.CLIENT_ERROR_REQUEST_ENTITY_TOO_LARGE);
+			int userId = Integer.parseInt(this.getReqAttr("id"));
+			String email = this.getQueryVal("email");
+
+			//though placing userId in post entity, when checking cookie session the id is still effectively verified
+			this.validateAuthentication(userId);
+			
+			String sessionString = this.getSessionString();
+        	if (Common.isEmailFormatValid(email)){
+        		if (UserDaoService.isEmailAvailable(email)){
+    				emailChanged = UserDaoService.changeEmail(userId, email, sessionString);
+    				if (emailChanged){
+    					setStatus(Status.SUCCESS_OK);
+    					this.closeAuthenticationSession(userId);
+    				}
+    				else{
+    					setStatus(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY);
+    				}
+    				jsonString = JSONFactory.toJSON(emailChanged);
+        		}
+        		else{
+        			setStatus(Status.CLIENT_ERROR_CONFLICT);
+        		}
+        	}
+        	else{
+        		setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+        	}
+
+		} catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch (Exception e) {
+			this.doException(e);
 		}
 		
 		Representation result = new JsonRepresentation(jsonString);
 		
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
+		this.addCORSHeader();
 		return result;
 	}
-
-	
-	
-	//needed here since backbone will try to send OPTIONS before POST
-	@Options
-	public Representation takeOptions(Representation entity) {
-		/*set the response header*/
-		Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-		if (responseHeaders != null){
-			getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-		} 
-
-		/*send anything back will be fine, browser only expects a response
-		Message message = new Message();
-		Representation result = new JsonRepresentation(message);*/
-
-		return null;
-	}
-
 
 }

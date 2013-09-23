@@ -14,18 +14,18 @@ import carpool.common.Constants.userSearchState;
 import carpool.dbservice.NotificationDaoService;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
-import carpool.model.DMMessage;
+import carpool.model.Message;
 import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
 
 
-public class DaoDMMessage{
+public class DaoMessage{
 	
-	public static ArrayList<DMMessage> searchMessageSingle(String location, String date,String type) {
+	public static ArrayList<Message> searchMessageSingle(String location, String date,String type) {
 		date = date.split(" ")[0];
-		ArrayList<DMMessage> retVal = new ArrayList<DMMessage>();
+		ArrayList<Message> retVal = new ArrayList<Message>();
 		String query = "SELECT * from Message WHERE location LIKE ? AND (startTime <= ? OR endTime >= ?) AND type LIKE ?;";
 		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setString(1, location);
@@ -42,14 +42,14 @@ public class DaoDMMessage{
 		return retVal;
 	}
 	
-	public static ArrayList<DMMessage> searchMessageRegion(String location,String date, String type) {
+	public static ArrayList<Message> searchMessageRegion(String location,String date, String type) {
 		date = date.split(" ")[0];
 		String[] locations = location.split(" ");
 		location = locations[0]+" "+locations[1]+" "+locations[2]+" %";
 		return searchMessageSingle(location, date, type);
 	}
 	
-	public static DMMessage addMessageToDatabase(DMMessage msg){
+	public static Message addMessageToDatabase(Message msg){
 		String query = "INSERT INTO Message (ownerId,ownerImgPath,ownerName,ownerLevel," +
 				"ownerAverageScore,ownerPhone,ownerEmail,ownerQq,paymentMethod,location,startTime," +
 				"endTime,note,type,genderRequirement,state,price,active,historyDeleted,creationTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -99,7 +99,7 @@ public class DaoDMMessage{
 		}
 	}
 	
-	public static void UpdateMessageInDatabase(DMMessage msg) throws MessageNotFoundException{
+	public static void UpdateMessageInDatabase(Message msg) throws MessageNotFoundException{
 		String query = "UPDATE Message SET ownerImgPath=?,ownerName=?,ownerLevel=?,ownerAverageScore=?,ownerPhone=?,ownerEmail=?,ownerQq=?," +
 				"paymentMethod=?,location=?,startTime=?,endTime=?,note=?,type=?,genderRequirement=?,state=?,price=?,active=?,historyDeleted=?," +
 				"creationTime=? WHERE messageId=?";
@@ -133,9 +133,9 @@ public class DaoDMMessage{
 		}
 	}
 	
-	public static DMMessage getMessageById(int id) throws MessageNotFoundException{
+	public static Message getMessageById(int id) throws MessageNotFoundException{
 		String query = "SELECT * FROM Message WHERE messageId = ?;";
-		DMMessage message = null;
+		Message message = null;
 		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, id);
 			ResultSet rs = stmt.executeQuery();
@@ -150,9 +150,9 @@ public class DaoDMMessage{
 		return message;
 	}
 
-	protected static DMMessage createMessageByResultSet(ResultSet rs) throws SQLException {
-		DMMessage message;
-		message = new DMMessage(rs.getInt("messageId"),rs.getInt("ownerId"),rs.getString("ownerImgPath"),rs.getString("ownerName"),
+	protected static Message createMessageByResultSet(ResultSet rs) throws SQLException {
+		Message message;
+		message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),rs.getString("ownerImgPath"),rs.getString("ownerName"),
 				rs.getInt("ownerLevel"),rs.getInt("ownerAverageScore"),rs.getString("ownerPhone"),rs.getString("ownerEmail"),
 				rs.getString("ownerQq"),Constants.paymentMethod.fromInt(rs.getInt("paymentMethod")),new Location(rs.getString("location")),
 				Common.DateToCalendar(rs.getTimestamp("startTime")),Common.DateToCalendar(rs.getTimestamp("endTime")),rs.getString("note"),
@@ -162,8 +162,8 @@ public class DaoDMMessage{
 		return message;
 	}
 	
-	public static ArrayList<DMMessage> getAll() {
-		ArrayList<DMMessage> retVal = new ArrayList<DMMessage>();
+	public static ArrayList<Message> getAll() {
+		ArrayList<Message> retVal = new ArrayList<Message>();
 		String query = "SELECT * from Message;";
 		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
 			ResultSet rs = stmt.executeQuery();

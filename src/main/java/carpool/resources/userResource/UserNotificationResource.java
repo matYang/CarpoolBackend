@@ -18,15 +18,17 @@ import org.json.JSONObject;
 
 import carpool.common.JSONFactory;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 
 
 
 
-public class UserNotificationResource extends ServerResource{	
+public class UserNotificationResource extends PseudoResource{	
 
     @Get 
     /**
@@ -39,70 +41,28 @@ public class UserNotificationResource extends ServerResource{
         JSONArray response = new JSONArray();
         
         try {
-			id = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"),"utf-8"));
-			intendedUserId = Integer.parseInt(java.net.URLDecoder.decode(getQuery().getValues("intendedUserId"),"utf-8"));
+        	id = Integer.parseInt(this.getReqAttr("id"));
+			intendedUserId = Integer.parseInt(this.getQueryVal("intendedUserId"));
 			
-			if (UserCookieResource.validateCookieSession(id, this.getRequest().getCookies())){
-				goOn = true;
-			}
-			else{
-				goOn = false;
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-			}
+			this.validateAuthentication(id);
 			
-			if (goOn){
-	        	ArrayList<Notification> historyNotifications = UserDaoService.getNotificationByUserId(intendedUserId);
-	        	if (historyNotifications != null){
-	                response = JSONFactory.toJSON(historyNotifications);
-	        	}
-	        	else{
-	        		setStatus(Status.CLIENT_ERROR_CONFLICT);
-	        	}
-	        }
+        	ArrayList<Notification> historyNotifications = UserDaoService.getNotificationByUserId(intendedUserId);
+        	if (historyNotifications != null){
+                response = JSONFactory.toJSON(historyNotifications);
+        	}
+        	else{
+        		setStatus(Status.CLIENT_ERROR_CONFLICT);
+        	}
 			
-		} catch (UserNotFoundException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (DuplicateSessionCookieException e1){
-			//TODO clear cookies, set name and value
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (UnsupportedEncodingException e2) {
-			e2.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+		} catch (PseudoException e){
+			this.doPseudoException(e);
 		} catch (Exception e) {
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+			this.doException(e);
 		}
         
-        
         Representation result = new JsonRepresentation(response);
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-
+        this.addCORSHeader();
         return result;
     }
     
-   
-    //needed here since backbone will try to send OPTIONS to /id before PUT or DELETE
-    @Options
-    public Representation takeOptions(Representation entity) {
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-        //send anything back will be fine, browser just expects a response
-        return new JsonRepresentation(new JSONObject());
-    }
-
 }

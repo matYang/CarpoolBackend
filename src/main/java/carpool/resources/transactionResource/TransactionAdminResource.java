@@ -24,6 +24,7 @@ import carpool.common.Constants.messageState;
 import carpool.common.Constants.transactionStateChangeAction;
 import carpool.common.Constants.transactionStateChangeAdminAction;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.message.MessageNotFoundException;
@@ -33,12 +34,13 @@ import carpool.exception.transaction.TransactionOwnerNotMatchException;
 import carpool.exception.transaction.TransactionStateViolationException;
 import carpool.mappings.*;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserCookieResource;
 import carpool.resources.userResource.UserResource;
 
 
 
-public class TransactionAdminResource extends ServerResource{
+public class TransactionAdminResource extends PseudoResource{
 	
 
     //if authentication passed, local model should have the correct password field, thus checking both password and authCode here, please note under other situations password on the front end would be goofypassword
@@ -47,91 +49,53 @@ public class TransactionAdminResource extends ServerResource{
     public Representation updateTransaction(Representation entity) {
         int transactionId = -1;
         int stateIndex = -1;
-        boolean goOn = true;
         JSONObject newJsonTransaction = new JSONObject();
         Transaction transaction = new Transaction();
         String access_admin = "";
         
 		try {
-			transactionId = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"), "utf-8"));
-			stateIndex = Integer.parseInt(java.net.URLDecoder.decode(getQuery().getValues("stateIndex"),"utf-8"));
-			access_admin = java.net.URLDecoder.decode(getQuery().getValues("access_admin"),"utf-8");
+			this.checkEntity(entity);
 			
-			if (access_admin.equals(Constants.access_admin)){
-				goOn = true;
-			}
-			else{
-				goOn = false;
+			transactionId = Integer.parseInt(this.getReqAttr("id"));
+			stateIndex = Integer.parseInt(this.getQueryVal("stateIndex"));
+			access_admin = this.getQueryVal("access_admin");
+			
+			if (!access_admin.equals(Constants.access_admin)){
 				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+				this.addCORSHeader();
+		        return this.buildQuickResponse("invalid authorization value");
+				
 			}
 			
-			if (goOn && entity!= null && entity.getSize() < Constants.max_TransactionLength){
-				transactionStateChangeAdminAction stateChangeAdminAction = transactionStateChangeAdminAction.fromInt(stateIndex);
-				
-		        if (stateChangeAdminAction != null){
-		        	switch(stateChangeAdminAction){
-		        		case investigation_cancel:
-		        			transaction = TransactionDaoService.investigationCancelTransaction(transactionId);
-		        			break;
-		        			
-		        		case investigation_release:
-		        			transaction = TransactionDaoService.investigationReleaseTransaction(transactionId);
-		        			break;
-		        			
-		        		default:
-		        			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		        			break;
-		        	}
-		        }
-		        else{
-		        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		        }
-		        
-		        newJsonTransaction = JSONFactory.toJSON(transaction);
-	        }
-	        else if (entity == null){
-	        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+			transactionStateChangeAdminAction stateChangeAdminAction = transactionStateChangeAdminAction.fromInt(stateIndex);
+			
+	        if (stateChangeAdminAction != null){
+	        	switch(stateChangeAdminAction){
+	        		case investigation_cancel:
+	        			transaction = TransactionDaoService.investigationCancelTransaction(transactionId);
+	        			break;
+	        		case investigation_release:
+	        			transaction = TransactionDaoService.investigationReleaseTransaction(transactionId);
+	        			break;
+	        		default:
+	        			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+	        			break;
+	        	}
 	        }
 	        else{
-	        	setStatus(Status.CLIENT_ERROR_REQUEST_ENTITY_TOO_LARGE);
+	        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 	        }
+	        newJsonTransaction = JSONFactory.toJSON(transaction);
 			
-		} catch (TransactionNotFoundException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-		} catch (TransactionStateViolationException e){
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_PRECONDITION_FAILED);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch(Exception e1){
-			e1.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+		} catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch(Exception e){
+			this.doException(e);
 		}
-
         
         Representation result =  new JsonRepresentation(newJsonTransaction);
-        //set the response header
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        }  
-
+        this.addCORSHeader();
         return result;
     }
     
-
-    //needed here since backbone will try to send OPTIONS to /id before PUT or DELETE
-    @Options
-    public Representation takeOptions(Representation entity) {
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-        //send anything back will be fine, browser just expects a response
-        return new JsonRepresentation(new JSONObject());
-    }
-
 }

@@ -19,76 +19,48 @@ import carpool.common.Common;
 import carpool.common.Constants;
 import carpool.common.JSONFactory;
 import carpool.dbservice.*;
+import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.mappings.*;
 import carpool.model.*;
+import carpool.resources.PseudoResource;
 
 
 
-public class UserTopBarResource extends ServerResource{
+public class UserTopBarResource extends PseudoResource{
 
     @Get 
      //  return the user object constructed using topBar constructor
     public Representation getTopBarUerById() {
         int id = -1;
-        boolean goOn = false;
         JSONObject jsonObject = new JSONObject();
         
         try {
-			id = Integer.parseInt(java.net.URLDecoder.decode((String)this.getRequestAttributes().get("id"),"utf-8"));
-			if (UserCookieResource.validateCookieSession(id, this.getRequest().getCookies())){
-				goOn = true;
-			}
-			else{
-				goOn = false;
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-			}
+			id = Integer.parseInt(this.getReqAttr("id"));
+			this.validateAuthentication(id);
+			
 			Common.d("API::GetUserById:: " + id);
 			
-			if (goOn){
-	        	User user = UserDaoService.getTopBarUserById(id);
-	        	if (user != null){
-	            	//user.setPassword(Message.goofyPasswordTrickHackers);
-	        		jsonObject = JSONFactory.toJSON(user);
-	                setStatus(Status.SUCCESS_OK);
+        	User user = UserDaoService.getTopBarUserById(id);
+        	if (user != null){
+        		jsonObject = JSONFactory.toJSON(user);
+                setStatus(Status.SUCCESS_OK);
 
-	        	}
-	        	else{
-	        		setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-	        	}
-	        }
+        	}
+        	else{
+        		setStatus(Status.CLIENT_ERROR_FORBIDDEN);
+        	}
 			
-		} catch (UserNotFoundException e){
-        	e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-        } catch (UnsupportedEncodingException e2) {
-			e2.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (DuplicateSessionCookieException e1){
-			//TODO clear cookies, set name and value
-			e1.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (SessionEncodingException e){
-			//TODO modify session where needed
-			e.printStackTrace();
-			this.getResponse().getCookieSettings().clear();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		} catch (Exception e) {
-			e.printStackTrace();
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+		} catch (PseudoException e){
+        	this.doPseudoException(e);
+        } catch (Exception e) {
+			this.doException(e);
 		}
         
-        
         Representation result = new JsonRepresentation(jsonObject);
-        /*set the response header*/
-        Series<Header> responseHeaders = UserResource.addHeader((Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers")); 
-        if (responseHeaders != null){
-            getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders); 
-        } 
-
+        this.addCORSHeader();
         return result;
     }
 
