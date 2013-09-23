@@ -16,14 +16,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
 
@@ -35,7 +35,7 @@ public class SessionRedirect extends PseudoResource{
 		
 	@Get
 	public Representation sessionRedirect(Representation entity){
-		Common.d("enter session redirect");
+		DebugLog.d("enter session redirect");
 		
 		User topBarUser = new User();
 		JSONObject jsonObject = new JSONObject();
@@ -45,7 +45,7 @@ public class SessionRedirect extends PseudoResource{
 		try {
 			sessionString = this.getSessionString();
 			
-			Common.d("session redirect receving session string: " + sessionString);
+			DebugLog.d("session redirect receving session string: " + sessionString);
 			
 			topBarUser = UserDaoService.getUserFromSession(sessionString);
 			

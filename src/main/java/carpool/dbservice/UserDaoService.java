@@ -7,7 +7,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import carpool.asyncRelayExecutor.ExecutorProvider;
 import carpool.common.*;
-import carpool.common.Constants.gender;
+import carpool.constants.Constants;
+import carpool.constants.Constants.gender;
 import carpool.database.*;
 import carpool.encryption.EmailCrypto;
 import carpool.exception.message.MessageNotFoundException;
@@ -26,7 +27,7 @@ public class UserDaoService{
 	 */
 	public static ArrayList<User> searchByInfo(String name, String phone, String email, String qq){
 		if(name==null || phone==null || email==null || qq==null){
-			Common.d("User searchByInfo: Parameters are null");
+			DebugLog.d("User searchByInfo: Parameters are null");
 			return null;
 		}
 		if(name.equals("")){
@@ -59,7 +60,7 @@ public class UserDaoService{
 			returnUser.prepareTopBarUser();
 			return returnUser;
 		} catch (Exception e) {
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 			return null;
 		}
 	}
@@ -85,7 +86,7 @@ public class UserDaoService{
 			sendActivationEmail(userId, newEmail);
 			return true;
 		} catch (Exception e) {
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return false;
 	}
@@ -108,7 +109,7 @@ public class UserDaoService{
 			EmailRelayTask emailTask = new EmailRelayTask(newEmail, "Activate your email address", "http://"+Constants.domainName+"/api/v1.0/users/emailActivation?key="+encryptedEmailKey);
 			ExecutorProvider.executeRelay(emailTask);
 		} catch (Exception e) {
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 			return false;
 		}
 		return true;
@@ -127,7 +128,7 @@ public class UserDaoService{
 	public static User activateUserEmail(int userId, String authCode) throws UserNotFoundException{
 		try{
 			if(!DaoBasic.getJedis().get(Constants.key_emailActivationAuth + userId).equals(authCode)){
-				Common.d("anthCode does not match");
+				DebugLog.d("anthCode does not match");
 				return null;
 			}
 		}
@@ -143,7 +144,7 @@ public class UserDaoService{
 			user.prepareTopBarUser();
 			return user;
 		} catch (Exception e) {
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return null;
 	}
@@ -176,7 +177,7 @@ public class UserDaoService{
 		try {
 			user = DaoUser.getUserById(userId);
 		} catch (UserNotFoundException e) {
-			Common.d("User does not exsit");
+			DebugLog.d("User does not exsit");
 			return false;
 		}
 		//make sure you have the prefix...don't want to debug this
@@ -227,18 +228,18 @@ public class UserDaoService{
 		try {
 			User user = DaoUser.getUserByEmail(email);
 			if(!user.isUserValid()){
-				Common.d("user not valid");
+				DebugLog.d("user not valid");
 				return null;
 			}
 			if(!user.isPasswordCorrect(password)){
-				Common.d("login password failed with paramter " + password);
+				DebugLog.d("login password failed with paramter " + password);
 				return null;
 			}
 			return user;
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
-				Common.d(UserDaoService.getUserById(1).getEmail() + " paramter " + password);
+				DebugLog.d(UserDaoService.getUserById(1).getEmail() + " paramter " + password);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -274,7 +275,7 @@ public class UserDaoService{
 			User user = DaoUser.getUserById(id);
 			return user.getState()==Constants.userState.normal;
 		} catch (Exception e) {
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 			return false;
 		}
 	}
@@ -359,7 +360,7 @@ public class UserDaoService{
 	 */
 	public static User updateUser(User user, int id) throws UserNotFoundException{
 		if(id!=user.getUserId()){
-			Common.d("Id does not equal user's id");
+			DebugLog.d("Id does not equal user's id");
 		}
 		try {
 			DaoUser.UpdateUserInDatabase(user);
@@ -367,7 +368,7 @@ public class UserDaoService{
 			returnUser.prepareTopBarUser();
 			return returnUser;
 		}catch(Exception e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 			return null;
 		}
 	}
@@ -396,7 +397,7 @@ public class UserDaoService{
 	 */
 	public static boolean changePassword(int userId, String oldPassword, String newPassword) throws UserNotFoundException{
 		if(oldPassword.equals(newPassword)){
-			Common.d("old pasword and new pasword are the same.");
+			DebugLog.d("old pasword and new pasword are the same.");
 			return false;
 		}
 		try {
@@ -405,7 +406,7 @@ public class UserDaoService{
 			DaoUser.UpdateUserInDatabase(user);
 			return true;
 		} catch (Exception e) {
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 			return false;
 		}
 	}
@@ -428,7 +429,7 @@ public class UserDaoService{
 				return true;
 			}
 		} catch (Exception e) {
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return false;
 	}
@@ -450,7 +451,7 @@ public class UserDaoService{
 			DaoUser.UpdateUserInDatabase(user);
 			return location;
 		} catch (Exception e) {
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return null;
 	}
@@ -547,7 +548,7 @@ public class UserDaoService{
 			DaoUser.UpdateUserInDatabase(user);
 			return user;
 		} catch (Exception e) {
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return null;
 	}
@@ -742,7 +743,7 @@ public class UserDaoService{
 	public static boolean deWatchUser(int userId, int targetUserId) throws UserNotFoundException{
 		User user = DaoUser.getUserById(userId);
 		User target = DaoUser.getUserById(targetUserId);
-		Common.removeFromSocialList(user.getSocialList(), target.getUserId());
+		Validator.removeFromSocialList(user.getSocialList(), target.getUserId());
 		try {
 			DaoUser.UpdateUserInDatabase(user);
 			return true;
@@ -873,7 +874,7 @@ public class UserDaoService{
 		User user = DaoUser.getUserById(userId);
 		try {
 			Message msg = DaoMessage.getMessageById(targetMessageId);
-			Common.removeFromWatchList(user.getWatchList(), msg.getMessageId());
+			Validator.removeFromWatchList(user.getWatchList(), msg.getMessageId());
 			DaoUser.UpdateUserInDatabase(user);
 			return true;
 		} catch (MessageNotFoundException e) {

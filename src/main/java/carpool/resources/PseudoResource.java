@@ -17,17 +17,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
-import carpool.common.Constants.userSearchState;
-import carpool.common.Constants.userState;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
+import carpool.constants.Constants.userSearchState;
+import carpool.constants.Constants.userState;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.exception.validation.EntityTooLargeException;
+import carpool.factory.JSONFactory;
 import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.userResource.UserCookieResource;
@@ -156,7 +156,7 @@ public class PseudoResource extends ServerResource{
 	
 	public void printResult(Representation result){
 		try {
-            Common.d(result.getText());
+            DebugLog.d(result.getText());
         } catch (IOException e) {
             e.printStackTrace();
         }

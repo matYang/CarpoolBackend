@@ -8,8 +8,8 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-import carpool.common.Common;
-import carpool.common.Constants;
+import carpool.common.DateUtility;
+import carpool.constants.Constants;
 import carpool.database.DaoBasic;
 import carpool.database.DaoMessage;
 import carpool.database.DaoNotification;
@@ -26,7 +26,7 @@ import carpool.model.User;
 public class DaoNotificationTest {
 
 	private final Calendar calender = Calendar.getInstance();
-	private final Calendar calender1 = Common.DateToCalendar(new Date(6666666));
+	private final Calendar calender1 = DateUtility.DateToCalendar(new Date(6666666));
 	private final User defaultUser = new User(0, "password", "name", 0, 0,0, new ArrayList<Message>(),
 			new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 			new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,

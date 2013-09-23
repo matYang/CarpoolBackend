@@ -8,10 +8,10 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.Constants.paymentMethod;
-import carpool.common.Constants.transactionState;
+import carpool.common.DateUtility;
+import carpool.constants.Constants;
+import carpool.constants.Constants.paymentMethod;
+import carpool.constants.Constants.transactionState;
 import carpool.database.DaoBasic;
 import carpool.database.DaoTransaction;
 import carpool.dbservice.MessageDaoService;
@@ -27,7 +27,7 @@ import carpool.model.User;
 public class DaoTransactionTest {
 	
 	private final Calendar calender = Calendar.getInstance();
-	private final Calendar calender2 = Common.DateToCalendar(new Date(9999999));
+	private final Calendar calender2 = DateUtility.DateToCalendar(new Date(9999999));
 	private final User defaultUser = new User(0, "password", "name", 0, 0,0, new ArrayList<Message>(),
 			new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 			new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,

@@ -6,8 +6,8 @@ import org.restlet.Context;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
 
-import carpool.common.Common;
-import carpool.common.Constants;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
 import carpool.resources.dianmingResource.*;
 import carpool.resources.generalResource.*;
 import carpool.resources.locationResource.*;
@@ -31,7 +31,7 @@ public class RoutingService extends Application {
 	
 	//@Override
 	public synchronized Restlet createInboundRoot(){
-		Common.d("initiaing router::RoutingService");
+		DebugLog.d("initiaing router::RoutingService");
 		Router router = new Router(getContext());
 		
 		/** -------------------- APIs for dianming module -------------- **/

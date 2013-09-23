@@ -19,14 +19,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.encryption.EmailCrypto;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.factory.JSONFactory;
 import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
@@ -45,7 +45,7 @@ public class UserEmailActivationResource extends PseudoResource{
         
         try {
         	String encryptedKey = this.getQueryVal("key");
-        	Common.d("encryptedKey: " + encryptedKey);
+        	DebugLog.d("encryptedKey: " + encryptedKey);
         	String[] decodedKey = EmailCrypto.decrypt(encryptedKey);
         	
         	userId = Integer.parseInt(decodedKey[0]);

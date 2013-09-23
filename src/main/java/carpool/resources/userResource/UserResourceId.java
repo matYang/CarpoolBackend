@@ -17,16 +17,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
-import carpool.common.Constants.userSearchState;
-import carpool.common.Constants.userState;
+import carpool.common.DateUtility;
+import carpool.common.DebugLog;
+import carpool.common.Validator;
+import carpool.constants.Constants;
+import carpool.constants.Constants.userSearchState;
+import carpool.constants.Constants.userState;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.factory.JSONFactory;
 import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
@@ -43,7 +45,7 @@ public class UserResourceId extends PseudoResource{
 		
 		try {
 			jsonUser = (new JsonRepresentation(entity)).getJsonObject();
-			Common.d("@Post::receive jsonMessage: " +  jsonUser.toString());
+			DebugLog.d("@Post::receive jsonMessage: " +  jsonUser.toString());
 			
 			int userId = jsonUser.getInt("userId");
 			String password = jsonUser.getString("password");
@@ -62,19 +64,19 @@ public class UserResourceId extends PseudoResource{
 			boolean phoneActivated = jsonUser.getBoolean("phoneActivated");
 			userState state = Constants.userState.values()[jsonUser.getInt("state")];
 			userSearchState searchState = Constants.userSearchState.values()[jsonUser.getInt("searchState")];
-			Calendar lastLogin = Common.parseDateString(jsonUser.getString("lastLogin"));
-			Calendar creationTime = Common.parseDateString(jsonUser.getString("creationTime"));
+			Calendar lastLogin = DateUtility.parseDateString(jsonUser.getString("lastLogin"));
+			Calendar creationTime = DateUtility.parseDateString(jsonUser.getString("creationTime"));
 			String paypal = jsonUser.getString("paypal");
 			
 			
 			//no DB interaction is necessary here
-			if (User.isPasswordFormatValid(password) && User.isAgeValid(age) && User.isGenderValid(Constants.gender.values()[gender]) && Common.isPhoneFormatValid(phone) && Common.isEmailFormatValid(email) && Common.isQqFormatValid(qq) && Location.isLocationVaild(location)){
+			if (User.isPasswordFormatValid(password) && User.isAgeValid(age) && User.isGenderValid(Constants.gender.values()[gender]) && Validator.isPhoneFormatValid(phone) && Validator.isEmailFormatValid(email) && Validator.isQqFormatValid(qq) && Location.isLocationVaild(location)){
 				user = new User(userId, password, name, level, averageScore, totalTransition, new ArrayList<Message>(), new ArrayList<Message>(), new ArrayList<User>(), new ArrayList<Transaction>(), new ArrayList<Notification>(), new ArrayList<String>(), age, Constants.gender.values()[gender], phone, email, qq, imgPath, location, emailActivated, phoneActivated, true, true, state, searchState, lastLogin, creationTime, paypal );
 			}
 			
 		}catch (Exception e){
 			  e.printStackTrace();
-			  Common.d("UserIdResouce:: parseJSON error, likely invalid format");
+			  DebugLog.d("UserIdResouce:: parseJSON error, likely invalid format");
 		}
 
 		return user;
@@ -95,7 +97,7 @@ public class UserResourceId extends PseudoResource{
 			intendedUserId = Integer.parseInt(this.getQueryVal("intendedUserId"));
 			
 			this.validateAuthentication(id);
-			Common.d("API::GetUserById:: " + id);
+			DebugLog.d("API::GetUserById:: " + id);
 			
 			//used for personal page, able to retrieve any user's information
 	    	User user = UserDaoService.getUserById(intendedUserId);
@@ -139,7 +141,7 @@ public class UserResourceId extends PseudoResource{
 		            User updateFeedBack = UserDaoService.updateUser(user, id);
 		            if (updateFeedBack != null){
 		                newJsonUser = JSONFactory.toJSON(updateFeedBack);
-		                Common.d("@Put::resources::updateUser: newJsonUser" + newJsonUser.toString());
+		                DebugLog.d("@Put::resources::updateUser: newJsonUser" + newJsonUser.toString());
 		                setStatus(Status.SUCCESS_OK);
 		            }
 		            else{

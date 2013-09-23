@@ -7,10 +7,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.Constants.messageType;
-import carpool.common.Constants.userSearchState;
+import carpool.common.DateUtility;
+import carpool.common.DebugLog;
+import carpool.common.Validator;
+import carpool.constants.Constants;
+import carpool.constants.Constants.messageType;
+import carpool.constants.Constants.userSearchState;
 import carpool.dbservice.NotificationDaoService;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -37,7 +39,7 @@ public class DaoMessage{
 				retVal.add(createMessageByResultSet(rs));
 			}
 		} catch (SQLException e) {
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return retVal;
 	}
@@ -64,8 +66,8 @@ public class DaoMessage{
 			stmt.setString(8, msg.getOwnerQq());
 			stmt.setInt(9, msg.getPaymentMethod().code);
 			stmt.setString(10, msg.getLocation().toString());
-			stmt.setString(11, Common.toSQLDateTime(msg.getStartTime()));
-			stmt.setString(12, Common.toSQLDateTime(msg.getEndTime()));
+			stmt.setString(11, Validator.toSQLDateTime(msg.getStartTime()));
+			stmt.setString(12, Validator.toSQLDateTime(msg.getEndTime()));
 			stmt.setString(13, msg.getNote());
 			stmt.setInt(14, msg.getType().code);
 			stmt.setInt(15, msg.getGenderRequirement().code);
@@ -73,13 +75,13 @@ public class DaoMessage{
 			stmt.setInt(17, msg.getPrice());
 			stmt.setInt(18, msg.isActive() ? 1:0);
 			stmt.setInt(19, msg.isHistoryDeleted() ? 1:0);
-			stmt.setString(20, Common.toSQLDateTime(msg.getCreationTime()));
+			stmt.setString(20, Validator.toSQLDateTime(msg.getCreationTime()));
 			stmt.executeUpdate();
 			ResultSet rs = stmt.getGeneratedKeys();
 			rs.next();
 			msg.setMessageId(rs.getInt(1));
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return msg;
 	}
@@ -95,7 +97,7 @@ public class DaoMessage{
 				throw new MessageNotFoundException();
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 	}
 	
@@ -113,8 +115,8 @@ public class DaoMessage{
 			stmt.setString(7, msg.getOwnerQq());
 			stmt.setInt(8, msg.getPaymentMethod().code);
 			stmt.setString(9, msg.getLocation().toString());
-			stmt.setString(10, Common.toSQLDateTime(msg.getStartTime()));
-			stmt.setString(11, Common.toSQLDateTime(msg.getEndTime()));
+			stmt.setString(10, Validator.toSQLDateTime(msg.getStartTime()));
+			stmt.setString(11, Validator.toSQLDateTime(msg.getEndTime()));
 			stmt.setString(12, msg.getNote());
 			stmt.setInt(13, msg.getType().code);
 			stmt.setInt(14, msg.getGenderRequirement().code);
@@ -122,14 +124,14 @@ public class DaoMessage{
 			stmt.setInt(16, msg.getPrice());
 			stmt.setInt(17, msg.isActive() ? 1:0);
 			stmt.setInt(18, msg.isHistoryDeleted() ? 1:0);
-			stmt.setString(19, Common.toSQLDateTime(msg.getCreationTime()));
+			stmt.setString(19, Validator.toSQLDateTime(msg.getCreationTime()));
 			stmt.setInt(20, msg.getMessageId());
 			int recordsAffected = stmt.executeUpdate();
 			if(recordsAffected==0){
 				throw new MessageNotFoundException();
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 	}
 	
@@ -145,7 +147,7 @@ public class DaoMessage{
 				throw new MessageNotFoundException();
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return message;
 	}
@@ -155,10 +157,10 @@ public class DaoMessage{
 		message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),rs.getString("ownerImgPath"),rs.getString("ownerName"),
 				rs.getInt("ownerLevel"),rs.getInt("ownerAverageScore"),rs.getString("ownerPhone"),rs.getString("ownerEmail"),
 				rs.getString("ownerQq"),Constants.paymentMethod.fromInt(rs.getInt("paymentMethod")),new Location(rs.getString("location")),
-				Common.DateToCalendar(rs.getTimestamp("startTime")),Common.DateToCalendar(rs.getTimestamp("endTime")),rs.getString("note"),
+				DateUtility.DateToCalendar(rs.getTimestamp("startTime")),DateUtility.DateToCalendar(rs.getTimestamp("endTime")),rs.getString("note"),
 				Constants.messageType.fromInt(rs.getInt("type")),Constants.gender.fromInt(rs.getInt("genderRequirement")),
 				Constants.messageState.fromInt(rs.getInt("state")),rs.getInt("price"),rs.getBoolean("active"),
-				rs.getBoolean("historyDeleted"),new ArrayList<Transaction>(),Common.DateToCalendar(rs.getTimestamp("creationTime")));
+				rs.getBoolean("historyDeleted"),new ArrayList<Transaction>(),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")));
 		return message;
 	}
 	
@@ -171,7 +173,7 @@ public class DaoMessage{
 				retVal.add(createMessageByResultSet(rs));
 			}
 		} catch (SQLException e) {
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return retVal;
 	}

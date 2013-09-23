@@ -8,12 +8,12 @@ import org.restlet.data.*;
 
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
-import carpool.common.Constants.gender;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
+import carpool.constants.Constants.gender;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
+import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
 
@@ -28,7 +28,7 @@ public class DMGenderResource extends PseudoResource{
 			newGender = Constants.gender.values()[jsonMessage.getInt("gender")];
 		} catch (Exception e){
 			e.printStackTrace();
-			Common.d("DMMessage GendeResource:: parseJSON error, likely invalid gender format");
+			DebugLog.d("DMMessage GendeResource:: parseJSON error, likely invalid gender format");
 		}
 
 		return newGender;

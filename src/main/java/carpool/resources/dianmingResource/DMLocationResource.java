@@ -16,17 +16,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
-import carpool.common.Constants.gender;
-import carpool.common.Constants.messageState;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
+import carpool.constants.Constants.gender;
+import carpool.constants.Constants.messageState;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.message.MessageOwnerNotMatchException;
+import carpool.factory.JSONFactory;
 import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
@@ -45,7 +45,7 @@ public class DMLocationResource extends PseudoResource{
 			newLocation = new Location(jsonMessage.getJSONObject("location").getString("province"), jsonMessage.getJSONObject("location").getString("city"), jsonMessage.getJSONObject("location").getString("region"),jsonMessage.getJSONObject("location").getString("university")) ;
 		}  catch (Exception e){
 			e.printStackTrace();
-			Common.d("DMMessage LocationResource:: parseJSON error, likely invalid format");
+			DebugLog.d("DMMessage LocationResource:: parseJSON error, likely invalid format");
 		}
 
 		return newLocation;

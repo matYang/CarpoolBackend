@@ -10,10 +10,10 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.Constants.paymentMethod;
-import carpool.common.Constants.transactionState;
+import carpool.common.DateUtility;
+import carpool.constants.Constants;
+import carpool.constants.Constants.paymentMethod;
+import carpool.constants.Constants.transactionState;
 import carpool.interfaces.PseudoModel;
 import carpool.mappings.MappingManager;
 
@@ -270,7 +270,7 @@ public class Transaction implements PseudoModel{
 	}
 	
 	public String toNotificationSummary(){
-		return Common.getNotificationDateString(this.startTime) + "与您的交易";
+		return DateUtility.getNotificationDateString(this.startTime) + "与您的交易";
 	}
 
 	public String getMessageNote() {
@@ -503,9 +503,9 @@ public class Transaction implements PseudoModel{
 		JSONObject jsonTransaction = new JSONObject(this);
 		
 		try {
-			jsonTransaction.put("startTime", Common.CalendarToUTCString(this.getStartTime()));
-			jsonTransaction.put("endTime", Common.CalendarToUTCString(this.getEndTime()));
-			jsonTransaction.put("creationTime", Common.CalendarToUTCString(this.getCreationTime()));
+			jsonTransaction.put("startTime", DateUtility.CalendarToUTCString(this.getStartTime()));
+			jsonTransaction.put("endTime", DateUtility.CalendarToUTCString(this.getEndTime()));
+			jsonTransaction.put("creationTime", DateUtility.CalendarToUTCString(this.getCreationTime()));
 			
 			jsonTransaction.put("location", this.location.toJSON());
 			

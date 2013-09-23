@@ -9,9 +9,9 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.Constants.userSearchState;
+import carpool.common.Validator;
+import carpool.constants.Constants;
+import carpool.constants.Constants.userSearchState;
 import carpool.database.DaoBasic;
 import carpool.database.DaoMessage;
 import carpool.database.DaoUser;

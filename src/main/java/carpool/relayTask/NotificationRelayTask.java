@@ -17,8 +17,8 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 
-import carpool.common.Common;
-import carpool.common.JSONFactory;
+import carpool.common.DebugLog;
+import carpool.factory.JSONFactory;
 import carpool.interfaces.PesudoRelayTask;
 import carpool.model.Notification;
 
@@ -63,15 +63,15 @@ public class NotificationRelayTask implements PesudoRelayTask{
 			
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-			Common.d("NotificationRelayTask::sendNotification::sending encoutered Exception:" + e.toString());
+			DebugLog.d("NotificationRelayTask::sendNotification::sending encoutered Exception:" + e.toString());
 			return false;
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
-			Common.d("NotificationRelayTask::sendNotification::sending encoutered Exception:" + e.toString());
+			DebugLog.d("NotificationRelayTask::sendNotification::sending encoutered Exception:" + e.toString());
 			return false;
 		} catch (IOException e) {
 			e.printStackTrace();
-			Common.d("NotificationRelayTask::sendNotification::sending encoutered Exception:" + e.toString());
+			DebugLog.d("NotificationRelayTask::sendNotification::sending encoutered Exception:" + e.toString());
 			return false;
 		} 
 
@@ -88,15 +88,15 @@ public class NotificationRelayTask implements PesudoRelayTask{
 		        sb.append(line);
 		    }
 		    //TODO should be deleted later, just printing out the content to see how it's like
-		    Common.d(sb.toString());
+		    DebugLog.d(sb.toString());
 		    
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
-			Common.d("NotificationRelayTask::sendNotification::parsing encoutered Exception:" + e.toString());
+			DebugLog.d("NotificationRelayTask::sendNotification::parsing encoutered Exception:" + e.toString());
 			return false;
 		} catch (IOException e) {
 			e.printStackTrace();
-			Common.d("NotificationRelayTask::sendNotification::parsing encoutered Exception:" + e.toString());
+			DebugLog.d("NotificationRelayTask::sendNotification::parsing encoutered Exception:" + e.toString());
 			return false;
 		}
 	   

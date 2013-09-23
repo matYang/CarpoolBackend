@@ -5,7 +5,7 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-import carpool.common.Constants;
+import carpool.constants.Constants;
 import carpool.database.DaoBasic;
 import carpool.database.DaoUser;
 import carpool.exception.user.UserNotFoundException;

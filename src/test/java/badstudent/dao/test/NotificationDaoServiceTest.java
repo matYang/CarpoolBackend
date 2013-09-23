@@ -8,8 +8,8 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-import carpool.common.Common;
-import carpool.common.Constants;
+import carpool.common.Validator;
+import carpool.constants.Constants;
 import carpool.database.DaoBasic;
 import carpool.database.DaoNotification;
 import carpool.dbservice.MessageDaoService;

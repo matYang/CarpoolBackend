@@ -12,15 +12,15 @@ import org.restlet.data.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.notification.NotificationNotFoundException;
 import carpool.exception.notification.NotificationOwnerNotMatchException;
+import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserCookieResource;
@@ -84,7 +84,7 @@ public class NotificationResourceId extends PseudoResource{
 			checked = NotificationDaoService.checkNotification(notificationId, userId);
 			if (checked) {
 				setStatus(Status.SUCCESS_OK);
-				Common.d("@Checked notification with id: " + notificationId);
+				DebugLog.d("@Checked notification with id: " + notificationId);
 			} else {
 				setStatus(Status.CLIENT_ERROR_CONFLICT);
 			}
@@ -116,7 +116,7 @@ public class NotificationResourceId extends PseudoResource{
 			deleted = NotificationDaoService.deleteNotification(notificationId, id);
 			if (deleted) {
 				setStatus(Status.SUCCESS_OK);
-				Common.d("@Delete with id: " + notificationId);
+				DebugLog.d("@Delete with id: " + notificationId);
 			} else {
 				setStatus(Status.CLIENT_ERROR_CONFLICT);
 			}
