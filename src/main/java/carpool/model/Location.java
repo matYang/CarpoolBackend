@@ -51,7 +51,7 @@ public class Location implements PseudoModel{
     	return (this.province.compareTo(location.getProvince()) == 0) && (this.city.compareTo(location.getCity()) ==0) && (this.school.compareTo(location.getCity()) == 0);
     }
     
-    
+
     public String getCity() {
         return city;
     }

@@ -53,6 +53,7 @@ public class Constants {
         public static messageType fromInt(int n){
             return map[n+1];
         }
+		
     }
     public static enum gender{
         male(0),female(1),both(2);

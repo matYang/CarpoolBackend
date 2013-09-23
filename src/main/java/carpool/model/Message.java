@@ -33,16 +33,16 @@ public class Message implements PseudoModel, PseudoValidatable{
 	/*****
 	 * Carpool Details
 	 *****/
-	private boolean isRroundTrip;
+	private boolean isRoundTrip;
 	
 	private Location departure_Location;
 	private Calendar departure_Time;
 	private int departure_seatsNumber;
-	private int departures_seatsBooked;
+	private int departure_seatsBooked;
 	private ArrayList<Integer> daparture_priceList;
 	
-	private Location arrivalLocation;
-	private Calendar arrivalTime;
+	private Location arrival_Location;
+	private Calendar arrival_Time;
 	private int arrival_seatsNumber;
 	private int arrival_seatsBooked;
 	private ArrayList<Integer> arrival_priceList;
@@ -51,6 +51,8 @@ public class Message implements PseudoModel, PseudoValidatable{
 	 * message details
 	 *****/
 	private paymentMethod paymentMethod;   //refer to common.Constants, though for now we'll be using offline only, it will be guaranteed on API level, allow flexibility in underlying logic
+	
+
 	private String note;
 	private messageType type;
 	private gender genderRequirement;
@@ -61,19 +63,19 @@ public class Message implements PseudoModel, PseudoValidatable{
 	private boolean historyDeleted;
 	
 	
-	/*****
-	 * 	Grey Zone
-	 * 	The following are for toJSON method specifications, please never use
-	 *****/
-	private String ownerImgPath;
-	private String ownerName;
-	private int ownerLevel;
-	private int ownerAverageScore;
-	private String ownerPhone;
-	private String ownerEmail;
-	private String ownerQq;
-	private int ownerTotalTransactions;
-	private ArrayList<JSONObject> transactionBriefs;
+//	/*****
+//	 * 	Grey Zone
+//	 * 	The following are for toJSON method specifications, please never use
+//	 *****/
+//	private String ownerImgPath;
+//	private String ownerName;
+//	private int ownerLevel;
+//	private int ownerAverageScore;
+//	private String ownerPhone;
+//	private String ownerEmail;
+//	private String ownerQq;
+//	private int ownerTotalTransactions;
+//	private ArrayList<JSONObject> transactionBriefs;
 
 
 	
@@ -136,6 +138,117 @@ public class Message implements PseudoModel, PseudoValidatable{
 		//TODO
 		return false;
 	}
+
+
+	public int getMessageId() {
+		return messageId;
+	}
+
+
+	public int ownerId() {
+		return ownerId;
+	}
+
+
+	public boolean isRoundTrip() {
+		return isRoundTrip;
+	}
+
+
+	public Location getDeparture_Location() {
+		return departure_Location;
+		
+	}
+
+
+	public Calendar getDeparture_Time() {
+		return departure_Time;
+	}
+
+
+	public int getDeparture_seatsNumber() {
+		return departure_seatsNumber;
+	}
+
+
+	public int getDeparture_seatsBooked() {
+		return departure_seatsBooked;
+	}
+
+
+	public String getDeparture_priceList() {
+		return "Not ready";
+	}
+
+
+	public Location getArrival_Location() {
+		return arrival_Location;
+	}
+
+
+	public Calendar getArrival_Time() {
+		return arrival_Time;
+	}
+
+
+	public int getArrival_seatsNumber() {
+		return arrival_seatsNumber;
+	}
+
+
+	public int getArrival_seatsBooked() {
+		return arrival_seatsBooked;
+	}
+
+
+	public String getArrival_priceList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public paymentMethod getPaymentMethod() {
+		return paymentMethod;
+	}
+
+
+	public String getNote() {
+		return note;
+	}
+
+
+	public messageType getMessageType() {
+		return type;
+	}
+
+
+	public gender getGender() {
+		return genderRequirement;
+	}
+
+
+	public messageState getMessageState() {
+		return state;
+	}
+
+
+	public Calendar getCreationTime() {
+		return creationTime;
+	}
+
+
+	public Calendar getEditTime() {
+		return editTime;
+	}
+
+
+	public boolean isHistoryDeleted() {
+		return historyDeleted;
+	}
+
+
+	
+	
 	
 	
 
