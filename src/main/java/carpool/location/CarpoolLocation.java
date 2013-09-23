@@ -1,6 +1,7 @@
 package carpool.location;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import carpool.exception.location.LocationException;
@@ -213,5 +214,90 @@ public class CarpoolLocation {
 			throw new LocationException("Access Violation");
 		}
 	}
+	
+	
+	/*****
+	 * API zone, used to represent the location data in a readable manner
+	 *****/
+	
+	public CarpoolLocation getHighestAscendant() throws LocationException{
+		CarpoolLocation curPos = this;
+		while (curPos.getParent() != null){
+			curPos = curPos.getParent();
+		}
+		if (curPos.getDepth() != 0){
+			throw new LocationException("Location Structural Failure");
+		}
+		return curPos;
+	}
+	
+	public ArrayList<String> getAscendantsNameList() throws LocationException{
+		CarpoolLocation curPos = this;
+		ArrayList<String> hierarchyNameList = new ArrayList<String>();
+		
+		while (curPos.getParent() != null){
+			hierarchyNameList.add(curPos.getName());
+			curPos = curPos.getParent();
+		}
+		hierarchyNameList.add(curPos.getName());
+		//verify curentPosition is at the root
+		if (curPos.getDepth() != 0){
+			throw new LocationException("Location Structural Failure");
+		}
+		
+		Collections.reverse(hierarchyNameList);
+		return hierarchyNameList;
+		
+	}
+	
+	public ArrayList<String> getDirectDescendantsNameList(){
+		ArrayList<String> descendantsNameList = new ArrayList<String>();
+		
+		if (this.getSubLocations() != null){
+			descendantsNameList = new ArrayList<String>(this.getSubLocations().keySet());
+		}
+		
+		return descendantsNameList;
+	}
+	
+	
+	public JSONObject toJSON() throws ValidationException{
+		JSONObject jsonLocation = new JSONObject(this);
+		
+		try{
+			jsonLocation.put("name", this.getName());
+			jsonLocation.put("ascendantsNameList", new JSONArray(this.getAscendantsNameList()));
+			jsonLocation.put("directDescendantsNameList", new JSONArray(this.getDirectDescendantsNameList()));
+			
+			jsonLocation.put("curDepth", this.getDepth());
+			jsonLocation.put("postalCode", this.getPostalCode());
+			jsonLocation.put("address", this.getAddress());
+			jsonLocation.put("latitude", this.getLat());
+			jsonLocation.put("longitude", this.getLon());
+			jsonLocation.put("radius", this.getRadius());
+			
+		}
+		catch (JSONException e){
+			e.printStackTrace();
+			throw new ValidationException("Location Data Content Format Error");
+		}
+		catch (LocationException e){
+			e.printStackTrace();
+			throw new ValidationException(e.getMessage());
+		}
+		
+		return jsonLocation;
+	}
+
+	@Override
+	public String toString() {
+		return "CarpoolLocation [parent=" + parent + ", subLocations="
+				+ subLocations + ", neighbours=" + neighbours + ", name="
+				+ name + ", curDepth=" + curDepth + ", postalCode="
+				+ postalCode + ", address=" + address + ", latitude="
+				+ latitude + ", longitude=" + longitude + ", radius=" + radius
+				+ "]";
+	}
+	
 	
 }

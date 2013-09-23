@@ -86,7 +86,7 @@ public class DMResource extends PseudoResource{
 			
 	        Message message = parseJSON(entity, id);
 	        if (message != null){
-	        	if (message.isMessageValid() && message.getOwnerId() == id){
+	        	if (message.validate() && message.getOwnerId() == id){
 		        	//if create the message
 		            Message creationFeedBack = MessageDaoService.createNewMessage(message);
 		            if (creationFeedBack != null){

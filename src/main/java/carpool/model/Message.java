@@ -3,9 +3,11 @@ package carpool.model;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import carpool.common.DateUtility;
 import carpool.common.Validator;
 import carpool.constants.Constants;
 import carpool.constants.Constants.gender;
@@ -26,14 +28,14 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	 *****/
 	private int messageId;
 	private int ownerId;
-	//use to fill JSONObject specs with 2 concret objects
 	private User owner;
+	//transactionList is not pulled from database by default
 	private ArrayList<Transaction> transactionList;
 	
 	/*****
 	 * Carpool Details
 	 *****/
-	private boolean isRoundTrip;
+	private boolean isRroundTrip;
 	
 	private Location departure_Location;
 	private Calendar departure_Time;
@@ -50,9 +52,9 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	/*****
 	 * message details
 	 *****/
-	private carpool.common.Constants.paymentMethod paymentMethod;   //refer to common.Constants, though for now we'll be using offline only, it will be guaranteed on API level, allow flexibility in underlying logic
+	private paymentMethod paymentMethod;   //refer to common.Constants, though for now we'll be using offline only, it will be guaranteed on API level, allow flexibility in underlying logic
 	private String note;
-	private carpool.common.Constants.messageType type;
+	private messageType type;
 	private gender genderRequirement;
 	private messageState state;
 	
@@ -60,123 +62,149 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	private Calendar editTime;
 	private boolean historyDeleted;
 	
-	public Message(int int1, int int2, int int3, Location location1, Calendar departTime,
-			int int4, int int5,String dpricelist, Location location2,
-			Calendar arriveTime, int int6, int int7, String apricelist,
-			carpool.common.Constants.paymentMethod fromInt, String Note,
-			carpool.common.Constants.messageType fromInt2,
-			carpool.common.Constants.gender fromInt3,
-			carpool.common.Constants.messageState fromInt4,
-			Calendar dateToCalendar2, Calendar dateToCalendar3, boolean boolean1) {
-		 messageId = int1;
-		 ownerId = int2;
-		isRoundTrip = (int3 -1 ==0);
-		departure_Location =location1;
-		departure_Time = departTime;
-		departure_seatsNumber = int4;
-		departure_seatsBooked = int5;
-		departure_priceList = Departure_pricelist(dpricelist);
+	
+	private Message(){}
+	
+	
+	/*****
+	 * The contructor used for message posting
+	 *****/
+	public Message(int messageId, int ownerId, boolean isRroundTrip,
+			Location departure_Location, Calendar departure_Time,
+			int departure_seatsNumber, ArrayList<Integer> departure_priceList,
+			Location arrival_Location, Calendar arrival_Time,
+			int arrival_seatsNumber, ArrayList<Integer> arrival_priceList,
+			carpool.constants.Constants.paymentMethod paymentMethod,
+			String note, messageType type, gender genderRequirement) {
+		super();
+		this.messageId = messageId;
+		this.ownerId = ownerId;
+		this.isRroundTrip = isRroundTrip;
+		this.departure_Location = departure_Location;
+		this.departure_Time = departure_Time;
+		this.departure_seatsNumber = departure_seatsNumber;
+		this.departure_priceList = departure_priceList;
+		this.arrival_Location = arrival_Location;
+		this.arrival_Time = arrival_Time;
+		this.arrival_seatsNumber = arrival_seatsNumber;
+		this.arrival_priceList = arrival_priceList;
+		this.paymentMethod = paymentMethod;
+		this.note = note;
+		this.type = type;
+		this.genderRequirement = genderRequirement;
 		
-		arrival_Location = location2;
-		arrival_Time = arriveTime;
-		arrival_seatsNumber = int6;
-		arrival_seatsBooked = int7;
-		arrival_priceList = Arrival_price(apricelist);
-		paymentMethod = fromInt;
-		note = Note;
-		type = fromInt2;
+		//dummy fills
+		this.owner = null;
+		this.transactionList = new ArrayList<Transaction>();
+		this.departure_seatsBooked = 0;
+		this.arrival_seatsBooked = 0;
 		
-	}
-	
-private ArrayList<Integer> Arrival_price(String apricelist) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-//	public String toNotificationSummary(){
-//		String typeSufix = (type == messageType.ask ? "求点名" : "帮点名") + "的消息";
-//		return Common.getNotificationDateString(this.startTime) + typeSufix;
-//	}
-	
-
-	
-	
-
-
-	private ArrayList<Integer> Departure_pricelist(String dpricelist) {
-		// TODO Auto-generated method stub
-		return null;
+		this.state = Constants.messageState.normal;
+		this.creationTime = Calendar.getInstance();
+		this.editTime = Calendar.getInstance();
+		this.historyDeleted = false;
 	}
 
-	/**
-	 * checks if the existing message is valid, eg, expired or not, content and state
-	 */
-	public boolean isMessageValid() {
-		//TODO
-		return false;
+
+
+
+	/*****
+	 * full constructor used for SQL retrieval
+	 *****/
+	public Message(int messageId, int ownerId, User owner,
+			boolean isRroundTrip, Location departure_Location,
+			Calendar departure_Time, int departure_seatsNumber,
+			int departures_seatsBooked, ArrayList<Integer> departure_priceList,
+			Location arrival_Location, Calendar arrival_Time,
+			int arrival_seatsNumber, int arrival_seatsBooked,
+			ArrayList<Integer> arrival_priceList,
+			carpool.constants.Constants.paymentMethod paymentMethod,
+			String note, messageType type, gender genderRequirement,
+			messageState state, Calendar creationTime, Calendar editTime,
+			boolean historyDeleted) {
+		super();
+		this.messageId = messageId;
+		this.ownerId = ownerId;
+		this.owner = owner;
+		this.isRroundTrip = isRroundTrip;
+		this.departure_Location = departure_Location;
+		this.departure_Time = departure_Time;
+		this.departure_seatsNumber = departure_seatsNumber;
+		this.departure_seatsBooked = departures_seatsBooked;
+		this.departure_priceList = departure_priceList;
+		this.arrival_Location = arrival_Location;
+		this.arrival_Time = arrival_Time;
+		this.arrival_seatsNumber = arrival_seatsNumber;
+		this.arrival_seatsBooked = arrival_seatsBooked;
+		this.arrival_priceList = arrival_priceList;
+		this.paymentMethod = paymentMethod;
+		this.note = note;
+		this.type = type;
+		this.genderRequirement = genderRequirement;
+		this.state = state;
+		this.creationTime = creationTime;
+		this.editTime = editTime;
+		this.historyDeleted = historyDeleted;
 	}
 
-	
-	/**
-	 * checks if this messageType is valid for a message
-	 * @param messageType
-	 * @return
-	 */
-	public static boolean isMessageTypeValid(messageType messageType){
-		return true;
-	}
 
-	/**
-	 * TODO: note that, to send a full message back, apply Transaction::prepareBrief to transactlionList
-	 */
-	
-	@Override
-	public JSONObject toJSON(){
-		JSONObject jsonMessage = new JSONObject(this);
-		
-		try {
-			jsonMessage.put("startTime", Validator.CalendarToUTCString(this.getStartTime()));
-			jsonMessage.put("endTime", Validator.CalendarToUTCString(this.getEndTime()));
-			jsonMessage.put("creationTime", Validator.CalendarToUTCString(this.getCreationTime()));
-			
-			jsonMessage.put("location", this.location.toJSON());
-			jsonMessage.put("transactionList", JSONFactory.toJSON(this.transactionList));
-			
-			jsonMessage.put("paymentMethod", this.getPaymentMethod());
-			jsonMessage.put("type", this.getType());
-			jsonMessage.put("genderRequirement", this.getGenderRequirement());
-			jsonMessage.put("state", this.getState());
-
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		
-		return jsonMessage;
-	}
-	
-	@Override
-	public boolean validate() {
-		//TODO
-		return false;
-	}
 	public int getMessageId() {
 		return messageId;
 	}
 
 
-	public int ownerId() {
+	public void setMessageId(int messageId) {
+		this.messageId = messageId;
+	}
+
+
+	public int getOwnerId() {
 		return ownerId;
 	}
 
 
-	public boolean isRoundTrip() {
-		return isRoundTrip;
+	public void setOwnerId(int ownerId) {
+		this.ownerId = ownerId;
+	}
+
+
+	public User getOwner() {
+		return owner;
+	}
+
+
+	public void setOwner(User owner) {
+		this.owner = owner;
+	}
+
+
+	public ArrayList<Transaction> getTransactionList() {
+		return transactionList;
+	}
+
+
+	public void setTransactionList(ArrayList<Transaction> transactionList) {
+		this.transactionList = transactionList;
+	}
+
+
+	public boolean isRroundTrip() {
+		return isRroundTrip;
+	}
+
+
+	public void setRroundTrip(boolean isRroundTrip) {
+		this.isRroundTrip = isRroundTrip;
 	}
 
 
 	public Location getDeparture_Location() {
 		return departure_Location;
-		
+	}
+
+
+	public void setDeparture_Location(Location departure_Location) {
+		this.departure_Location = departure_Location;
 	}
 
 
@@ -185,8 +213,18 @@ private ArrayList<Integer> Arrival_price(String apricelist) {
 	}
 
 
+	public void setDeparture_Time(Calendar departure_Time) {
+		this.departure_Time = departure_Time;
+	}
+
+
 	public int getDeparture_seatsNumber() {
 		return departure_seatsNumber;
+	}
+
+
+	public void setDeparture_seatsNumber(int departure_seatsNumber) {
+		this.departure_seatsNumber = departure_seatsNumber;
 	}
 
 
@@ -195,8 +233,18 @@ private ArrayList<Integer> Arrival_price(String apricelist) {
 	}
 
 
-	public String getDeparture_priceList() {
-		return "Not ready";
+	public void setDeparture_seatsBooked(int departure_seatsBooked) {
+		this.departure_seatsBooked = departure_seatsBooked;
+	}
+
+
+	public ArrayList<Integer> getDeparture_priceList() {
+		return departure_priceList;
+	}
+
+
+	public void setDeparture_priceList(ArrayList<Integer> departure_priceList) {
+		this.departure_priceList = departure_priceList;
 	}
 
 
@@ -205,8 +253,18 @@ private ArrayList<Integer> Arrival_price(String apricelist) {
 	}
 
 
+	public void setArrival_Location(Location arrival_Location) {
+		this.arrival_Location = arrival_Location;
+	}
+
+
 	public Calendar getArrival_Time() {
 		return arrival_Time;
+	}
+
+
+	public void setArrival_Time(Calendar arrival_Time) {
+		this.arrival_Time = arrival_Time;
 	}
 
 
@@ -215,14 +273,28 @@ private ArrayList<Integer> Arrival_price(String apricelist) {
 	}
 
 
+	public void setArrival_seatsNumber(int arrival_seatsNumber) {
+		this.arrival_seatsNumber = arrival_seatsNumber;
+	}
+
+
 	public int getArrival_seatsBooked() {
 		return arrival_seatsBooked;
 	}
 
 
-	public String getArrival_priceList() {
-		// TODO Auto-generated method stub
-		return null;
+	public void setArrival_seatsBooked(int arrival_seatsBooked) {
+		this.arrival_seatsBooked = arrival_seatsBooked;
+	}
+
+
+	public ArrayList<Integer> getArrival_priceList() {
+		return arrival_priceList;
+	}
+
+
+	public void setArrival_priceList(ArrayList<Integer> arrival_priceList) {
+		this.arrival_priceList = arrival_priceList;
 	}
 
 
@@ -231,28 +303,48 @@ private ArrayList<Integer> Arrival_price(String apricelist) {
 	}
 
 
+	public void setPaymentMethod(paymentMethod paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+
+
 	public String getNote() {
 		return note;
 	}
 
 
-	public messageType getMessageType() {
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+
+	public messageType getType() {
 		return type;
 	}
 
 
-	public gender getGender() {
+	public void setType(messageType type) {
+		this.type = type;
+	}
+
+
+	public gender getGenderRequirement() {
 		return genderRequirement;
 	}
 
 
-	public messageState getMessageState() {
+	public void setGenderRequirement(gender genderRequirement) {
+		this.genderRequirement = genderRequirement;
+	}
+
+
+	public messageState getState() {
 		return state;
 	}
 
 
-	public Calendar getCreationTime() {
-		return creationTime;
+	public void setState(messageState state) {
+		this.state = state;
 	}
 
 
@@ -261,11 +353,107 @@ private ArrayList<Integer> Arrival_price(String apricelist) {
 	}
 
 
+	public void setEditTime(Calendar editTime) {
+		this.editTime = editTime;
+	}
+
+
 	public boolean isHistoryDeleted() {
 		return historyDeleted;
 	}
 
 
+	public void setHistoryDeleted(boolean historyDeleted) {
+		this.historyDeleted = historyDeleted;
+	}
+
+
+	public int getCategory() {
+		return category;
+	}
+
+
+	public Calendar getCreationTime() {
+		return creationTime;
+	}
+
+
+	@Override
+	public JSONObject toJSON(){
+		JSONObject jsonMessage = new JSONObject(this);
+		
+		try {
+			jsonMessage.put("messageId", this.getMessageId());
+			jsonMessage.put("ownerId", this.getOwnerId());
+			jsonMessage.put("owner", this.getOwner());
+			jsonMessage.put("transactionList", this.getTransactionList());
+			
+			jsonMessage.put("isRroundTrip", this.isRroundTrip());
+			jsonMessage.put("departure_Location", this.getDeparture_Location().toJSON());
+			jsonMessage.put("departure_Time", DateUtility.CalendarToUTCString(this.getDeparture_Time()));
+			jsonMessage.put("departure_seatsNumber", this.getDeparture_seatsNumber());
+			jsonMessage.put("departure_seatsBooked", this.getDeparture_seatsBooked());
+			jsonMessage.put("daparture_priceList", new JSONArray(this.getDeparture_priceList()));
+			jsonMessage.put("arrival_Location", this.getArrival_Location().toJSON());
+			jsonMessage.put("arrival_Time", DateUtility.CalendarToUTCString(this.getArrival_Time()));
+			jsonMessage.put("arrival_seatsNumber", this.getArrival_seatsNumber());
+			jsonMessage.put("arrival_seatsBooked", this.getArrival_seatsBooked());
+			jsonMessage.put("arrival_priceList", new JSONArray(this.getArrival_priceList()));
+			
+			jsonMessage.put("paymentMethod", this.getPaymentMethod());
+			jsonMessage.put("note", this.getNote());
+			jsonMessage.put("type", this.getType());
+			jsonMessage.put("genderRequirement", this.getGenderRequirement());
+			jsonMessage.put("state", this.getState());
+			jsonMessage.put("creationTime", DateUtility.CalendarToUTCString(this.getCreationTime()));
+			jsonMessage.put("editTime",DateUtility.CalendarToUTCString(this.getEditTime()));
+			jsonMessage.put("historyDeleted", this.isHistoryDeleted());
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return jsonMessage;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "Message [category=" + category + ", messageId=" + messageId
+				+ ", ownerId=" + ownerId + ", owner=" + owner
+				+ ", transactionList=" + transactionList + ", isRroundTrip="
+				+ isRroundTrip + ", departure_Location=" + departure_Location
+				+ ", departure_Time=" + departure_Time
+				+ ", departure_seatsNumber=" + departure_seatsNumber
+				+ ", departure_seatsBooked=" + departure_seatsBooked
+				+ ", departure_priceList=" + departure_priceList
+				+ ", arrival_Location=" + arrival_Location + ", arrival_Time="
+				+ arrival_Time + ", arrival_seatsNumber=" + arrival_seatsNumber
+				+ ", arrival_seatsBooked=" + arrival_seatsBooked
+				+ ", arrival_priceList=" + arrival_priceList
+				+ ", paymentMethod=" + paymentMethod + ", note=" + note
+				+ ", type=" + type + ", genderRequirement=" + genderRequirement
+				+ ", state=" + state + ", creationTime=" + creationTime
+				+ ", editTime=" + editTime + ", historyDeleted="
+				+ historyDeleted + "]";
+	}
+
+
+	//override Comparator, by default messages will be sorted in departure timing orders
+	@Override
+	public int compareTo(Message anotherMessage) {
+		return this.getDeparture_Time().compareTo(anotherMessage.getDeparture_Time());
+	}
+	
+	
+	@Override
+	public boolean validate() {
+		//TODO
+		
+		
+		return true;
+	}
 	
 
 }

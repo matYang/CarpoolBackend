@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DateUtility;
+import carpool.common.Validator;
 import carpool.constants.Constants;
 import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.userSearchState;
@@ -56,7 +57,7 @@ public class DMSearchResource extends PseudoResource{
 			
 			
 			//not checking for date..because an invalid date will have no search result anyways
-			if (Location.isLocationVaild(location) && User.isSearchStateValid(searchState)){
+			if (Location.isLocationVaild(location) && searchState != null){
 				boolean login = false;
 				try{
 					this.validateAuthentication(userId);

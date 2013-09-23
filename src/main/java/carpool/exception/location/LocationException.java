@@ -18,6 +18,6 @@ public class LocationException extends PseudoException{
 	
 	@Override
     public int getCode() {
-        return 14;
+        return 17;
     }
 }

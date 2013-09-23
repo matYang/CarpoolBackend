@@ -47,7 +47,7 @@ public class UserContactResource extends PseudoResource{
 			String phone = jsonContact.getString("phone");
 			String qq = jsonContact.getString("qq");
 			//no DB interaction here
-			if (!(User.isNameFormatValid(name) && User.isAgeValid(age) && User.isGenderValid(Constants.gender.values()[gender]) && Validator.isPhoneFormatValid(phone) && Validator.isQqFormatValid(qq))){
+			if (!(Validator.isNameFormatValid(name) && Validator.isAgeValid(age) && Constants.gender.values()[gender] != null && Validator.isPhoneFormatValid(phone) && Validator.isQqFormatValid(qq))){
 				return null;
 			}
 			else{
