@@ -712,7 +712,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		// TODO 
 		
 		
-		return false;
+		return true;
 	}
 
 

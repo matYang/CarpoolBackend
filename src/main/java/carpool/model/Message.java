@@ -452,7 +452,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		//TODO
 		
 		
-		return false;
+		return true;
 	}
 	
 
