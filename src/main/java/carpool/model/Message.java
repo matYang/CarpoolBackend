@@ -33,16 +33,16 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	/*****
 	 * Carpool Details
 	 *****/
-	private boolean isRroundTrip;
+	private boolean isRoundTrip;
 	
 	private Location departure_Location;
 	private Calendar departure_Time;
 	private int departure_seatsNumber;
-	private int departures_seatsBooked;
-	private ArrayList<Integer> daparture_priceList;
+	private int departure_seatsBooked;
+	private ArrayList<Integer> departure_priceList;
 	
-	private Location arrivalLocation;
-	private Calendar arrivalTime;
+	private Location arrival_Location;
+	private Calendar arrival_Time;
 	private int arrival_seatsNumber;
 	private int arrival_seatsBooked;
 	private ArrayList<Integer> arrival_priceList;
@@ -50,9 +50,9 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	/*****
 	 * message details
 	 *****/
-	private paymentMethod paymentMethod;   //refer to common.Constants, though for now we'll be using offline only, it will be guaranteed on API level, allow flexibility in underlying logic
+	private carpool.common.Constants.paymentMethod paymentMethod;   //refer to common.Constants, though for now we'll be using offline only, it will be guaranteed on API level, allow flexibility in underlying logic
 	private String note;
-	private messageType type;
+	private carpool.common.Constants.messageType type;
 	private gender genderRequirement;
 	private messageState state;
 	
@@ -60,8 +60,39 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	private Calendar editTime;
 	private boolean historyDeleted;
 	
-
+	public Message(int int1, int int2, int int3, Location location1, Calendar departTime,
+			int int4, int int5,String dpricelist, Location location2,
+			Calendar arriveTime, int int6, int int7, String apricelist,
+			carpool.common.Constants.paymentMethod fromInt, String Note,
+			carpool.common.Constants.messageType fromInt2,
+			carpool.common.Constants.gender fromInt3,
+			carpool.common.Constants.messageState fromInt4,
+			Calendar dateToCalendar2, Calendar dateToCalendar3, boolean boolean1) {
+		 messageId = int1;
+		 ownerId = int2;
+		isRoundTrip = (int3 -1 ==0);
+		departure_Location =location1;
+		departure_Time = departTime;
+		departure_seatsNumber = int4;
+		departure_seatsBooked = int5;
+		departure_priceList = Departure_pricelist(dpricelist);
+		
+		arrival_Location = location2;
+		arrival_Time = arriveTime;
+		arrival_seatsNumber = int6;
+		arrival_seatsBooked = int7;
+		arrival_priceList = Arrival_price(apricelist);
+		paymentMethod = fromInt;
+		note = Note;
+		type = fromInt2;
+		
+	}
 	
+private ArrayList<Integer> Arrival_price(String apricelist) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 //	public String toNotificationSummary(){
 //		String typeSufix = (type == messageType.ask ? "求点名" : "帮点名") + "的消息";
 //		return Common.getNotificationDateString(this.startTime) + typeSufix;
@@ -69,6 +100,14 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	
 
 	
+	
+
+
+	private ArrayList<Integer> Departure_pricelist(String dpricelist) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	/**
 	 * checks if the existing message is valid, eg, expired or not, content and state
 	 */
@@ -120,7 +159,113 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		//TODO
 		return false;
 	}
-	
+	public int getMessageId() {
+		return messageId;
+	}
+
+
+	public int ownerId() {
+		return ownerId;
+	}
+
+
+	public boolean isRoundTrip() {
+		return isRoundTrip;
+	}
+
+
+	public Location getDeparture_Location() {
+		return departure_Location;
+		
+	}
+
+
+	public Calendar getDeparture_Time() {
+		return departure_Time;
+	}
+
+
+	public int getDeparture_seatsNumber() {
+		return departure_seatsNumber;
+	}
+
+
+	public int getDeparture_seatsBooked() {
+		return departure_seatsBooked;
+	}
+
+
+	public String getDeparture_priceList() {
+		return "Not ready";
+	}
+
+
+	public Location getArrival_Location() {
+		return arrival_Location;
+	}
+
+
+	public Calendar getArrival_Time() {
+		return arrival_Time;
+	}
+
+
+	public int getArrival_seatsNumber() {
+		return arrival_seatsNumber;
+	}
+
+
+	public int getArrival_seatsBooked() {
+		return arrival_seatsBooked;
+	}
+
+
+	public String getArrival_priceList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public paymentMethod getPaymentMethod() {
+		return paymentMethod;
+	}
+
+
+	public String getNote() {
+		return note;
+	}
+
+
+	public messageType getMessageType() {
+		return type;
+	}
+
+
+	public gender getGender() {
+		return genderRequirement;
+	}
+
+
+	public messageState getMessageState() {
+		return state;
+	}
+
+
+	public Calendar getCreationTime() {
+		return creationTime;
+	}
+
+
+	public Calendar getEditTime() {
+		return editTime;
+	}
+
+
+	public boolean isHistoryDeleted() {
+		return historyDeleted;
+	}
+
+
 	
 
 }
