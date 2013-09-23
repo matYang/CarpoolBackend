@@ -9,8 +9,8 @@ import org.restlet.data.CookieSetting;
 import org.restlet.engine.header.Header;
 import org.restlet.data.Status;
 
-import carpool.common.Common;
-import carpool.common.Constants;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.encryption.SessionCrypto;
 import carpool.exception.PseudoException;
@@ -119,9 +119,9 @@ public class UserCookieResource extends ServerResource{
 			throw new SessionEncodingException();
 		}
         
-        Common.d("UserCookie Resource, newCookieSetting brief:");
-        Common.d(newCookieSetting.getValue());
-        Common.d(newCookieSetting.getMaxAge());
+        DebugLog.d("UserCookie Resource, newCookieSetting brief:");
+        DebugLog.d(newCookieSetting.getValue());
+        DebugLog.d(newCookieSetting.getMaxAge());
         
        return newCookieSetting;
 	}

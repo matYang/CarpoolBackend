@@ -10,7 +10,7 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.junit.Test;
 
-import carpool.common.Common;
+import carpool.common.DebugLog;
 import carpool.encryption.EmailCrypto;
 import carpool.encryption.ImgCrypto;
 import carpool.encryption.SessionCrypto;
@@ -26,9 +26,9 @@ public class EncryptionTest {
 		String encryptedString = EmailCrypto.encrypt(id, authCode);
 		String[] decryptedStrings = EmailCrypto.decrypt(encryptedString);
 		
-		Common.d(encryptedString);
-		Common.d(decryptedStrings[0]);
-		Common.d(decryptedStrings[1]);
+		DebugLog.d(encryptedString);
+		DebugLog.d(decryptedStrings[0]);
+		DebugLog.d(decryptedStrings[1]);
 		
 		assertTrue( Integer.valueOf(decryptedStrings[0]) == id );
 		assertTrue( decryptedStrings[1].equals(authCode));
@@ -68,9 +68,9 @@ public class EncryptionTest {
 			e.printStackTrace();
 		}
 		
-		Common.d("Test_SessionCrypto::" + testSessionKey);
-		Common.d("Test_SessionCrypto::" + encryptedString);
-		Common.d("Test_SessionCrypto::" + decryptedString);
+		DebugLog.d("Test_SessionCrypto::" + testSessionKey);
+		DebugLog.d("Test_SessionCrypto::" + encryptedString);
+		DebugLog.d("Test_SessionCrypto::" + decryptedString);
 		assertTrue(!encryptedString.equals(""));
 		assertTrue(!decryptedString.equals(""));
 		assertTrue(testSessionKey.equals(decryptedString));

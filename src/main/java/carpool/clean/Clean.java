@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.Set;
 import java.util.TimeZone;
 
-import carpool.common.Common;
+import carpool.common.Validator;
 import carpool.dbservice.*;
 import carpool.model.*;
 

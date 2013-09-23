@@ -34,15 +34,16 @@ import java.io.ByteArrayOutputStream;
 
 import org.imgscalr.Scalr;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
+import carpool.common.DebugLog;
+import carpool.common.HelperOperator;
+import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.encryption.ImgCrypto;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
 
@@ -62,7 +63,7 @@ public class ImgResource extends PseudoResource{
         try {
 			id = Integer.parseInt(this.getReqAttr("id"));
 			this.validateAuthentication(id);
-			Common.d("API::GetImage:: " + id);
+			DebugLog.d("API::GetImage:: " + id);
 			
         	imgPath = UserDaoService.getImagePath(id);
         	if (imgPath != null){
@@ -121,11 +122,11 @@ public class ImgResource extends PseudoResource{
                 
                 String previousPath = UserDaoService.getImagePath(id);
                 imgPathSet = UserDaoService.setImagePath(id, imgPath);
-                previousImgRemoved = Common.removePreviousImg(previousPath);
+                previousImgRemoved = HelperOperator.removePreviousImg(previousPath);
                 
                 if (!previousImgRemoved){
                 	//TODO should change to log, set log4j
-                	Common.d("image not removed, path: " + previousPath);
+                	DebugLog.d("image not removed, path: " + previousPath);
                 }
                 
                 //once new image path is set, operation successfully, have an image cleaner later on

@@ -1,6 +1,6 @@
 package carpool.exception.transaction;
 
-import carpool.common.Constants.transactionState;
+import carpool.constants.Constants.transactionState;
 import carpool.exception.PseudoException;
 
 public class TransactionAccessViolationException extends PseudoException {

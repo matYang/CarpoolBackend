@@ -9,12 +9,12 @@ import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
-import carpool.common.Constants.gender;
-import carpool.common.Constants.userSearchState;
-import carpool.common.Constants.userState;
+import carpool.common.Validator;
+import carpool.constants.Constants;
+import carpool.constants.Constants.gender;
+import carpool.constants.Constants.userSearchState;
+import carpool.constants.Constants.userState;
+import carpool.factory.JSONFactory;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoValidatable;
 
@@ -96,10 +96,11 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     }
     
     
+    
+    
 
     /** 
      * check if user can be logged in
-     * @return  if the user is able to be logged in, etc, state == normal, emailActivated == true
      */
     public boolean isAbleToLogin(){
         //TODO
@@ -108,8 +109,6 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 
     /**
      * check if existing user is valid, potentially has to look into database
-     * @param user
-     * @return
      */
     public boolean isUserValid(){
         //TODO
@@ -117,12 +116,9 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     }
 
     /**
-     * check if newUser is valid, potentially has to look into database
-     * checks if the newly registered is valid
+     * check if newUser is valid
      */
     public boolean isNewUserValid(){
-        //isEmailUserNameAvailable(newUser.getEmail(), newUser.getUserName());
-        //TODO	
         return true;
     }
 
@@ -130,8 +126,6 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 
     /**
      * check if password is in a valid format
-     * @param password
-     * @return true if password is valid
      */
     public static boolean isPasswordFormatValid(String password){
         if (password == null || password.length() == 0 || password.length() > Constants.maxPasswordLength){
@@ -153,12 +147,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
         if (userName.indexOf("@") >= 0){
             return false;
         }
-        //check for all-number userName
-        for (int i = 0; i < userName.length(); i++) {
-            if (Character.isLetter(userName.charAt(i)) == true) {
-                return true;
-            }
-        }
+
         return false;
     }
 
@@ -194,8 +183,8 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	public JSONObject toJSON(){
 		JSONObject jsonUser = new JSONObject(this);
 		try {
-			jsonUser.put("lastLogin", Common.CalendarToUTCString(this.getLastLogin()));
-			jsonUser.put("creationTime", Common.CalendarToUTCString(this.getCreationTime()));
+			jsonUser.put("lastLogin", Validator.CalendarToUTCString(this.getLastLogin()));
+			jsonUser.put("creationTime", Validator.CalendarToUTCString(this.getCreationTime()));
 			
 			jsonUser.put("location", this.location.toJSON());
 			jsonUser.put("historyList", JSONFactory.toJSON(this.getHistoryList()));

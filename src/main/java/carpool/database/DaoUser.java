@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import carpool.common.Common;
-import carpool.common.Constants.gender;
-import carpool.common.Constants.userSearchState;
-import carpool.common.Constants.userState;
+import carpool.common.DateUtility;
+import carpool.common.DebugLog;
+import carpool.common.Validator;
+import carpool.constants.Constants.gender;
+import carpool.constants.Constants.userSearchState;
+import carpool.constants.Constants.userState;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -43,7 +45,7 @@ public class DaoUser {
 				retVal.add(user);
 			}
 		} catch (SQLException e) {
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return retVal;
 	}
@@ -73,8 +75,8 @@ public class DaoUser {
 			stmt.setInt(17, user.isPhoneNotice() ? 1:0);
 			stmt.setInt(18, user.getState().code);
 			stmt.setInt(19, user.getSearchState().code);
-			stmt.setString(20, Common.toSQLDateTime(user.getLastLogin()));
-			stmt.setString(21, Common.toSQLDateTime(user.getCreationTime()));
+			stmt.setString(20, Validator.toSQLDateTime(user.getLastLogin()));
+			stmt.setString(21, Validator.toSQLDateTime(user.getCreationTime()));
 			stmt.setString(22, user.getPaypal());
 			stmt.executeUpdate();
 			ResultSet rs = stmt.getGeneratedKeys();
@@ -84,7 +86,7 @@ public class DaoUser {
 			if(e.getMessage().contains("Duplicate")){
 				throw new Exception("Some user field already exists");
 			}else{
-				Common.d(e.getMessage());
+				DebugLog.d(e.getMessage());
 			}
 		}
 		updateWatchList(user);
@@ -108,7 +110,7 @@ public class DaoUser {
 				throw new UserNotFoundException();
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 	}
 
@@ -137,8 +139,8 @@ public class DaoUser {
 			stmt.setInt(17, user.isPhoneNotice() ? 1:0);
 			stmt.setInt(18, user.getState().code);
 			stmt.setInt(19, user.getSearchState().code);
-			stmt.setString(20, Common.toSQLDateTime(user.getLastLogin()));
-			stmt.setString(21, Common.toSQLDateTime(user.getCreationTime()));
+			stmt.setString(20, Validator.toSQLDateTime(user.getLastLogin()));
+			stmt.setString(21, Validator.toSQLDateTime(user.getCreationTime()));
 			stmt.setString(22, user.getPaypal());
 			stmt.setInt(23, user.getUserId());
 			int recordsAffected = stmt.executeUpdate();
@@ -146,7 +148,7 @@ public class DaoUser {
 				throw new UserNotFoundException();
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		updateWatchList(user);
 		updateSocialList(user);
@@ -164,7 +166,7 @@ public class DaoUser {
 				throw new UserNotFoundException();
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		user = addHistoryListToUser(user);
 		user = addWatchListToUser(user);
@@ -186,7 +188,7 @@ public class DaoUser {
 				throw new UserNotFoundException();
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		user = addHistoryListToUser(user);
 		user = addWatchListToUser(user);
@@ -206,7 +208,7 @@ public class DaoUser {
 				users.add(createUserByResultSet(rs));
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return users;
 	}
@@ -221,7 +223,7 @@ public class DaoUser {
 				users.add(createUserByResultSet(rs));
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return users;
 	}
@@ -247,8 +249,8 @@ public class DaoUser {
 				rs.getBoolean("emailNotice"),rs.getBoolean("phoneNotice"),
 				userState.fromInt(rs.getInt("state")),
 				userSearchState.fromInt(rs.getInt("searchState")),
-				Common.DateToCalendar(rs.getTimestamp("lastLogin")),
-				Common.DateToCalendar(rs.getTimestamp("creationTime")), rs.getString("paypal"));
+				DateUtility.DateToCalendar(rs.getTimestamp("lastLogin")),
+				DateUtility.DateToCalendar(rs.getTimestamp("creationTime")), rs.getString("paypal"));
 		return user;
 	}
 
@@ -262,7 +264,7 @@ public class DaoUser {
 				historyList.add(DaoMessage.createMessageByResultSet(rs));
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		query = "SELECT * FROM Message JOIN Transaction ON ( Transaction.messageId = Message.messageId AND Transaction.initUserId = ?)";
 		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
@@ -272,7 +274,7 @@ public class DaoUser {
 				historyList.add(DaoMessage.createMessageByResultSet(rs));
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		user.setHistoryList(historyList);
 		return user;
@@ -293,7 +295,7 @@ public class DaoUser {
 			}
 			stmt.executeBatch();
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 	}
 
@@ -307,7 +309,7 @@ public class DaoUser {
 				watchLsit.add(DaoMessage.createMessageByResultSet(rs));
 			}
 		} catch (SQLException e) {
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		user.setWatchList(watchLsit);
 		return user;
@@ -328,7 +330,7 @@ public class DaoUser {
 			}
 			stmt.executeBatch();
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 	}
 
@@ -342,7 +344,7 @@ public class DaoUser {
 				socialLsit.add(DaoUser.createUserByResultSet(rs));
 			}
 		} catch (SQLException e) {
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		user.setSocialList(socialLsit);
 		return user;
@@ -359,7 +361,7 @@ public class DaoUser {
 				transactionList.add(DaoTransaction.createTransactionByResultSet(rs));
 			}
 		} catch (SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		user.setTransactionList(transactionList);
 		return user;
@@ -375,7 +377,7 @@ public class DaoUser {
 				notificationList.add(DaoNotification.createNotificationByResultSet(rs));
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		user.setNotificationList(notificationList);
 		return user;		

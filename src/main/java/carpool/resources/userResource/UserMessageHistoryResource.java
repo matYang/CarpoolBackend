@@ -12,9 +12,9 @@ import org.restlet.data.*;
 
 import org.json.JSONArray;
 
-import carpool.common.JSONFactory;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
+import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
 

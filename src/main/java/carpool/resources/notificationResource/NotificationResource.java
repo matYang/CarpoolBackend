@@ -11,8 +11,8 @@ import org.restlet.data.Status;
 
 import org.json.JSONArray;
 
-import carpool.common.JSONFactory;
 import carpool.dbservice.*;
+import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserResource;

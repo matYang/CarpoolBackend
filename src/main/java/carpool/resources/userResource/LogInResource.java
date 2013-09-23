@@ -22,14 +22,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
 import carpool.resources.dianmingResource.DMResource;
@@ -58,7 +58,7 @@ public class LogInResource extends PseudoResource{
 			email = jsonString.getString("email");
 			password = jsonString.getString("password");
 			
-			Common.d("log in, receving paramters: " + email + " " + password);
+			DebugLog.d("log in, receving paramters: " + email + " " + password);
 			topBarUser = UserDaoService.isLoginUserValid(email, password);
 			
 			if (topBarUser != null && topBarUser.isAbleToLogin()){

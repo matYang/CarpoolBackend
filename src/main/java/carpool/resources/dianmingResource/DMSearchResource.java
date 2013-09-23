@@ -18,11 +18,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
-import carpool.common.Constants.messageType;
-import carpool.common.Constants.userSearchState;
+import carpool.common.DateUtility;
+import carpool.constants.Constants;
+import carpool.constants.Constants.messageType;
+import carpool.constants.Constants.userSearchState;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.AccountAuthenticationException;
@@ -31,6 +30,7 @@ import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.exception.validation.UnacceptableSearchStateException;
+import carpool.factory.JSONFactory;
 import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
@@ -50,7 +50,7 @@ public class DMSearchResource extends PseudoResource{
 			int userId = Integer.parseInt(this.getQueryVal("userId"));
 			
 			Location location = new Location(this.getQueryVal("location"));
-			Calendar date = Common.parseDateString(this.getQueryVal("date"));
+			Calendar date = DateUtility.parseDateString(this.getQueryVal("date"));
 			String searchStateString = this.getQueryVal("searchState");
 			userSearchState searchState = Constants.userSearchState.values()[Integer.parseInt(searchStateString)];
 			

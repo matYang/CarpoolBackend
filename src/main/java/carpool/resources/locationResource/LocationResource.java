@@ -11,8 +11,9 @@ import org.restlet.data.Status;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.JSONFactory;
+import carpool.common.DebugLog;
+import carpool.common.Validator;
+import carpool.factory.JSONFactory;
 import carpool.mappings.MappingManager;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
@@ -42,50 +43,50 @@ public class LocationResource extends PseudoResource{
 			String ignoreRegion = this.getQueryVal("ignoreRegion");
 
 			
-			if (!Common.isEntryNull(province) && !Common.isEntryNull(city) && !Common.isEntryNull(ignoreRegion)){
+			if (!Validator.isStringNullOrEmpty(province) && !Validator.isStringNullOrEmpty(city) && !Validator.isStringNullOrEmpty(ignoreRegion)){
 				try{
 					searchResult = MappingManager.getAllSchools(province, city);
 				}
 				catch(Exception e){
 					e.printStackTrace();
-					Common.d("invalid GETSCHOOL location query with parameter province: " + province + " city: " + city + " region ignored: " + ignoreRegion);
+					DebugLog.d("invalid GETSCHOOL location query with parameter province: " + province + " city: " + city + " region ignored: " + ignoreRegion);
 				}
 			}
-			else if (!Common.isEntryNull(province) && !Common.isEntryNull(city) && !Common.isEntryNull(region)){
+			else if (!Validator.isStringNullOrEmpty(province) && !Validator.isStringNullOrEmpty(city) && !Validator.isStringNullOrEmpty(region)){
 				try{
 					searchResult = MappingManager.getAllSchools(province, city, region);
 				}
 				catch(Exception e){
 					e.printStackTrace();
-					Common.d("invalid GETSCHOOL location query with parameter province: " + province + " city: " + city + " region " + region);
+					DebugLog.d("invalid GETSCHOOL location query with parameter province: " + province + " city: " + city + " region " + region);
 				}
 			}
-			else if (!Common.isEntryNull(province) && !Common.isEntryNull(city)){
+			else if (!Validator.isStringNullOrEmpty(province) && !Validator.isStringNullOrEmpty(city)){
 				try{
 					searchResult_b = MappingManager.getRegionUniversity(province, city);
 				}
 				catch(Exception e){
 					e.printStackTrace();
-					Common.d("invalid GETSCHOOL location query with parameter province: " + province + " city: " + city + " region " + region);
+					DebugLog.d("invalid GETSCHOOL location query with parameter province: " + province + " city: " + city + " region " + region);
 				}
 			}
-			else if (!Common.isEntryNull(province) && Common.isEntryNull(city)){
+			else if (!Validator.isStringNullOrEmpty(province) && Validator.isStringNullOrEmpty(city)){
 				try{
 					searchResult = MappingManager.getAllCity(province);
 				}
 				catch(Exception e){
 					e.printStackTrace();
-					Common.d("invalid GETCITY location query with parameter province: " + province);
+					DebugLog.d("invalid GETCITY location query with parameter province: " + province);
 				}
 			}
-			else if (Common.isEntryNull(province) && Common.isEntryNull(city)){
+			else if (Validator.isStringNullOrEmpty(province) && Validator.isStringNullOrEmpty(city)){
 				searchResult = 	MappingManager.getAllProvince();
 			}
 			else{
-				Common.d("invalid location query format with parameter province: " + province + " city: " + city);
+				DebugLog.d("invalid location query format with parameter province: " + province + " city: " + city);
 			}
 			
-			Common.d("@Get::resources::LocationResource query parameters: province " + province + " city         " + city);
+			DebugLog.d("@Get::resources::LocationResource query parameters: province " + province + " city         " + city);
 		}
 		catch (Exception e){
 			this.doException(e);

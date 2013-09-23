@@ -2,7 +2,7 @@ package carpool.location;
 
 import java.util.LinkedHashMap;
 
-import carpool.exception.LocationException;
+import carpool.exception.location.LocationException;
 
 
 /**

@@ -18,13 +18,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
+import carpool.common.DateUtility;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
+import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserCookieResource;
@@ -42,11 +43,11 @@ public class TransactionResource extends PseudoResource{
 		Transaction transaction = null;
 		try {
 			jsonTransaction = (new JsonRepresentation(entity)).getJsonObject();
-			Common.d("@Post::receive jsonTransaction: " +  jsonTransaction.toString());
+			DebugLog.d("@Post::receive jsonTransaction: " +  jsonTransaction.toString());
 			
 			transaction = new Transaction(jsonTransaction.getInt("initUserId"), jsonTransaction.getInt("targetUserId"), jsonTransaction.getInt("messageId"), Constants.paymentMethod.values()[jsonTransaction.getInt("paymentMethod")], 
-					jsonTransaction.getInt("price"), jsonTransaction.getString("requestInfo"),  Common.parseDateString(jsonTransaction.getString("startTime")), 
-					Common.parseDateString(jsonTransaction.getString("endTime")), new Location(jsonTransaction.getJSONObject("location").getString("province"), jsonTransaction.getJSONObject("location").getString("city"), jsonTransaction.getJSONObject("location").getString("region"),jsonTransaction.getJSONObject("location").getString("university")) );
+					jsonTransaction.getInt("price"), jsonTransaction.getString("requestInfo"),  DateUtility.parseDateString(jsonTransaction.getString("startTime")), 
+					DateUtility.parseDateString(jsonTransaction.getString("endTime")), new Location(jsonTransaction.getJSONObject("location").getString("province"), jsonTransaction.getJSONObject("location").getString("city"), jsonTransaction.getJSONObject("location").getString("region"),jsonTransaction.getJSONObject("location").getString("university")) );
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

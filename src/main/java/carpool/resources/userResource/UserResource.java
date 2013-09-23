@@ -14,11 +14,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
+import carpool.common.DebugLog;
+import carpool.common.Validator;
+import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
+import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
 
@@ -53,12 +54,12 @@ public class UserResource extends PseudoResource{
 			String email = jsonUser.getString("email");
 			Location location = new Location(java.net.URLDecoder.decode(jsonUser.getJSONObject("location").getString("province"),"utf-8"), jsonUser.getJSONObject("location").getString("city"), jsonUser.getJSONObject("location").getString("region"),jsonUser.getJSONObject("location").getString("university"));
 			
-			Common.d("getting user location: " + location.toString() + " is location valid: " + Location.isLocationVaild(location));
-			Common.d("getting user password: " + password + " is password valid: " + User.isPasswordFormatValid(password));
-			Common.d("getting user gender: " + gender + " is gender valid: " + User.isGenderValid(Constants.gender.values()[gender]));
-			Common.d("getting user email: " + email + " is email valid: " + Common.isEmailFormatValid(email));
+			DebugLog.d("getting user location: " + location.toString() + " is location valid: " + Location.isLocationVaild(location));
+			DebugLog.d("getting user password: " + password + " is password valid: " + User.isPasswordFormatValid(password));
+			DebugLog.d("getting user gender: " + gender + " is gender valid: " + User.isGenderValid(Constants.gender.values()[gender]));
+			DebugLog.d("getting user email: " + email + " is email valid: " + Validator.isEmailFormatValid(email));
 			
-			if (User.isPasswordFormatValid(password) && User.isGenderValid(Constants.gender.values()[gender]) && Common.isEmailFormatValid(email) && Location.isLocationVaild(location) && UserDaoService.isEmailAvailable(email)){
+			if (User.isPasswordFormatValid(password) && User.isGenderValid(Constants.gender.values()[gender]) && Validator.isEmailFormatValid(email) && Location.isLocationVaild(location) && UserDaoService.isEmailAvailable(email)){
 				user = new User(password,Constants.gender.values()[gender],email, location);
 			}
 			
@@ -111,7 +112,7 @@ public class UserResource extends PseudoResource{
 					creationFeedBack = UserDaoService.createNewUser(newUser);
 					//creation feedback with null indicates the user is not valid
 					if (creationFeedBack != null){
-						Common.d("@Post::resources::createUser: available: " + creationFeedBack.getName() + " id: " +  creationFeedBack.getUserId() + " createUser: " + creationFeedBack.toString());
+						DebugLog.d("@Post::resources::createUser: available: " + creationFeedBack.getName() + " id: " +  creationFeedBack.getUserId() + " createUser: " + creationFeedBack.toString());
 						creationFeedBack.prepareTopBarUser();
 						
 						boolean emailSent = UserDaoService.sendActivationEmail(creationFeedBack.getUserId(), creationFeedBack.getEmail());
@@ -127,7 +128,7 @@ public class UserResource extends PseudoResource{
 					
 			}
 			else{
-				Common.d("Registration null user recorded");
+				DebugLog.d("Registration null user recorded");
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			}
 		} catch(PseudoException e){

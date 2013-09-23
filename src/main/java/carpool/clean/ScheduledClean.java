@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 
 import java.util.Date;
 
-import carpool.common.Common;
+import carpool.common.DebugLog;
 
 
 public class ScheduledClean {
@@ -26,12 +26,12 @@ public class ScheduledClean {
                 cleanOldSchedules();
             }
             private void cleanOldSchedules() {
-                Common.d("cleaning old schedules at time: " + dateFormat.format(new Date()));
+                DebugLog.d("cleaning old schedules at time: " + dateFormat.format(new Date()));
                 Clean clean = new Clean();
                 clean.cleanSchedules();
             }
         }, new DailyIterator(hourOfDay, minute, second));
-        Common.d("ScheduledClean:: clean scheduled at " + hourOfDay + ":" + minute + ":" + second);
+        DebugLog.d("ScheduledClean:: clean scheduled at " + hourOfDay + ":" + minute + ":" + second);
     }
 
 }

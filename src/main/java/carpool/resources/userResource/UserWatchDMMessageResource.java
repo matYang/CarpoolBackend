@@ -16,14 +16,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
+import carpool.common.Validator;
+import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.factory.JSONFactory;
 import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.PseudoResource;

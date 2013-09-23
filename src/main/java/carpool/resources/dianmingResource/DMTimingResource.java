@@ -17,17 +17,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
-import carpool.common.Constants.gender;
-import carpool.common.Constants.messageState;
+import carpool.common.DateUtility;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
+import carpool.constants.Constants.gender;
+import carpool.constants.Constants.messageState;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.message.MessageOwnerNotMatchException;
+import carpool.factory.JSONFactory;
 import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
@@ -43,11 +44,11 @@ public class DMTimingResource extends PseudoResource{
 		ArrayList<Calendar> newTiming = new ArrayList<Calendar>();
 		try {
 			jsonMessage = (new JsonRepresentation(entity)).getJsonObject();
-			newTiming.add(Common.parseDateString(jsonMessage.getString("startTime")));
-			newTiming.add(Common.parseDateString(jsonMessage.getString("endTime")));
+			newTiming.add(DateUtility.parseDateString(jsonMessage.getString("startTime")));
+			newTiming.add(DateUtility.parseDateString(jsonMessage.getString("endTime")));
 		} catch (Exception e){
 			e.printStackTrace();
-			Common.d("DMMessage TimingResource:: parseJSON error, likely invalid format");
+			DebugLog.d("DMMessage TimingResource:: parseJSON error, likely invalid format");
 			return null;
 		}
 
@@ -76,7 +77,7 @@ public class DMTimingResource extends PseudoResource{
 		            if (newTiming != null){
 		            	ArrayList<JSONObject> jsonCals = new ArrayList<JSONObject>();
 		            	for (int i = 0; i < newTiming.size(); i++){
-		            		jsonCals.add(JSONFactory.toJSON(Common.CalendarToUTCString(newTiming.get(i))));
+		            		jsonCals.add(JSONFactory.toJSON(DateUtility.CalendarToUTCString(newTiming.get(i))));
 		            	}
 		                response = new JSONArray(jsonCals);
 		                setStatus(Status.SUCCESS_OK);

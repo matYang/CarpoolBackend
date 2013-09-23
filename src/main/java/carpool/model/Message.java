@@ -6,18 +6,18 @@ import java.util.Calendar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
-import carpool.common.Constants.gender;
-import carpool.common.Constants.messageState;
-import carpool.common.Constants.messageType;
-import carpool.common.Constants.paymentMethod;
+import carpool.common.Validator;
+import carpool.constants.Constants;
+import carpool.constants.Constants.gender;
+import carpool.constants.Constants.messageState;
+import carpool.constants.Constants.messageType;
+import carpool.constants.Constants.paymentMethod;
+import carpool.factory.JSONFactory;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoValidatable;
 
 
-public class Message implements PseudoModel, PseudoValidatable{
+public class Message implements PseudoModel, PseudoValidatable, Comparable<Message>{
 	
 	public final int category = Constants.category_DM;
 	
@@ -60,21 +60,6 @@ public class Message implements PseudoModel, PseudoValidatable{
 	private Calendar editTime;
 	private boolean historyDeleted;
 	
-	
-	/*****
-	 * 	Grey Zone
-	 * 	The following are for toJSON method specifications, please never use
-	 *****/
-	private String ownerImgPath;
-	private String ownerName;
-	private int ownerLevel;
-	private int ownerAverageScore;
-	private String ownerPhone;
-	private String ownerEmail;
-	private String ownerQq;
-	private int ownerTotalTransactions;
-	private ArrayList<JSONObject> transactionBriefs;
-
 
 	
 //	public String toNotificationSummary(){
@@ -86,7 +71,6 @@ public class Message implements PseudoModel, PseudoValidatable{
 	
 	/**
 	 * checks if the existing message is valid, eg, expired or not, content and state
-	 * @return
 	 */
 	public boolean isMessageValid() {
 		//TODO
@@ -112,9 +96,9 @@ public class Message implements PseudoModel, PseudoValidatable{
 		JSONObject jsonMessage = new JSONObject(this);
 		
 		try {
-			jsonMessage.put("startTime", Common.CalendarToUTCString(this.getStartTime()));
-			jsonMessage.put("endTime", Common.CalendarToUTCString(this.getEndTime()));
-			jsonMessage.put("creationTime", Common.CalendarToUTCString(this.getCreationTime()));
+			jsonMessage.put("startTime", Validator.CalendarToUTCString(this.getStartTime()));
+			jsonMessage.put("endTime", Validator.CalendarToUTCString(this.getEndTime()));
+			jsonMessage.put("creationTime", Validator.CalendarToUTCString(this.getCreationTime()));
 			
 			jsonMessage.put("location", this.location.toJSON());
 			jsonMessage.put("transactionList", JSONFactory.toJSON(this.transactionList));

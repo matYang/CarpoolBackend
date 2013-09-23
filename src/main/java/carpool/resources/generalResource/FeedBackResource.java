@@ -12,8 +12,8 @@ import org.restlet.util.Series;
 import org.restlet.engine.header.Header;
 import org.restlet.data.Status;
 
-import carpool.common.Common;
-import carpool.common.Constants;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
 import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserResource;
 
@@ -53,7 +53,7 @@ public class FeedBackResource extends PseudoResource{
 				e.printStackTrace();
 			}
 			writeFile(jsonMessage);
-			Common.d(jsonMessage);
+			DebugLog.d(jsonMessage);
 		}
 		else{
 			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);

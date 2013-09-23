@@ -17,11 +17,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
+import carpool.common.Validator;
+import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
+import carpool.factory.JSONFactory;
 import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
@@ -43,7 +43,7 @@ public class UserEmailResource extends PseudoResource{
         
         try {
         	email = this.getQueryVal("email");
-        	isFormatCorrect = Common.isEmailFormatValid(email);
+        	isFormatCorrect = Validator.isEmailFormatValid(email);
         	if (isFormatCorrect){
         		isAvailable = UserDaoService.isEmailAvailable(email);
         		

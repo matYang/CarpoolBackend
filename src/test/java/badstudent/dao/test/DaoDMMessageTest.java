@@ -8,9 +8,10 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.Constants.paymentMethod;
+import carpool.common.DateUtility;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
+import carpool.constants.Constants.paymentMethod;
 import carpool.database.DaoBasic;
 import carpool.database.DaoMessage;
 import carpool.database.DaoTransaction;
@@ -26,10 +27,10 @@ import carpool.model.User;
 
 public class DaoDMMessageTest {
 
-	private final Calendar calender1 = Common.DateToCalendar(new Date(6666666));
-	private final Calendar calender2 = Common.DateToCalendar(new Date(7777777));
-	private final Calendar calender3 = Common.DateToCalendar(new Date(8888888));
-	private final Calendar calender4 = Common.DateToCalendar(new Date(9999999));
+	private final Calendar calender1 = DateUtility.DateToCalendar(new Date(6666666));
+	private final Calendar calender2 = DateUtility.DateToCalendar(new Date(7777777));
+	private final Calendar calender3 = DateUtility.DateToCalendar(new Date(8888888));
+	private final Calendar calender4 = DateUtility.DateToCalendar(new Date(9999999));
 	private final Message default1 = new Message(11,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
 			new Location("a a a a"),calender1,calender2,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
 			5,false,true,new ArrayList<Transaction>(),calender3);
@@ -107,14 +108,14 @@ public class DaoDMMessageTest {
 		try {
 			DaoMessage.UpdateMessageInDatabase(default2);
 		} catch (MessageNotFoundException e) {
-			Common.d("Message Not Found");
+			DebugLog.d("Message Not Found");
 			assertTrue(false);
 		}
 		Message msg = null;
 		try {
 			msg = DaoMessage.getMessageById(1);
 		} catch (MessageNotFoundException e) {
-			Common.d("Message Not Found");
+			DebugLog.d("Message Not Found");
 			assertTrue(false);
 		}
 		assertTrue(msg.getMessageId()==1);
@@ -155,7 +156,7 @@ public class DaoDMMessageTest {
 		try {
 			msg = DaoMessage.getMessageById(msg.getMessageId());
 		} catch (MessageNotFoundException e) {
-			Common.d("Message Not Found");
+			DebugLog.d("Message Not Found");
 			assertTrue(false);
 		}
 		assertTrue(msg.getMessageId()==1);
@@ -248,10 +249,10 @@ public class DaoDMMessageTest {
 		DaoMessage.addMessageToDatabase(default3);
 		DaoMessage.addMessageToDatabase(default4);
 		//init Message finish
-		ArrayList<Message> results = DaoMessage.searchMessageRegion("a a a bla", Common.toSQLDateTime(calender3), Constants.messageType.ask.code+"");
+		ArrayList<Message> results = DaoMessage.searchMessageRegion("a a a bla", DateUtility.toSQLDateTime(calender3), Constants.messageType.ask.code+"");
 		assertTrue(results.get(0).getOwnerImgPath().equals("ImgPath"));
 
-		assertTrue(DaoMessage.searchMessageSingle("%", Common.toSQLDateTime(calender4), "%").size()==4);
+		assertTrue(DaoMessage.searchMessageSingle("%", DateUtility.toSQLDateTime(calender4), "%").size()==4);
 		init();
 	}
 

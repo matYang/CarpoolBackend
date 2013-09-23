@@ -15,14 +15,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.factory.JSONFactory;
 import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
@@ -41,7 +41,7 @@ public class UserTopBarResource extends PseudoResource{
 			id = Integer.parseInt(this.getReqAttr("id"));
 			this.validateAuthentication(id);
 			
-			Common.d("API::GetUserById:: " + id);
+			DebugLog.d("API::GetUserById:: " + id);
 			
         	User user = UserDaoService.getTopBarUserById(id);
         	if (user != null){

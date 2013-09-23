@@ -7,9 +7,9 @@ import org.restlet.Component;
 import org.restlet.Server;
 import org.restlet.data.Protocol;
 
-import carpool.common.Common;
-import carpool.common.JSONFactory;
-import carpool.common.Constants.gender;
+import carpool.common.DebugLog;
+import carpool.constants.Constants.gender;
+import carpool.factory.JSONFactory;
 import carpool.service.*;
 
 
@@ -48,7 +48,7 @@ public class ServerMain {
 
 		// Start the component.
 		//log.info("ready to start");
-		Common.d("ready to start");
+		DebugLog.d("ready to start");
 		component.start();
 
 	}
@@ -83,7 +83,7 @@ public class ServerMain {
 		lols.add("das");
 		System.out.println(JSONFactory.toJSON_arr_str(lols));
 		*/
-		Common.d("Excuting");
+		DebugLog.d("Excuting");
 		// Load server logic
 		try {
 			ServerMain.getInstance().init(args);

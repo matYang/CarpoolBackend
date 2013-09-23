@@ -3,7 +3,7 @@ package carpool.location;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 
-import carpool.exception.LocationException;
+import carpool.exception.location.LocationException;
 
 public class CarpoolLocation {
 	

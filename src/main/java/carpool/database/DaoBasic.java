@@ -6,8 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Set;
 
-import carpool.common.Common;
-import carpool.common.Constants;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
 
 
 import redis.clients.jedis.Jedis;
@@ -22,9 +22,9 @@ public class DaoBasic {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection(uri, "root", null);
         } catch (ClassNotFoundException e) {
-            Common.d(e.getMessage());
+            DebugLog.d(e.getMessage());
         } catch (SQLException e) {
-            Common.d(e.getMessage()); 
+            DebugLog.d(e.getMessage()); 
         }
     }
     
@@ -69,7 +69,7 @@ public class DaoBasic {
         	stmt.addBatch(query7);
         	stmt.executeBatch();
         }catch(SQLException e){
-        	Common.d(e.getMessage());
+        	DebugLog.d(e.getMessage());
         }
     }
 }

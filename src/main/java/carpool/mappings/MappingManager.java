@@ -12,8 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
 import carpool.model.Location;
 
 
@@ -155,14 +155,14 @@ public class MappingManager {
     
     public static String determineRegionFromLocation(Location location){
         if(location.getRegion()!="NULL"){
-            Common.d("Location has already got region which is " + location.getRegion());
+            DebugLog.d("Location has already got region which is " + location.getRegion());
             return location.getRegion();
         }
         if(!isLocationVaild(location)){
-            Common.d("Location is not vaild.");
-            Common.d(""+location.getSchool());
-            Common.d(""+location.getProvince());
-            Common.d(""+location.getCity());
+            DebugLog.d("Location is not vaild.");
+            DebugLog.d(""+location.getSchool());
+            DebugLog.d(""+location.getProvince());
+            DebugLog.d(""+location.getCity());
             return null;
         }
         for(String region : getAllRegion(location.getProvince(), location.getCity())){
@@ -171,7 +171,7 @@ public class MappingManager {
                 return regionMappings.getAreaName();
             }
         }
-        Common.d("Can not determine location.");
+        DebugLog.d("Can not determine location.");
         return location.getRegion();
     }
     

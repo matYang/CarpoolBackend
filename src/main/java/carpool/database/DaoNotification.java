@@ -6,8 +6,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import carpool.common.Common;
-import carpool.common.Constants;
+import carpool.common.DateUtility;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
 import carpool.exception.notification.NotificationNotFoundException;
 import carpool.model.Notification;
 
@@ -27,7 +28,7 @@ public class DaoNotification {
 			stmt.setInt(6, n.getTranscationId());
 			stmt.setInt(7,n.getTargetUserId());
 			stmt.setString(8, n.getSummary());
-			stmt.setString(9,Common.toSQLDateTime(n.getCreationTime()));
+			stmt.setString(9,DateUtility.toSQLDateTime(n.getCreationTime()));
 			stmt.setBoolean(10, n.isChecked());
 			stmt.setBoolean(11, n.isHistoryDeleted());
 			stmt.executeUpdate();
@@ -35,7 +36,7 @@ public class DaoNotification {
 			rs.next();
 			n.setNotificationId(rs.getInt(1));
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 			return null;
 		}
 		return n;
@@ -54,7 +55,7 @@ public class DaoNotification {
 				stmt.setInt(6, n.getTranscationId());
 				stmt.setInt(7,n.getTargetUserId());
 				stmt.setString(8, n.getSummary());
-				stmt.setString(9,Common.toSQLDateTime(n.getCreationTime()));
+				stmt.setString(9,DateUtility.toSQLDateTime(n.getCreationTime()));
 				stmt.setBoolean(10, n.isChecked());
 				stmt.setBoolean(11, n.isHistoryDeleted());
 				stmt.executeUpdate();
@@ -63,7 +64,7 @@ public class DaoNotification {
 				n.setNotificationId(rs.getInt(1));
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 			return null;
 		}
 		return notifications;
@@ -77,7 +78,7 @@ public class DaoNotification {
 				throw new NotificationNotFoundException();
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}		
 	}
 
@@ -93,7 +94,7 @@ public class DaoNotification {
 			stmt.setInt(6, n.getTranscationId());
 			stmt.setInt(7,n.getTargetUserId());
 			stmt.setString(8, n.getSummary());
-			stmt.setString(9,Common.toSQLDateTime(n.getCreationTime()));
+			stmt.setString(9,DateUtility.toSQLDateTime(n.getCreationTime()));
 			stmt.setBoolean(10, n.isChecked());
 			stmt.setBoolean(11, n.isHistoryDeleted());
 			stmt.setInt(12, n.getNotificationId());
@@ -102,7 +103,7 @@ public class DaoNotification {
 				throw new NotificationNotFoundException();
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 	}
 
@@ -115,7 +116,7 @@ public class DaoNotification {
 				retVal.add(createNotificationByResultSet(rs));
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return retVal;
 	}
@@ -132,7 +133,7 @@ public class DaoNotification {
 				throw new NotificationNotFoundException();
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return n;		
 	}
@@ -143,7 +144,7 @@ public class DaoNotification {
 		n = new Notification(rs.getInt("notificationId"), Constants.notificationType.fromInt(rs.getInt("notificationType")),
 				Constants.notificationEvent.fromInt(rs.getInt("notificationEvent")), rs.getInt("initUserId"),
 				rs.getString("initUserName"), rs.getInt("messageId"), rs.getInt("transcationId"),
-				rs.getInt("targetUserId"), rs.getString("summary"), Common.DateToCalendar(rs.getTimestamp("creationTime")),
+				rs.getInt("targetUserId"), rs.getString("summary"), DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
 				rs.getBoolean("checked"), rs.getBoolean("historyDeleted"));
 		return n;
 	}

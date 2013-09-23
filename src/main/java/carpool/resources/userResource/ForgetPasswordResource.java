@@ -19,9 +19,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
+import carpool.common.Validator;
+import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.encryption.EmailCrypto;
 import carpool.exception.PseudoException;
@@ -29,6 +28,7 @@ import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.exception.validation.EntityTooLargeException;
+import carpool.factory.JSONFactory;
 import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
@@ -47,7 +47,7 @@ public class ForgetPasswordResource extends PseudoResource{
         	email = this.getQueryVal("email");
         	
         	//check the email format first
-        	if (Common.isEmailFormatValid(email)){
+        	if (Validator.isEmailFormatValid(email)){
         		//if the email format is valid, check if this email has been registered
         		if (!UserDaoService.isEmailAvailable(email)){
         			//this will need a translation from email to id, another SQL query, wonder if could be improved

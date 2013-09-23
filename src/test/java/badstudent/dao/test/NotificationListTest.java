@@ -7,7 +7,7 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-import carpool.common.Constants;
+import carpool.constants.Constants;
 import carpool.database.DaoBasic;
 import carpool.database.DaoMessage;
 import carpool.database.DaoNotification;

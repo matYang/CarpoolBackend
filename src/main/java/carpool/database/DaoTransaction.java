@@ -6,8 +6,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import carpool.common.Common;
-import carpool.common.Constants;
+import carpool.common.DateUtility;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.model.Message;
@@ -39,20 +40,20 @@ public class DaoTransaction {
 			stmt.setInt(14, t.getPrice());
 			stmt.setString(15, t.getRequestInfo());
 			stmt.setString(16, t.getResponseInfo());
-			stmt.setString(17, Common.toSQLDateTime(t.getStartTime()));
-			stmt.setString(18, Common.toSQLDateTime(t.getEndTime()));
+			stmt.setString(17, DateUtility.toSQLDateTime(t.getStartTime()));
+			stmt.setString(18, DateUtility.toSQLDateTime(t.getEndTime()));
 			stmt.setString(19, t.getLocation().toString());
 			stmt.setInt(20, t.isEstablished() ? 1:0);
 			stmt.setInt(21, t.isSuccess() ? 1:0);
 			stmt.setInt(22, t.getState().code);
 			stmt.setInt(23, t.isHistoryDeleted() ? 1:0);
-			stmt.setString(24, Common.toSQLDateTime(t.getCreationTime()));
+			stmt.setString(24, DateUtility.toSQLDateTime(t.getCreationTime()));
 			stmt.executeUpdate();
 			ResultSet rs = stmt.getGeneratedKeys();
 			rs.next();
 			t.setTransactionId(rs.getInt(1));
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 			return null;
 		}
 		return t;
@@ -66,7 +67,7 @@ public class DaoTransaction {
 				throw new TransactionNotFoundException();
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 	}
 	
@@ -92,21 +93,21 @@ public class DaoTransaction {
 			stmt.setInt(14, t.getPrice());
 			stmt.setString(15, t.getRequestInfo());
 			stmt.setString(16, t.getResponseInfo());
-			stmt.setString(17, Common.toSQLDateTime(t.getStartTime()));
-			stmt.setString(18, Common.toSQLDateTime(t.getEndTime()));
+			stmt.setString(17, DateUtility.toSQLDateTime(t.getStartTime()));
+			stmt.setString(18, DateUtility.toSQLDateTime(t.getEndTime()));
 			stmt.setString(19, t.getLocation().toString());
 			stmt.setInt(20, t.isEstablished() ? 1:0);
 			stmt.setInt(21, t.isSuccess() ? 1:0);
 			stmt.setInt(22, t.getState().code);
 			stmt.setInt(23, t.isHistoryDeleted() ? 1:0);
-			stmt.setString(24, Common.toSQLDateTime(t.getCreationTime()));
+			stmt.setString(24, DateUtility.toSQLDateTime(t.getCreationTime()));
 			stmt.setInt(25, t.getTransactionId());
 			int recordsAffected = stmt.executeUpdate();
 			if(recordsAffected==0){
 				throw new TransactionNotFoundException();
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 	}
 	
@@ -119,7 +120,7 @@ public class DaoTransaction {
 				retVal.add(createTransactionByResultSet(rs));
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return retVal;
 	}
@@ -136,7 +137,7 @@ public class DaoTransaction {
 				throw new TransactionNotFoundException();
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return t;		
 	}
@@ -151,7 +152,7 @@ public class DaoTransaction {
 				retVal.add(createTransactionByResultSet(rs));
 			}
 		}catch(SQLException e){
-			Common.d(e.getMessage());
+			DebugLog.d(e.getMessage());
 		}
 		return retVal;
 	}
@@ -162,9 +163,9 @@ public class DaoTransaction {
 				rs.getString("initUserName"), rs.getInt("initUserLevel"),rs.getString("targetUserImgPath"), rs.getString("targetUserName"),
 				rs.getInt("targetUserLevel"),rs.getInt("initUserEval"),rs.getInt("targetUserEval"), rs.getInt("messageId"), rs.getString("messageNote"),
 				Constants.paymentMethod.fromInt(rs.getInt("paymentMethod")), rs.getInt("price"),rs.getString("requestInfo"),
-				rs.getString("responseInfo"), Common.DateToCalendar(rs.getTimestamp("startTime")),Common.DateToCalendar(rs.getTimestamp("endTime")),
+				rs.getString("responseInfo"), DateUtility.DateToCalendar(rs.getTimestamp("startTime")),DateUtility.DateToCalendar(rs.getTimestamp("endTime")),
 				new Location(rs.getString("location")), rs.getBoolean("established"), rs.getBoolean("success"),
-				Constants.transactionState.fromInt(rs.getShort("state")), rs.getBoolean("historyDeleted"), Common.DateToCalendar(rs.getTimestamp("creationTime")));
+				Constants.transactionState.fromInt(rs.getShort("state")), rs.getBoolean("historyDeleted"), DateUtility.DateToCalendar(rs.getTimestamp("creationTime")));
 		return t;
 	}
 }

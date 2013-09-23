@@ -3,12 +3,13 @@ package carpool.dbservice;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.Constants.gender;
-import carpool.common.Constants.messageType;
-import carpool.common.Constants.paymentMethod;
-import carpool.common.Constants.userSearchState;
+import carpool.common.DateUtility;
+import carpool.common.DebugLog;
+import carpool.constants.Constants;
+import carpool.constants.Constants.gender;
+import carpool.constants.Constants.messageType;
+import carpool.constants.Constants.paymentMethod;
+import carpool.constants.Constants.userSearchState;
 import carpool.database.DaoMessage;
 import carpool.database.DaoTransaction;
 import carpool.database.DaoUser;
@@ -68,9 +69,9 @@ public class MessageDaoService{
 			type = messageType.help;
 		}
 		if(searchState.code<2){
-			return DaoMessage.searchMessageSingle(location.toString(),Common.toSQLDateTime(date),type.code+"");
+			return DaoMessage.searchMessageSingle(location.toString(),DateUtility.toSQLDateTime(date),type.code+"");
 		}else if(searchState.code<4){
-			return DaoMessage.searchMessageRegion(location.toString(),Common.toSQLDateTime(date),type.code+"");
+			return DaoMessage.searchMessageRegion(location.toString(),DateUtility.toSQLDateTime(date),type.code+"");
 		}else{
 			throw new UnacceptableSearchStateException();
 		}
@@ -93,7 +94,7 @@ public class MessageDaoService{
 			try {
 				return primaryMessageSearch(location, date, searchState);
 			} catch (UnacceptableSearchStateException e) {
-				Common.d("IMPOSSIBLE TO HAPPEN");
+				DebugLog.d("IMPOSSIBLE TO HAPPEN");
 				return null;
 			}
 		}else{
@@ -106,7 +107,7 @@ public class MessageDaoService{
 			String group = user.getUniversityGroupString();
 			ArrayList<Message> retVal = new ArrayList<Message>();
 			for(String str : group.split("-")){
-				retVal.addAll(DaoMessage.searchMessageSingle(str, Common.toSQLDateTime(date), type.code+""));
+				retVal.addAll(DaoMessage.searchMessageSingle(str, DateUtility.toSQLDateTime(date), type.code+""));
 			}
 			return retVal;
 		}

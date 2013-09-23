@@ -10,8 +10,8 @@ import org.restlet.data.Cookie;
 import org.restlet.data.CookieSetting;
 import org.restlet.util.Series;
 
-import carpool.common.Common;
-import carpool.common.Constants;
+import carpool.common.Validator;
+import carpool.constants.Constants;
 import carpool.database.DaoBasic;
 import carpool.database.DaoUser;
 import carpool.dbservice.UserDaoService;

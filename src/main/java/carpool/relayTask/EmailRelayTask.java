@@ -12,7 +12,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import carpool.common.Common;
+import carpool.common.DebugLog;
 import carpool.interfaces.PesudoRelayTask;
 
 
@@ -69,15 +69,15 @@ public class EmailRelayTask implements PesudoRelayTask{
 				transport.close();
 			} catch (AddressException e) {
 				e.printStackTrace();
-				Common.d("EmailRelayTask::send encoutered Exception:" + e.toString());
+				DebugLog.d("EmailRelayTask::send encoutered Exception:" + e.toString());
 				return false;
 			} catch (NoSuchProviderException e) {
 				e.printStackTrace();
-				Common.d("EmailRelayTask::send encoutered Exception:" + e.toString());
+				DebugLog.d("EmailRelayTask::send encoutered Exception:" + e.toString());
 				return false;
 			} catch (MessagingException e) {
 				e.printStackTrace();
-				Common.d("EmailRelayTask::send encoutered Exception:" + e.toString());
+				DebugLog.d("EmailRelayTask::send encoutered Exception:" + e.toString());
 				return false;
 			} 
 			

@@ -6,9 +6,9 @@ import java.util.Calendar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants.notificationEvent;
-import carpool.common.Constants.notificationType;
+import carpool.common.DateUtility;
+import carpool.constants.Constants.notificationEvent;
+import carpool.constants.Constants.notificationType;
 import carpool.interfaces.PseudoModel;
 
 
@@ -231,7 +231,7 @@ public class Notification implements PseudoModel{
 		JSONObject jsonNotification = new JSONObject(this);
 		
 		try {
-			jsonNotification.put("creationTime", Common.CalendarToUTCString(this.getCreationTime()));
+			jsonNotification.put("creationTime", DateUtility.CalendarToUTCString(this.getCreationTime()));
 			
 			jsonNotification.put("notificationType", this.getNotificationType());
 			jsonNotification.put("notificationEvent", this.getNotificationEvent());

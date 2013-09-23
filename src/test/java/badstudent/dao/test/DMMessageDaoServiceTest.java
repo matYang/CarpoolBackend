@@ -8,8 +8,8 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-import carpool.common.Common;
-import carpool.common.Constants;
+import carpool.common.DateUtility;
+import carpool.constants.Constants;
 import carpool.database.DaoBasic;
 import carpool.database.DaoMessage;
 import carpool.database.DaoUser;
@@ -32,7 +32,7 @@ public class DMMessageDaoServiceTest {
 	public void updateTest(){
 		DaoBasic.clearBothDatabase();
 		Calendar calender = Calendar.getInstance();
-		Calendar calender2 = Common.DateToCalendar(new Date(9999999));
+		Calendar calender2 = DateUtility.DateToCalendar(new Date(9999999));
 		User defaultUser = new User(0, "password", "name", 0, 0,0, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
@@ -194,10 +194,10 @@ public class DMMessageDaoServiceTest {
 		}
 		//init user finish
 		//init Message
-		Calendar calender1 = Common.DateToCalendar(new Date(6666666));
-		Calendar calender2 = Common.DateToCalendar(new Date(7777777));
-		Calendar calender3 = Common.DateToCalendar(new Date(8888888));
-		Calendar calender4 = Common.DateToCalendar(new Date(9999999));
+		Calendar calender1 = DateUtility.DateToCalendar(new Date(6666666));
+		Calendar calender2 = DateUtility.DateToCalendar(new Date(7777777));
+		Calendar calender3 = DateUtility.DateToCalendar(new Date(8888888));
+		Calendar calender4 = DateUtility.DateToCalendar(new Date(9999999));
 		Message default1 = new Message(1,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
 				new Location("a a a a"),calender2,calender4,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
 				5,false,true,new ArrayList<Transaction>(),calenderx);

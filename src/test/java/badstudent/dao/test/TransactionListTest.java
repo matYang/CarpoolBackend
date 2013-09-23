@@ -7,8 +7,8 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-import carpool.common.Constants;
-import carpool.common.Constants.paymentMethod;
+import carpool.constants.Constants;
+import carpool.constants.Constants.paymentMethod;
 import carpool.database.DaoBasic;
 import carpool.database.DaoMessage;
 import carpool.database.DaoTransaction;

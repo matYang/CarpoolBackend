@@ -17,13 +17,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.common.Common;
-import carpool.common.Constants;
-import carpool.common.JSONFactory;
+import carpool.common.DebugLog;
+import carpool.common.Validator;
+import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.factory.JSONFactory;
 import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
@@ -46,7 +47,7 @@ public class UserContactResource extends PseudoResource{
 			String phone = jsonContact.getString("phone");
 			String qq = jsonContact.getString("qq");
 			//no DB interaction here
-			if (!(User.isNameFormatValid(name) && User.isAgeValid(age) && User.isGenderValid(Constants.gender.values()[gender]) && Common.isPhoneFormatValid(phone) && Common.isQqFormatValid(qq))){
+			if (!(User.isNameFormatValid(name) && User.isAgeValid(age) && User.isGenderValid(Constants.gender.values()[gender]) && Validator.isPhoneFormatValid(phone) && Validator.isQqFormatValid(qq))){
 				return null;
 			}
 			else{
@@ -55,7 +56,7 @@ public class UserContactResource extends PseudoResource{
 			
 		} catch (Exception e){
 			e.printStackTrace();
-			Common.d("UserContactResource:: parseJSON error, likely invalid format");
+			DebugLog.d("UserContactResource:: parseJSON error, likely invalid format");
 		}
 
 		return null;
@@ -92,7 +93,7 @@ public class UserContactResource extends PseudoResource{
 				}
 			}
 			else{
-				Common.d("parsed contact is null");
+				DebugLog.d("parsed contact is null");
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			}
 
