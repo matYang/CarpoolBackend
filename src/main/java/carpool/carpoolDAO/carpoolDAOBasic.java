@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Set;
 
-import carpool.common.Constants;
+import carpool.constants.Constants;
 import carpool.common.DebugLog;
 
 
