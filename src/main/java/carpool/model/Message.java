@@ -69,7 +69,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	/*****
 	 * The contructor used for message posting
 	 *****/
-	public Message(int messageId, int ownerId, boolean isRroundTrip,
+	public Message(int messageId, int ownerId, boolean isRoundTrip,
 			Location departure_Location, Calendar departure_Time,
 			int departure_seatsNumber, ArrayList<Integer> departure_priceList,
 			Location arrival_Location, Calendar arrival_Time,
@@ -79,7 +79,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		super();
 		this.messageId = messageId;
 		this.ownerId = ownerId;
-		this.isRoundTrip = isRroundTrip;
+		this.isRoundTrip = isRoundTrip;
 		this.departure_Location = departure_Location;
 		this.departure_Time = departure_Time;
 		this.departure_seatsNumber = departure_seatsNumber;
@@ -126,7 +126,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		this.messageId = messageId;
 		this.ownerId = ownerId;
 		this.owner = owner;
-		this.isRoundTrip = isRroundTrip;
+		this.isRoundTrip = isRoundTrip;
 		this.departure_Location = departure_Location;
 		this.departure_Time = departure_Time;
 		this.departure_seatsNumber = departure_seatsNumber;
@@ -422,7 +422,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	public String toString() {
 		return "Message [category=" + category + ", messageId=" + messageId
 				+ ", ownerId=" + ownerId + ", owner=" + owner
-				+ ", transactionList=" + transactionList + ", isRoundTrip="
+				+ ", transactionList=" + transactionList + ", isRroundTrip="
 				+ isRoundTrip + ", departure_Location=" + departure_Location
 				+ ", departure_Time=" + departure_Time
 				+ ", departure_seatsNumber=" + departure_seatsNumber
