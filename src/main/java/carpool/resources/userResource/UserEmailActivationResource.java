@@ -52,7 +52,7 @@ public class UserEmailActivationResource extends PseudoResource{
         	authCode = decodedKey[1];
         	
         	//activate email anyways
-        	topBarUser = UserDaoService.activateUserEmail(userId, authCode);
+        	topBarUser = EmailDaoService.activateUserEmail(userId, authCode);
         	
         	if (topBarUser != null && topBarUser.isEmailActivated() && topBarUser.isAbleToLogin()){
         		this.closeAuthenticationSession(userId);

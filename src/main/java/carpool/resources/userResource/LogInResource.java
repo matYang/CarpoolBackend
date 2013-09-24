@@ -59,7 +59,7 @@ public class LogInResource extends PseudoResource{
 			password = jsonString.getString("password");
 			
 			DebugLog.d("log in, receving paramters: " + email + " " + password);
-			topBarUser = UserDaoService.isLoginUserValid(email, password);
+			topBarUser = authDaoService.authenticateUserLogin(email, password);
 			
 			if (topBarUser != null && topBarUser.isAbleToLogin()){
 				

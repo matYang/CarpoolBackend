@@ -52,7 +52,7 @@ public class PseudoResource extends ServerResource{
         }
 	}
 
-	protected Object parseJSON(Representation entity){
+	protected Object parseJSON(Representation entity) throws PseudoException{
 		return null;
 	}
 	

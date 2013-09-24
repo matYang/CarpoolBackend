@@ -49,9 +49,9 @@ public class ForgetPasswordResource extends PseudoResource{
         	//check the email format first
         	if (Validator.isEmailFormatValid(email)){
         		//if the email format is valid, check if this email has been registered
-        		if (!UserDaoService.isEmailAvailable(email)){
+        		if (!EmailDaoService.isEmailAvailable(email)){
         			//this will need a translation from email to id, another SQL query, wonder if could be improved
-            		isSent = UserDaoService.sendChangePasswordEmail(email);
+            		isSent = EmailDaoService.sendChangePasswordEmail(email);
             		if (isSent){
             			setStatus(Status.SUCCESS_OK);
             		}
@@ -106,7 +106,7 @@ public class ForgetPasswordResource extends PseudoResource{
 			newPassword = jsonString.getString("newPassword");
 			confirmNewPassword = jsonString.getString("confirmNewPassword");
 			
-			isValid = UserDaoService.isResetPasswordValid(userId, authCode);
+			isValid = authDaoService.isResetPasswordValid(userId, authCode);
 			if (isValid){
 				if (Validator.isPasswordFormatValid(newPassword) && newPassword.equals(confirmNewPassword)){
 					passwordChanged = UserDaoService.resetUserPassword(userId, newPassword);

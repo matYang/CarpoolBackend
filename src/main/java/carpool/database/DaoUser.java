@@ -14,6 +14,7 @@ import carpool.common.Validator;
 import carpool.constants.Constants.gender;
 import carpool.constants.Constants.userSearchState;
 import carpool.constants.Constants.userState;
+import carpool.exception.ValidationException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -50,7 +51,7 @@ public class DaoUser {
 		return retVal;
 	}
 
-	public static User addUserToDatabase(User user) throws Exception{
+	public static User addUserToDatabase(User user) throws ValidationException{
 		String query = "INSERT INTO User (password,name,level,averageScore," +
 				"totalTranscations,universityGroup,age,gender,phone,email,qq," +
 				"imgPath,location,emailActivated,phoneActivated,emailNotice," +
@@ -84,7 +85,7 @@ public class DaoUser {
 			user.setUserId(rs.getInt(1));
 		}catch(SQLException e){
 			if(e.getMessage().contains("Duplicate")){
-				throw new Exception("Some user field already exists");
+				throw new ValidationException("Some user field already exists");
 			}else{
 				DebugLog.d(e.getMessage());
 			}

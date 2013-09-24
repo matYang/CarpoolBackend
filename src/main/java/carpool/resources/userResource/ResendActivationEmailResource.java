@@ -43,11 +43,11 @@ public class ResendActivationEmailResource extends PseudoResource{
         try {
         	userId = Integer.parseInt(this.getReqAttr("userId"));
         	
-        	isActivated = UserDaoService.isUserEmailActivated(userId);
+        	isActivated = EmailDaoService.isUserEmailActivated(userId);
         	
         	//if not activated already, assuming without activation login is impossible and does not need to be checked
         	if (!isActivated){
-        		isSent = UserDaoService.reSendActivationEmail(userId);
+        		isSent = EmailDaoService.reSendActivationEmail(userId);
         		if (isSent){
         			setStatus(Status.SUCCESS_OK);
         		}

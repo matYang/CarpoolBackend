@@ -74,7 +74,7 @@ public class UserWatchUserResource extends PseudoResource{
 		int id = -1;
 		int targetUserId = -1;
 		JSONObject response = new JSONObject();
-		User watchedUser = new User();
+		User watchedUser = null;
 
 		try {
 			this.checkEntity(entity);
