@@ -11,6 +11,8 @@ import carpool.constants.Constants;
 import carpool.constants.Constants.gender;
 import carpool.database.*;
 import carpool.encryption.EmailCrypto;
+import carpool.exception.PseudoException;
+import carpool.exception.ValidationException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.*;
@@ -20,9 +22,6 @@ public class UserDaoService{
 
 
 	/**
-	 * @param   accepts name, phone, email, qq as search key words, if any of name, phone, email, or qq is empty(""), do not search by it
-	 * do moderate safe checking if necessary,(e.g. not null), I'll take care most of checking on Resource level
-	 * @return  ArrayList of users, as long as one of name, phone, email, or qq matches the user, include user in search result
 	 * return null if fails safe checking, return empty ArrayList if no result found
 	 */
 	public static ArrayList<User> searchByInfo(String name, String phone, String email, String qq){
@@ -44,6 +43,15 @@ public class UserDaoService{
 		}
 		return DaoUser.searchUser(name, phone, email, qq);
 	}
+	
+
+	/**
+	 * return all users, used to testing only
+	 */
+	public static ArrayList<User> getAllUsers() {
+		ArrayList<User> users = searchByInfo("", "", "", "");
+		return users;
+	}
 
 	/**
 	 * @param newUser   the newUser just received in POST, constructed by the specified constructor in User
@@ -51,14 +59,9 @@ public class UserDaoService{
 	 * @return the newUser with UserId in place, null if error occurred		
 	 */
 	public static User createNewUser(User newUser){
-		if(newUser==null){
-			return null;
-		}
+
 		try {
-			newUser = DaoUser.addUserToDatabase(newUser);
-			User returnUser = new User(newUser);
-			returnUser.prepareTopBarUser();
-			return returnUser;
+			return DaoUser.addUserToDatabase(newUser);
 		} catch (Exception e) {
 			DebugLog.d(e.getMessage());
 			return null;
@@ -141,7 +144,6 @@ public class UserDaoService{
 			user.setEmailActivated(true);
 			DaoUser.UpdateUserInDatabase(user);
 			DaoBasic.getJedis().del(Constants.key_emailActivationAuth +  userId);
-			user.prepareTopBarUser();
 			return user;
 		} catch (Exception e) {
 			DebugLog.d(e.getMessage());
@@ -300,7 +302,6 @@ public class UserDaoService{
 	 */
 	public static User getTopBarUserById(int id) throws UserNotFoundException{
 		User user = DaoUser.getUserById(id);
-		user.prepareTopBarUser();
 		return user;
 	}
 
@@ -326,7 +327,6 @@ public class UserDaoService{
 		}
 		try {
 			User user = DaoUser.getUserById(Integer.parseInt(id));
-			user.prepareTopBarUser();
 			return user;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -358,15 +358,13 @@ public class UserDaoService{
 	 * @return  the newly updated user, null if error occurred, eg id does not exist
 	 * @throws user not found exception if the user id does not exist
 	 */
-	public static User updateUser(User user, int id) throws UserNotFoundException{
-		if(id!=user.getUserId()){
-			DebugLog.d("Id does not equal user's id");
+	public static User updateUser(User user, int id) throws PseudoException{
+		if(id != user.getUserId()){
+			throw new ValidationException("id does not match");
 		}
 		try {
 			DaoUser.UpdateUserInDatabase(user);
-			User returnUser = new User(user);
-			returnUser.prepareTopBarUser();
-			return returnUser;
+			return user;
 		}catch(Exception e){
 			DebugLog.d(e.getMessage());
 			return null;
@@ -456,77 +454,9 @@ public class UserDaoService{
 		return null;
 	}
 
-	/**
-	 * get the university group from target user
-	 * @param userId
-	 * @return	return arrayList of university group, return null if error occurred, eg: userId does not exist
-	 * @throws user not found exception if the user id does not exist
-	 */
-	public static ArrayList<Location> getUniversityGroup(int userId) throws UserNotFoundException{
-		User user = DaoUser.getUserById(userId);
-		ArrayList<String> retSet =  user.getUniversityGroup();
-		ArrayList<Location> retVal = new ArrayList<Location>();
-		for(String s : retSet){
-			retVal.add(new Location(s));
-		}
-		return retVal;
-	}
-
-	/**
-	 * Adds the desired location to the universityGoup of targetUser
-	 * @param userId
-	 * @param location
-	 * @return	the latest location added to this university, return null if operation failed, eg, target user does not exist
-	 * @throws user not found exception if the user id does not exist
-	 */
-	public static Location addLocationToUniversityGroup(int userId, Location location) throws UserNotFoundException{
-		try {
-			User user = DaoUser.getUserById(userId);
-			ArrayList<String> group = user.getUniversityGroup();
-			group.add(location.toString());
-			user.setUniversityGroup(group);
-			DaoUser.UpdateUserInDatabase(user);
-			return location;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-
-	/**
-	 * removed the location from the target user
-	 * @param userId
-	 * @param location
-	 * @return	return null if error, eg user does not exist, else return the removed location
-	 * @throws user not found exception if the user id does not exist
-	 */
-	public static Location removeLocationFromUniversityGroup(int userId, Location location) throws UserNotFoundException{
-		try {
-			User user = DaoUser.getUserById(userId);
-			ArrayList<String> group = user.getUniversityGroup();
-			boolean success = group.remove(location.toString());
-			user.setUniversityGroup(group);
-			DaoUser.UpdateUserInDatabase(user);
-			if(success){
-				return location;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 
 	/**
 	 * changes user's contact information, it can be assumed all info entries here are valid
-	 * @param userId
-	 * @param name
-	 * @param age
-	 * @param gender
-	 * @param phone
-	 * @param qq
-	 * @return 
 	 * @throws user not found exception if the user id does not exist
 	 */
 	public static User changeContactInfo(int userId, String name, int age, gender gender, String phone, String qq) throws UserNotFoundException{
@@ -553,28 +483,12 @@ public class UserDaoService{
 		return null;
 	}
 
-
-
 	/**
 	 * @return  a random string of fixed length 15 characters, consisting of a-z, A-Z, 0-9,
 	 */
 	private static String generateRandomString(){
 		return RandomStringUtils.randomAlphanumeric(15);
 	}
-
-
-
-	/**
-	 * used for experimenting only
-	 * @param id
-	 * @return the session string consisting of the randomString + id
-	 */
-	private static String generateSessionString(int id){
-		String randomString = generateRandomString();
-		return randomString + "+" + id;
-
-	}
-
 
 
 	/**
@@ -743,7 +657,7 @@ public class UserDaoService{
 	public static boolean deWatchUser(int userId, int targetUserId) throws UserNotFoundException{
 		User user = DaoUser.getUserById(userId);
 		User target = DaoUser.getUserById(targetUserId);
-		Validator.removeFromSocialList(user.getSocialList(), target.getUserId());
+		HelperOperator.removeFromSocialList(user.getSocialList(), target.getUserId());
 		try {
 			DaoUser.UpdateUserInDatabase(user);
 			return true;
@@ -805,14 +719,6 @@ public class UserDaoService{
 		return false;
 	}
 
-	/**
-	 * return all users, used to testing only
-	 * @return null if any error occurs
-	 */
-	public static ArrayList<User> getAllUsers() {
-		ArrayList<User> users = searchByInfo("", "", "", "");
-		return users;
-	}
 
 	/**
 	 * return an array list of messages that are watched by the current user
@@ -874,7 +780,7 @@ public class UserDaoService{
 		User user = DaoUser.getUserById(userId);
 		try {
 			Message msg = DaoMessage.getMessageById(targetMessageId);
-			Validator.removeFromWatchList(user.getWatchList(), msg.getMessageId());
+			HelperOperator.removeFromWatchList(user.getWatchList(), msg.getMessageId());
 			DaoUser.UpdateUserInDatabase(user);
 			return true;
 		} catch (MessageNotFoundException e) {
