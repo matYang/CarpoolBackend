@@ -54,25 +54,20 @@ public class UserDaoService{
 
 	
 	public static User createNewUser(User newUser) throws ValidationException{
-
 		return DaoUser.addUserToDatabase(newUser);
 	}
 
 
 
-	public static User updateUser(User user, int id) throws PseudoException{
-		if(id != user.getUserId()){
-			throw new ValidationException("id does not match");
-		}
+	public static User updateUser(User user) throws PseudoException{
 		try {
 			DaoUser.UpdateUserInDatabase(user);
 			return user;
 		}catch(Exception e){
 			DebugLog.d(e.getMessage());
-			return null;
+			throw new PseudoException(e.getMessage());
 		}
 	}
-
 
 
 	public static void deleteUser(int id) throws UserNotFoundException{
@@ -114,20 +109,10 @@ public class UserDaoService{
 		return false;
 	}
 	
-
-
+	
 	/*****
 	 * The follows are user relations used separately on API 
 	 *****/
-	
-	public static ArrayList<User> getWatchedUsers(int id) throws UserNotFoundException{
-		User user = DaoUser.getUserById(id);
-		if(user==null){
-			return null;
-		}
-		return user.getSocialList();
-	}
-
 	
 	public static User watchUser(int id, int targetUserId) throws UserNotFoundException{
 		User user = DaoUser.getUserById(id);
@@ -162,16 +147,6 @@ public class UserDaoService{
 		return false;
 	}
 
-
-	public static ArrayList<Message> getWatchedMessaegs(int id) throws UserNotFoundException{
-		User user = DaoUser.getUserById(id);
-		if(user==null){
-			return null;
-		}
-		return user.getWatchList();
-	}
-
-	
 
 	public static Message watchMessage(int id, int targetMessageId) throws UserNotFoundException{
 		User user = DaoUser.getUserById(id);
@@ -211,6 +186,24 @@ public class UserDaoService{
 		}
 		
 		return false;
+	}
+
+	
+	public static ArrayList<User> getWatchedUsers(int id) throws UserNotFoundException{
+		User user = DaoUser.getUserById(id);
+		if(user==null){
+			return null;
+		}
+		return user.getSocialList();
+	}
+	
+	
+	public static ArrayList<Message> getWatchedMessaegs(int id) throws UserNotFoundException{
+		User user = DaoUser.getUserById(id);
+		if(user==null){
+			return null;
+		}
+		return user.getWatchList();
 	}
 
 

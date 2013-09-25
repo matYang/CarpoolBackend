@@ -52,7 +52,7 @@ public class authDaoService {
 	 * gets the user from sessionString: 
 	 * 1. try to retrieve id+time stamp 
 	 * 2. if not found, return null, else, check time stamp 
-	 * 3. if time stamp expired, return null, else, get topBarUser using id from sql
+	 * 3. if time stamp expired, return null, else, get user using id from SQL
 	 * 4. if topBarUser retrieved successfully, return it, else, return null if any error occurs
 	 * @param sessionString
 	 * @return	the topBarUser currently associated with this sessionString

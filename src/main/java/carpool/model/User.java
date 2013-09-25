@@ -97,7 +97,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
      * private constructor to disallow raw initialization and serialization
      *****/
     private User(){}
- 
+    
 
     /*****
      * Constructor for user registration
@@ -215,8 +215,6 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	    this.universityGroup = new ArrayList<String>();
 	}
 
-	
-	
 
 	public int getUserId() {
 		return userId;
@@ -672,8 +670,33 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		
 		return jsonUser;
 	}
-
-
+    
+    //Does not compare relational objects
+    public boolean equals(User user){
+    	try{
+    		return user != null && this.getUserId() == user.getUserId() && user.getName().equals(user.getName()) &&
+    				this.getEmail().equals(user.getEmail()) && this.getPhone().equals(user.getPhone()) &&
+    				this.getQq().equals(user.getQq()) && this.getAge() == user.getAge() && this.getGender() == user.getGender() &&
+    				this.getBirthday().equals(user.getBirthday()) && this.getLocation().equals(user.getLocation()) &&
+    				this.getLastLogin().equals(user.getLastLogin()) && this.getCreationTime().equals(user.getCreationTime()) &&
+    				this.isEmailActivated() == user.isEmailActivated() && this.isPhoneActivated() == user.isPhoneActivated() &&
+    				this.isEmailNotice() == user.isEmailNotice() && this.isPhoneNotice() == user.isPhoneNotice() &&
+    				this.getState() == user.getState() && this.getSearchState() == user.getSearchState() && this.getLevel() == user.getLevel() &&
+    				this.getAverageScore() == user.getAverageScore() && this.getTotalTranscations() == user.getTotalTranscations() &&
+    				this.getGoogleToken().equals(user.getGoogleToken()) && this.getFacebookToken().equals(user.getFacebookToken()) &&
+    				this.getTwitterToken().equals(user.getTwitterToken()) && this.getPaypalToken().equals(user.getPaypalToken()) &&
+    				this.getId_docType().equals(user.getId_docType()) && this.getId_docNum().equals(user.getId_docNum()) &&
+    				this.getId_path().equals(user.getId_path()) && this.getId_vehicleImgPath().equals(user.getId_vehicleImgPath()) &&
+    				this.getAccountId().equals(user.getAccountId()) && this.getAccountPass().equals(user.getAccountPass()) &&
+    				this.getAccountToken().equals(user.getAccountToken()) && this.getAccountValue().equals(user.getAccountValue());
+    	}
+		catch (NullPointerException e){
+			e.printStackTrace();
+			return false;
+		}
+    }
+    
+    
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", password=" + password + ", name="

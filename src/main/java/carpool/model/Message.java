@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DateUtility;
+import carpool.common.HelperOperator;
 import carpool.common.Validator;
 import carpool.constants.Constants;
 import carpool.constants.Constants.gender;
@@ -418,6 +419,28 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 
 
 
+	public boolean equals(Message msg) {
+		try{
+			return msg != null && this.getArrival_Location().equals(msg.getArrival_Location()) && this.getArrival_Time().equals(msg.getArrival_Time()) &&
+					HelperOperator.isArrayListEqual(this.getArrival_priceList(), msg.getArrival_priceList()) && this.getArrival_seatsBooked() == msg.getArrival_seatsBooked() &&
+					this.getArrival_seatsNumber() == msg.getArrival_seatsNumber() && this.category == msg.getCategory() && this.getCreationTime().equals(msg.getCreationTime()) &&
+					this.departure_Location.equals(msg.getDeparture_Location()) && this.getDeparture_Time().equals(msg.getDeparture_Time()) &&
+					HelperOperator.isArrayListEqual(this.getDeparture_priceList(), msg.getDeparture_priceList()) && this.getDeparture_seatsBooked() == msg.getDeparture_seatsBooked() &&
+					this.getDeparture_seatsNumber() == msg.getDeparture_seatsNumber() && this.getEditTime().equals(msg.getEditTime()) &&
+					this.getGenderRequirement() == msg.getGenderRequirement() && this.isHistoryDeleted() == msg.isHistoryDeleted() &&
+					this.isRoundTrip == msg.isRoundTrip && this.getMessageId() == msg.getMessageId() && this.getNote().equals(msg.getNote()) &&
+					this.getOwnerId() == msg.getOwnerId() && this.getPaymentMethod() == msg.getPaymentMethod() && this.getState() == msg.getState() &&
+					this.getType() == msg.getType();
+		}
+		catch(NullPointerException e){
+			e.printStackTrace();
+			return false;
+		}
+		
+
+	}
+
+
 	@Override
 	public String toString() {
 		return "Message [category=" + category + ", messageId=" + messageId
@@ -454,6 +477,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		
 		return true;
 	}
+
 	
 
 }

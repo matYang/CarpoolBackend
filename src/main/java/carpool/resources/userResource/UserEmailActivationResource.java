@@ -23,6 +23,7 @@ import carpool.common.DebugLog;
 import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.encryption.EmailCrypto;
+import carpool.exception.ValidationException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
@@ -39,8 +40,8 @@ public class UserEmailActivationResource extends PseudoResource{
 	public Representation activiateUserEmail(){
 		int userId = -1;
 		String authCode = "";
-        User topBarUser = new User();
-        JSONObject response = new JSONObject(topBarUser);; 
+        User user = null;
+        JSONObject response = new JSONObject(); 
 
         
         try {
@@ -52,28 +53,27 @@ public class UserEmailActivationResource extends PseudoResource{
         	authCode = decodedKey[1];
         	
         	//activate email anyways
-        	topBarUser = EmailDaoService.activateUserEmail(userId, authCode);
+        	user = EmailDaoService.activateUserEmail(userId, authCode);
         	
-        	if (topBarUser != null && topBarUser.isEmailActivated() && topBarUser.isAbleToLogin()){
+        	if (user != null && user.isEmailActivated() && user.isAbleToLogin()){
         		this.closeAuthenticationSession(userId);
         		this.clearUserCookies();
         		this.addAuthenticationSession(userId);
   
         		setStatus(Status.SUCCESS_OK);
-        		response = JSONFactory.toJSON(topBarUser);
+        		response = JSONFactory.toJSON(user);
         	}
-        	else if (topBarUser == null){
+        	else if (user == null){
         		setStatus(Status.CLIENT_ERROR_FORBIDDEN);
         	}
-        	else if (!topBarUser.isEmailActivated()){
+        	else if (!user.isEmailActivated()){
         		//alert: authCode has been expired
-        		response = JSONFactory.toJSON(topBarUser);
-        		setStatus(Status.CLIENT_ERROR_PRECONDITION_FAILED);
+        		response = JSONFactory.toJSON(user);
+        		throw new ValidationException("Email Authcode expired");
         	}
-        	else if (!topBarUser.isAbleToLogin()){
-        		//other states have gone invalid
-        		response = JSONFactory.toJSON(topBarUser);
-        		setStatus(Status.CLIENT_ERROR_EXPECTATION_FAILED);
+        	else if (!user.isAbleToLogin()){
+        		response = JSONFactory.toJSON(user);
+        		throw new ValidationException("User can not log in");
         	}
         	
 		} catch (UserNotFoundException e){

@@ -37,7 +37,7 @@ public class SessionRedirect extends PseudoResource{
 	public Representation sessionRedirect(Representation entity){
 		DebugLog.d("enter session redirect");
 		
-		User topBarUser = new User();
+		User topBarUser = null;
 		JSONObject jsonObject = new JSONObject();
 		String sessionString = "";
 		
@@ -56,7 +56,7 @@ public class SessionRedirect extends PseudoResource{
 			}
 			//if not, retun defeault user, front end will detect invalid id==-1 and will use non-session
 			else{
-				jsonObject = JSONFactory.toJSON(new User());
+				jsonObject = JSONFactory.toJSON(new User("","",new Location()));
 			}
 		
 		}  catch (PseudoException e){

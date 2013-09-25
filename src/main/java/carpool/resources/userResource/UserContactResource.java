@@ -33,8 +33,6 @@ import carpool.resources.PseudoResource;
 
 public class UserContactResource extends PseudoResource{
 
-	//parses contact information from a JSONObject consisting of name, age, gender, phone, qq
-	//return JSONObject if all fields are valid, null if not
 	protected JSONObject parseJSON(Representation entity){
 		JSONObject jsonContact = null;
 		
