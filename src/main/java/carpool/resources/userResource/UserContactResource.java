@@ -71,7 +71,6 @@ public class UserContactResource extends PseudoResource{
 		int userId = -1;
 		JSONObject response = new JSONObject();
 		JSONObject contact = new JSONObject();
-		User topBarUser = new User();
 		
 		try {
 			this.checkEntity(entity);
@@ -81,14 +80,16 @@ public class UserContactResource extends PseudoResource{
 			
 			contact = parseJSON(entity);
 			if (contact != null){
-				topBarUser = UserDaoService.changeContactInfo(userId, contact.getString("name"), contact.getInt("age"), Constants.gender.values()[contact.getInt("gender")], contact.getString("phone"), contact.getString("qq"));
-				if (topBarUser != null){
-					response = JSONFactory.toJSON(topBarUser);
-					setStatus(Status.SUCCESS_OK);
-				}
-				else{
-					setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-				}
+				User user = UserDaoService.getUserById(userId);
+				user.setName(contact.getString("name"));
+				user.setAge(contact.getInt("age"));
+				user.setGender(Constants.gender.values()[contact.getInt("gender")]);
+				user.setPhone(contact.getString("phone"));
+				user.setQq(contact.getString("qq"));
+				UserDaoService.updateUser(user);
+				
+				response = JSONFactory.toJSON(user);
+				setStatus(Status.SUCCESS_OK);
 			}
 			else{
 				DebugLog.d("parsed contact is null");

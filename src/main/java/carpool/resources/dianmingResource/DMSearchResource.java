@@ -82,14 +82,14 @@ public class DMSearchResource extends PseudoResource{
 							setStatus(Status.SUCCESS_OK);
 						}
 					}
-					//other wise unauthorized, much login
+					//other wise unauthorized, must login
 					else{
 						setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
 					}
 				}
 				//if logged in, extended search used to record search state
 				else{
-					searchResult = MessageDaoService.extendedMessageSearch(location, date, searchState, userId);
+					searchResult = MessageDaoService.primaryMessageSearch(location, date, searchState);
 					if (searchResult == null){
 						setStatus(Status.SERVER_ERROR_INTERNAL);
 					}

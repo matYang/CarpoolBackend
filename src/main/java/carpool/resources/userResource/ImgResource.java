@@ -65,7 +65,7 @@ public class ImgResource extends PseudoResource{
 			this.validateAuthentication(id);
 			DebugLog.d("API::GetImage:: " + id);
 			
-        	imgPath = UserDaoService.getImagePath(id);
+        	imgPath = UserDaoService.getUserById(id).getImgPath();
         	if (imgPath != null){
         		setStatus(Status.SUCCESS_OK);
         		jsonObject = JSONFactory.toJSON(imgPath);
@@ -95,7 +95,6 @@ public class ImgResource extends PseudoResource{
 		JSONObject jsonObject = new JSONObject();
 		int id = -1;
 		String imgPath = "";
-		boolean imgPathSet = false;
 		boolean previousImgRemoved = false;
 			
 		try {
@@ -120,23 +119,20 @@ public class ImgResource extends PseudoResource{
                 
                 ImageIO.write(bufferedImage, "png", new File(imgPath));
                 
-                String previousPath = UserDaoService.getImagePath(id);
-                imgPathSet = UserDaoService.setImagePath(id, imgPath);
+                User user = UserDaoService.getUserById(id);
+                String previousPath = user.getImgPath();
+                user.setImgPath(imgPath);
+                UserDaoService.updateUser(user);
                 previousImgRemoved = HelperOperator.removePreviousImg(previousPath);
                 
                 if (!previousImgRemoved){
-                	//TODO should change to log, set log4j
                 	DebugLog.d("image not removed, path: " + previousPath);
                 }
                 
-                //once new image path is set, operation successfully, have an image cleaner later on
-				if (imgPathSet){
-					jsonObject = JSONFactory.toJSON(imgPath);
-					setStatus(Status.SUCCESS_OK);
-				}
-				else{
-					setStatus(Status.CLIENT_ERROR_CONFLICT);
-				}
+                //sending a user obj to front end
+				jsonObject = JSONFactory.toJSON(user);
+				setStatus(Status.SUCCESS_OK);
+
 			}
 			else{
 				setStatus(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY);

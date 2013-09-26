@@ -31,7 +31,7 @@ import carpool.resources.PseudoResource;
 
 
 
-public class UserToggleEmailNoticeResource extends PseudoResource{
+public class UserToggleNoticesResource extends PseudoResource{
 
 
 	@Put
@@ -44,7 +44,7 @@ public class UserToggleEmailNoticeResource extends PseudoResource{
 		int userId = -1;
 		JSONObject response = new JSONObject();
 		boolean emailNotice = false;
-		boolean toggleSuccess = false;
+		boolean phoneNotice = false;
 
 		try {
 			this.checkEntity(entity);
@@ -53,15 +53,16 @@ public class UserToggleEmailNoticeResource extends PseudoResource{
 			this.validateAuthentication(userId);
 			
 			emailNotice = Boolean.parseBoolean(this.getQueryVal("emailNotice"));
+			phoneNotice = Boolean.parseBoolean(this.getQueryVal("phoneNotice"));
 			
-			toggleSuccess = UserDaoService.toggleEmailNotice(userId, emailNotice);
-			if (toggleSuccess){
-				response = JSONFactory.toJSON(emailNotice);
-				setStatus(Status.SUCCESS_OK);
-			}
-			else{
-				setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-			}
+			User user = UserDaoService.getUserById(userId);
+			user.setEmailNotice(emailNotice);
+			user.setPhoneNotice(phoneNotice);
+			UserDaoService.updateUser(user);
+			
+			response = JSONFactory.toJSON(emailNotice);
+			setStatus(Status.SUCCESS_OK);
+
 
 		} catch (PseudoException e){
         	this.doPseudoException(e);
