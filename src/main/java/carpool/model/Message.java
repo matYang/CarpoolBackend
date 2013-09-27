@@ -69,7 +69,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	/*****
 	 * The contructor used for message posting
 	 *****/
-	public Message(int messageId, int ownerId, boolean isRoundTrip,
+	public Message(int ownerId, boolean isRoundTrip,
 			Location departure_Location, Calendar departure_Time,
 			int departure_seatsNumber, ArrayList<Integer> departure_priceList,
 			Location arrival_Location, Calendar arrival_Time,
@@ -77,7 +77,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 			carpool.constants.Constants.paymentMethod paymentMethod,
 			String note, messageType type, gender genderRequirement) {
 		super();
-		this.messageId = messageId;
+		this.messageId = -1;
 		this.ownerId = ownerId;
 		this.isRoundTrip = isRoundTrip;
 		this.departure_Location = departure_Location;

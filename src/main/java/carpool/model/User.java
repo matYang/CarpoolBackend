@@ -94,9 +94,9 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     
     
     /*****
-     * private constructor to disallow raw initialization and serialization
+     * protected constructor to disallow raw initialization and serialization, but allow easier testing
      *****/
-    private User(){}
+    protected User(){}
  
 
     /*****
@@ -713,6 +713,11 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		
 		
 		return true;
+	}
+
+
+	public String getPassword() {
+		return  this.password;
 	}
 
 

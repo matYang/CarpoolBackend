@@ -28,7 +28,7 @@ public class carpoolDAOMessage{
 	public static ArrayList<Message> searchMessageSingle(String location, String date,String type) throws UserNotFoundException {
 		date = date.split(" ")[0];
 		ArrayList<Message> retVal = new ArrayList<Message>();
-		String query = "SELECT * from Message WHERE location LIKE ? AND (startTime <= ? OR endTime >= ?) AND type LIKE ?;";
+		String query = "SELECT * from carpoolDAOMessage WHERE location LIKE ? AND (startTime <= ? OR endTime >= ?) AND type LIKE ?;";
 		try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setString(1, location);
 			stmt.setString(2, date);
@@ -54,7 +54,7 @@ public class carpoolDAOMessage{
 	}
 	
 	public static Message addMessageToDatabase(Message msg){
-		String query = "INSERT INTO Message (ownerId,isRoundTrip," +
+		String query = "INSERT INTO carpoolDAOMessage (ownerId,isRoundTrip," +
 				"departure_Location,departure_Time,departure_seatsNumber,departure_seatsBooked,departure_priceList,arrival_Location,arrival_Time," +
 				"arrival_seatsNumber,arrival_seatsBooked,arrival_priceList,paymentMethod,note,messageType,gender,messageState,creationTime,editTime,historyDeleted) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
@@ -82,6 +82,7 @@ public class carpoolDAOMessage{
 			ResultSet rs = stmt.getGeneratedKeys();
 			rs.next();
 			msg.setMessageId(rs.getInt(1));
+			System.out.println(msg.getMessageId()+"xch");
 		}catch(SQLException e){
 			DebugLog.d(e.getMessage());
 		}
@@ -90,7 +91,7 @@ public class carpoolDAOMessage{
 	
 	public static void deleteMessageFromDatabase(int id) throws MessageNotFoundException{
 		String query = "DELETE from WatchList where Message_messageId = '" + id +"'";
-		String query2 = "DELETE from Message where messageId = '" + id + "'";
+		String query2 = "DELETE from carpoolDAOMessage where messageId = '" + id + "'";
 		try(Statement stmt = carpoolDAOBasic.getSQLConnection().createStatement()){
 			stmt.addBatch(query);
 			stmt.addBatch(query2);
@@ -104,7 +105,7 @@ public class carpoolDAOMessage{
 	}
 	
 	public static void UpdateMessageInDatabase(Message msg) throws MessageNotFoundException{
-		String query = "UPDATE Message SET isRoundTrip=?,departure_Location=?,departure_Time=?,departure_seatsNumber=?,departure_seatsBooked=?,departure_priceList=?,arrival_Location=?,arrival_Time=?,"
+		String query = "UPDATE carpoolDAOMessage SET isRoundTrip=?,departure_Location=?,departure_Time=?,departure_seatsNumber=?,departure_seatsBooked=?,departure_priceList=?,arrival_Location=?,arrival_Time=?,"
 				+ "arrival_seatsNumber=?,arrival_seatsBooked=?,arrival_priceList=?,paymentMethod=?,note=?,messageType=?,gender=?,messageState=?,creationTime=?,editTime=?,historyDeleted=? WHERE messageId=?";
 		try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, msg.isRoundTrip() ? 1:0);
@@ -137,7 +138,7 @@ public class carpoolDAOMessage{
 	}
 	
 	public static Message getMessageById(int id) throws MessageNotFoundException,UserNotFoundException{
-		String query = "SELECT * FROM Message WHERE messageId = ?;";
+		String query = "SELECT * FROM carpoolDAOMessage WHERE messageId = ?;";
 		Message message = null;
 		try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, id);
@@ -154,15 +155,14 @@ public class carpoolDAOMessage{
 	}
 
 	protected static Message createMessageByResultSet(ResultSet rs) throws SQLException, UserNotFoundException {
-		User owner;
-		owner = DaoUser.getUserById(rs.getInt("ownerId"));
-		
-		Message message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),owner,rs.getBoolean("isRoundTrip"),new Location(rs.getString("departure_Location")),
+		//User owner;
+		//owner = DaoUser.getUserById(rs.getInt("ownerId"));
+		Message message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),null,rs.getBoolean("isRoundTrip"),new Location(rs.getString("departure_Location")),
 				DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),rs.getInt("departure_seatsNumber"),rs.getInt("departure_seatsBooked"),Parser.stringToPriceList(rs.getString("departure_priceList")),
-				new Location(rs.getString("Location")),	DateUtility.DateToCalendar(rs.getTimestamp("arrival_Time")),rs.getInt("arrival_seatsNumber"),rs.getInt("arrival_seatsBooked"),
+				new Location(rs.getString("arrival_Location")),	DateUtility.DateToCalendar(rs.getTimestamp("arrival_Time")),rs.getInt("arrival_seatsNumber"),rs.getInt("arrival_seatsBooked"),
 				Parser.stringToPriceList(rs.getString("arrival_priceList")),Constants.paymentMethod.fromInt(rs.getInt("paymentMethod")),rs.getString("note"),
-				Constants.messageType.fromInt(rs.getInt("type")),Constants.gender.fromInt(rs.getInt("genderRequirement")),
-				Constants.messageState.fromInt(rs.getInt("state")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
+				Constants.messageType.fromInt(rs.getInt("messageType")),Constants.gender.fromInt(rs.getInt("gender")),
+				Constants.messageState.fromInt(rs.getInt("messageState")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
 				DateUtility.DateToCalendar(rs.getTimestamp("editTime")),rs.getBoolean("historyDeleted"));
 		
 		return message;
@@ -170,7 +170,7 @@ public class carpoolDAOMessage{
 	
 	public static ArrayList<Message> getAll() throws UserNotFoundException{
 		ArrayList<Message> retVal = new ArrayList<Message>();
-		String query = "SELECT * from Message;";
+		String query = "SELECT * from carpoolDAOMessage;";
 		try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
