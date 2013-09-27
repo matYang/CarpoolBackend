@@ -42,19 +42,13 @@ public class LogOutResource extends PseudoResource{
 
 	@Put
 	public Representation logoutAuthentication(Representation entity){
-		JSONObject jsonObject = new JSONObject();
 		int id = -1;
-		boolean loggedin = false;
-		boolean logout = false;
-		
 
-		Series<Cookie> cookies = this.getRequest().getCookies();
 		try {
 			this.checkEntity(entity);
 			id = Integer.parseInt(this.getReqAttr("id"));
 			
 			this.closeAuthenticationSession(id);
-			jsonObject = JSONFactory.toJSON(new User());
 			
 		} catch (PseudoException e){
         	this.doPseudoException(e);
@@ -62,7 +56,7 @@ public class LogOutResource extends PseudoResource{
 			this.doException(e);
 		}
 
-		Representation result = new JsonRepresentation(jsonObject);
+		Representation result = new JsonRepresentation(new JSONObject());
 
         this.addCORSHeader();
         return result;

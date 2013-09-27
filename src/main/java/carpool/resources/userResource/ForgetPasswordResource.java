@@ -24,6 +24,7 @@ import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.encryption.EmailCrypto;
 import carpool.exception.PseudoException;
+import carpool.exception.ValidationException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
@@ -49,9 +50,9 @@ public class ForgetPasswordResource extends PseudoResource{
         	//check the email format first
         	if (Validator.isEmailFormatValid(email)){
         		//if the email format is valid, check if this email has been registered
-        		if (!UserDaoService.isEmailAvailable(email)){
+        		if (!EmailDaoService.isEmailAvailable(email)){
         			//this will need a translation from email to id, another SQL query, wonder if could be improved
-            		isSent = UserDaoService.sendChangePasswordEmail(email);
+            		isSent = EmailDaoService.sendChangePasswordEmail(email);
             		if (isSent){
             			setStatus(Status.SUCCESS_OK);
             		}
@@ -90,8 +91,8 @@ public class ForgetPasswordResource extends PseudoResource{
 		String newPassword = "";
 		String confirmNewPassword = "";
 		String authCode = "";
-		User topBarUser = new User();
-		JSONObject jsonResponse = new JSONObject(topBarUser);
+		User user = null;
+		JSONObject jsonResponse = new JSONObject();
 		
 		try {
 			this.checkEntity(entity);
@@ -106,29 +107,26 @@ public class ForgetPasswordResource extends PseudoResource{
 			newPassword = jsonString.getString("newPassword");
 			confirmNewPassword = jsonString.getString("confirmNewPassword");
 			
-			isValid = UserDaoService.isResetPasswordValid(userId, authCode);
+			isValid = authDaoService.isResetPasswordValid(userId, authCode);
 			if (isValid){
 				if (Validator.isPasswordFormatValid(newPassword) && newPassword.equals(confirmNewPassword)){
 					passwordChanged = UserDaoService.resetUserPassword(userId, newPassword);
 					
 					if (passwordChanged){
 						//the only thing to check here is for email, try combine them into one
-						topBarUser = UserDaoService.getTopBarUserById(userId);
+						user = UserDaoService.getUserById(userId);
 						
-						if (topBarUser != null && topBarUser.isAbleToLogin()){
+						if (user.isAbleToLogin()){
 							
 							this.closeAuthenticationSession(userId);
 				            this.clearUserCookies();
 				            this.addAuthenticationSession(userId);
 							
-							jsonResponse = JSONFactory.toJSON(topBarUser);
-						}
-						else if (topBarUser == null){
-							setStatus(Status.CLIENT_ERROR_FORBIDDEN);
+							jsonResponse = JSONFactory.toJSON(user);
 						}
 						else{
-							setStatus(Status.CLIENT_ERROR_PRECONDITION_FAILED);
-							jsonResponse = JSONFactory.toJSON(topBarUser);
+							jsonResponse = JSONFactory.toJSON(user);
+							throw new ValidationException("User can not log in");
 						}
 					}
 					else{

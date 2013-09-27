@@ -26,6 +26,7 @@ import carpool.common.DebugLog;
 import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
+import carpool.exception.ValidationException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
@@ -35,16 +36,13 @@ import carpool.resources.PseudoResource;
 import carpool.resources.dianmingResource.DMResource;
 
 
-
-
 public class LogInResource extends PseudoResource{
 
 	
 	@Post
 	public Representation loginAuthentication(Representation entity){
-		boolean login = false;
 		JSONObject jsonString = null;
-		User topBarUser = new User();
+		User user = null;
 		JSONObject jsonObject = new JSONObject();
 		String email = "";
 		String password = "";
@@ -59,28 +57,28 @@ public class LogInResource extends PseudoResource{
 			password = jsonString.getString("password");
 			
 			DebugLog.d("log in, receving paramters: " + email + " " + password);
-			topBarUser = UserDaoService.isLoginUserValid(email, password);
+			user = authDaoService.authenticateUserLogin(email, password);
 			
-			if (topBarUser != null && topBarUser.isAbleToLogin()){
+			if (user != null && user.isAbleToLogin()){
 				
-				login = UserCookieResource.validateCookieSession(topBarUser.getUserId(), cookies);
+				UserCookieResource.validateCookieSession(user.getUserId(), cookies);
 					
-				this.closeAuthenticationSession(topBarUser.getUserId());
+				this.closeAuthenticationSession(user.getUserId());
 	            this.clearUserCookies();
-	            this.addAuthenticationSession(topBarUser.getUserId());
+	            this.addAuthenticationSession(user.getUserId());
 				
-				jsonObject = JSONFactory.toJSON(topBarUser);
+				jsonObject = JSONFactory.toJSON(user);
 				setStatus(Status.SUCCESS_OK);
 			}
 			else{
 				//if user failed authentication, do not return topBarUser
-				if (topBarUser == null){
+				if (user == null){
 					setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
 				}
 				//if user fails account state validation, eg email not activated, still return topBarUser
 				else{
-					jsonObject = JSONFactory.toJSON(topBarUser);
-					setStatus(Status.CLIENT_ERROR_PRECONDITION_FAILED);
+					jsonObject = JSONFactory.toJSON(user);
+					throw new ValidationException("User can not log in");
 				}
 			}
 		

@@ -43,24 +43,6 @@ public class RoutingService extends Application {
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMResourcePrefix, DMResource.class);
 		//	API for Get/Put/Delete dianming messages: /api/v1.0/dianming/dianming/:id
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMResourcePrefix + "/{id}", DMResourceId.class);
-		String DMGenderResourcePrefix = "/gender";
-		//	API for DM message change gender: /api/v1.0/dianming/gender/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMGenderResourcePrefix + "/{id}", DMGenderResource.class);
-		String DMLocationResourcePrefix = "/location";
-		//	API for DM message change gender: /api/v1.0/dianming/location/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMLocationResourcePrefix + "/{id}", DMLocationResource.class);
-		String DMNoteResourcePrefix = "/note";
-		//	API for DM message change gender: /api/v1.0/dianming/note/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMNoteResourcePrefix + "/{id}", DMNoteResource.class);
-		String DMPaymentMethodResourcePrefix = "/paymentMethod";
-		//	API for DM message change gender: /api/v1.0/dianming/paymentMethod/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMPaymentMethodResourcePrefix + "/{id}", DMPaymentMethodResource.class);
-		String DMPriceResourcePrefix = "/price";
-		//	API for DM message change gender: /api/v1.0/dianming/price/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMPriceResourcePrefix + "/{id}", DMPriceResource.class);
-		String DMTimingResourcePrefix = "/timing";
-		//	API for DM message change gender: /api/v1.0/dianming/timing/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMTimingResourcePrefix + "/{id}", DMTimingResource.class);
 		String DMRecentResourcePrefix = "/recent";
 		//	API for DM message change gender: /api/v1.0/dianming/recent
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMRecentResourcePrefix, RecentMessageResource.class);
@@ -132,27 +114,18 @@ public class RoutingService extends Application {
 		String SingleLocationResourcePrefix = "/singleLocation";
 		//	API for user changing the single location:  /api/v1.0/users/singleLocation/:id
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + SingleLocationResourcePrefix + "/{id}", UserSingleLocationResource.class);
-		String CircleLocationResourcePrefix = "/circleLocation";
-		//	API for user changing the university circle:  /api/v1.0/users/circleLocation/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + CircleLocationResourcePrefix + "/{id}", UserCircleLocationResource.class);
 		String EmailActivationResourcePrefix = "/emailActivation";
 		//	API for user email activation: /api/v1.0/users/emailActivation
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + EmailActivationResourcePrefix, UserEmailActivationResource.class);
 		String ResendActivationEmailResourcePrefix = "/resendActivationEmail";
 		//	API for sending activation email to target userId: /api/v1.0/users/resendActivationEmail/:id
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + ResendActivationEmailResourcePrefix + "/{id}", ResendActivationEmailResource.class);
-		String UserTopBarResourcePrefix = "/topBar";
-		//	API to return the user object designed for topBar: /api/v1.0/users/topBar/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserTopBarResourcePrefix + "/{id}", UserTopBarResource.class);
 		String ForgetPasswordResourcePrefix = "/forgetPassword";
 		//	API for user forgetting the password: /api/v1.0/users/forgetPassword
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + ForgetPasswordResourcePrefix, ForgetPasswordResource.class);
-		String UserToggleEmailNoticePrefix = "/toggleEmailNotice";
-		String UserTogglePhoneNoticePrefix = "/togglePhoneNotice";
-		//	API for user to toggle email notice state: /api/v1.0/users/toggleEmailNotice/:id
-		//	API for user to toggle phone notice state: /api/v1.0/users/togglePhoneNotice/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserToggleEmailNoticePrefix + "/{id}", UserToggleEmailNoticeResource.class);
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserTogglePhoneNoticePrefix + "/{id}", UserTogglePhoneNoticeResource.class);
+		String UserToggleEmailNoticePrefix = "/toggleNotices";
+		//	API for user to toggle email notice state: /api/v1.0/users/toggleNotices/:id
+		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserToggleEmailNoticePrefix + "/{id}", UserToggleNoticesResource.class);
 		String UserWatchUserResourcePrefix = "/watchUser";
 		//	API for user watch/de-watch other users: /api/v1.0/users/watchUser/:id
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserWatchUserResourcePrefix + "/{id}", UserWatchUserResource.class);

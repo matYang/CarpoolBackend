@@ -34,5 +34,9 @@ public class HelperOperator {
 		// TODO
 		return false;
 	}
+	
+	public static boolean isArrayListEqual(ArrayList<?> o1, ArrayList<?> o2){
+		return o1.equals(o2);
+	}
 
 }

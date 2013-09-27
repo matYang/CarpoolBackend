@@ -51,7 +51,7 @@ public class UserCookieResource extends ServerResource{
 		else{
 			try{
 				String decryptedString = SessionCrypto.decrypt(sessionString.get(0));
-				login =  UserDaoService.validateUserSession(id, decryptedString);
+				login =  authDaoService.validateUserSession(id, decryptedString);
 			}
 			catch (Exception e){
 				e.printStackTrace();
@@ -105,7 +105,7 @@ public class UserCookieResource extends ServerResource{
 	 */
 	public static CookieSetting openCookieSession(int id) throws PseudoException{
 		// generate session string and stores session in Redis
-        String sessionString = UserDaoService.generateUserSession(id);
+        String sessionString = authDaoService.generateUserSession(id);
         String encryptedString = "";
         CookieSetting newCookieSetting;
         
@@ -151,7 +151,7 @@ public class UserCookieResource extends ServerResource{
 		else{
 			try{
 				String decryptedString = SessionCrypto.decrypt(sessionString.get(0));
-				logout =  UserDaoService.closeUserSession(decryptedString);
+				logout =  authDaoService.closeUserSession(decryptedString);
 			}
 			catch (Exception e){
 				throw new SessionEncodingException();

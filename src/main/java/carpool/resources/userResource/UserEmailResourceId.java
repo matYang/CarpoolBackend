@@ -55,8 +55,8 @@ public class UserEmailResourceId extends PseudoResource{
 			
 			String sessionString = this.getSessionString();
         	if (Validator.isEmailFormatValid(email)){
-        		if (UserDaoService.isEmailAvailable(email)){
-    				emailChanged = UserDaoService.changeEmail(userId, email, sessionString);
+        		if (EmailDaoService.isEmailAvailable(email)){
+    				emailChanged = EmailDaoService.changeEmail(userId, email, sessionString);
     				if (emailChanged){
     					setStatus(Status.SUCCESS_OK);
     					this.closeAuthenticationSession(userId);

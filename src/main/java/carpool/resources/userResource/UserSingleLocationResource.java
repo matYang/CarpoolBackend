@@ -66,14 +66,14 @@ public class UserSingleLocationResource extends PseudoResource{
 			
 			location = parseJSON(this.getQueryVal("location"));
 			if (location != null){
-				updatedLocation = UserDaoService.changeSingleLocation(userId, location);
-				if (updatedLocation != null){
-					response = JSONFactory.toJSON(updatedLocation);
-					setStatus(Status.SUCCESS_OK);
-				}
-				else{
-					setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-				}
+				
+				User user = UserDaoService.getUserById(userId);
+				user.setLocation(location);
+				UserDaoService.updateUser(user);
+				
+				response = JSONFactory.toJSON(updatedLocation);
+				setStatus(Status.SUCCESS_OK);
+
 			}
 			else{
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);

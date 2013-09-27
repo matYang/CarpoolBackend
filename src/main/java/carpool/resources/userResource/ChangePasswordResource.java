@@ -16,7 +16,6 @@ import carpool.resources.PseudoResource;
 public class ChangePasswordResource extends PseudoResource{
 
 	//parses passwords from a JSONObject format of {oldPassword: oldPassword, newPassword: newPassword, confirmNewPassword: confirmNewPassword}
-	//return String array length of 2, [0] storing the oldPassword, [1] storing the newPassword, returns null of the password format is not correct
 	protected String[] parseJSON(Representation entity){
 		JSONObject jsonPasswords = null;
 		String[] passwords = new String[2];
@@ -27,7 +26,7 @@ public class ChangePasswordResource extends PseudoResource{
 			String oldPassword = jsonPasswords.getString("oldPassword");
 			String newPassword = jsonPasswords.getString("newPassword");
 			String confirmNewPassword = jsonPasswords.getString("confirmNewPassword");
-			//no DB interaction here
+
 			if (Validator.isPasswordFormatValid(oldPassword) && Validator.isPasswordFormatValid(newPassword) && Validator.isPasswordFormatValid(confirmNewPassword) && newPassword.equals(confirmNewPassword)){
 				passwords[0] = oldPassword;
 				passwords[1] = newPassword;

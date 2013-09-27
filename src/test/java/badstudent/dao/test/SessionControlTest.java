@@ -14,7 +14,9 @@ import carpool.common.Validator;
 import carpool.constants.Constants;
 import carpool.database.DaoBasic;
 import carpool.database.DaoUser;
+import carpool.dbservice.EmailDaoService;
 import carpool.dbservice.UserDaoService;
+import carpool.dbservice.authDaoService;
 import carpool.encryption.SessionCrypto;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
@@ -41,10 +43,10 @@ public class SessionControlTest {
 				calender,calender,"paypal");
 		
 		UserDaoService.createNewUser(defaultUser);
-		UserDaoService.sendActivationEmail(defaultUser.getUserId(), defaultUser.getEmail());
+		EmailDaoService.sendActivationEmail(defaultUser.getUserId(), defaultUser.getEmail());
 		
 		try {
-			UserDaoService.activateUserEmail(defaultUser.getUserId(), DaoBasic.getJedis().get(Constants.key_emailActivationAuth + defaultUser.getUserId()));
+			EmailDaoService.activateUserEmail(defaultUser.getUserId(), DaoBasic.getJedis().get(Constants.key_emailActivationAuth + defaultUser.getUserId()));
 			
 		} catch (UserNotFoundException e) {
 			e.printStackTrace();
@@ -53,7 +55,7 @@ public class SessionControlTest {
 		
 		User topBarUser;
 		try {
-			topBarUser = UserDaoService.isLoginUserValid("uwse@me.com", "1");
+			topBarUser = authDaoService.authenticateUserLogin("uwse@me.com", "1");
 			assertTrue(topBarUser != null);
 			if (topBarUser != null && topBarUser.isAbleToLogin()){
 				CookieSetting newCookie = UserCookieResource.openCookieSession(topBarUser.getUserId());
@@ -63,7 +65,7 @@ public class SessionControlTest {
 				
 				Series<Cookie> cookies = new Series<Cookie>(null);
 				cookies.add(newCookie);
-				User newUser1 = UserDaoService.getUserFromSession(UserCookieResource.getSessionString(cookies));
+				User newUser1 = authDaoService.getUserFromSession(UserCookieResource.getSessionString(cookies));
 
 //				Common.d(newUser1.toString());
 				

@@ -70,7 +70,7 @@ public class UserWatchDMMessageResource extends PseudoResource{
         int id = -1;
         int targetMessageId = -1;
 		JSONObject response = new JSONObject();
-		Message watchedMessage = new Message();
+		Message watchedMessage = null;
 
 		try {
 			this.checkEntity(entity);

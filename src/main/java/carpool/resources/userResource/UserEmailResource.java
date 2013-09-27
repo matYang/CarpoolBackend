@@ -45,7 +45,7 @@ public class UserEmailResource extends PseudoResource{
         	email = this.getQueryVal("email");
         	isFormatCorrect = Validator.isEmailFormatValid(email);
         	if (isFormatCorrect){
-        		isAvailable = UserDaoService.isEmailAvailable(email);
+        		isAvailable = EmailDaoService.isEmailAvailable(email);
         		
         		jsonObject = JSONFactory.toJSON(isAvailable);
         	}

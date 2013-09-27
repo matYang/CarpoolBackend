@@ -1,5 +1,6 @@
 package carpool.model;
 
+import org.apache.http.annotation.Immutable;
 import org.json.JSONObject;
 
 import carpool.interfaces.PseudoModel;
@@ -109,9 +110,17 @@ public class Location implements PseudoModel{
 		return MappingManager.isLocationVaild(location);
 	}
 	
+	public boolean equals(Location loc){
+		return loc != null && this.getProvince().equals(loc.getProvince()) &&
+				this.getCity().equals(loc.getCity()) &&
+				this.getRegion().equals(loc.getRegion()) &&
+				this.getSchool().equals(loc.getSchool());
+	}
 	
+	@Override
 	public JSONObject toJSON(){
 		return new JSONObject(this);
 	}
+
 
 }

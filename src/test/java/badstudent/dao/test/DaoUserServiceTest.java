@@ -12,9 +12,11 @@ import carpool.constants.Constants.paymentMethod;
 import carpool.database.DaoBasic;
 import carpool.database.DaoTransaction;
 import carpool.database.DaoUser;
+import carpool.dbservice.EmailDaoService;
 import carpool.dbservice.MessageDaoService;
 import carpool.dbservice.NotificationDaoService;
 import carpool.dbservice.UserDaoService;
+import carpool.dbservice.authDaoService;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
 import carpool.model.Location;
@@ -38,7 +40,7 @@ public class DaoUserServiceTest {
 		UserDaoService.createNewUser(defaultUser);
 
 		try {
-			assertTrue(UserDaoService.isUserEmailActivated(1)==false);
+			assertTrue(EmailDaoService.isUserEmailActivated(1)==false);
 		} catch (UserNotFoundException e) {
 			assertTrue(false);
 		}
@@ -108,7 +110,7 @@ public class DaoUserServiceTest {
 			assertTrue(false);
 		}
 		
-		assertFalse(UserDaoService.isEmailAvailable("email"));
+		assertFalse(EmailDaoService.isEmailAvailable("email"));
 		assertTrue(UserDaoService.isDBUserExist(1));
 		assertTrue(UserDaoService.getAllUsers().get(0).getName().equals("name3"));
 		assertTrue(UserDaoService.isDBUserValid(1));
@@ -139,11 +141,11 @@ public class DaoUserServiceTest {
 				calender,calender,"paypal");
 		UserDaoService.createNewUser(defaultUser);
 		
-		String str = UserDaoService.generateUserSession(1);
-		assertTrue(UserDaoService.validateUserSession(1, str));
-		assertTrue(UserDaoService.getUserFromSession(str).getName().equals("name"));
-		assertTrue(UserDaoService.closeUserSession(str));
-		assertFalse(UserDaoService.validateUserSession(1, str));
+		String str = authDaoService.generateUserSession(1);
+		assertTrue(authDaoService.validateUserSession(1, str));
+		assertTrue(authDaoService.getUserFromSession(str).getName().equals("name"));
+		assertTrue(authDaoService.closeUserSession(str));
+		assertFalse(authDaoService.validateUserSession(1, str));
 	}
 	
 	@Test
@@ -216,14 +218,14 @@ public class DaoUserServiceTest {
 				calender,calender,"paypal");
 		UserDaoService.createNewUser(defaultUser);
 		try {
-			assertTrue(UserDaoService.changeEmail(1, "shhyfz@hotmail.com", "bla"));
+			assertTrue(EmailDaoService.changeEmail(1, "shhyfz@hotmail.com", "bla"));
 		} catch (UserNotFoundException e1) {
 			assertTrue(false);
 		}
-		assertTrue(UserDaoService.sendActivationEmail(1, "shhyfz@hotmail.com"));
-		assertTrue(UserDaoService.reSendActivationEmail(1));
+		assertTrue(EmailDaoService.sendActivationEmail(1, "shhyfz@hotmail.com"));
+		assertTrue(EmailDaoService.reSendActivationEmail(1));
 		try {
-			UserDaoService.activateUserEmail(1, DaoBasic.getJedis().get(Constants.key_emailActivationAuth+"1"));
+			EmailDaoService.activateUserEmail(1, DaoBasic.getJedis().get(Constants.key_emailActivationAuth+"1"));
 		} catch (UserNotFoundException e) {
 			assertTrue(false);
 		}
@@ -233,7 +235,7 @@ public class DaoUserServiceTest {
 			assertTrue(false);
 		}
 		try {
-			assertTrue(UserDaoService.sendChangePasswordEmail("shhyfz@hotmail.com"));
+			assertTrue(EmailDaoService.sendChangePasswordEmail("shhyfz@hotmail.com"));
 		} catch (UserNotFoundException e) {
 			assertTrue(false);
 		}
