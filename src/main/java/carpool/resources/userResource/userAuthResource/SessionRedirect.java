@@ -1,4 +1,4 @@
-package carpool.resources.userResource;
+package carpool.resources.userResource.userAuthResource;
 
 import java.io.IOException;
 

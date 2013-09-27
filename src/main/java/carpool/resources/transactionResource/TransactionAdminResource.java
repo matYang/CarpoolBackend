@@ -35,8 +35,8 @@ import carpool.factory.JSONFactory;
 import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
-import carpool.resources.userResource.UserCookieResource;
 import carpool.resources.userResource.UserResource;
+import carpool.resources.userResource.userAuthResource.UserCookieResource;
 
 
 

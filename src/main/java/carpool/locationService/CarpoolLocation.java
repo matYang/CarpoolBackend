@@ -1,4 +1,4 @@
-package carpool.location;
+package carpool.locationService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

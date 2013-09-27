@@ -24,7 +24,7 @@ import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
-import carpool.resources.userResource.UserCookieResource;
+import carpool.resources.userResource.userAuthResource.UserCookieResource;
 
 
 public class SessionControlTest {

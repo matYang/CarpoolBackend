@@ -30,7 +30,7 @@ import carpool.exception.validation.EntityTooLargeException;
 import carpool.factory.JSONFactory;
 import carpool.mappings.*;
 import carpool.model.*;
-import carpool.resources.userResource.UserCookieResource;
+import carpool.resources.userResource.userAuthResource.UserCookieResource;
 
 public class PseudoResource extends ServerResource{
 	

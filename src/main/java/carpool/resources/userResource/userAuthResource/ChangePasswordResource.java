@@ -1,4 +1,4 @@
-package carpool.resources.userResource;
+package carpool.resources.userResource.userAuthResource;
 
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;

@@ -185,6 +185,18 @@ public class Constants {
             return map[n+2];
         }
     }
+    
+    public static enum DayTimeSlot{
+    	all(0), morning(1), afternoon(2), night(3);
+    	public int code;
+    	DayTimeSlot(int code){
+            this.code = code;
+        }
+        private final static DayTimeSlot[] map = DayTimeSlot.values();
+        public static DayTimeSlot fromInt(int n){
+            return map[n];
+        }
+    }
 
 
     /*API level constants*/
