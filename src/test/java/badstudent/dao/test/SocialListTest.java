@@ -10,10 +10,10 @@ import carpool.database.DaoBasic;
 import carpool.database.DaoUser;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
-import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
+import carpool.model.representation.LocationRepresentation;
 
 import static org.junit.Assert.*;
 
@@ -22,19 +22,19 @@ public class SocialListTest {
 	private final User A = new User(0, "password", "name", 0, 0,0, new ArrayList<Message>(),
 			new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 			new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
-			"phone", "email", "qq","imgPath",new Location("a a a a"),false,false,false,false,
+			"phone", "email", "qq","imgPath",new LocationRepresentation("a a a a"),false,false,false,false,
 			Constants.userState.normal,Constants.userSearchState.universityAsk,
 			calender,calender,"paypal");
 	private User B = new User(0, "password2", "name2", 1, 1,1, new ArrayList<Message>(),
 			new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 			new ArrayList<Notification>(),new ArrayList<String>(),21,Constants.gender.female,
-			"phone2", "email2", "qq2","imgPath2",new Location("a2 a2 a2 a2"),true,true,true,true,
+			"phone2", "email2", "qq2","imgPath2",new LocationRepresentation("a2 a2 a2 a2"),true,true,true,true,
 			Constants.userState.invalid,Constants.userSearchState.regionAsk,
 			calender,calender,"paypal2");
 	private User C = new User(0, "password3", "name3", 2, 2,2, new ArrayList<Message>(),
 			new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 			new ArrayList<Notification>(),new ArrayList<String>(),21,Constants.gender.female,
-			"phone3", "email3", "qq3","imgPath3",new Location("a3 a3 a3 a3"),true,false,true,false,
+			"phone3", "email3", "qq3","imgPath3",new LocationRepresentation("a3 a3 a3 a3"),true,false,true,false,
 			Constants.userState.invalid,Constants.userSearchState.regionAsk,
 			calender,calender,"paypal3");
 	@Test

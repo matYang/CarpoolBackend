@@ -19,10 +19,10 @@ import carpool.exception.message.MessageOwnerNotMatchException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.exception.validation.UnacceptableSearchStateException;
 import carpool.model.Message;
-import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
+import carpool.model.representation.LocationRepresentation;
 
 
 
@@ -57,7 +57,7 @@ public class MessageDaoService{
 	 * note that, should include both types of messages
 	 * note that only use year-month-date in this calendar instance to search for matching messages, not the matching of entire date strings
 	 */
-	public static ArrayList<Message> primaryMessageSearch(Location location,Calendar date, userSearchState searchState) throws UnacceptableSearchStateException{
+	public static ArrayList<Message> primaryMessageSearch(LocationRepresentation location,Calendar date, userSearchState searchState) throws UnacceptableSearchStateException{
 		//universityAsk(0), universityHelp(1), regionAsk(2), regionHelp(3), universityGroupAsk(4), universityGroupHelp(5);
 		int remainder = searchState.code % 2;
 		messageType type = messageType.ask;

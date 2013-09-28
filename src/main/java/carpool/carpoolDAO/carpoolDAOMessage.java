@@ -17,10 +17,10 @@ import carpool.dbservice.NotificationDaoService;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
-import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
+import carpool.model.representation.LocationRepresentation;
 
 
 public class carpoolDAOMessage{
@@ -157,9 +157,9 @@ public class carpoolDAOMessage{
 	protected static Message createMessageByResultSet(ResultSet rs) throws SQLException, UserNotFoundException {
 		//User owner;
 		//owner = DaoUser.getUserById(rs.getInt("ownerId"));
-		Message message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),null,rs.getBoolean("isRoundTrip"),new Location(rs.getString("departure_Location")),
+		Message message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),null,rs.getBoolean("isRoundTrip"),new LocationRepresentation(rs.getString("departure_Location")),
 				DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),rs.getInt("departure_seatsNumber"),rs.getInt("departure_seatsBooked"),Parser.stringToPriceList(rs.getString("departure_priceList")),
-				new Location(rs.getString("arrival_Location")),	DateUtility.DateToCalendar(rs.getTimestamp("arrival_Time")),rs.getInt("arrival_seatsNumber"),rs.getInt("arrival_seatsBooked"),
+				new LocationRepresentation(rs.getString("arrival_Location")),	DateUtility.DateToCalendar(rs.getTimestamp("arrival_Time")),rs.getInt("arrival_seatsNumber"),rs.getInt("arrival_seatsBooked"),
 				Parser.stringToPriceList(rs.getString("arrival_priceList")),Constants.paymentMethod.fromInt(rs.getInt("paymentMethod")),rs.getString("note"),
 				Constants.messageType.fromInt(rs.getInt("messageType")),Constants.gender.fromInt(rs.getInt("gender")),
 				Constants.messageState.fromInt(rs.getInt("messageState")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),

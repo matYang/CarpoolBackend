@@ -19,10 +19,10 @@ import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
-import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
+import carpool.model.representation.LocationRepresentation;
 
 
 public class DaoUser {
@@ -239,7 +239,7 @@ public class DaoUser {
 			}
 		}
 		String locationString = rs.getString("location");
-		Location location = new Location(locationString);
+		LocationRepresentation location = new LocationRepresentation(locationString);
 		user = new User(rs.getInt("userId"),rs.getString("password"), rs.getString("name"),
 				rs.getInt("level"), rs.getInt("averageScore"), rs.getInt("totalTranscations"),
 				new ArrayList<Message>(),new ArrayList<Message>(),new ArrayList<User>(),

@@ -11,6 +11,7 @@ import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.messageType;
 import carpool.interfaces.PseudoRepresentation;
+import carpool.model.representation.temp.LocationRepresentation;
 
 public class SearchRepresentation implements PseudoRepresentation{
 	

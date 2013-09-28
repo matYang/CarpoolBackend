@@ -18,10 +18,10 @@ import carpool.dbservice.MessageDaoService;
 import carpool.dbservice.UserDaoService;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.model.Message;
-import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
+import carpool.model.representation.LocationRepresentation;
 
 
 public class DaoTransactionTest {
@@ -31,17 +31,17 @@ public class DaoTransactionTest {
 	private final User defaultUser = new User(0, "password", "name", 0, 0,0, new ArrayList<Message>(),
 			new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 			new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
-			"phone", "email", "qq","imgPath",new Location("a a a a"),false,false,false,false,
+			"phone", "email", "qq","imgPath",new LocationRepresentation("a a a a"),false,false,false,false,
 			Constants.userState.normal,Constants.userSearchState.universityAsk,
 			calender,calender,"paypal");
 	private User defaultUser2 = new User(0, "password2", "name2", 1, 1,1, new ArrayList<Message>(),
 			new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 			new ArrayList<Notification>(),new ArrayList<String>(),21,Constants.gender.female,
-			"phone2", "email2", "qq2","imgPath2",new Location("a2 a2 a2 a2"),true,true,true,true,
+			"phone2", "email2", "qq2","imgPath2",new LocationRepresentation("a2 a2 a2 a2"),true,true,true,true,
 			Constants.userState.invalid,Constants.userSearchState.regionAsk,
 			calender2,calender2,"paypal2");
 	private final Message default1 = new Message(11,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
-			new Location("a a a a"),calender,calender2,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
+			new LocationRepresentation("a a a a"),calender,calender2,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
 			5,false,true,new ArrayList<Transaction>(),calender);
 	
 	
@@ -59,7 +59,7 @@ public class DaoTransactionTest {
 		//1 published a message 1
 		Transaction t = new Transaction(0, 2, 1, "initUserImgPath", "initUserName", 10,
 				"targetUserImgPath", "targetUserName", 2,-5,-6, 1, "messageNote", Constants.paymentMethod.offline, 3, "requestInfo",
-				"responseInfo", calender, calender2, new Location("a a a a"), false, true, Constants.transactionState.aboutToStart, true, calender);
+				"responseInfo", calender, calender2, new LocationRepresentation("a a a a"), false, true, Constants.transactionState.aboutToStart, true, calender);
 		DaoTransaction.addTransactionToDatabase(t);
 		try {
 			t = DaoTransaction.getTransactionById(1);
@@ -106,7 +106,7 @@ public class DaoTransactionTest {
 		t.setResponseInfo("responseInfo2");
 		t.setStartTime(calender2);
 		t.setEndTime(calender);
-		t.setLocation(new Location("a2 a2 a2 a2"));
+		t.setLocation(new LocationRepresentation("a2 a2 a2 a2"));
 		t.setEstablished(true);
 		t.setSuccess(false);
 		t.setState(transactionState.cancelled);

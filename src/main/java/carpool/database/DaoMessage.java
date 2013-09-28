@@ -17,10 +17,10 @@ import carpool.dbservice.NotificationDaoService;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
-import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
+import carpool.model.representation.LocationRepresentation;
 
 
 public class DaoMessage{
@@ -156,7 +156,7 @@ public class DaoMessage{
 		Message message;
 		message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),rs.getString("ownerImgPath"),rs.getString("ownerName"),
 				rs.getInt("ownerLevel"),rs.getInt("ownerAverageScore"),rs.getString("ownerPhone"),rs.getString("ownerEmail"),
-				rs.getString("ownerQq"),Constants.paymentMethod.fromInt(rs.getInt("paymentMethod")),new Location(rs.getString("location")),
+				rs.getString("ownerQq"),Constants.paymentMethod.fromInt(rs.getInt("paymentMethod")),new LocationRepresentation(rs.getString("location")),
 				DateUtility.DateToCalendar(rs.getTimestamp("startTime")),DateUtility.DateToCalendar(rs.getTimestamp("endTime")),rs.getString("note"),
 				Constants.messageType.fromInt(rs.getInt("type")),Constants.gender.fromInt(rs.getInt("genderRequirement")),
 				Constants.messageState.fromInt(rs.getInt("state")),rs.getInt("price"),rs.getBoolean("active"),

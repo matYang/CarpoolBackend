@@ -22,6 +22,7 @@ import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
+import carpool.model.representation.LocationRepresentation;
 import carpool.resources.PseudoResource;
 
 
@@ -37,7 +38,7 @@ public class DMResource extends PseudoResource{
 			DebugLog.d("@Post::receive jsonMessage: " +  jsonMessage.toString());
 			
 			message = new Message(jsonMessage.getInt("ownerId"), Constants.paymentMethod.values()[jsonMessage.getInt("paymentMethod")], 
-					new Location(jsonMessage.getJSONObject("location").getString("province"), jsonMessage.getJSONObject("location").getString("city"), jsonMessage.getJSONObject("location").getString("region"),jsonMessage.getJSONObject("location").getString("university")), DateUtility.parseDateString(jsonMessage.getString("startTime")),  DateUtility.parseDateString(jsonMessage.getString("endTime")), 
+					new LocationRepresentation(jsonMessage.getJSONObject("location").getString("province"), jsonMessage.getJSONObject("location").getString("city"), jsonMessage.getJSONObject("location").getString("region"),jsonMessage.getJSONObject("location").getString("university")), DateUtility.parseDateString(jsonMessage.getString("startTime")),  DateUtility.parseDateString(jsonMessage.getString("endTime")), 
 					jsonMessage.getString("note"), Constants.messageType.values()[jsonMessage.getInt("type")], Constants.gender.values()[jsonMessage.getInt("genderRequirement")], jsonMessage.getInt("price"));
 		} catch (Exception e) {
 			e.printStackTrace();

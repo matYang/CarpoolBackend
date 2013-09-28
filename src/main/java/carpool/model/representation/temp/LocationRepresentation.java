@@ -1,4 +1,4 @@
-package carpool.model.representation;
+package carpool.model.representation.temp;
 
 import java.util.ArrayList;
 
@@ -6,11 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.exception.ValidationException;
 import carpool.interfaces.PseudoRepresentation;
-import carpool.interfaces.PseudoValidatable;
 
-public class LocationRepresentation implements PseudoRepresentation, PseudoValidatable{
+public class LocationRepresentation implements PseudoRepresentation{
 	
 	private ArrayList<String> hierarchyNameList;
 	private int customDepthIndex;
@@ -121,13 +119,6 @@ public class LocationRepresentation implements PseudoRepresentation, PseudoValid
 			}
 		}
 		return this.customDepthIndex == loc.getCustomDepthIndex();
-	}
-
-
-	@Override
-	public boolean validate() throws ValidationException {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

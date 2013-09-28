@@ -13,10 +13,10 @@ import carpool.constants.Constants.paymentMethod;
 import carpool.constants.Constants.userState;
 import carpool.interfaces.*;
 import carpool.model.Message;
-import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
+import carpool.model.representation.LocationRepresentation;
 
 
 

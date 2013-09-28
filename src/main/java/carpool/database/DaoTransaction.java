@@ -12,8 +12,8 @@ import carpool.constants.Constants;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.model.Message;
-import carpool.model.Location;
 import carpool.model.Transaction;
+import carpool.model.representation.LocationRepresentation;
 
 
 
@@ -164,7 +164,7 @@ public class DaoTransaction {
 				rs.getInt("targetUserLevel"),rs.getInt("initUserEval"),rs.getInt("targetUserEval"), rs.getInt("messageId"), rs.getString("messageNote"),
 				Constants.paymentMethod.fromInt(rs.getInt("paymentMethod")), rs.getInt("price"),rs.getString("requestInfo"),
 				rs.getString("responseInfo"), DateUtility.DateToCalendar(rs.getTimestamp("startTime")),DateUtility.DateToCalendar(rs.getTimestamp("endTime")),
-				new Location(rs.getString("location")), rs.getBoolean("established"), rs.getBoolean("success"),
+				new LocationRepresentation(rs.getString("location")), rs.getBoolean("established"), rs.getBoolean("success"),
 				Constants.transactionState.fromInt(rs.getShort("state")), rs.getBoolean("historyDeleted"), DateUtility.DateToCalendar(rs.getTimestamp("creationTime")));
 		return t;
 	}

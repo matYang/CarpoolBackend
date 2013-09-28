@@ -26,6 +26,7 @@ import carpool.exception.user.UserNotFoundException;
 import carpool.factory.JSONFactory;
 import carpool.mappings.*;
 import carpool.model.*;
+import carpool.model.representation.LocationRepresentation;
 import carpool.resources.PseudoResource;
 
 
@@ -34,10 +35,10 @@ public class UserSingleLocationResource extends PseudoResource{
 
 	//return JSONObject if all fields are valid, null if not, parses Location from string
 	
-	public static Location parseJSON(String locationString){
-		Location location = new Location(locationString);
+	public static LocationRepresentation parseJSON(String locationString){
+		LocationRepresentation location = new LocationRepresentation(locationString);
 		//no DB interaction here
-		if (Location.isLocationVaild(location)){
+		if (LocationRepresentation.isLocationVaild(location)){
 			return location;
 		}
 		else{
@@ -55,8 +56,8 @@ public class UserSingleLocationResource extends PseudoResource{
 	public Representation changeLocation(Representation entity) {
 		int userId = -1;
 		JSONObject response = new JSONObject();
-		Location location = new Location();
-		Location updatedLocation = new Location();
+		LocationRepresentation location = new LocationRepresentation();
+		LocationRepresentation updatedLocation = new LocationRepresentation();
 
 		try {
 			this.checkEntity(entity);

@@ -8,7 +8,7 @@ import carpool.common.Validator;
 import carpool.common.EmailHandler;
 import carpool.dbservice.EmailDaoService;
 import carpool.mappings.MappingManager;
-import carpool.model.Location;
+import carpool.model.representation.LocationRepresentation;
 
 
 public class SimpleTest {
