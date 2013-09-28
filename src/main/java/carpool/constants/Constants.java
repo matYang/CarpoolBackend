@@ -44,14 +44,14 @@ public class Constants {
     public static final String access_admin = "4rkozalh48z1";
 
     public static enum messageType{
-    	invalid(-1),ask(0),help(1);
+    	ask(0),help(1);
         public int code;
         messageType(int code){
             this.code = code;
         }
         private final static messageType[] map = messageType.values();
         public static messageType fromInt(int n){
-            return map[n+1];
+            return map[n];
         }
     }
     public static enum gender{
@@ -151,14 +151,14 @@ public class Constants {
 
     //states of the user account, more states reserved for future uses
     public static enum userState{
-    	invalid(-1),normal(0);
+    	normal(0);
         public int code;
         userState(int code){
             this.code = code;
         }
         private final static userState[] map = userState.values();
         public static userState fromInt(int n){
-            return map[n+1];
+            return map[n];
         }
     }
 
@@ -175,14 +175,14 @@ public class Constants {
     }
     //states of the message, more states reserved for future uses
     public static enum messageState{
-    	deleted(-2),expired(-1),normal(0);
+    	deleted(2),expired(1),normal(0);
         public int code;
         messageState(int code){
             this.code = code;
         }
         private final static messageState[] map = messageState.values();
         public static messageState fromInt(int n){
-            return map[n+2];
+            return map[n];
         }
     }
     

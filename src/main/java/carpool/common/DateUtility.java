@@ -46,5 +46,17 @@ public class DateUtility {
 		cal.setTime(sdf1.parse(dateString));
 		return cal;
 	}
+	
+	
+	//currently using milliseconds
+	public static Calendar castFromAPIFormat(String apiDateString){
+		Calendar representatedDate = Calendar.getInstance();
+		representatedDate.setTimeInMillis(Long.parseLong(apiDateString));
+		return representatedDate;
+	}
+	
+	public static String castToAPIFormat(Calendar date){
+		return Long.toString(date.getTimeInMillis());
+	}
 
 }

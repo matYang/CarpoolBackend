@@ -33,6 +33,7 @@ public class LocationRepresentation implements PseudoRepresentation{
 		this.customDepthIndex = Integer.parseInt(representationArray[i]);
 	}
 	
+	//used for SQL
 	public LocationRepresentation(String primaryLocationString, String customLocationString, int customDepthIndex){
 		this(primaryLocationString + "_" + customLocationString + "_" + customDepthIndex);
 	}
@@ -101,11 +102,23 @@ public class LocationRepresentation implements PseudoRepresentation{
 	public JSONObject toJSON() throws JSONException{
 		JSONArray nameList = new JSONArray(this.hierarchyNameList);
 		JSONObject jsonLocationRepresentation = new JSONObject();
-		
 		jsonLocationRepresentation.put("nameList", nameList);
 		jsonLocationRepresentation.put("customDepthIndex", this.customDepthIndex);
 		
 		return jsonLocationRepresentation;
+	}
+
+
+	public boolean equals(LocationRepresentation loc) {
+		if (this.hierarchyNameList.size() != loc.getHierarchyNameList().size()){
+			return false;
+		}
+		for (int i = 0; i < this.hierarchyNameList.size(); i++){
+			if (!this.hierarchyNameList.get(i).equals(loc.getHierarchyNameList().get(i))){
+				return false;
+			}
+		}
+		return this.customDepthIndex == loc.getCustomDepthIndex();
 	}
 
 }
