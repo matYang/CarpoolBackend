@@ -20,10 +20,10 @@ import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.message.MessageOwnerNotMatchException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
-import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
+import carpool.model.representation.LocationRepresentation;
 
 
 public class DMMessageDaoServiceTest {
@@ -36,7 +36,7 @@ public class DMMessageDaoServiceTest {
 		User defaultUser = new User(0, "password", "name", 0, 0,0, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
-				"phone", "email", "qq","imgPath",new Location("a a a a"),false,false,false,false,
+				"phone", "email", "qq","imgPath",new LocationRepresentation("a a a a"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,
 				calender,calender,"paypal");
 		try {
@@ -45,7 +45,7 @@ public class DMMessageDaoServiceTest {
 			assertTrue(false);
 		}
 		Message default1 = new Message(11,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
-				new Location("a a a a"),calender,calender,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
+				new LocationRepresentation("a a a a"),calender,calender,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
 				5,false,true,new ArrayList<Transaction>(),calender);
 		try {
 			UserDaoService.watchUser(1, 1);
@@ -75,7 +75,7 @@ public class DMMessageDaoServiceTest {
 		}
 		
 		try {
-			MessageDaoService.updateLocation(new Location("a2 a2 a2 a2"), 1, 1);
+			MessageDaoService.updateLocation(new LocationRepresentation("a2 a2 a2 a2"), 1, 1);
 			default1 = MessageDaoService.getMessageById(1);
 			assertTrue(default1.getLocation().toString().equals("a2 a2 a2 a2"));
 		} catch (MessageNotFoundException | MessageOwnerNotMatchException e) {
@@ -154,7 +154,7 @@ public class DMMessageDaoServiceTest {
 		User defaultUser1 = new User(0, "password", "name", 0, 0,0, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
-				"phone", "email", "qq","imgPath",new Location("a a a a"),false,false,false,false,
+				"phone", "email", "qq","imgPath",new LocationRepresentation("a a a a"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,
 				calenderx,calenderx,"paypal");
 		group.add("a a a a");
@@ -167,7 +167,7 @@ public class DMMessageDaoServiceTest {
 		User defaultUser2 = new User(0, "password3", "name3", 2, 2,2, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),22,Constants.gender.female,
-				"phone3", "email3", "qq3","imgPath3",new Location("a3 a3 a3 a3"),true,true,true,true,
+				"phone3", "email3", "qq3","imgPath3",new LocationRepresentation("a3 a3 a3 a3"),true,true,true,true,
 				Constants.userState.invalid,Constants.userSearchState.regionAsk,
 				calenderx,calenderx,"paypal3");
 		group.clear();
@@ -181,7 +181,7 @@ public class DMMessageDaoServiceTest {
 		User defaultUser3 = new User(0, "password4", "name4", 3, 3,3, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),23,Constants.gender.female,
-				"phone4", "email4", "qq4","imgPath4",new Location("a4 a4 a4 a4"),true,true,true,true,
+				"phone4", "email4", "qq4","imgPath4",new LocationRepresentation("a4 a4 a4 a4"),true,true,true,true,
 				Constants.userState.invalid,Constants.userSearchState.regionAsk,
 				calenderx,calenderx,"paypal4");
 		group.clear();
@@ -199,16 +199,16 @@ public class DMMessageDaoServiceTest {
 		Calendar calender3 = DateUtility.DateToCalendar(new Date(8888888));
 		Calendar calender4 = DateUtility.DateToCalendar(new Date(9999999));
 		Message default1 = new Message(1,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
-				new Location("a a a a"),calender2,calender4,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
+				new LocationRepresentation("a a a a"),calender2,calender4,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
 				5,false,true,new ArrayList<Transaction>(),calenderx);
 		Message default2 = new Message(2,1,"ImgPath2","Name2",30,40,"phone2","email2","qq2",Constants.paymentMethod.all,
-				new Location("a2 a2 a2 a2"),calender1,calender2,"note2",Constants.messageType.ask,Constants.gender.both,
+				new LocationRepresentation("a2 a2 a2 a2"),calender1,calender2,"note2",Constants.messageType.ask,Constants.gender.both,
 				Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calenderx);
 		Message default3 = new Message(3,2,"ImgPath3","Name3",30,40,"phone3","email3","qq3",Constants.paymentMethod.all,
-				new Location("a a a a3"),calender3,calender4,"note3",Constants.messageType.ask,Constants.gender.both,
+				new LocationRepresentation("a a a a3"),calender3,calender4,"note3",Constants.messageType.ask,Constants.gender.both,
 				Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calenderx);
 		Message default4 = new Message(3,3,"ImgPath4","Name4",30,40,"phone4","email4","qq4",Constants.paymentMethod.all,
-				new Location("a a b c"),calender1,calender4,"note4",Constants.messageType.ask,Constants.gender.both,
+				new LocationRepresentation("a a b c"),calender1,calender4,"note4",Constants.messageType.ask,Constants.gender.both,
 				Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calenderx);
 		DaoMessage.addMessageToDatabase(default1);
 		DaoMessage.addMessageToDatabase(default2);
@@ -216,19 +216,19 @@ public class DMMessageDaoServiceTest {
 		DaoMessage.addMessageToDatabase(default4);
 		//init Message finish
 		try {
-			assertTrue(MessageDaoService.extendedMessageSearch(new Location("a a b c"), calender3, Constants.userSearchState.universityAsk, 1000).get(0).getOwnerImgPath().equals("ImgPath4"));
+			assertTrue(MessageDaoService.extendedMessageSearch(new LocationRepresentation("a a b c"), calender3, Constants.userSearchState.universityAsk, 1000).get(0).getOwnerImgPath().equals("ImgPath4"));
 		} catch (UserNotFoundException e) {
 			assertTrue(false);
 		}
 		try {
-			ArrayList<Message> result = MessageDaoService.extendedMessageSearch(new Location("a a a shit"), calender3, Constants.userSearchState.regionAsk, 1000);
+			ArrayList<Message> result = MessageDaoService.extendedMessageSearch(new LocationRepresentation("a a a shit"), calender3, Constants.userSearchState.regionAsk, 1000);
 			assertTrue(result.get(0).getOwnerImgPath().equals("ImgPath"));
 			assertTrue(result.get(1).getOwnerImgPath().equals("ImgPath3"));
 		} catch (UserNotFoundException e) {
 			assertTrue(false);
 		}
 		try {
-			assertTrue(MessageDaoService.extendedMessageSearch(new Location("bla bla bla bla"), calender3, Constants.userSearchState.universityGroupAsk, 3).get(0).getOwnerImgPath().equals("ImgPath4"));
+			assertTrue(MessageDaoService.extendedMessageSearch(new LocationRepresentation("bla bla bla bla"), calender3, Constants.userSearchState.universityGroupAsk, 3).get(0).getOwnerImgPath().equals("ImgPath4"));
 		} catch (UserNotFoundException e) {
 			assertTrue(false);
 		}

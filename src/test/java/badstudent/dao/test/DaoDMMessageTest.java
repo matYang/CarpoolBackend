@@ -19,10 +19,10 @@ import carpool.database.DaoUser;
 import carpool.dbservice.MessageDaoService;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.model.Message;
-import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
+import carpool.model.representation.LocationRepresentation;
 
 
 public class DaoDMMessageTest {
@@ -32,10 +32,10 @@ public class DaoDMMessageTest {
 	private final Calendar calender3 = DateUtility.DateToCalendar(new Date(8888888));
 	private final Calendar calender4 = DateUtility.DateToCalendar(new Date(9999999));
 	private final Message default1 = new Message(11,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
-			new Location("a a a a"),calender1,calender2,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
+			new LocationRepresentation("a a a a"),calender1,calender2,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
 			5,false,true,new ArrayList<Transaction>(),calender3);
 	private final Message default2 = new Message(1,2,"ImgPath2","Name2",30,40,"phone2","email2","qq2",Constants.paymentMethod.all,
-			new Location("a2 a2 a2 a2"),calender2,calender3,"note2",Constants.messageType.help,Constants.gender.both,
+			new LocationRepresentation("a2 a2 a2 a2"),calender2,calender3,"note2",Constants.messageType.help,Constants.gender.both,
 			Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calender4);
 
 	@Test
@@ -45,30 +45,30 @@ public class DaoDMMessageTest {
 		User defaultUser1 = new User(0, "password", "name", 0, 0,0, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
-				"phone", "email", "qq","imgPath",new Location("a a a a"),false,false,false,false,
+				"phone", "email", "qq","imgPath",new LocationRepresentation("a a a a"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,
 				calender,calender,"paypal");
 		User defaultUser2 = new User(1, "password", "name1", 0, 0,0, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
-				"phone1", "email1", "qq1","imgPath1",new Location("a2 a2 a2 a2"),false,false,false,false,
+				"phone1", "email1", "qq1","imgPath1",new LocationRepresentation("a2 a2 a2 a2"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,
 				calender,calender,"paypal");
 		Message default1 = new Message(11,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
-				new Location("a a a a"),calender,calender,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
+				new LocationRepresentation("a a a a"),calender,calender,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
 				5,false,true,new ArrayList<Transaction>(),calender);
 		Message default2 = new Message(1,2,"ImgPath2","Name2",30,40,"phone2","email2","qq2",Constants.paymentMethod.all,
-				new Location("a2 a2 a2 a2"),calender,calender,"note2",Constants.messageType.help,Constants.gender.both,
+				new LocationRepresentation("a2 a2 a2 a2"),calender,calender,"note2",Constants.messageType.help,Constants.gender.both,
 				Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calender);
 		Message default3 = new Message(1,1,"ImgPath2","Name3",30,40,"phone3","email3","qq2",Constants.paymentMethod.all,
-				new Location("a2 a2 a2 a2"),calender,calender,"note2",Constants.messageType.help,Constants.gender.both,
+				new LocationRepresentation("a2 a2 a2 a2"),calender,calender,"note2",Constants.messageType.help,Constants.gender.both,
 				Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calender);
 		Transaction defaultT1 = new Transaction(111, 2, 1, "initUserImgPath", "initUserName",
 				1, "targetUserImgPath", "targetUserName", 1,1,1, 1, "messageNote", paymentMethod.offline, 1,
-				"requestInfo", "responseInfo", calender, calender, new Location("a a a a"), false, false, Constants.transactionState.init, true, calender);
+				"requestInfo", "responseInfo", calender, calender, new LocationRepresentation("a a a a"), false, false, Constants.transactionState.init, true, calender);
 		Transaction defaultT2 = new Transaction(111, 2, 1, "initUserImgPath", "initUserName",
 				1, "targetUserImgPath", "targetUserName", 1,1,1, 3, "messageNote", paymentMethod.offline, 1,
-				"requestInfo", "responseInfo", calender, calender, new Location("a a a a"), false, false, Constants.transactionState.init, true, calender);
+				"requestInfo", "responseInfo", calender, calender, new LocationRepresentation("a a a a"), false, false, Constants.transactionState.init, true, calender);
 		try {
 			DaoUser.addUserToDatabase(defaultUser1);
 			DaoUser.addUserToDatabase(defaultUser2);
@@ -192,7 +192,7 @@ public class DaoDMMessageTest {
 		User defaultUser1 = new User(0, "password", "name", 0, 0,0, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
-				"phone", "email", "qq","imgPath",new Location("a a a a"),false,false,false,false,
+				"phone", "email", "qq","imgPath",new LocationRepresentation("a a a a"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,
 				calender2,calender2,"paypal");
 		group.add("a a a a");
@@ -205,7 +205,7 @@ public class DaoDMMessageTest {
 		User defaultUser2 = new User(0, "password3", "name3", 2, 2,2, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),22,Constants.gender.female,
-				"phone3", "email3", "qq3","imgPath3",new Location("a3 a3 a3 a3"),true,true,true,true,
+				"phone3", "email3", "qq3","imgPath3",new LocationRepresentation("a3 a3 a3 a3"),true,true,true,true,
 				Constants.userState.invalid,Constants.userSearchState.regionAsk,
 				calender2,calender2,"paypal3");
 		group.clear();
@@ -219,7 +219,7 @@ public class DaoDMMessageTest {
 		User defaultUser3 = new User(0, "password4", "name4", 3, 3,3, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),23,Constants.gender.female,
-				"phone4", "email4", "qq4","imgPath4",new Location("a4 a4 a4 a4"),true,true,true,true,
+				"phone4", "email4", "qq4","imgPath4",new LocationRepresentation("a4 a4 a4 a4"),true,true,true,true,
 				Constants.userState.invalid,Constants.userSearchState.regionAsk,
 				calender2,calender2,"paypal4");
 		group.clear();
@@ -233,16 +233,16 @@ public class DaoDMMessageTest {
 		//init user finish
 		//init Message
 		Message default1 = new Message(1,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
-				new Location("a a a a"),calender2,calender4,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
+				new LocationRepresentation("a a a a"),calender2,calender4,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
 				5,false,true,new ArrayList<Transaction>(),calender3);
 		Message default2 = new Message(2,1,"ImgPath2","Name2",30,40,"phone2","email2","qq2",Constants.paymentMethod.all,
-				new Location("a2 a2 a2 a2"),calender1,calender2,"note2",Constants.messageType.ask,Constants.gender.both,
+				new LocationRepresentation("a2 a2 a2 a2"),calender1,calender2,"note2",Constants.messageType.ask,Constants.gender.both,
 				Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calender4);
 		Message default3 = new Message(3,2,"ImgPath3","Name3",30,40,"phone3","email3","qq3",Constants.paymentMethod.all,
-				new Location("a3 a3 a3 a3"),calender3,calender4,"note3",Constants.messageType.help,Constants.gender.both,
+				new LocationRepresentation("a3 a3 a3 a3"),calender3,calender4,"note3",Constants.messageType.help,Constants.gender.both,
 				Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calender4);
 		Message default4 = new Message(3,3,"ImgPath4","Name4",30,40,"phone4","email4","qq4",Constants.paymentMethod.all,
-				new Location("a4 a4 a4 a4"),calender1,calender4,"note4",Constants.messageType.ask,Constants.gender.both,
+				new LocationRepresentation("a4 a4 a4 a4"),calender1,calender4,"note4",Constants.messageType.ask,Constants.gender.both,
 				Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calender4);
 		DaoMessage.addMessageToDatabase(default1);
 		DaoMessage.addMessageToDatabase(default2);

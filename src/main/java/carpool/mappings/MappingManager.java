@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 import carpool.common.DebugLog;
 import carpool.constants.Constants;
-import carpool.model.Location;
+import carpool.model.representation.LocationRepresentation;
 
 
 public class MappingManager {
@@ -132,7 +132,7 @@ public class MappingManager {
         return retVal;
     }
 
-    public static boolean isLocationVaild(Location location) {
+    public static boolean isLocationVaild(LocationRepresentation location) {
         String province = location.getProvince();
         String city = location.getCity();
         String school = location.getSchool();
@@ -153,7 +153,7 @@ public class MappingManager {
         return false;
     }
     
-    public static String determineRegionFromLocation(Location location){
+    public static String determineRegionFromLocation(LocationRepresentation location){
         if(location.getRegion()!="NULL"){
             DebugLog.d("Location has already got region which is " + location.getRegion());
             return location.getRegion();
@@ -175,8 +175,8 @@ public class MappingManager {
         return location.getRegion();
     }
     
-    public static ArrayList<Location> getLocationsFromUniversities(ArrayList<String> universities){
-    	ArrayList<Location> retVal = new ArrayList<Location>();
+    public static ArrayList<LocationRepresentation> getLocationsFromUniversities(ArrayList<String> universities){
+    	ArrayList<LocationRepresentation> retVal = new ArrayList<LocationRepresentation>();
     	for(String university : universities){
     		for(String provinceName : getAllProvince()){
     			MappingBase province = getProvinceMappings(provinceName);
@@ -186,7 +186,7 @@ public class MappingManager {
     					MappingBase region = getRegionMappings(provinceName, cityName, regionName);
     					for(String school : region.getAllSubArea()){
     						if(school.equals(university)){
-    							retVal.add(new Location(provinceName,cityName,regionName,school));
+    							retVal.add(new LocationRepresentation(provinceName,cityName,regionName,school));
     						}
     					}
     				}

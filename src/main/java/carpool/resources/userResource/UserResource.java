@@ -22,6 +22,7 @@ import carpool.exception.PseudoException;
 import carpool.exception.ValidationException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
+import carpool.model.representation.LocationRepresentation;
 import carpool.resources.PseudoResource;
 
 
@@ -38,14 +39,14 @@ public class UserResource extends PseudoResource{
 			
 			String password = jsonUser.getString("password");
 			String email = jsonUser.getString("email");
-			Location location = new Location(java.net.URLDecoder.decode(jsonUser.getJSONObject("location").getString("province"),"utf-8"), jsonUser.getJSONObject("location").getString("city"), jsonUser.getJSONObject("location").getString("region"),jsonUser.getJSONObject("location").getString("university"));
+			LocationRepresentation location = new LocationRepresentation(jsonUser.getJSONObject("location"));
 			
 			//if email is used, do not register
 			if (EmailDaoService.isEmailAvailable(email)){
 				throw new ValidationException("Email already in use");
 			}
 			
-			if (Validator.isPasswordFormatValid(password) && Validator.isEmailFormatValid(email) && Location.isLocationVaild(location)){
+			if (Validator.isPasswordFormatValid(password) && Validator.isEmailFormatValid(email) && LocationRepresentation.isLocationVaild(location)){
 				user = new User(password, email, location);
 			}
 		} catch (JSONException|IOException e) {

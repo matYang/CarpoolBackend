@@ -34,9 +34,10 @@ import carpool.exception.validation.UnacceptableSearchStateException;
 import carpool.factory.JSONFactory;
 import carpool.mappings.*;
 import carpool.model.*;
+import carpool.model.representation.LocationRepresentation;
 import carpool.resources.PseudoResource;
-import carpool.resources.userResource.UserCookieResource;
 import carpool.resources.userResource.UserResource;
+import carpool.resources.userResource.userAuthResource.UserCookieResource;
 
 
 
@@ -50,14 +51,14 @@ public class DMSearchResource extends PseudoResource{
 		try {
 			int userId = Integer.parseInt(this.getQueryVal("userId"));
 			
-			Location location = new Location(this.getQueryVal("location"));
+			LocationRepresentation location = new LocationRepresentation(this.getQueryVal("location"));
 			Calendar date = DateUtility.parseDateString(this.getQueryVal("date"));
 			String searchStateString = this.getQueryVal("searchState");
 			userSearchState searchState = Constants.userSearchState.values()[Integer.parseInt(searchStateString)];
 			
 			
 			//not checking for date..because an invalid date will have no search result anyways
-			if (Location.isLocationVaild(location) && searchState != null){
+			if (LocationRepresentation.isLocationVaild(location) && searchState != null){
 				boolean login = false;
 				try{
 					this.validateAuthentication(userId);

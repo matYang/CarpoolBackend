@@ -7,6 +7,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import carpool.constants.Constants;
 import carpool.database.DaoBasic;
 import carpool.database.DaoUser;
+import carpool.exception.PseudoException;
 import carpool.exception.ValidationException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.User;
@@ -20,21 +21,23 @@ public class authDaoService {
 	 * @throws UserNotFoundException 
 	 * @throws no need to throw user not found exception here, not found then not log in
 	 */
-	public static User authenticateUserLogin(String email, String password) throws ValidationException{
+	public static User authenticateUserLogin(String email, String password) throws PseudoException{
 	
 		User user;
 		try {
 			user = DaoUser.getUserByEmail(email);
+			if(!user.validate()){
+				throw new ValidationException("Account not valid");
+			}
+			if(!user.isPasswordCorrect(password)){
+				throw new ValidationException("Email/Password Incorrect");
+			}
+			user.setLastLogin(Calendar.getInstance());
+			UserDaoService.updateUser(user);
 		} catch (UserNotFoundException e) {
 			throw new ValidationException("Email/Password Incorrect");
 		}
 		
-		if(!user.validate()){
-			throw new ValidationException("Account not valid");
-		}
-		if(!user.isPasswordCorrect(password)){
-			throw new ValidationException("Email/Password Incorrect");
-		}
 		return user;
 	
 	}

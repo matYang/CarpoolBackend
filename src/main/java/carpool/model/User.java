@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +20,7 @@ import carpool.exception.ValidationException;
 import carpool.factory.JSONFactory;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoValidatable;
+import carpool.model.representation.LocationRepresentation;
 
 
 public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
@@ -36,7 +38,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     private gender gender;
     private Calendar birthday;
     private String imgPath;
-    private Location location;
+    private LocationRepresentation location;
 
     private Calendar lastLogin;
     private Calendar creationTime;
@@ -75,6 +77,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     /*****
      * the followings are user's authorizations
      *****/
+    private ArrayList<String> verifications;
     private String googleToken;
     private String facebookToken;
     private String twitterToken;
@@ -102,7 +105,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     /*****
      * Constructor for user registration
 	 *****/
-	public User(String password, String email, Location location) {
+	public User(String password, String email, LocationRepresentation location) {
 		super();
 		this.userId = -1;
 		this.password = password;
@@ -127,7 +130,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	    this.notificationList = new ArrayList<Notification>();
 	    this.universityGroup = new ArrayList<String>();
   
-
+	    this.verifications = new ArrayList<String>();
 	    this.emailActivated = false;
 	    this.phoneActivated = false;
 	    this.emailNotice = false;
@@ -162,8 +165,8 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	public User(int userId, String password, String name, String email,
 			String phone, String qq, int age,
 			carpool.constants.Constants.gender gender, Calendar birthday,
-			String imgPath, Location location, Calendar lastLogin,
-			Calendar creationTime, boolean emailActivated,
+			String imgPath, LocationRepresentation location, Calendar lastLogin,
+			Calendar creationTime, ArrayList<String> verifications, boolean emailActivated,
 			boolean phoneActivated, boolean emailNotice, boolean phoneNotice,
 			userState state, userSearchState searchState, int level,
 			int averageScore, int totalTranscations, String googleToken,
@@ -185,6 +188,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.location = location;
 		this.lastLogin = lastLogin;
 		this.creationTime = creationTime;
+		this.verifications = verifications;
 		this.emailActivated = emailActivated;
 		this.phoneActivated = phoneActivated;
 		this.emailNotice = emailNotice;
@@ -308,12 +312,12 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	}
 
 
-	public Location getLocation() {
+	public LocationRepresentation getLocation() {
 		return location;
 	}
 
 
-	public void setLocation(Location location) {
+	public void setLocation(LocationRepresentation location) {
 		this.location = location;
 	}
 
@@ -383,7 +387,15 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.notificationList = notificationList;
 	}
 
-
+	
+	public ArrayList<String> getVerifications(){
+		return this.verifications;
+	}
+	
+	public void setVerifications(ArrayList<String> verifications){
+		this.verifications = verifications;
+	}
+	
 	public boolean isEmailActivated() {
 		return emailActivated;
 	}
@@ -641,6 +653,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 			jsonUser.put("transactionList", JSONFactory.toJSON(this.getTransactionList()));
 			jsonUser.put("notificationList", JSONFactory.toJSON(this.getNotificationList()));
 			
+			jsonUser.put("verifications", new JSONArray(this.verifications));
 			jsonUser.put("emailActivated", this.isEmailActivated());
 			jsonUser.put("phoneActivated", this.isPhoneActivated());
 			jsonUser.put("emailNotice", this.isEmailNotice());
@@ -684,7 +697,8 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 				+ ", historyList=" + historyList + ", watchList=" + watchList
 				+ ", socialList=" + socialList + ", transactionList="
 				+ transactionList + ", notificationList=" + notificationList
-				+ ", universityGroup=" + universityGroup + ", emailActivated="
+				+ ", universityGroup=" + universityGroup + ", verifications="
+				+ verifications + ", emailActivated="
 				+ emailActivated + ", phoneActivated=" + phoneActivated
 				+ ", emailNotice=" + emailNotice + ", phoneNotice="
 				+ phoneNotice + ", state=" + state + ", searchState="

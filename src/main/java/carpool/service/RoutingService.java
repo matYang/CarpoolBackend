@@ -14,6 +14,15 @@ import carpool.resources.locationResource.*;
 import carpool.resources.notificationResource.*;
 import carpool.resources.transactionResource.*;
 import carpool.resources.userResource.*;
+import carpool.resources.userResource.userAuthResource.ChangePasswordResource;
+import carpool.resources.userResource.userAuthResource.ForgetPasswordResource;
+import carpool.resources.userResource.userAuthResource.LogInResource;
+import carpool.resources.userResource.userAuthResource.LogOutResource;
+import carpool.resources.userResource.userAuthResource.SessionRedirect;
+import carpool.resources.userResource.userEmailResource.ResendActivationEmailResource;
+import carpool.resources.userResource.userEmailResource.UserEmailActivationResource;
+import carpool.resources.userResource.userEmailResource.UserEmailResource;
+import carpool.resources.userResource.userEmailResource.UserEmailResourceId;
 
 
 /**

@@ -16,6 +16,7 @@ import carpool.constants.Constants.paymentMethod;
 import carpool.constants.Constants.transactionState;
 import carpool.interfaces.PseudoModel;
 import carpool.mappings.MappingManager;
+import carpool.model.representation.LocationRepresentation;
 
 
 
@@ -47,7 +48,7 @@ public class Transaction implements PseudoModel{
 
 	private Calendar startTime;
 	private Calendar endTime;
-	private Location location;
+	private LocationRepresentation location;
 
 	private boolean established;
 	private boolean success;
@@ -80,7 +81,7 @@ public class Transaction implements PseudoModel{
 
 		this.startTime = Calendar.getInstance();
 		this.endTime = Calendar.getInstance();
-		this.location =  new Location();
+		this.location =  new LocationRepresentation();
 
 		this.established = false;
 		this.success = false;
@@ -114,7 +115,7 @@ public class Transaction implements PseudoModel{
 
 		this.startTime = Calendar.getInstance();
 		this.endTime = Calendar.getInstance();
-		this.location =  new Location();
+		this.location =  new LocationRepresentation();
 
 		this.established = false;
 		this.success = false;
@@ -141,7 +142,7 @@ public class Transaction implements PseudoModel{
 	 * @param historyDeleted
 	 * @param creationTime
 	 */
-	public Transaction(int transactionId, int initUserId, int targetUserId, int messageId, String messageNote, int price, Calendar startTime, Location location, boolean established, boolean success ,transactionState state, boolean historyDeleted, Calendar creationTime){
+	public Transaction(int transactionId, int initUserId, int targetUserId, int messageId, String messageNote, int price, Calendar startTime, LocationRepresentation location, boolean established, boolean success ,transactionState state, boolean historyDeleted, Calendar creationTime){
 		this.transactionId = -1;
 		this.initUserId = initUserId;
 		this.targetUserId = targetUserId;
@@ -181,7 +182,7 @@ public class Transaction implements PseudoModel{
 	 * @param endTime
 	 * @param location
 	 */
-	public Transaction(int initUserId, int targetUserId, int messageId ,paymentMethod paymentMethod, int price, String requestInfo, Calendar startTime, Calendar endTime, Location location){
+	public Transaction(int initUserId, int targetUserId, int messageId ,paymentMethod paymentMethod, int price, String requestInfo, Calendar startTime, Calendar endTime, LocationRepresentation location){
 		this.transactionId = -1;
 		this.initUserId = initUserId;
 		this.targetUserId = targetUserId;
@@ -214,7 +215,7 @@ public class Transaction implements PseudoModel{
 	
 	public Transaction(int transactionId,int initUserId,int targetUserId,String initUserImgPath,String initUserName,int initUserLevel,
 			String targetUserImgPath,String targetUserName,int targetUserLevel,int initUserEval, int targetUserEval, int messageId,String messageNote,Constants.paymentMethod paymentMethod,
-			int price,String requestInfo,String responseInfo,Calendar startTime,Calendar endTime,Location location,boolean established,
+			int price,String requestInfo,String responseInfo,Calendar startTime,Calendar endTime,LocationRepresentation location,boolean established,
 			boolean success,Constants.transactionState state,boolean historyDeleted,Calendar creationTime){
 		this.transactionId = transactionId;
 		this.initUserId = initUserId;
@@ -425,11 +426,11 @@ public class Transaction implements PseudoModel{
 		this.endTime = endTime;
 	}
 
-	public Location getLocation() {
+	public LocationRepresentation getLocation() {
 		return location;
 	}
 
-	public void setLocation(Location location) {
+	public void setLocation(LocationRepresentation location) {
 		this.location = location;
 	}
 

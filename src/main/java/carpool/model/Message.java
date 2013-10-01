@@ -18,6 +18,7 @@ import carpool.constants.Constants.paymentMethod;
 import carpool.factory.JSONFactory;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoValidatable;
+import carpool.model.representation.LocationRepresentation;
 
 
 public class Message implements PseudoModel, PseudoValidatable, Comparable<Message>{
@@ -38,13 +39,13 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	 *****/
 	private boolean isRoundTrip;
 	
-	private Location departure_Location;
+	private LocationRepresentation departure_Location;
 	private Calendar departure_Time;
 	private int departure_seatsNumber;
 	private int departure_seatsBooked;
 	private ArrayList<Integer> departure_priceList;
 	
-	private Location arrival_Location;
+	private LocationRepresentation arrival_Location;
 	private Calendar arrival_Time;
 	private int arrival_seatsNumber;
 	private int arrival_seatsBooked;
@@ -64,6 +65,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	private boolean historyDeleted;
 	
 	
+	@SuppressWarnings("unused")
 	private Message(){}
 	
 	
@@ -71,9 +73,9 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	 * The contructor used for message posting
 	 *****/
 	public Message(int ownerId, boolean isRoundTrip,
-			Location departure_Location, Calendar departure_Time,
+			LocationRepresentation departure_Location, Calendar departure_Time,
 			int departure_seatsNumber, ArrayList<Integer> departure_priceList,
-			Location arrival_Location, Calendar arrival_Time,
+			LocationRepresentation arrival_Location, Calendar arrival_Time,
 			int arrival_seatsNumber, ArrayList<Integer> arrival_priceList,
 			carpool.constants.Constants.paymentMethod paymentMethod,
 			String note, messageType type, gender genderRequirement) {
@@ -113,10 +115,10 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	 * full constructor used for SQL retrieval
 	 *****/
 	public Message(int messageId, int ownerId, User owner,
-			boolean isRoundTrip, Location departure_Location,
+			boolean isRroundTrip, LocationRepresentation departure_Location,
 			Calendar departure_Time, int departure_seatsNumber,
 			int departures_seatsBooked, ArrayList<Integer> departure_priceList,
-			Location arrival_Location, Calendar arrival_Time,
+			LocationRepresentation arrival_Location, Calendar arrival_Time,
 			int arrival_seatsNumber, int arrival_seatsBooked,
 			ArrayList<Integer> arrival_priceList,
 			carpool.constants.Constants.paymentMethod paymentMethod,
@@ -199,12 +201,12 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	}
 
 
-	public Location getDeparture_Location() {
+	public LocationRepresentation getDeparture_Location() {
 		return departure_Location;
 	}
 
 
-	public void setDeparture_Location(Location departure_Location) {
+	public void setDeparture_Location(LocationRepresentation departure_Location) {
 		this.departure_Location = departure_Location;
 	}
 
@@ -249,12 +251,12 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	}
 
 
-	public Location getArrival_Location() {
+	public LocationRepresentation getArrival_Location() {
 		return arrival_Location;
 	}
 
 
-	public void setArrival_Location(Location arrival_Location) {
+	public void setArrival_Location(LocationRepresentation arrival_Location) {
 		this.arrival_Location = arrival_Location;
 	}
 
@@ -417,38 +419,17 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		return jsonMessage;
 	}
 
-	public boolean tests(Message msg) {
-		try{
-			return msg != null && this.getArrival_Location().equals(msg.getArrival_Location()) && this.getArrival_Time().equals(msg.getArrival_Time()) &&
-					HelperOperator.isArrayListEqual(this.getArrival_priceList(), msg.getArrival_priceList()) && this.getArrival_seatsBooked() == msg.getArrival_seatsBooked() &&
-					this.getArrival_seatsNumber() == msg.getArrival_seatsNumber() && this.category == msg.getCategory() 
-				   //&& this.getCreationTime().equals(msg.getCreationTime())
-					&&this.departure_Location.equals(msg.getDeparture_Location())&& HelperOperator.isArrayListEqual(this.getDeparture_priceList(), msg.getDeparture_priceList()) && this.getDeparture_seatsBooked() == msg.getDeparture_seatsBooked() &&
-					this.getDeparture_seatsNumber() == msg.getDeparture_seatsNumber() 
-					//&& this.getEditTime().equals(msg.getEditTime()) 
-					&&this.getGenderRequirement() == msg.getGenderRequirement() &&
-					this.isRoundTrip == msg.isRoundTrip;
-		}
-		catch(NullPointerException e){
-			e.printStackTrace();
-			return false;
-		}
-		
 
-	}
-    
+
 	public boolean equals(Message msg) {
 		try{
 			return msg != null && this.getArrival_Location().equals(msg.getArrival_Location()) && this.getArrival_Time().equals(msg.getArrival_Time()) &&
 					HelperOperator.isArrayListEqual(this.getArrival_priceList(), msg.getArrival_priceList()) && this.getArrival_seatsBooked() == msg.getArrival_seatsBooked() &&
-					this.getArrival_seatsNumber() == msg.getArrival_seatsNumber() && this.category == msg.getCategory() 
-				   //&& this.getCreationTime().equals(msg.getCreationTime())
-					&&this.departure_Location.equals(msg.getDeparture_Location()) 
-					//&& this.getDeparture_Time().equals(msg.getDeparture_Time()) 
-					&& HelperOperator.isArrayListEqual(this.getDeparture_priceList(), msg.getDeparture_priceList()) && this.getDeparture_seatsBooked() == msg.getDeparture_seatsBooked() &&
-					this.getDeparture_seatsNumber() == msg.getDeparture_seatsNumber() 
-					//&& this.getEditTime().equals(msg.getEditTime()) 
-					&&this.getGenderRequirement() == msg.getGenderRequirement() && this.isHistoryDeleted() == msg.isHistoryDeleted() &&
+					this.getArrival_seatsNumber() == msg.getArrival_seatsNumber() && this.category == msg.getCategory() && this.getCreationTime().equals(msg.getCreationTime()) &&
+					this.departure_Location.equals(msg.getDeparture_Location()) && this.getDeparture_Time().equals(msg.getDeparture_Time()) &&
+					HelperOperator.isArrayListEqual(this.getDeparture_priceList(), msg.getDeparture_priceList()) && this.getDeparture_seatsBooked() == msg.getDeparture_seatsBooked() &&
+					this.getDeparture_seatsNumber() == msg.getDeparture_seatsNumber() && this.getEditTime().equals(msg.getEditTime()) &&
+					this.getGenderRequirement() == msg.getGenderRequirement() && this.isHistoryDeleted() == msg.isHistoryDeleted() &&
 					this.isRoundTrip == msg.isRoundTrip && this.getMessageId() == msg.getMessageId() && this.getNote().equals(msg.getNote()) &&
 					this.getOwnerId() == msg.getOwnerId() && this.getPaymentMethod() == msg.getPaymentMethod() && this.getState() == msg.getState() &&
 					this.getType() == msg.getType();

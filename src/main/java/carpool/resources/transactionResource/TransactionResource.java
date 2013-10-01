@@ -27,9 +27,10 @@ import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
+import carpool.model.representation.LocationRepresentation;
 import carpool.resources.PseudoResource;
-import carpool.resources.userResource.UserCookieResource;
 import carpool.resources.userResource.UserResource;
+import carpool.resources.userResource.userAuthResource.UserCookieResource;
 
 
 
@@ -47,7 +48,7 @@ public class TransactionResource extends PseudoResource{
 			
 			transaction = new Transaction(jsonTransaction.getInt("initUserId"), jsonTransaction.getInt("targetUserId"), jsonTransaction.getInt("messageId"), Constants.paymentMethod.values()[jsonTransaction.getInt("paymentMethod")], 
 					jsonTransaction.getInt("price"), jsonTransaction.getString("requestInfo"),  DateUtility.parseDateString(jsonTransaction.getString("startTime")), 
-					DateUtility.parseDateString(jsonTransaction.getString("endTime")), new Location(jsonTransaction.getJSONObject("location").getString("province"), jsonTransaction.getJSONObject("location").getString("city"), jsonTransaction.getJSONObject("location").getString("region"),jsonTransaction.getJSONObject("location").getString("university")) );
+					DateUtility.parseDateString(jsonTransaction.getString("endTime")), new LocationRepresentation(jsonTransaction.getJSONObject("location").getString("province"), jsonTransaction.getJSONObject("location").getString("city"), jsonTransaction.getJSONObject("location").getString("region"),jsonTransaction.getJSONObject("location").getString("university")) );
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -19,10 +19,10 @@ import carpool.dbservice.UserDaoService;
 import carpool.dbservice.authDaoService;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
-import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
+import carpool.model.representation.LocationRepresentation;
 
 
 public class DaoUserServiceTest {
@@ -34,7 +34,7 @@ public class DaoUserServiceTest {
 		User defaultUser = new User(1, "password", "name", 0, 0,0, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
-				"phone", "email", "qq","imgPath",new Location("a a a a"),false,false,false,false,
+				"phone", "email", "qq","imgPath",new LocationRepresentation("a a a a"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,
 				calender,calender,"paypal");
 		UserDaoService.createNewUser(defaultUser);
@@ -68,16 +68,16 @@ public class DaoUserServiceTest {
 		}
 		
 		try {
-			UserDaoService.changeSingleLocation(1, new Location("b b b b"));
+			UserDaoService.changeSingleLocation(1, new LocationRepresentation("b b b b"));
 			assertTrue(UserDaoService.getUserById(1).getLocation().toString().equals("b b b b"));
 		} catch (UserNotFoundException e) {
 			assertTrue(false);
 		}
 		
 		try {
-			UserDaoService.addLocationToUniversityGroup(1, new Location("a a a a"));
+			UserDaoService.addLocationToUniversityGroup(1, new LocationRepresentation("a a a a"));
 			assertTrue(UserDaoService.getUniversityGroup(1).get(0).toString().equals("a a a a"));
-			UserDaoService.removeLocationFromUniversityGroup(1, new Location("a a a a"));
+			UserDaoService.removeLocationFromUniversityGroup(1, new LocationRepresentation("a a a a"));
 			assertTrue(UserDaoService.getUniversityGroup(1).size()==0);
 		} catch (UserNotFoundException e) {
 			assertTrue(false);
@@ -136,7 +136,7 @@ public class DaoUserServiceTest {
 		User defaultUser = new User(1, "password", "name", 0, 0,0, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
-				"phone", "email", "qq","imgPath",new Location("a a a a"),false,false,false,false,
+				"phone", "email", "qq","imgPath",new LocationRepresentation("a a a a"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,
 				calender,calender,"paypal");
 		UserDaoService.createNewUser(defaultUser);
@@ -154,21 +154,21 @@ public class DaoUserServiceTest {
 		User defaultUser = new User(1, "password", "name", 0, 0,0, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
-				"phone", "email", "qq","imgPath",new Location("a a a a"),false,false,false,false,
+				"phone", "email", "qq","imgPath",new LocationRepresentation("a a a a"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,
 				calender,calender,"paypal");
 		User defaultUser2 = new User(2, "password2", "name2", 1, 1,1, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),21,Constants.gender.female,
-				"phone2", "email2", "qq2","imgPath2",new Location("a2 a2 a2 a2"),true,true,true,true,
+				"phone2", "email2", "qq2","imgPath2",new LocationRepresentation("a2 a2 a2 a2"),true,true,true,true,
 				Constants.userState.invalid,Constants.userSearchState.regionAsk,
 				calender,calender,"paypal2");
 		Message default1 = new Message(1,1,"ImgPath","Name",3,4,"phone","email","qq",Constants.paymentMethod.offline,
-				new Location("a a a a"),calender,calender,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
+				new LocationRepresentation("a a a a"),calender,calender,"note",Constants.messageType.ask,Constants.gender.male,Constants.messageState.normal,
 				5,false,true,new ArrayList<Transaction>(),calender);
 		Transaction defaultT1 = new Transaction(111, 2, 1, "initUserImgPath", "initUserName",
 				1, "targetUserImgPath", "targetUserName", 1,1,1, 1, "messageNote", paymentMethod.offline, 1,
-				"requestInfo", "responseInfo", calender, calender, new Location("a a a a"), false, false, Constants.transactionState.init, true, calender);
+				"requestInfo", "responseInfo", calender, calender, new LocationRepresentation("a a a a"), false, false, Constants.transactionState.init, true, calender);
 		UserDaoService.createNewUser(defaultUser);
 		UserDaoService.createNewUser(defaultUser2);
 		MessageDaoService.createNewMessage(default1);
@@ -213,7 +213,7 @@ public class DaoUserServiceTest {
 		User defaultUser = new User(1, "password", "name", 0, 0,0, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
-				"phone", "hahaha", "qq","imgPath",new Location("a a a a"),false,false,false,false,
+				"phone", "hahaha", "qq","imgPath",new LocationRepresentation("a a a a"),false,false,false,false,
 				Constants.userState.normal,Constants.userSearchState.universityAsk,
 				calender,calender,"paypal");
 		UserDaoService.createNewUser(defaultUser);
