@@ -20,6 +20,7 @@ import carpool.carpoolDAO.carpoolDAOBasic;
 import carpool.carpoolDAO.carpoolDAOMessage;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
+import carpool.common.HelperOperator;
 import carpool.common.Parser;
 import carpool.constants.Constants.gender;
 import carpool.constants.Constants.messageState;
@@ -30,9 +31,9 @@ import carpool.database.DaoUser;
 import carpool.dbservice.*;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.model.Location;
 import carpool.model.Message;
 import carpool.model.User;
-import carpool.model.representation.LocationRepresentation;
 import carpool.test.mockModel.MockUser;
 import static java.lang.System.out;
 
@@ -53,14 +54,14 @@ public class CarpoolMessageTest {
 		messageState state = messageState.fromInt(0);
 		//No user
 		Message message=new Message(1, 1, null,false
-				, new LocationRepresentation("p c d s"),time,1,1 , priceList,new LocationRepresentation("p c d s"),
+				, new Location("p c d s"),time,1,1 , priceList,new Location("p c d s"),
 				time,1, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement ,
 				state, time, time,false);
 		//Has user
-		User user = new User("HarryXiong","c2xiong@uwaterloo.ca",new LocationRepresentation("p c d s"));
+		User user = new User("HarryXiong","c2xiong@uwaterloo.ca",new Location("p c d s"));
 		Message message2=new Message(1, 2, user,false
-				, new LocationRepresentation("p c d s"),time,3,4 , priceList,new LocationRepresentation("p c d s"),
+				, new Location("p c d s"),time,3,4 , priceList,new Location("p c d s"),
 				time,5, 6,priceList,paymentMethod,
 				"test",  type, genderRequirement ,
 				state, time, time,false);
@@ -68,7 +69,7 @@ public class CarpoolMessageTest {
 	}
 	
 	@Test
-	public void testRead() throws Exception{
+	public void testRead(){
 		Calendar time = DateUtility.DateToCalendar(new Date(0));
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
@@ -82,14 +83,22 @@ public class CarpoolMessageTest {
 				
 		//Message	
 		Message message=new Message(userId,false
-				, new LocationRepresentation("p c d s"),time,1 , priceList,new LocationRepresentation("p c d s"),
+				, new Location("p c d s"),time,1 , priceList,new Location("p c d s"),
 				time, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
 		carpoolDAOMessage.addMessageToDatabase(message);
-		System.out.println(message.getMessageId()+"xch");
+		Message orig = message;
 		
 		//Test
-		if(!carpoolDAOMessage.getMessageById(message.getMessageId()).equals(message)){fail();}
+	    try {
+			message = carpoolDAOMessage.getMessageById(orig.getMessageId());
+		} catch (MessageNotFoundException | UserNotFoundException e) {
+			fail();
+		}
+	   
+		if(!orig.equals(message)){fail();}
+		
+		
 			
 		
 	}
@@ -109,31 +118,29 @@ public class CarpoolMessageTest {
 				
 		//Message	
 		Message message=new Message(userId,false
-				, new LocationRepresentation("p c d s"),time,1 , priceList,new LocationRepresentation("p c d s"),
+				, new Location("p c d s"),time,1 , priceList,new Location("p c d s"),
 				time, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
 		carpoolDAOMessage.addMessageToDatabase(message);
-		
 		//Update Location, paymentMethod, and type, state,genderRequirement as well as priceList
-	   message.setArrival_Location(new LocationRepresentation("Ontario Waterloo Downtown UniversityOfWaterloo"));
+	   message.setArrival_Location(new Location("Ontario Waterloo Downtown UniversityOfWaterloo"));
 	   message.setGenderRequirement(gender.fromInt(1));
 	   message.setType(messageType.fromInt(1));
-	   message.setState(messageState.fromInt(-1));
 	   message.setPaymentMethod(paymentMethod.fromInt(1));	  
 	   priceList.remove(0);
 	   priceList.add(2);	   
 	   message.setArrival_priceList(priceList);
 	   carpoolDAOMessage.UpdateMessageInDatabase(message);
-	   ArrayList origList = new ArrayList();
-	   origList.add(2);
+	  // ArrayList newList = new ArrayList();
+	  // newList.add(2);
+	 /* Message updateMessage = new Message(userId,false
+				, new Location("p c d s"),time,1 , priceList,new Location("Ontario Waterloo Downtown UniversityOfWaterloo"),
+				time, 1,newList,paymentMethod.fromInt(1),"test",  messageType.fromInt(1), gender.fromInt(1));*/
 	   //Test
-	   message = carpoolDAOMessage.getMessageById(message.getMessageId());
-	   
-	   if(message.getArrival_Location().equals(new LocationRepresentation("Ontario Waterloo Downtown UniversityOfWaterloo"))
-	     && message.getArrival_priceList().equals(origList) && message.getGenderRequirement().equals(gender.fromInt(1))
-	     && message.getType().equals(messageType.fromInt(1)) && message.getState().equals(messageState.fromInt(-1))
-	     && message.getPaymentMethod().equals(paymentMethod.fromInt(1))){
-	   }else{fail();}   
+	  Message updateMessage = message;
+	  message = carpoolDAOMessage.getMessageById(message.getMessageId());
+	   if(!updateMessage.equals(message)){fail();}
+	    
 	
 	}
 	@Test
@@ -151,7 +158,7 @@ public class CarpoolMessageTest {
 				
 		//Message	
 		Message message=new Message(userId,false
-				, new LocationRepresentation("p c d s"),time,1 , priceList,new LocationRepresentation("p c d s"),
+				, new Location("p c d s"),time,1 , priceList,new Location("p c d s"),
 				time, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
 		carpoolDAOMessage.addMessageToDatabase(message);
@@ -190,7 +197,7 @@ public class CarpoolMessageTest {
 	
 	}
 	
-	
+	@Test
 	public void testBenchmark(){
 		Calendar  before = Calendar.getInstance();
 		Calendar time = DateUtility.DateToCalendar(new Date(0));
@@ -207,7 +214,7 @@ public class CarpoolMessageTest {
 		while(times > 0){					
 			//create	
 			Message message=new Message(userId,false
-					, new LocationRepresentation("p c d s"),time,1 , priceList,new LocationRepresentation("p c d s"),
+					, new Location("p c d s"),time,1 , priceList,new Location("p c d s"),
 					time, 1,priceList,paymentMethod,
 					"test",  type, genderRequirement);
 			//add
@@ -222,8 +229,8 @@ public class CarpoolMessageTest {
 				e.printStackTrace();
 				fail();
 			}
-			//update
-			   message.setArrival_Location(new LocationRepresentation("Ontario Waterloo Downtown UniversityOfWaterloo"));
+			//update			
+			   message.setArrival_Location(new Location("Ontario Waterloo Downtown UniversityOfWaterloo"));
 			   message.setGenderRequirement(gender.fromInt(1));
 			   message.setType(messageType.fromInt(1));
 			   message.setState(messageState.fromInt(-1));
@@ -231,31 +238,36 @@ public class CarpoolMessageTest {
 			   message.setArrival_seatsBooked(3);
 			   message.setArrival_seatsNumber(100);
 			   message.setDeparture_Time(DateUtility.DateToCalendar(new Date(1)));
-			   message.setDeparture_Location(new LocationRepresentation("Canada Ontario Waterloo UniversityOfWaterloo"));
+			   message.setDeparture_Location(new Location("Canada Ontario Waterloo UniversityOfWaterloo"));
 			   message.setDeparture_seatsBooked(12);
 			   message.setDeparture_seatsNumber(13);
 			   message.setHistoryDeleted(true);
-			   message.setEditTime(before);
 			   message.setNote("xch");
 			   message.setRoundTrip(true);
 			   message.setEditTime(DateUtility.DateToCalendar(new Date(2)));
 			   priceList.remove(0);
 			   priceList.add(2);	   
 			   message.setArrival_priceList(priceList);
+			  
+			   
 			   try {
 				carpoolDAOMessage.UpdateMessageInDatabase(message);
+				
 			} catch (MessageNotFoundException e) {
 				fail();
 			}
-			   Message NewMessage = null;
+			  
 		  try {
-			 NewMessage = carpoolDAOMessage.getMessageById(message.getMessageId());
+			  
+			
+			   if(!message.equals(carpoolDAOMessage.getMessageById(message.getMessageId()))){fail();}
+			 
 		} catch (MessageNotFoundException e) {
 			fail();
 		} catch (UserNotFoundException e) {
 			fail();
 		}
-		  if(!NewMessage.equals(message)){fail();}
+		  
 		 //delete
 		  try {
 				carpoolDAOMessage.deleteMessageFromDatabase(message.getMessageId());
