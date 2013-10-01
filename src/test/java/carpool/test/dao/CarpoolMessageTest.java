@@ -20,6 +20,7 @@ import carpool.carpoolDAO.carpoolDAOBasic;
 import carpool.carpoolDAO.carpoolDAOMessage;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
+import carpool.common.HelperOperator;
 import carpool.common.Parser;
 import carpool.constants.Constants.gender;
 import carpool.constants.Constants.messageState;
@@ -68,7 +69,7 @@ public class CarpoolMessageTest {
 	}
 	
 	@Test
-	public void testRead() throws Exception{
+	public void testRead(){
 		Calendar time = DateUtility.DateToCalendar(new Date(0));
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
@@ -86,10 +87,18 @@ public class CarpoolMessageTest {
 				time, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
 		carpoolDAOMessage.addMessageToDatabase(message);
-		System.out.println(message.getMessageId()+"xch");
+		Message orig = message;
 		
 		//Test
-		if(!carpoolDAOMessage.getMessageById(message.getMessageId()).equals(message)){fail();}
+	    try {
+			message = carpoolDAOMessage.getMessageById(orig.getMessageId());
+		} catch (MessageNotFoundException | UserNotFoundException e) {
+			fail();
+		}
+	   
+		if(!orig.equals(message)){fail();}
+		
+		
 			
 		
 	}
@@ -113,27 +122,25 @@ public class CarpoolMessageTest {
 				time, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
 		carpoolDAOMessage.addMessageToDatabase(message);
-		
 		//Update Location, paymentMethod, and type, state,genderRequirement as well as priceList
 	   message.setArrival_Location(new Location("Ontario Waterloo Downtown UniversityOfWaterloo"));
 	   message.setGenderRequirement(gender.fromInt(1));
 	   message.setType(messageType.fromInt(1));
-	   message.setState(messageState.fromInt(-1));
 	   message.setPaymentMethod(paymentMethod.fromInt(1));	  
 	   priceList.remove(0);
 	   priceList.add(2);	   
 	   message.setArrival_priceList(priceList);
 	   carpoolDAOMessage.UpdateMessageInDatabase(message);
-	   ArrayList origList = new ArrayList();
-	   origList.add(2);
+	  // ArrayList newList = new ArrayList();
+	  // newList.add(2);
+	 /* Message updateMessage = new Message(userId,false
+				, new Location("p c d s"),time,1 , priceList,new Location("Ontario Waterloo Downtown UniversityOfWaterloo"),
+				time, 1,newList,paymentMethod.fromInt(1),"test",  messageType.fromInt(1), gender.fromInt(1));*/
 	   //Test
-	   message = carpoolDAOMessage.getMessageById(message.getMessageId());
-	   
-	   if(message.getArrival_Location().equals(new Location("Ontario Waterloo Downtown UniversityOfWaterloo"))
-	     && message.getArrival_priceList().equals(origList) && message.getGenderRequirement().equals(gender.fromInt(1))
-	     && message.getType().equals(messageType.fromInt(1)) && message.getState().equals(messageState.fromInt(-1))
-	     && message.getPaymentMethod().equals(paymentMethod.fromInt(1))){
-	   }else{fail();}   
+	  Message updateMessage = message;
+	  message = carpoolDAOMessage.getMessageById(message.getMessageId());
+	   if(!updateMessage.equals(message)){fail();}
+	    
 	
 	}
 	@Test
@@ -190,7 +197,7 @@ public class CarpoolMessageTest {
 	
 	}
 	
-	
+	@Test
 	public void testBenchmark(){
 		Calendar  before = Calendar.getInstance();
 		Calendar time = DateUtility.DateToCalendar(new Date(0));
@@ -222,7 +229,7 @@ public class CarpoolMessageTest {
 				e.printStackTrace();
 				fail();
 			}
-			//update
+			//update			
 			   message.setArrival_Location(new Location("Ontario Waterloo Downtown UniversityOfWaterloo"));
 			   message.setGenderRequirement(gender.fromInt(1));
 			   message.setType(messageType.fromInt(1));
@@ -235,27 +242,32 @@ public class CarpoolMessageTest {
 			   message.setDeparture_seatsBooked(12);
 			   message.setDeparture_seatsNumber(13);
 			   message.setHistoryDeleted(true);
-			   message.setEditTime(before);
 			   message.setNote("xch");
 			   message.setRoundTrip(true);
 			   message.setEditTime(DateUtility.DateToCalendar(new Date(2)));
 			   priceList.remove(0);
 			   priceList.add(2);	   
 			   message.setArrival_priceList(priceList);
+			  
+			   
 			   try {
 				carpoolDAOMessage.UpdateMessageInDatabase(message);
+				
 			} catch (MessageNotFoundException e) {
 				fail();
 			}
-			   Message NewMessage = null;
+			  
 		  try {
-			 NewMessage = carpoolDAOMessage.getMessageById(message.getMessageId());
+			  
+			
+			   if(!message.equals(carpoolDAOMessage.getMessageById(message.getMessageId()))){fail();}
+			 
 		} catch (MessageNotFoundException e) {
 			fail();
 		} catch (UserNotFoundException e) {
 			fail();
 		}
-		  if(!NewMessage.equals(message)){fail();}
+		  
 		 //delete
 		  try {
 				carpoolDAOMessage.deleteMessageFromDatabase(message.getMessageId());

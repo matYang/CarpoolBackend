@@ -82,7 +82,7 @@ public class carpoolDAOMessage{
 			ResultSet rs = stmt.getGeneratedKeys();
 			rs.next();
 			msg.setMessageId(rs.getInt(1));
-			System.out.println(msg.getMessageId()+"xch");
+			
 		}catch(SQLException e){
 			DebugLog.d(e.getMessage());
 		}
@@ -164,6 +164,7 @@ public class carpoolDAOMessage{
 				Constants.messageType.fromInt(rs.getInt("messageType")),Constants.gender.fromInt(rs.getInt("gender")),
 				Constants.messageState.fromInt(rs.getInt("messageState")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
 				DateUtility.DateToCalendar(rs.getTimestamp("editTime")),rs.getBoolean("historyDeleted"));
+		
 		
 		return message;
 	}
