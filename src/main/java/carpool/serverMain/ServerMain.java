@@ -10,6 +10,7 @@ import org.restlet.data.Protocol;
 import carpool.common.DebugLog;
 import carpool.constants.Constants.gender;
 import carpool.factory.JSONFactory;
+import carpool.locationService.LocationService;
 import carpool.service.*;
 
 
@@ -34,6 +35,8 @@ public class ServerMain {
 	 * @throws Exception
 	 */
 	public void start() throws Exception {
+		LocationService.init();
+		
 		component = new Component();
 
 		// Add a new HTTP server listening on port

@@ -1,0 +1,50 @@
+#Requirements:
+#Be consistent! （e.g., capital letter for 1st char of every non-numerical word）
+#Example: 43.472586,-80.533895，precise to at least 6 digits after decimal（0.1 meter）
+#No space inside postal code, no space or tab or anything on empty line
+#In the case of no actuarial address, use name instead, e.g., Kennedy Station-Subway #Platform, Toronto, ON
+#In the case of no actuarial postal code, e.g., only knows M1K , use this format for #postal code: [M1K%%%]
+#for any larger areas, use lat and lons of their central points, and vague postal codes and addresses
+
+$start
+[Canada]
+
+	$start
+	[Ontario]
+
+		$start
+		[Waterloo] 
+
+			$start
+			[Matthew's Sweet Little Home] [43.472586,-80.533895] [N2L3W4] [203 Lester, Waterloo,ON]
+			[DC Library] [43.472531,-80.541995] [N2L3G1] [Davis Center Lobby, Waterloo, ON]
+			$end
+
+		$end
+
+		$start
+		[Toronto]
+		
+			$start
+			[Convocation Hall] [43.660987,-79.39534] [M5S3G4] [31 King's College Cir, Toronto, ON]
+			[CN Tower] [43.642659,-79.387047] [M5V2T6] [301 Front St W, Toronto, ON]
+			[Eaton Center] [43.654568,-79.380701] [M5B2H1] [220 Yonge St, Toronto, ON]
+			[York Dale] [43.725258,-79.451989] [M6A2T9] [3401 Dufferin Street Toronto, ON]
+			$end
+
+		$end
+
+		$start
+		[Mississauga]
+
+			$start
+			[Pearson Airport - terminal 1] [43.681451,-79.611958] [L5P1B2] [6135 Silver Dart Dr, Mississauga, ON]
+			[Pearson Airport - terminal 3] [43.685719,-79.620541] [L5P1B2] [6135 Silver Dart Dr, Mississauga, ON]
+			[Square One] [43.592918,-79.643177] [L5B2C9] [100 City Centre Drive Mississauga, ON]
+			$end
+
+		$end
+
+	$end
+
+$end

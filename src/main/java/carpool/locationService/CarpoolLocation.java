@@ -170,55 +170,30 @@ public class CarpoolLocation {
 	 * 
 	 ******************************************/
 	
-	void setParent(CarpoolLocation parent, Object accessor) throws LocationException{
-		if (accessor instanceof CarpoolLocationLoader){
-			this.parent = parent;
-		}
-		else{
-			throw new LocationException("Access Violation");
-		}
+	void setParent(CarpoolLocation parent) throws LocationException{
+		this.parent = parent;
 	}
 	
-	void addSubLocation(CarpoolLocation loc, Object accessor)throws LocationException{
-		if (accessor instanceof CarpoolLocationLoader){
-			if (this.subLocations.containsKey(loc.getName())){
-				throw new LocationException("SubLocation Already Exist");
-			}
-			this.subLocations.put(loc.getName(), loc);
+	void addSubLocation(CarpoolLocation loc)throws LocationException{
+		if (this.subLocations.containsKey(loc.getName())){
+			throw new LocationException("SubLocation Already Exist");
 		}
-		else{
-			throw new LocationException("Access Violation");
-		}
+		this.subLocations.put(loc.getName(), loc);
 	}
 	
-	void setSubLocations( LinkedHashMap<String, CarpoolLocation> subLocations, Object accessor)throws LocationException{
-		if (accessor instanceof CarpoolLocationLoader){
-			this.subLocations = subLocations;
-		}
-		else{
-			throw new LocationException("Access Violation");
-		}
+	void setSubLocations( LinkedHashMap<String, CarpoolLocation> subLocations)throws LocationException{
+		this.subLocations = subLocations;
 	}
 	
-	void addNeighbour(CarpoolLocation loc, Object accessor)throws LocationException{
-		if (accessor instanceof CarpoolLocationLoader){
-			if (this.neighbours.containsKey(loc.getName())){
-				throw new LocationException("Neighbour Already Exist");
-			}
-			this.neighbours.put(loc.getName(), loc);
+	void addNeighbour(CarpoolLocation loc)throws LocationException{
+		if (this.neighbours.containsKey(loc.getName())){
+			throw new LocationException("Neighbour Already Exist");
 		}
-		else{
-			throw new LocationException("Access Violation");
-		}
+		this.neighbours.put(loc.getName(), loc);
 	}
 	
-	void setNeighbours( LinkedHashMap<String, CarpoolLocation> neighbours, Object accessor)throws LocationException{
-		if (accessor instanceof CarpoolLocationLoader){
-			this.neighbours = neighbours;
-		}
-		else{
-			throw new LocationException("Access Violation");
-		}
+	void setNeighbours( LinkedHashMap<String, CarpoolLocation> neighbours)throws LocationException{
+		this.neighbours = neighbours;
 	}
 	
 	
