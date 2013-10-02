@@ -56,8 +56,37 @@ public class LocationService {
 		}
 	}
 	
-	public static final ArrayList<LocationRepresentation> getAllNamesWithDepth(int depth){
+	public static final ArrayList<String> getAllNamesWithDepth(int depth){
+		ArrayList<String> nameList = new ArrayList<String>();
+		for (CarpoolLocation loc : lookupMap.get(depth).values()){
+			nameList.add(loc.getName());
+		}
+		return nameList;
+	}
+	
+	public static final ArrayList<String> getAllSubLocationNamesWithNode(int depth, String name)throws  LocationException{
+		ArrayList<String> nameList = new ArrayList<String>();
+		CarpoolLocation node;
+		if (depth >= lookupMap.size() || (node = lookupMap.get(depth).get(name)) == null){
+			throw new LocationException("Location invalid");
+		}
+		for (CarpoolLocation loc : node.getSubLocations().values()){
+			nameList.add(loc.getName());
+		}
+		return nameList;
+	}
+	
+	public static final JSONObject getSpecificJSONNode(int depth, String name) throws LocationException{
+		CarpoolLocation node;
+		if (depth >= lookupMap.size() || (node = lookupMap.get(depth).get(name)) == null){
+			throw new LocationException("Location invalid");
+		}
+		return node.toJSON();
 		
+	}
+	
+	public static final LocationRepresentation getLocationRepresentation(int depth, String name) throws LocationException{
+		//recursion
 	}
 	
 	
