@@ -33,7 +33,6 @@ public class LocationService {
 		return (ArrayList<CarpoolLocation>) lookupMap.get(depth).values();
 	}
 	
-	
 	public static final boolean isLocationRepresentationValid(LocationRepresentation locRep){
 		try{
 			if (locRep.getCustomDepthIndex() >= locRep.getHierarchyNameList().size() || locRep.getCustomDepthIndex() >= lookupMap.size()){
@@ -56,9 +55,6 @@ public class LocationService {
 		}
 	}
 	
-	public static final ArrayList<LocationRepresentation> getAllNamesWithDepth(int depth){
-		
-	}
 	
 	
 	
