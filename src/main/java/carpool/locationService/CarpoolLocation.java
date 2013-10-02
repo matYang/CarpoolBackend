@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -175,6 +176,9 @@ public class CarpoolLocation {
 	}
 	
 	void addSubLocation(CarpoolLocation loc)throws LocationException{
+		if (this.subLocations == null){
+			this.subLocations = new LinkedHashMap<String, CarpoolLocation>();
+		}
 		if (this.subLocations.containsKey(loc.getName())){
 			throw new LocationException("SubLocation Already Exist");
 		}
@@ -186,6 +190,9 @@ public class CarpoolLocation {
 	}
 	
 	void addNeighbour(CarpoolLocation loc)throws LocationException{
+		if (this.neighbours == null){
+			this.neighbours = new LinkedHashMap<String, CarpoolLocation>();
+		}
 		if (this.neighbours.containsKey(loc.getName())){
 			throw new LocationException("Neighbour Already Exist");
 		}
@@ -272,12 +279,24 @@ public class CarpoolLocation {
 
 	@Override
 	public String toString() {
-		return "CarpoolLocation [parent=" + parent + ", subLocations="
-				+ subLocations + ", neighbours=" + neighbours + ", name="
-				+ name + ", curDepth=" + curDepth + ", postalCode="
-				+ postalCode + ", address=" + address + ", latitude="
-				+ latitude + ", longitude=" + longitude + ", radius=" + radius
-				+ "]";
+		String padding = "";
+		for (int i = 0; i < this.curDepth; i++){
+			padding += "      ";
+		}
+		return padding + "Location Value with curDepth=" + curDepth + ": [name="
+				+ name  + ", postalCode=" + postalCode + ", address=" + address + ", latitude="
+				+ latitude + ", longitude=" + longitude + ", radius=" + radius+ "]";
+	}
+	
+	public void loopPrint(){
+		String tail = this.subLocations == null || this.subLocations.size() == 0 ? "$bottom" : " with sublocations: ";
+		System.out.println(this.toString() + tail);
+		if (this.subLocations != null){
+			for (Entry<String, CarpoolLocation> cl: this.subLocations.entrySet()){
+				cl.getValue().loopPrint();
+			}
+		}
+		
 	}
 	
 	

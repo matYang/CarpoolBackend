@@ -7,13 +7,13 @@
 #for any larger areas, use lat and lons of their central points, and vague postal codes and addresses
 
 $start
-[Canada]
+[Canada] [45.434117,-75.697389] [%%%%%%] [Canada]
 
 	$start
-	[Ontario]
+	[Ontario] [51.344339,-85.260773] [%%%%%%] [Ontario, Canada]
 
 		$start
-		[Waterloo] 
+		[Waterloo] [43.474847,-80.556618] [N2L%%%] [Waterloo, ON]
 
 			$start
 			[Matthew's Sweet Little Home] [43.472586,-80.533895] [N2L3W4] [203 Lester, Waterloo,ON]
@@ -23,8 +23,8 @@ $start
 		$end
 
 		$start
-		[Toronto]
-		
+		[Toronto] [43.654956,-79.379182] [M%%%%%%] [Toronto, ON]
+
 			$start
 			[Convocation Hall] [43.660987,-79.39534] [M5S3G4] [31 King's College Cir, Toronto, ON]
 			[CN Tower] [43.642659,-79.387047] [M5V2T6] [301 Front St W, Toronto, ON]
@@ -35,7 +35,7 @@ $start
 		$end
 
 		$start
-		[Mississauga]
+		[Mississauga] [43.589344,-79.643433] [L%%%%%] [Mississauge, ON]
 
 			$start
 			[Pearson Airport - terminal 1] [43.681451,-79.611958] [L5P1B2] [6135 Silver Dart Dr, Mississauga, ON]

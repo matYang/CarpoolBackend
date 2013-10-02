@@ -58,11 +58,16 @@ public class CarpoolLocationLoader {
 		return value_end.equals(c);
 	}
 	
+	private static boolean isCommandModeStart(Character c){
+		return commandFlag.equals(c);
+	}
+	
 	private static ArrayList<Character> sanitize(String str)throws ValidationException{
 		ArrayList<Character> sanitizedCharArray = new ArrayList<Character>();
 
 		int readIndex = 0;
 		boolean valueMode = false;
+		boolean commandMode = false;
 		
 		//make sure not end of string, not end of line, and ignore all comments
 		while(readIndex < str.length() && str.charAt(readIndex) != '\n' && str.charAt(readIndex) != commentFlag.charValue()){
@@ -70,7 +75,6 @@ public class CarpoolLocationLoader {
 			
 			//do not ignore white space when in value mode
 			if (valueMode || !isWhiteSpace(c)){
-				sanitizedCharArray.add(c);
 				
 				if (!valueMode && isValueModeStart(c)){
 					valueMode = true;
@@ -78,14 +82,18 @@ public class CarpoolLocationLoader {
 				else if (valueMode && isValueModeEnd(c)){
 					valueMode = false;
 				}
+				else if (!valueMode && isCommandModeStart(c)){
+					commandMode = true;
+				}
 				else{
-					if (!valueMode && !isValueModeEnd(c)){
+					if (!valueMode && !isValueModeEnd(c) && !commandMode){
 						throw new ValidationException("Invalid " + value_end + " placement at line: " + lineTracker);
 					}
-					else if (valueMode && isValueModeStart(c)){
+					else if (valueMode && isValueModeStart(c) && !commandMode){
 						throw new ValidationException("Invalid " + value_start + " placement at line: " + lineTracker);
 					}
 				}
+				sanitizedCharArray.add(c);
 			}
 			readIndex++;
 		}
@@ -166,6 +174,7 @@ public class CarpoolLocationLoader {
 				else{
 					throw new ValidationException("Invalid value state with item number: " + itemTracker + " at line: " + lineTracker);
 				}
+				bufferToken = "";
 			}
 			else{
 				bufferToken += curChar;
@@ -189,8 +198,9 @@ public class CarpoolLocationLoader {
 			throw new ValidationException("LookupMap insert error, higher lookupMap not added with size: " + cache_lookupMap.size() + " at line: " + lineTracker);
 		}
 		else{
-			if (cache_lookupMap.get(depthTracker) == null){
-				cache_lookupMap.set(depthTracker, new HashMap<String, CarpoolLocation>());
+			//if first of its depth, initialize the hashmap
+			if (cache_lookupMap.size() == depthTracker){
+				cache_lookupMap.add(new HashMap<String, CarpoolLocation>());
 			}
 			cache_lookupMap.get(depthTracker).put(newLocation.getName(), newLocation);
 		}
