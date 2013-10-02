@@ -25,13 +25,18 @@ public class LocationService {
 		lookupMap = CarpoolLocationLoader.getLookupMap();
 	}
 	
-	private static final CarpoolLocation getNode(String name, int depth){
-		return lookupMap.get(depth).get(name);
+	private static final CarpoolLocation getNode(int depth, String name) throws LocationException{
+		CarpoolLocation node;
+		if (depth >= lookupMap.size() || (node = lookupMap.get(depth).get(name)) == null){
+			throw new LocationException("Location not found");
+		}
+		return node;
 	}
 	
 	private static final ArrayList<CarpoolLocation> getAllNodesWithDepth(int depth){
 		return (ArrayList<CarpoolLocation>) lookupMap.get(depth).values();
 	}
+	
 	
 	public static final boolean isLocationRepresentationValid(LocationRepresentation locRep){
 		try{
@@ -55,6 +60,40 @@ public class LocationService {
 		}
 	}
 	
+	public static final ArrayList<String> getAllNamesWithDepth(int depth){
+		ArrayList<String> nameList = new ArrayList<String>();
+		for (CarpoolLocation loc :  getAllNodesWithDepth(depth)){
+			nameList.add(loc.getName());
+		}
+		return nameList;
+	}
+	
+	public static final ArrayList<String> getAllSubLocationNamesWithNode(int depth, String name)throws  LocationException{
+		ArrayList<String> nameList = new ArrayList<String>();
+		CarpoolLocation node = getNode(depth, name);
+		for (CarpoolLocation loc : node.getSubLocations().values()){
+			nameList.add(loc.getName());
+		}
+		return nameList;
+	}
+	
+	public static final JSONObject getSpecificJSONNode(int depth, String name) throws LocationException{
+		CarpoolLocation node = getNode(depth, name);
+		return node.toJSON();
+		
+	}
+	
+	public static final LocationRepresentation getLocationRepresentation(int depth, String name) throws LocationException{
+		ArrayList<String> hierarchyNameList = new ArrayList<String>();
+		CarpoolLocation node = getNode(depth, name);
+		while (node !=  null){
+			hierarchyNameList.add(node.getName());
+			node = node.getParent();
+		}
+		Collections.reverse(hierarchyNameList);
+		return new LocationRepresentation(hierarchyNameList, CarpoolConfig.customDepth);
+		
+	}
 	
 	
 	
