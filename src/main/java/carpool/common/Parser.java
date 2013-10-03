@@ -8,37 +8,38 @@ import org.junit.Test;
 
 public class Parser {
 	//Pricelist: Numb-numb-
-	public static String priceListToString(ArrayList<Integer> priceList){
-		String Pricelist="";
-		for(int i=0; i<priceList.size();i++){
-			Pricelist += priceList.get(i) +"-";
+	public static String listToString(ArrayList<?> list){
+		String serializedList = null;
+		for(int i=0; i <list.size(); i++){
+			if (serializedList == null){
+				serializedList = "";
+			}
+			serializedList += list.get(i).toString() +"-";
 		}
-		return Pricelist;
+		return serializedList;
 	}
 	
-	public static ArrayList<Integer> stringToPriceList(String priceListString){
-		ArrayList<Integer> arrayList = new ArrayList<Integer>();
-		String p="";
-		int endind;
-		int ptr;
-		while(priceListString.length()>=2){
-			ptr=0;
-			endind=1;
-			p=priceListString.substring(ptr,ptr+1);
-			while(!p.equals("-")){
-				endind++;
-				ptr++;
-				p=priceListString.substring(ptr,ptr+1);
-				
-			}		
-			arrayList.add(Integer.parseInt(priceListString.substring(0,endind-1)));
-			priceListString = priceListString.substring(endind,priceListString.length());
-			
+	public static ArrayList<?> stringToList(String listString, Object optionFlag){
+		String[] strArray = listString != null ? listString.split("-") : null;
+		if (optionFlag instanceof Integer){
+			ArrayList<Integer> intList = new ArrayList<Integer>();
+
+			for (int i = 0; strArray != null && i < strArray.length; i++){
+				intList.add(new Integer(strArray[i]));
+			}
+			return intList;
+		}
+		else if (optionFlag instanceof String){
+			ArrayList<String> strList = new ArrayList<String>();
+			for (int i = 0; strArray != null && i < strArray.length; i++){
+				strList.add(strArray[i]);
+			}
+			return strList;
 		}
 		
-		
-		return arrayList;
+		return null;
 	}
+	
 	
 	@Test
 	public void TestStringToPriceListOne(){
@@ -49,7 +50,7 @@ public class Parser {
 		arrayList.add(4);
 		arrayList.add(5);
 		arrayList.add(6);
-		if(!Parser.stringToPriceList("1-2-3-4-5-6-").equals(arrayList)){fail();}
+		if(!Parser.stringToList("1-2-3-4-5-6-",new Integer(0)).equals(arrayList)){fail();}
 	}
 	@Test
 	public void TestStringToPriceListTwo(){
@@ -60,7 +61,7 @@ public class Parser {
 		arrayList.add(4444);
 		arrayList.add(55555);
 		arrayList.add(666666);
-		if(!Parser.stringToPriceList("1-22-333-4444-55555-666666-").equals(arrayList)){fail();}
+		if(!Parser.stringToList("1-22-333-4444-55555-666666-",new Integer(0)).equals(arrayList)){fail();}
 	}
 	@Test
 	public void TestStringToPriceListThree(){
@@ -71,13 +72,13 @@ public class Parser {
 		arrayList.add(4444);
 		arrayList.add(555);
 		arrayList.add(66);
-		if(!Parser.stringToPriceList("1-22-333-4444-555-66-").equals(arrayList)){fail();}
+		if(!Parser.stringToList("1-22-333-4444-555-66-",new Integer(0)).equals(arrayList)){fail();}
 	}
 	@Test
 	public void TestPriceListToStringOne(){
 		ArrayList<Integer> arrayList = new ArrayList<Integer>();
 		arrayList.add(2);
-		if(!Parser.priceListToString(arrayList).equals("2-")){fail();}
+		if(!Parser.listToString(arrayList).equals("2-")){fail();}
 	}
    @Test
    public void TestPriceListToStringTwo(){
@@ -88,7 +89,7 @@ public class Parser {
 		arrayList.add(4444);
 		arrayList.add(555);
 		arrayList.add(66);
-		if(!Parser.priceListToString(arrayList).equals("1-22-333-4444-555-66-")){fail();}
+		if(!Parser.listToString(arrayList).equals("1-22-333-4444-555-66-")){fail();}
 	}
 }
 
