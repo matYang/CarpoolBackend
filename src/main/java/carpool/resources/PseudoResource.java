@@ -146,10 +146,12 @@ public class PseudoResource extends ServerResource{
 			case 17:
 				//LocationException
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+				break;
 			case 18:
 				//ValidationException
 				//TODO add response
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+				break;
 			default:
 				setStatus(Status.SERVER_ERROR_INTERNAL);
 				break;
