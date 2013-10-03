@@ -187,7 +187,7 @@ public class Constants {
     }
     
     public static enum DayTimeSlot{
-    	all(0), morning(1), afternoon(2), night(3);
+    	all(0), morning(1), afternoon(2), night(3), specific(4);
     	public int code;
     	DayTimeSlot(int code){
             this.code = code;

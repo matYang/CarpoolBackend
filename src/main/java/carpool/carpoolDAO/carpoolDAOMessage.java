@@ -57,21 +57,21 @@ public class carpoolDAOMessage{
 	public static Message addMessageToDatabase(Message msg){
 		String query = "INSERT INTO carpoolDAOMessage (ownerId,isRoundTrip," +
 				"departure_primaryLocation,departure_customLocation,departure_customDepthIndex,departure_Time,departure_seatsNumber,departure_seatsBooked,departure_priceList,arrival_primaryLocation,arrival_customLocation,arrival_customDepthIndex,arrival_Time," +
-				"arrival_seatsNumber,arrival_seatsBooked,arrival_priceList,paymentMethod,note,messageType,gender,messageState,creationTime,editTime,historyDeleted) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				"arrival_seatsNumber,arrival_seatsBooked,arrival_priceList,paymentMethod,note,messageType,gender,messageState,creationTime,editTime,historyDeleted,departure_timeSlot,arrival_timeSlot) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 			stmt.setInt(1, msg.getOwnerId());			
 			stmt.setInt(2, msg.isRoundTrip() ? 1:0);
-			stmt.setString(3, msg.getDeparture_Location().getPrimaryLocationString());
-			stmt.setString(4, msg.getDeparture_Location().getCustomLocationString());
-			stmt.setInt(5, msg.getDeparture_Location().getCustomDepthIndex());
-			stmt.setString(6, DateUtility.toSQLDateTime(msg.getDeparture_Time()));
+			stmt.setString(3, msg.getDeparture_location().getPrimaryLocationString());
+			stmt.setString(4, msg.getDeparture_location().getCustomLocationString());
+			stmt.setInt(5, msg.getDeparture_location().getCustomDepthIndex());
+			stmt.setString(6, DateUtility.toSQLDateTime(msg.getDeparture_time()));
 			stmt.setInt(7, msg.getDeparture_seatsNumber());
 			stmt.setInt(8, msg.getDeparture_seatsBooked());
 			stmt.setString(9, Parser.listToString(msg.getDeparture_priceList()));
-			stmt.setString(10, msg.getArrival_Location().getPrimaryLocationString());
-		    stmt.setString(11, msg.getArrival_Location().getCustomLocationString());
-		    stmt.setInt(12, msg.getArrival_Location().getCustomDepthIndex());
-			stmt.setString(13, DateUtility.toSQLDateTime(msg.getArrival_Time()));
+			stmt.setString(10, msg.getArrival_location().getPrimaryLocationString());
+		    stmt.setString(11, msg.getArrival_location().getCustomLocationString());
+		    stmt.setInt(12, msg.getArrival_location().getCustomDepthIndex());
+			stmt.setString(13, DateUtility.toSQLDateTime(msg.getArrival_time()));
 			stmt.setInt(14, msg.getArrival_seatsNumber());
 			stmt.setInt(15, msg.getArrival_seatsBooked());
 			stmt.setString(16, Parser.listToString(msg.getArrival_priceList()));
@@ -83,6 +83,8 @@ public class carpoolDAOMessage{
 			stmt.setString(22, DateUtility.toSQLDateTime(msg.getCreationTime()));
 			stmt.setString(23, DateUtility.toSQLDateTime(msg.getEditTime()));
 			stmt.setInt(24, msg.isHistoryDeleted() ? 1:0);
+			stmt.setInt(25, msg.getDeparture_timeSlot().code);
+			stmt.setInt(26, msg.getArrival_timeSlot().code);
 			stmt.executeUpdate();
 			ResultSet rs = stmt.getGeneratedKeys();
 			rs.next();
@@ -114,20 +116,20 @@ public class carpoolDAOMessage{
 	public static void UpdateMessageInDatabase(Message msg) throws MessageNotFoundException{
 		String query = "UPDATE carpoolDAOMessage SET isRoundTrip=?,departure_primaryLocation=?,departure_customLocation=?,departure_customDepthIndex=?,departure_Time=?," +
 				"departure_seatsNumber=?,departure_seatsBooked=?,departure_priceList=?,arrival_primaryLocation=?,arrival_customLocation=?,arrival_customDepthIndex=?,arrival_Time=?," +
-				 "arrival_seatsNumber=?,arrival_seatsBooked=?,arrival_priceList=?,paymentMethod=?,note=?,messageType=?,gender=?,messageState=?,creationTime=?,editTime=?,historyDeleted=? WHERE messageId=?";
+				 "arrival_seatsNumber=?,arrival_seatsBooked=?,arrival_priceList=?,paymentMethod=?,note=?,messageType=?,gender=?,messageState=?,creationTime=?,editTime=?,historyDeleted=?,departure_timeSlot=?,arrival_timeSlot=? WHERE messageId=?";
 		try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, msg.isRoundTrip() ? 1:0);
-			stmt.setString(2, msg.getDeparture_Location().getPrimaryLocationString());
-			stmt.setString(3, msg.getDeparture_Location().getCustomLocationString());
-			stmt.setInt(4, msg.getDeparture_Location().getCustomDepthIndex());
-			stmt.setString(5, DateUtility.toSQLDateTime(msg.getDeparture_Time()));
+			stmt.setString(2, msg.getDeparture_location().getPrimaryLocationString());
+			stmt.setString(3, msg.getDeparture_location().getCustomLocationString());
+			stmt.setInt(4, msg.getDeparture_location().getCustomDepthIndex());
+			stmt.setString(5, DateUtility.toSQLDateTime(msg.getDeparture_time()));
 			stmt.setInt(6, msg.getDeparture_seatsNumber());
 			stmt.setInt(7, msg.getDeparture_seatsBooked());
 			stmt.setString(8, Parser.listToString(msg.getDeparture_priceList()));
-			stmt.setString(9, msg.getArrival_Location().getPrimaryLocationString());
-			stmt.setString(10, msg.getArrival_Location().getCustomLocationString());
-			stmt.setInt(11, msg.getArrival_Location().getCustomDepthIndex());
-			stmt.setString(12, DateUtility.toSQLDateTime(msg.getArrival_Time()));
+			stmt.setString(9, msg.getArrival_location().getPrimaryLocationString());
+			stmt.setString(10, msg.getArrival_location().getCustomLocationString());
+			stmt.setInt(11, msg.getArrival_location().getCustomDepthIndex());
+			stmt.setString(12, DateUtility.toSQLDateTime(msg.getArrival_time()));
 			stmt.setInt(13, msg.getArrival_seatsNumber());
 			stmt.setInt(14, msg.getArrival_seatsBooked());
 			stmt.setString(15, Parser.listToString(msg.getArrival_priceList()));
@@ -139,11 +141,13 @@ public class carpoolDAOMessage{
 			stmt.setString(21, DateUtility.toSQLDateTime(msg.getCreationTime()));
 			stmt.setString(22, DateUtility.toSQLDateTime(msg.getEditTime()));
 			stmt.setInt(23, msg.isHistoryDeleted() ? 1:0);
-			stmt.setInt(24, msg.getMessageId());
+			stmt.setInt(24, msg.getDeparture_timeSlot().code);
+			stmt.setInt(25, msg.getArrival_timeSlot().code);
+			stmt.setInt(26, msg.getMessageId());
 			int recordsAffected = stmt.executeUpdate();
 			if(recordsAffected==0){
 				throw new MessageNotFoundException();
-			}
+			} 
 		}catch(SQLException e){
 			e.printStackTrace();
 			DebugLog.d(e.getMessage());
@@ -172,8 +176,8 @@ public class carpoolDAOMessage{
 		//User owner;
 		//owner = DaoUser.getUserById(rs.getInt("ownerId"));
 		Message message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),null,rs.getBoolean("isRoundTrip"),new LocationRepresentation(rs.getString("departure_primaryLocation"),rs.getString("departure_customLocation"),rs.getInt("departure_customDepthIndex")),
-				DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),rs.getInt("departure_seatsNumber"),rs.getInt("departure_seatsBooked"),(ArrayList<Integer>)Parser.stringToList(rs.getString("departure_priceList"),new Integer(0)),
-				new LocationRepresentation(rs.getString("arrival_primaryLocation"),rs.getString("arrival_customLocation"),rs.getInt("arrival_customDepthIndex")),	DateUtility.DateToCalendar(rs.getTimestamp("arrival_Time")),rs.getInt("arrival_seatsNumber"),rs.getInt("arrival_seatsBooked"),
+				DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("departure_timeSlot")),rs.getInt("departure_seatsNumber"),rs.getInt("departure_seatsBooked"),(ArrayList<Integer>)Parser.stringToList(rs.getString("departure_priceList"),new Integer(0)),
+				new LocationRepresentation(rs.getString("arrival_primaryLocation"),rs.getString("arrival_customLocation"),rs.getInt("arrival_customDepthIndex")),	DateUtility.DateToCalendar(rs.getTimestamp("arrival_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("arrival_timeSlot")),rs.getInt("arrival_seatsNumber"),rs.getInt("arrival_seatsBooked"),
 				(ArrayList<Integer>)Parser.stringToList(rs.getString("arrival_priceList"),new Integer(0)),Constants.paymentMethod.fromInt(rs.getInt("paymentMethod")),rs.getString("note"),
 				Constants.messageType.fromInt(rs.getInt("messageType")),Constants.gender.fromInt(rs.getInt("gender")),
 				Constants.messageState.fromInt(rs.getInt("messageState")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),

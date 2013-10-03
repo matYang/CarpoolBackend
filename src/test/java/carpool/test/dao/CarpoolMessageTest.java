@@ -22,6 +22,7 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.HelperOperator;
 import carpool.common.Parser;
+import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.gender;
 import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.messageType;
@@ -53,18 +54,19 @@ public class CarpoolMessageTest {
 		messageType type = messageType.fromInt(0);
 		gender genderRequirement = gender.fromInt(0);
 		messageState state = messageState.fromInt(0);
+		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
 		//No user
 		Message message=new Message(1, 1, null,false
-				, new LocationRepresentation("p_c_d_2"),time,1,1 , priceList,new LocationRepresentation("p_c_d_2"),
-				time,1, 1,priceList,paymentMethod,
+				, new LocationRepresentation("p_c_d_2"),time,timeSlot,1,1 , priceList,new LocationRepresentation("p_c_d_2"),
+				time,timeSlot,1, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement ,
 				state, time, time,false);
 		carpoolDAOMessage.addMessageToDatabase(message);
 		//Has user
 		User user = new User("HarryXiong","c2xiong@uwaterloo.ca",new LocationRepresentation("p_c_d_2"));
 		Message message2=new Message(1, 2, user,false
-				, new LocationRepresentation("p_c_d_2"),time,3,4 , priceList,new LocationRepresentation("p_c_d_2"),
-				time,5, 6,priceList,paymentMethod,
+				, new LocationRepresentation("p_c_d_2"),time,timeSlot,3,4 , priceList,new LocationRepresentation("p_c_d_2"),
+				time,timeSlot,5, 6,priceList,paymentMethod,
 				"test",  type, genderRequirement ,
 				state, time, time,false);
 		carpoolDAOMessage.addMessageToDatabase(message);
@@ -81,13 +83,14 @@ public class CarpoolMessageTest {
 		messageType type = messageType.fromInt(0);
 		gender genderRequirement = gender.fromInt(0);
 		messageState state = messageState.fromInt(0);
+		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
 		int messageId=-1;
 		int userId=-1;
 				
 		//Message	
 		Message message=new Message(userId,false
-				, new LocationRepresentation("p_c_d_2"),time,1 , priceList,new LocationRepresentation("p_c_d_2"),
-				time, 1,priceList,paymentMethod,
+				, new LocationRepresentation("p_c_d_2"),time,timeSlot,1 , priceList,new LocationRepresentation("p_c_d_2"),
+				time,timeSlot, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
 		carpoolDAOMessage.addMessageToDatabase(message);		
 		
@@ -116,23 +119,26 @@ public class CarpoolMessageTest {
 		messageType type = messageType.fromInt(0);
 		gender genderRequirement = gender.fromInt(0);
 		messageState state = messageState.fromInt(0);
+		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
 		int messageId=-1;
 		int userId=-1;
 				
 		//Message	
 		Message message=new Message(userId,false
-				, new LocationRepresentation("p_c_d_2"),time,1 , priceList,new LocationRepresentation("p_c_d_2"),
-				time, 1,priceList,paymentMethod,
+				, new LocationRepresentation("p_c_d_2"),time,timeSlot,1 , priceList,new LocationRepresentation("p_c_d_2"),
+				time, timeSlot,1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
 		carpoolDAOMessage.addMessageToDatabase(message);
-		//Update Location, paymentMethod, and type, state,genderRequirement as well as priceList
-	   message.setArrival_Location(new LocationRepresentation("Ontario_Waterloo_UniversityOfWaterloo_2"));
+		//Update Location, paymentMethod, and type, state,genderRequirement,timeSlot as well as priceList
+	   message.setArrival_location(new LocationRepresentation("Ontario_Waterloo_UniversityOfWaterloo_2"));
 	   message.setGenderRequirement(gender.fromInt(1));
 	   message.setType(messageType.fromInt(1));
 	   message.setPaymentMethod(paymentMethod.fromInt(1));	  
 	   priceList.remove(0);
 	   priceList.add(2);	   
 	   message.setArrival_priceList(priceList);
+	   message.setArrival_timeSlot(DayTimeSlot.fromInt(1));
+	   message.setDeparture_timeSlot(DayTimeSlot.fromInt(2));
 	   carpoolDAOMessage.UpdateMessageInDatabase(message);
 	
 	   //Test
@@ -151,13 +157,14 @@ public class CarpoolMessageTest {
 		messageType type = messageType.fromInt(0);
 		gender genderRequirement = gender.fromInt(0);
 		messageState state = messageState.fromInt(0);
+		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
 		int messageId=-1;
 		int userId=-1;
 				
 		//Message	
 		Message message=new Message(userId,false
-				, new LocationRepresentation("p_c_d_2"),time,1 , priceList,new LocationRepresentation("p_c_d_2"),
-				time, 1,priceList,paymentMethod,
+				, new LocationRepresentation("p_c_d_2"),time,timeSlot,1 , priceList,new LocationRepresentation("p_c_d_2"),
+				time,timeSlot, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
 		carpoolDAOMessage.addMessageToDatabase(message);
 		//Delete
@@ -207,14 +214,15 @@ public class CarpoolMessageTest {
 		messageType type = messageType.fromInt(0);
 		gender genderRequirement = gender.fromInt(0);
 		messageState state = messageState.fromInt(0);
+		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
 		int messageId=-1;
 		int userId=-1;
 		int times=1000000;
 		while(times > 0){					
 			//create	
 			Message message=new Message(userId,false
-					, new LocationRepresentation("p_c_d_2"),time,1 , priceList,new LocationRepresentation("p_c_d_2"),
-					time, 1,priceList,paymentMethod,
+					, new LocationRepresentation("p_c_d_2"),time,timeSlot,1 , priceList,new LocationRepresentation("p_c_d_2"),
+					time,timeSlot, 1,priceList,paymentMethod,
 					"test",  type, genderRequirement);
 			//add
 			carpoolDAOMessage.addMessageToDatabase(message);
@@ -229,15 +237,15 @@ public class CarpoolMessageTest {
 				fail();
 			}
 			//update			
-			   message.setArrival_Location(new LocationRepresentation("Ontario_Waterloo_UniversityOfWaterloo_2"));
+			   message.setArrival_location(new LocationRepresentation("Ontario_Waterloo_UniversityOfWaterloo_2"));
 			   message.setGenderRequirement(gender.fromInt(1));
 			   message.setType(messageType.fromInt(1));
 			   message.setState(messageState.fromInt(1));
 			   message.setPaymentMethod(paymentMethod.fromInt(1));
 			   message.setArrival_seatsBooked(3);
 			   message.setArrival_seatsNumber(100);
-			   message.setDeparture_Time(DateUtility.DateToCalendar(new Date(1)));
-			   message.setDeparture_Location(new LocationRepresentation("Canada_Ontario_UniversityOfWaterloo_2"));
+			   message.setDeparture_time(DateUtility.DateToCalendar(new Date(1)));
+			   message.setDeparture_location(new LocationRepresentation("Canada_Ontario_UniversityOfWaterloo_2"));
 			   message.setDeparture_seatsBooked(12);
 			   message.setDeparture_seatsNumber(13);
 			   message.setHistoryDeleted(true);
@@ -247,7 +255,8 @@ public class CarpoolMessageTest {
 			   priceList.remove(0);
 			   priceList.add(2);	   
 			   message.setArrival_priceList(priceList);
-			  
+			   message.setArrival_timeSlot(DayTimeSlot.fromInt(1));
+			   message.setDeparture_timeSlot(DayTimeSlot.fromInt(2));
 			   
 			   try {
 				carpoolDAOMessage.UpdateMessageInDatabase(message);
