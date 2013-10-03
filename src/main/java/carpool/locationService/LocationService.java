@@ -1,9 +1,13 @@
 package carpool.locationService;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.json.JSONObject;
+
+import carpool.constants.CarpoolConfig;
 import carpool.exception.ValidationException;
 import carpool.exception.location.LocationException;
 import carpool.model.representation.LocationRepresentation;
@@ -77,7 +81,7 @@ public class LocationService {
 		return nameList;
 	}
 	
-	public static final JSONObject getSpecificJSONNode(int depth, String name) throws LocationException{
+	public static final JSONObject getSpecificJSONNode(int depth, String name) throws LocationException, ValidationException{
 		CarpoolLocation node = getNode(depth, name);
 		return node.toJSON();
 		
@@ -91,7 +95,7 @@ public class LocationService {
 			node = node.getParent();
 		}
 		Collections.reverse(hierarchyNameList);
-		return new LocationRepresentation(hierarchyNameList, CarpoolConfig.customDepth);
+		return new LocationRepresentation(hierarchyNameList, CarpoolConfig.customDepthIndex);
 		
 	}
 	
