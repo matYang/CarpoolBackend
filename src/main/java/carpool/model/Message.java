@@ -11,6 +11,7 @@ import carpool.common.DateUtility;
 import carpool.common.HelperOperator;
 import carpool.common.Validator;
 import carpool.constants.Constants;
+import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.gender;
 import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.messageType;
@@ -39,14 +40,16 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	 *****/
 	private boolean isRoundTrip;
 	
-	private LocationRepresentation departure_Location;
-	private Calendar departure_Time;
+	private LocationRepresentation departure_location;
+	private Calendar departure_time;
+	private DayTimeSlot departure_timeSlot;
 	private int departure_seatsNumber;
 	private int departure_seatsBooked;
 	private ArrayList<Integer> departure_priceList;
 	
-	private LocationRepresentation arrival_Location;
-	private Calendar arrival_Time;
+	private LocationRepresentation arrival_location;
+	private Calendar arrival_time;
+	private DayTimeSlot arrival_timeSlot;
 	private int arrival_seatsNumber;
 	private int arrival_seatsBooked;
 	private ArrayList<Integer> arrival_priceList;
@@ -73,9 +76,9 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	 * The contructor used for message posting
 	 *****/
 	public Message(int ownerId, boolean isRoundTrip,
-			LocationRepresentation departure_Location, Calendar departure_Time,
+			LocationRepresentation departure_location, Calendar departure_time, DayTimeSlot departure_timeSlot,
 			int departure_seatsNumber, ArrayList<Integer> departure_priceList,
-			LocationRepresentation arrival_Location, Calendar arrival_Time,
+			LocationRepresentation arrival_location, Calendar arrival_time, DayTimeSlot arrival_timeSlot,
 			int arrival_seatsNumber, ArrayList<Integer> arrival_priceList,
 			carpool.constants.Constants.paymentMethod paymentMethod,
 			String note, messageType type, gender genderRequirement) {
@@ -83,12 +86,14 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		this.messageId = -1;
 		this.ownerId = ownerId;
 		this.isRoundTrip = isRoundTrip;
-		this.departure_Location = departure_Location;
-		this.departure_Time = departure_Time;
+		this.departure_location = departure_location;
+		this.departure_time = departure_time;
+		this.departure_timeSlot = departure_timeSlot;
 		this.departure_seatsNumber = departure_seatsNumber;
 		this.departure_priceList = departure_priceList;
-		this.arrival_Location = arrival_Location;
-		this.arrival_Time = arrival_Time;
+		this.arrival_location = arrival_location;
+		this.arrival_time = arrival_time;
+		this.arrival_timeSlot  = arrival_timeSlot;
 		this.arrival_seatsNumber = arrival_seatsNumber;
 		this.arrival_priceList = arrival_priceList;
 		this.paymentMethod = paymentMethod;
@@ -115,10 +120,10 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	 * full constructor used for SQL retrieval
 	 *****/
 	public Message(int messageId, int ownerId, User owner,
-			boolean isRoundTrip, LocationRepresentation departure_Location,
-			Calendar departure_Time, int departure_seatsNumber,
+			boolean isRoundTrip, LocationRepresentation departure_location,
+			Calendar departure_time, DayTimeSlot departure_timeSlot, int departure_seatsNumber,
 			int departures_seatsBooked, ArrayList<Integer> departure_priceList,
-			LocationRepresentation arrival_Location, Calendar arrival_Time,
+			LocationRepresentation arrival_location, Calendar arrival_time, DayTimeSlot arrival_timeSlot,
 			int arrival_seatsNumber, int arrival_seatsBooked,
 			ArrayList<Integer> arrival_priceList,
 			carpool.constants.Constants.paymentMethod paymentMethod,
@@ -130,13 +135,15 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		this.ownerId = ownerId;
 		this.owner = owner;
 		this.isRoundTrip = isRoundTrip;
-		this.departure_Location = departure_Location;
-		this.departure_Time = departure_Time;
+		this.departure_location = departure_location;
+		this.departure_time = departure_time;
+		this.departure_timeSlot = departure_timeSlot;
 		this.departure_seatsNumber = departure_seatsNumber;
 		this.departure_seatsBooked = departures_seatsBooked;
 		this.departure_priceList = departure_priceList;
-		this.arrival_Location = arrival_Location;
-		this.arrival_Time = arrival_Time;
+		this.arrival_location = arrival_location;
+		this.arrival_time = arrival_time;
+		this.arrival_timeSlot = arrival_timeSlot;
 		this.arrival_seatsNumber = arrival_seatsNumber;
 		this.arrival_seatsBooked = arrival_seatsBooked;
 		this.arrival_priceList = arrival_priceList;
@@ -201,23 +208,43 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	}
 
 
-	public LocationRepresentation getDeparture_Location() {
-		return departure_Location;
+	public LocationRepresentation getDeparture_location() {
+		return departure_location;
 	}
 
 
-	public void setDeparture_Location(LocationRepresentation departure_Location) {
-		this.departure_Location = departure_Location;
+	public void setDeparture_location(LocationRepresentation departure_location) {
+		this.departure_location = departure_location;
 	}
 
 
-	public Calendar getDeparture_Time() {
-		return departure_Time;
+	public Calendar getDeparture_time() {
+		return departure_time;
 	}
 
 
-	public void setDeparture_Time(Calendar departure_Time) {
-		this.departure_Time = departure_Time;
+	public void setDeparture_time(Calendar departure_time) {
+		this.departure_time = departure_time;
+	}
+
+
+	public DayTimeSlot getDeparture_timeSlot() {
+		return departure_timeSlot;
+	}
+
+
+	public void setDeparture_timeSlot(DayTimeSlot departure_timeSlot) {
+		this.departure_timeSlot = departure_timeSlot;
+	}
+
+
+	public DayTimeSlot getArrival_timeSlot() {
+		return arrival_timeSlot;
+	}
+
+
+	public void setArrival_timeSlot(DayTimeSlot arrival_timeSlot) {
+		this.arrival_timeSlot = arrival_timeSlot;
 	}
 
 
@@ -251,23 +278,23 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	}
 
 
-	public LocationRepresentation getArrival_Location() {
-		return arrival_Location;
+	public LocationRepresentation getArrival_location() {
+		return arrival_location;
 	}
 
 
-	public void setArrival_Location(LocationRepresentation arrival_Location) {
-		this.arrival_Location = arrival_Location;
+	public void setArrival_location(LocationRepresentation arrival_location) {
+		this.arrival_location = arrival_location;
 	}
 
 
-	public Calendar getArrival_Time() {
-		return arrival_Time;
+	public Calendar getArrival_time() {
+		return arrival_time;
 	}
 
 
-	public void setArrival_Time(Calendar arrival_Time) {
-		this.arrival_Time = arrival_Time;
+	public void setArrival_time(Calendar arrival_time) {
+		this.arrival_time = arrival_time;
 	}
 
 
@@ -392,13 +419,15 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 			jsonMessage.put("transactionList", this.getTransactionList());
 			
 			jsonMessage.put("isRoundTrip", this.isRoundTrip());
-			jsonMessage.put("departure_Location", this.getDeparture_Location().toJSON());
-			jsonMessage.put("departure_Time", DateUtility.CalendarToUTCString(this.getDeparture_Time()));
+			jsonMessage.put("departure_location", this.getDeparture_location().toJSON());
+			jsonMessage.put("departure_time", DateUtility.CalendarToUTCString(this.getDeparture_time()));
+			jsonMessage.put("departure_timeSlot", this.departure_timeSlot);
 			jsonMessage.put("departure_seatsNumber", this.getDeparture_seatsNumber());
 			jsonMessage.put("departure_seatsBooked", this.getDeparture_seatsBooked());
 			jsonMessage.put("daparture_priceList", new JSONArray(this.getDeparture_priceList()));
-			jsonMessage.put("arrival_Location", this.getArrival_Location().toJSON());
-			jsonMessage.put("arrival_Time", DateUtility.CalendarToUTCString(this.getArrival_Time()));
+			jsonMessage.put("arrival_location", this.getArrival_location().toJSON());
+			jsonMessage.put("arrival_time", DateUtility.CalendarToUTCString(this.getArrival_time()));
+			jsonMessage.put("arrival_timeSlot", this.arrival_timeSlot);
 			jsonMessage.put("arrival_seatsNumber", this.getArrival_seatsNumber());
 			jsonMessage.put("arrival_seatsBooked", this.getArrival_seatsBooked());
 			jsonMessage.put("arrival_priceList", new JSONArray(this.getArrival_priceList()));
@@ -430,7 +459,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 					HelperOperator.isArrayListEqual(this.getArrival_priceList(), msg.getArrival_priceList()) && this.getArrival_seatsBooked() == msg.getArrival_seatsBooked()&&
 					this.getArrival_seatsNumber() == msg.getArrival_seatsNumber() && this.category == msg.getCategory() 
 				//	&& this.getCreationTime().equals(msg.getCreationTime())
-				//	&&this.departure_Location.equals(msg.getDeparture_Location()) 
+				//	&&this.departure_location.equals(msg.getDeparture_Location()) 
 				//	&& this.getDeparture_Time().equals(msg.getDeparture_Time())
 					&&
 					HelperOperator.isArrayListEqual(this.getDeparture_priceList(), msg.getDeparture_priceList()) && this.getDeparture_seatsBooked() == msg.getDeparture_seatsBooked() &&
@@ -442,7 +471,10 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 					this.getOwnerId() == msg.getOwnerId() && this.getPaymentMethod() == msg.getPaymentMethod() 
 			        && 
 			        //this.getState() == msg.getState() &&
-					this.getType() == msg.getType();
+					this.getType() == msg.getType()
+					&& this.getDeparture_timeSlot() == msg.getDeparture_timeSlot()
+					&& this.getArrival_timeSlot() == msg.getArrival_timeSlot();
+				
 		}
 		catch(NullPointerException e){
 			e.printStackTrace();
@@ -457,14 +489,16 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	public String toString() {
 		return "Message [category=" + category + ", messageId=" + messageId
 				+ ", ownerId=" + ownerId + ", owner=" + owner
-				+ ", transactionList=" + transactionList + ", isRroundTrip="
-				+ isRoundTrip + ", departure_Location=" + departure_Location
-				+ ", departure_Time=" + departure_Time
+				+ ", transactionList=" + transactionList + ", isRoundTrip="
+				+ isRoundTrip + ", departure_location=" + departure_location
+				+ ", departure_time=" + departure_time
+				+ ", departure_timeSlot=" + departure_timeSlot
 				+ ", departure_seatsNumber=" + departure_seatsNumber
 				+ ", departure_seatsBooked=" + departure_seatsBooked
 				+ ", departure_priceList=" + departure_priceList
-				+ ", arrival_Location=" + arrival_Location + ", arrival_Time="
-				+ arrival_Time + ", arrival_seatsNumber=" + arrival_seatsNumber
+				+ ", arrival_location=" + arrival_location + ", arrival_time="
+				+ arrival_time + ", arrival_timeSlot=" + arrival_timeSlot
+				+ ", arrival_seatsNumber=" + arrival_seatsNumber
 				+ ", arrival_seatsBooked=" + arrival_seatsBooked
 				+ ", arrival_priceList=" + arrival_priceList
 				+ ", paymentMethod=" + paymentMethod + ", note=" + note
@@ -478,7 +512,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	//override Comparator, by default messages will be sorted in departure timing orders
 	@Override
 	public int compareTo(Message anotherMessage) {
-		return this.getDeparture_Time().compareTo(anotherMessage.getDeparture_Time());
+		return this.getDeparture_time().compareTo(anotherMessage.getDeparture_time());
 	}
 	
 	

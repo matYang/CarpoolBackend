@@ -139,7 +139,7 @@ public class DaoNotification {
 	}
 
 
-	protected static Notification createNotificationByResultSet(ResultSet rs) throws SQLException {
+	public static Notification createNotificationByResultSet(ResultSet rs) throws SQLException {
 		Notification n;
 		n = new Notification(rs.getInt("notificationId"), Constants.notificationType.fromInt(rs.getInt("notificationType")),
 				Constants.notificationEvent.fromInt(rs.getInt("notificationEvent")), rs.getInt("initUserId"),

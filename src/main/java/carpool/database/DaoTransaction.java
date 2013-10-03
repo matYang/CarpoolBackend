@@ -157,7 +157,7 @@ public class DaoTransaction {
 		return retVal;
 	}
 
-	protected static Transaction createTransactionByResultSet(ResultSet rs) throws SQLException {
+	public static Transaction createTransactionByResultSet(ResultSet rs) throws SQLException {
 		Transaction t;
 		t = new Transaction(rs.getInt("transactionId"), rs.getInt("initUserId"), rs.getInt("targetUserId"), rs.getString("initUserImgPath"),
 				rs.getString("initUserName"), rs.getInt("initUserLevel"),rs.getString("targetUserImgPath"), rs.getString("targetUserName"),
