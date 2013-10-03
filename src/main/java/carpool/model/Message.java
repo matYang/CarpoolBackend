@@ -115,7 +115,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	 * full constructor used for SQL retrieval
 	 *****/
 	public Message(int messageId, int ownerId, User owner,
-			boolean isRroundTrip, LocationRepresentation departure_Location,
+			boolean isRoundTrip, LocationRepresentation departure_Location,
 			Calendar departure_Time, int departure_seatsNumber,
 			int departures_seatsBooked, ArrayList<Integer> departure_priceList,
 			LocationRepresentation arrival_Location, Calendar arrival_Time,
@@ -423,15 +423,25 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 
 	public boolean equals(Message msg) {
 		try{
-			return msg != null && this.getArrival_Location().equals(msg.getArrival_Location()) && this.getArrival_Time().equals(msg.getArrival_Time()) &&
-					HelperOperator.isArrayListEqual(this.getArrival_priceList(), msg.getArrival_priceList()) && this.getArrival_seatsBooked() == msg.getArrival_seatsBooked() &&
-					this.getArrival_seatsNumber() == msg.getArrival_seatsNumber() && this.category == msg.getCategory() && this.getCreationTime().equals(msg.getCreationTime()) &&
-					this.departure_Location.equals(msg.getDeparture_Location()) && this.getDeparture_Time().equals(msg.getDeparture_Time()) &&
+			return msg != null
+					//&& this.getArrival_Location().equals(msg.getArrival_Location()) 
+				//	&& this.getArrival_Time().equals(msg.getArrival_Time()) 
+					&&
+					HelperOperator.isArrayListEqual(this.getArrival_priceList(), msg.getArrival_priceList()) && this.getArrival_seatsBooked() == msg.getArrival_seatsBooked()&&
+					this.getArrival_seatsNumber() == msg.getArrival_seatsNumber() && this.category == msg.getCategory() 
+				//	&& this.getCreationTime().equals(msg.getCreationTime())
+				//	&&this.departure_Location.equals(msg.getDeparture_Location()) 
+				//	&& this.getDeparture_Time().equals(msg.getDeparture_Time())
+					&&
 					HelperOperator.isArrayListEqual(this.getDeparture_priceList(), msg.getDeparture_priceList()) && this.getDeparture_seatsBooked() == msg.getDeparture_seatsBooked() &&
-					this.getDeparture_seatsNumber() == msg.getDeparture_seatsNumber() && this.getEditTime().equals(msg.getEditTime()) &&
-					this.getGenderRequirement() == msg.getGenderRequirement() && this.isHistoryDeleted() == msg.isHistoryDeleted() &&
+					this.getDeparture_seatsNumber() == msg.getDeparture_seatsNumber() 
+				//	&& this.getEditTime().equals(msg.getEditTime()) 
+					&&
+				    this.getGenderRequirement() == msg.getGenderRequirement() && this.isHistoryDeleted() == msg.isHistoryDeleted() &&
 					this.isRoundTrip == msg.isRoundTrip && this.getMessageId() == msg.getMessageId() && this.getNote().equals(msg.getNote()) &&
-					this.getOwnerId() == msg.getOwnerId() && this.getPaymentMethod() == msg.getPaymentMethod() && this.getState() == msg.getState() &&
+					this.getOwnerId() == msg.getOwnerId() && this.getPaymentMethod() == msg.getPaymentMethod() 
+			        && 
+			        //this.getState() == msg.getState() &&
 					this.getType() == msg.getType();
 		}
 		catch(NullPointerException e){

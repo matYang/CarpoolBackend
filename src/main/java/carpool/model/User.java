@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DateUtility;
+import carpool.common.HelperOperator;
 import carpool.common.Validator;
 import carpool.constants.Constants;
 import carpool.constants.Constants.gender;
@@ -720,7 +721,17 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		return this.getName().compareTo(anotherUser.getName());
 	}
 
-
+    public boolean equals(User newUser){   	
+ //   	System.out.println(this.userId);
+//    	System.out.println(newUser.getUserId());
+    	return newUser !=null && this.userId == newUser.getUserId() 
+    			              && this.name.equals(newUser.getName())
+    			              && this.gender.equals(newUser.getGender())
+    			              && this.location.equals(newUser.getLocation())
+    			              && HelperOperator.isArrayListEqual(this.verifications, newUser.getVerifications());
+    	                      
+    	
+    }
 	@Override
 	public boolean validate() throws ValidationException{
 		// TODO 

@@ -58,7 +58,8 @@ public class carpoolDAOBasic {
         String query5 = "TRUNCATE TABLE WatchList ";
         String query6 = "TRUNCATE TABLE Notification ";
         String query7 = "TRUNCATE TABLE carpoolDAOMessage";
-        String query8 = "SET FOREIGN_KEY_CHECKS=1;";
+        String query8 = "TRUNCATE TABLE carpoolDAOUser";
+        String query9 = "SET FOREIGN_KEY_CHECKS=1;";
         try(Statement stmt = getSQLConnection().createStatement()){
         	stmt.addBatch(query0);
         	stmt.addBatch(query1);
@@ -69,6 +70,7 @@ public class carpoolDAOBasic {
         	stmt.addBatch(query6);
         	stmt.addBatch(query7);
         	stmt.addBatch(query8);
+        	stmt.addBatch(query9);
         	stmt.executeBatch();
         }catch(SQLException e){
         	DebugLog.d(e.getMessage());

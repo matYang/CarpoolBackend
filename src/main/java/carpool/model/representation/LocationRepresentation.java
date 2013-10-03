@@ -12,7 +12,7 @@ import carpool.interfaces.PseudoValidatable;
 
 public class LocationRepresentation implements PseudoRepresentation, PseudoValidatable{
 	
-	private ArrayList<String> hierarchyNameList;
+	private ArrayList<String> hierarchyNameList = new ArrayList<String>();
 	private int customDepthIndex;
 	
 	@SuppressWarnings("unused")
@@ -75,7 +75,7 @@ public class LocationRepresentation implements PseudoRepresentation, PseudoValid
 		for (int i = 0; i < this.customDepthIndex; i++){
 			serializedLocationRepresentationString += this.hierarchyNameList.get(i) + "_";
 		}
-		serializedLocationRepresentationString.substring(0, serializedLocationRepresentationString.length()-1);
+		serializedLocationRepresentationString = serializedLocationRepresentationString.substring(0, serializedLocationRepresentationString.length()-1);
 		return serializedLocationRepresentationString;
 	}
 	
@@ -84,7 +84,7 @@ public class LocationRepresentation implements PseudoRepresentation, PseudoValid
 		for (int i = this.customDepthIndex; i < this.hierarchyNameList.size(); i++){
 			serializedLocationRepresentationString += this.hierarchyNameList.get(i) + "_";
 		}
-		serializedLocationRepresentationString.substring(0, serializedLocationRepresentationString.length()-1);
+		serializedLocationRepresentationString = serializedLocationRepresentationString.substring(0, serializedLocationRepresentationString.length()-1);
 		return serializedLocationRepresentationString;
 	}
 
