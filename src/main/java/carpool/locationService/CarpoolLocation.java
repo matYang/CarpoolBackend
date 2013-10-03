@@ -250,7 +250,7 @@ public class CarpoolLocation {
 	
 	
 	public JSONObject toJSON() throws ValidationException{
-		JSONObject jsonLocation = new JSONObject(this);
+		JSONObject jsonLocation = new JSONObject();
 		
 		try{
 			jsonLocation.put("name", this.getName());

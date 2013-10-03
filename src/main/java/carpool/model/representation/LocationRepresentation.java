@@ -41,9 +41,9 @@ public class LocationRepresentation implements PseudoRepresentation, PseudoValid
 	}
 	
 	public LocationRepresentation(JSONObject jsonLocationRepresentation) throws JSONException{
-		JSONArray nameList = jsonLocationRepresentation.getJSONArray("nameList");
+		JSONArray nameList = jsonLocationRepresentation.getJSONArray("hierarchyNameList");
 		for(int i=0;i < nameList.length();i++){ 
-		    this.hierarchyNameList.add(nameList.getJSONObject(i).getString("names"));
+		    this.hierarchyNameList.add(nameList.getString(i));
 		}
 		this.customDepthIndex = jsonLocationRepresentation.getInt("customDepthIndex");
 	}
@@ -104,7 +104,7 @@ public class LocationRepresentation implements PseudoRepresentation, PseudoValid
 	public JSONObject toJSON() throws JSONException{
 		JSONArray nameList = new JSONArray(this.hierarchyNameList);
 		JSONObject jsonLocationRepresentation = new JSONObject();
-		jsonLocationRepresentation.put("nameList", nameList);
+		jsonLocationRepresentation.put("hierarchyNameList", nameList);
 		jsonLocationRepresentation.put("customDepthIndex", this.customDepthIndex);
 		
 		return jsonLocationRepresentation;
