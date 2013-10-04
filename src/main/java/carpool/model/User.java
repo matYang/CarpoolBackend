@@ -633,7 +633,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 
     @Override
 	public JSONObject toJSON(){
-		JSONObject jsonUser = new JSONObject(this);
+		JSONObject jsonUser = new JSONObject();
 		try {
 			
 			jsonUser.put("userId", this.getUserId());

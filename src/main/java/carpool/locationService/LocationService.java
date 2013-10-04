@@ -38,7 +38,7 @@ public class LocationService {
 	}
 	
 	private static final ArrayList<CarpoolLocation> getAllNodesWithDepth(int depth){
-		return (ArrayList<CarpoolLocation>) lookupMap.get(depth).values();
+		return new ArrayList<CarpoolLocation>(lookupMap.get(depth).values());
 	}
 	
 	
@@ -56,7 +56,7 @@ public class LocationService {
 				curLoc = curLoc.getSubLocation(hierachyNameList.get(tracker));
 				tracker++;
 			}
-			return true;
+			return curLoc != null;
 
 		} catch (NullPointerException e){
 			e.printStackTrace();

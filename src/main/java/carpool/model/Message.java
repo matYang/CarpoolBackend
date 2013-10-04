@@ -410,7 +410,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 
 	@Override
 	public JSONObject toJSON(){
-		JSONObject jsonMessage = new JSONObject(this);
+		JSONObject jsonMessage = new JSONObject();
 		
 		try {
 			jsonMessage.put("messageId", this.getMessageId());
