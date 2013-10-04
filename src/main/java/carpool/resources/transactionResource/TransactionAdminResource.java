@@ -9,6 +9,7 @@ import java.util.Calendar;
 import org.restlet.engine.header.Header;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.*;
 import org.restlet.util.Series;
 import org.restlet.data.*;
@@ -32,7 +33,6 @@ import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.transaction.TransactionOwnerNotMatchException;
 import carpool.exception.transaction.TransactionStateViolationException;
 import carpool.factory.JSONFactory;
-import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserResource;
@@ -88,7 +88,8 @@ public class TransactionAdminResource extends PseudoResource{
 	        newJsonTransaction = JSONFactory.toJSON(transaction);
 			
 		} catch (PseudoException e){
-        	this.doPseudoException(e);
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
         } catch(Exception e){
 			this.doException(e);
 		}

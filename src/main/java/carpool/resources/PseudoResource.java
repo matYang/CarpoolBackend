@@ -2,9 +2,6 @@ package carpool.resources;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
 
 import org.restlet.engine.header.Header;
 import org.restlet.ext.json.JsonRepresentation;
@@ -13,23 +10,13 @@ import org.restlet.resource.*;
 import org.restlet.util.Series;
 import org.restlet.data.*;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DebugLog;
 import carpool.constants.Constants;
-import carpool.constants.Constants.userSearchState;
-import carpool.constants.Constants.userState;
-import carpool.dbservice.*;
 import carpool.exception.PseudoException;
-import carpool.exception.auth.DuplicateSessionCookieException;
-import carpool.exception.auth.SessionEncodingException;
-import carpool.exception.user.UserNotFoundException;
 import carpool.exception.validation.EntityTooLargeException;
 import carpool.factory.JSONFactory;
-import carpool.mappings.*;
-import carpool.model.*;
 import carpool.resources.userResource.userAuthResource.UserCookieResource;
 
 public class PseudoResource extends ServerResource{
@@ -99,7 +86,7 @@ public class PseudoResource extends ServerResource{
 		return java.net.URLDecoder.decode(getQuery().getValues(fieldName), "utf-8");
 	}
 	
-	public void doPseudoException(PseudoException e){
+	public String doPseudoException(PseudoException e){
 		e.printStackTrace();
 		switch(e.getCode()){
 			case 1: case 2: case 4: case 8:
@@ -149,13 +136,13 @@ public class PseudoResource extends ServerResource{
 				break;
 			case 18:
 				//ValidationException
-				//TODO add response
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				break;
 			default:
 				setStatus(Status.SERVER_ERROR_INTERNAL);
 				break;
 		}
+		return e.getExceptionText();
 	}
 	
 	public void doException(Exception e){

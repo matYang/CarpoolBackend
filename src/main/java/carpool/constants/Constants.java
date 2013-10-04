@@ -1,7 +1,5 @@
 package carpool.constants;
 
-import carpool.mappings.AllProvinceMappings;
-import carpool.mappings.MappingBase;
 
 
 public class Constants {
@@ -26,9 +24,6 @@ public class Constants {
     
     public static final String cookie_userSession = "userSessionCookie";
     public static final int cookie_maxAge = 5184000; //2 month
-    
-    public static final MappingBase ALL_PROVINCE = new AllProvinceMappings();
-
 
     public static final int min_DMMessageHourPrice = 1;
     public static final int max_DMMessageHourPrice = 999;

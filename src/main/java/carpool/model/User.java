@@ -643,10 +643,10 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 			jsonUser.put("qq", this.getQq());
 			jsonUser.put("age", this.getAge());
 			jsonUser.put("gender", this.getGender());
-			jsonUser.put("birthday", DateUtility.CalendarToUTCString(this.getBirthday()));
+			jsonUser.put("birthday", DateUtility.castToAPIFormat(this.getBirthday()));
 			jsonUser.put("location", this.location.toJSON());
-			jsonUser.put("lastLogin", DateUtility.CalendarToUTCString(this.getLastLogin()));
-			jsonUser.put("creationTime", DateUtility.CalendarToUTCString(this.getCreationTime()));
+			jsonUser.put("lastLogin", DateUtility.castToAPIFormat(this.getLastLogin()));
+			jsonUser.put("creationTime", DateUtility.castToAPIFormat(this.getCreationTime()));
 
 			jsonUser.put("historyList", JSONFactory.toJSON(this.getHistoryList()));
 			jsonUser.put("watchList", JSONFactory.toJSON(this.getWatchList()));

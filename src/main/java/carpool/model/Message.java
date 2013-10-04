@@ -73,15 +73,14 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	
 	
 	/*****
-	 * The contructor used for message posting
+	 * The contructor used for message posting/updating
 	 *****/
 	public Message(int ownerId, boolean isRoundTrip,
 			LocationRepresentation departure_location, Calendar departure_time, DayTimeSlot departure_timeSlot,
 			int departure_seatsNumber, ArrayList<Integer> departure_priceList,
 			LocationRepresentation arrival_location, Calendar arrival_time, DayTimeSlot arrival_timeSlot,
 			int arrival_seatsNumber, ArrayList<Integer> arrival_priceList,
-			carpool.constants.Constants.paymentMethod paymentMethod,
-			String note, messageType type, gender genderRequirement) {
+			paymentMethod paymentMethod, String note, messageType type, gender genderRequirement) {
 		super();
 		this.messageId = -1;
 		this.ownerId = ownerId;
@@ -126,10 +125,8 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 			LocationRepresentation arrival_location, Calendar arrival_time, DayTimeSlot arrival_timeSlot,
 			int arrival_seatsNumber, int arrival_seatsBooked,
 			ArrayList<Integer> arrival_priceList,
-			carpool.constants.Constants.paymentMethod paymentMethod,
-			String note, messageType type, gender genderRequirement,
-			messageState state, Calendar creationTime, Calendar editTime,
-			boolean historyDeleted) {
+			paymentMethod paymentMethod, String note, messageType type, gender genderRequirement,
+			messageState state, Calendar creationTime, Calendar editTime, boolean historyDeleted) {
 		super();
 		this.messageId = messageId;
 		this.ownerId = ownerId;
@@ -415,18 +412,18 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		try {
 			jsonMessage.put("messageId", this.getMessageId());
 			jsonMessage.put("ownerId", this.getOwnerId());
-			jsonMessage.put("owner", this.getOwner());
-			jsonMessage.put("transactionList", this.getTransactionList());
+			jsonMessage.put("owner", this.owner != null ? this.getOwner() : new User());
+			jsonMessage.put("transactionList", this.transactionList != null ? this.getTransactionList() : new ArrayList<Transaction>());
 			
 			jsonMessage.put("isRoundTrip", this.isRoundTrip());
 			jsonMessage.put("departure_location", this.getDeparture_location().toJSON());
-			jsonMessage.put("departure_time", DateUtility.CalendarToUTCString(this.getDeparture_time()));
+			jsonMessage.put("departure_time", DateUtility.castToAPIFormat(this.getDeparture_time()));
 			jsonMessage.put("departure_timeSlot", this.departure_timeSlot);
 			jsonMessage.put("departure_seatsNumber", this.getDeparture_seatsNumber());
 			jsonMessage.put("departure_seatsBooked", this.getDeparture_seatsBooked());
 			jsonMessage.put("daparture_priceList", new JSONArray(this.getDeparture_priceList()));
 			jsonMessage.put("arrival_location", this.getArrival_location().toJSON());
-			jsonMessage.put("arrival_time", DateUtility.CalendarToUTCString(this.getArrival_time()));
+			jsonMessage.put("arrival_time", DateUtility.castToAPIFormat(this.getArrival_time()));
 			jsonMessage.put("arrival_timeSlot", this.arrival_timeSlot);
 			jsonMessage.put("arrival_seatsNumber", this.getArrival_seatsNumber());
 			jsonMessage.put("arrival_seatsBooked", this.getArrival_seatsBooked());
@@ -437,8 +434,8 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 			jsonMessage.put("type", this.getType());
 			jsonMessage.put("genderRequirement", this.getGenderRequirement());
 			jsonMessage.put("state", this.getState());
-			jsonMessage.put("creationTime", DateUtility.CalendarToUTCString(this.getCreationTime()));
-			jsonMessage.put("editTime",DateUtility.CalendarToUTCString(this.getEditTime()));
+			jsonMessage.put("creationTime", DateUtility.castToAPIFormat(this.getCreationTime()));
+			jsonMessage.put("editTime",DateUtility.castToAPIFormat(this.getEditTime()));
 			jsonMessage.put("historyDeleted", this.isHistoryDeleted());
 			
 		} catch (JSONException e) {

@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.ParagraphAction;
+
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.*;
 import org.restlet.util.Series;
 import org.restlet.engine.header.Header;
@@ -17,7 +20,11 @@ import org.json.JSONObject;
 
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
+import carpool.common.Parser;
 import carpool.constants.Constants;
+import carpool.constants.Constants.DayTimeSlot;
+import carpool.constants.Constants.gender;
+import carpool.constants.Constants.messageType;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.factory.JSONFactory;
@@ -37,9 +44,14 @@ public class DMResource extends PseudoResource{
 			jsonMessage = (new JsonRepresentation(entity)).getJsonObject();
 			DebugLog.d("@Post::receive jsonMessage: " +  jsonMessage.toString());
 			
-			message = new Message(jsonMessage.getInt("ownerId"), Constants.paymentMethod.values()[jsonMessage.getInt("paymentMethod")], 
-					new LocationRepresentation(jsonMessage.getJSONObject("location").getString("province"), jsonMessage.getJSONObject("location").getString("city"), jsonMessage.getJSONObject("location").getString("region"),jsonMessage.getJSONObject("location").getString("university")), DateUtility.parseDateString(jsonMessage.getString("startTime")),  DateUtility.parseDateString(jsonMessage.getString("endTime")), 
-					jsonMessage.getString("note"), Constants.messageType.values()[jsonMessage.getInt("type")], Constants.gender.values()[jsonMessage.getInt("genderRequirement")], jsonMessage.getInt("price"));
+			message = new Message(userId, jsonMessage.getBoolean("isRoundTrip"),
+					new LocationRepresentation(jsonMessage.getJSONObject("departure_location")), DateUtility.castFromAPIFormat("departure_time"), Constants.DayTimeSlot.values()[jsonMessage.getInt("departure_timeSlot")],
+					jsonMessage.getInt("departure_seatsNumber"), Parser.parsePriceList(jsonMessage.getJSONArray("departure_priceList")),
+					new LocationRepresentation(jsonMessage.getJSONObject("arrival_location")), DateUtility.castFromAPIFormat("arrival_time"), Constants.DayTimeSlot.values()[jsonMessage.getInt("arrival_timeSlot")],
+					jsonMessage.getInt("arrival_seatsNumber"), Parser.parsePriceList(jsonMessage.getJSONArray("arrival_priceList")),
+					Constants.paymentMethod.values()[jsonMessage.getInt("paymentMethod")],
+					jsonMessage.getString("note"), Constants.messageType.values()[jsonMessage.getInt("type")], Constants.gender.values()[jsonMessage.getInt("genderRequirement")]);
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -107,7 +119,8 @@ public class DMResource extends PseudoResource{
 	        }
 			
 		} catch (PseudoException e){
-        	this.doPseudoException(e);
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
         } catch (Exception e){
 			this.doException(e);
 		}

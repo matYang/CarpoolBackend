@@ -17,10 +17,7 @@ import carpool.exception.PseudoException;
 import carpool.exception.auth.AccountAuthenticationException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
-import carpool.mappings.*;
 import carpool.model.*;
-
-
 
 public class UserCookieResource extends ServerResource{
 

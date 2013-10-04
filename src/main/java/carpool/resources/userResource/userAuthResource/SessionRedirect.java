@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.restlet.engine.header.Header;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.*;
 import org.restlet.util.Series;
 import org.restlet.data.Cookie;
@@ -27,9 +28,6 @@ import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.model.representation.LocationRepresentation;
 import carpool.resources.PseudoResource;
-
-
-
 
 public class SessionRedirect extends PseudoResource{
 	
@@ -57,11 +55,12 @@ public class SessionRedirect extends PseudoResource{
 			}
 			//if not, retun defeault user, front end will detect invalid id==-1 and will use non-session
 			else{
-				jsonObject = JSONFactory.toJSON(new User("","",new LocationRepresentation()));
+				jsonObject = JSONFactory.toJSON(new User("","",new LocationRepresentation("Canada_Ontario_Waterloo_Matthew's Sweet Little Home_3")));
 			}
 		
 		}  catch (PseudoException e){
-			this.doPseudoException(e);
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
 		}  catch (Exception e) {
 			this.doException(e);
 		}

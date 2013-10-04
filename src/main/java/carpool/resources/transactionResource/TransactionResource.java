@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.*;
 import org.restlet.util.Series;
 import org.restlet.engine.header.Header;
@@ -47,8 +48,8 @@ public class TransactionResource extends PseudoResource{
 			DebugLog.d("@Post::receive jsonTransaction: " +  jsonTransaction.toString());
 			
 			transaction = new Transaction(jsonTransaction.getInt("initUserId"), jsonTransaction.getInt("targetUserId"), jsonTransaction.getInt("messageId"), Constants.paymentMethod.values()[jsonTransaction.getInt("paymentMethod")], 
-					jsonTransaction.getInt("price"), jsonTransaction.getString("requestInfo"),  DateUtility.parseDateString(jsonTransaction.getString("startTime")), 
-					DateUtility.parseDateString(jsonTransaction.getString("endTime")), new LocationRepresentation(jsonTransaction.getJSONObject("location").getString("province"), jsonTransaction.getJSONObject("location").getString("city"), jsonTransaction.getJSONObject("location").getString("region"),jsonTransaction.getJSONObject("location").getString("university")) );
+					jsonTransaction.getInt("price"), jsonTransaction.getString("requestInfo"),  DateUtility.castFromAPIFormat(jsonTransaction.getString("startTime")), 
+					DateUtility.castFromAPIFormat(jsonTransaction.getString("endTime")), new LocationRepresentation(jsonTransaction.getJSONObject("location").getString("province"), jsonTransaction.getJSONObject("location").getString("city"), jsonTransaction.getJSONObject("location").getString("region"),jsonTransaction.getJSONObject("location").getString("university")) );
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -122,7 +123,8 @@ public class TransactionResource extends PseudoResource{
 	        }
 			
 		} catch (PseudoException e){
-        	this.doPseudoException(e);
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
         } catch(Exception e){
 			this.doException(e);
 		}
