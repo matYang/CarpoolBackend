@@ -453,7 +453,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	public boolean equals(Message msg) {
 		try{
 			return msg != null
-					//&& this.getArrival_Location().equals(msg.getArrival_Location()) 
+				    && this.getArrival_location().equals(msg.getArrival_location()) 
 				//	&& this.getArrival_Time().equals(msg.getArrival_Time()) 
 					&&
 					HelperOperator.isArrayListEqual(this.getArrival_priceList(), msg.getArrival_priceList()) && this.getArrival_seatsBooked() == msg.getArrival_seatsBooked()&&
