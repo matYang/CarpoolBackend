@@ -4,3 +4,4 @@ dump.rdb
 .class
 .prefs
 .pref
+target/Carpool/*.class
