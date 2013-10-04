@@ -721,13 +721,43 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		return this.getName().compareTo(anotherUser.getName());
 	}
 
-    public boolean equals(User newUser){   	
- //   	System.out.println(this.userId);
-//    	System.out.println(newUser.getUserId());
+    public boolean equals(User newUser) throws ValidationException{       	
     	return newUser !=null && this.userId == newUser.getUserId() 
     			              && this.name.equals(newUser.getName())
     			              && this.gender.equals(newUser.getGender())
     			              && this.location.equals(newUser.getLocation())
+    			              && this.emailActivated==newUser.emailActivated
+    			              && this.emailNotice==newUser.emailNotice
+    			              && this.phoneActivated==newUser.phoneActivated
+    			              && this.phoneNotice== newUser.phoneNotice
+    			              && this.password.equals(newUser.getPassword())
+    			              && this.isAbleToLogin()==newUser.isAbleToLogin()
+    			              && this.validate()==newUser.validate()
+    			              && this.accountToken.equals(newUser.getAccountToken())
+    			              && this.accountValue.toString().equals(newUser.getAccountValue().toString())
+    			              && this.age==newUser.getAge()
+    			              && this.averageScore==newUser.getAverageScore()
+    			              && this.birthday.getTime().toString().equals(newUser.getBirthday().getTime().toString())
+    			              && this.creationTime.getTime().toString().equals(newUser.getCreationTime().getTime().toString())
+    			              && this.facebookToken.equals(newUser.getFacebookToken())
+    			              && this.googleToken.equals(newUser.getGoogleToken())
+    			              && this.gender.code==newUser.getGender().code
+    			              && HelperOperator.isArrayListEqual(this.historyList, newUser.getHistoryList())
+    			              && this.id_docNum.equals(newUser.getId_docNum())
+    			              && this.id_docType.equals(newUser.getId_docType())
+    			              && this.id_path.equals(newUser.getId_path())
+    			              && this.id_vehicleImgPath.equals(newUser.getId_vehicleImgPath())
+    			              && this.imgPath.equals(newUser.getImgPath())
+    			              && this.lastLogin.getTime().toString().equals(newUser.getLastLogin().getTime().toString())
+    			              && this.level==newUser.getLevel()
+    			              && this.paypalToken.equals(newUser.getPaypalToken())
+    			              && this.phone.equals(newUser.getPhone())
+    			              && this.qq.equals(newUser.getQq())
+    			              && this.searchState.code==newUser.getSearchState().code
+    			              && this.state.code==newUser.getState().code
+    			              && this.twitterToken.equals(newUser.getTwitterToken())
+    			              && HelperOperator.isArrayListEqual(this.watchList, newUser.getWatchList())
+    			              && HelperOperator.isArrayListEqual(this.socialList, newUser.getSocialList())
     			              && HelperOperator.isArrayListEqual(this.verifications, newUser.getVerifications());
     	                      
     	

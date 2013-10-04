@@ -60,18 +60,28 @@ public class CarpoolUserTest {
 		}
 		//Test
 		try {
-			if(!user.equals(carpoolDAOUser.getUserById(user.getUserId()))){
+			try {
+				if(!user.equals(carpoolDAOUser.getUserById(user.getUserId()))){
+					fail();
+				}
+			} catch (ValidationException e) {				
+				e.printStackTrace();
 				fail();
 			}
 		} catch (UserNotFoundException e) {
-			e.printStackTrace();		  
+			e.printStackTrace();
+			fail();
 		}
 		try {
 			if(!user.equals(carpoolDAOUser.getUserByEmail(user.getEmail()))){
 				fail();
 			}
 		} catch (UserNotFoundException e) {
-			e.printStackTrace();		  
+			e.printStackTrace();	
+			fail();
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			fail();
 		}
 	}
 	@Test
@@ -91,6 +101,10 @@ public class CarpoolUserTest {
 		}
 		user.setEmail("xiongchuhanplace@hotmail.com");
 		user.setLocation(new LocationRepresentation ("primary_secondary","customnew",2));
+		user.setAccountPass("test1");
+		user.setGoogleToken("google");
+		user.setAge(100);
+		user.setEmailActivated(true);
 		try {
 			carpoolDAOUser.UpdateUserInDatabase(user);
 		} catch (Exception e) {
@@ -104,6 +118,10 @@ public class CarpoolUserTest {
 			}
 		} catch (UserNotFoundException e) {
 			e.printStackTrace();		  
+		} catch (ValidationException e) {
+			
+			e.printStackTrace();
+			fail();
 		}
 		try {
 			if(!user.equals(carpoolDAOUser.getUserByEmail(user.getEmail()))){
@@ -111,6 +129,10 @@ public class CarpoolUserTest {
 			}
 		} catch (UserNotFoundException e) {
 			e.printStackTrace();		  
+		} catch (ValidationException e) {
+			
+			e.printStackTrace();
+			fail();
 		}
 	}
 	
