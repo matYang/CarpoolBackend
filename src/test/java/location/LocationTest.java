@@ -94,8 +94,8 @@ public class LocationTest {
 			lv3.add("Waterloo");
 			
 			lv4.add("Square One");
-			lv4.add("Pearson Airport - terminal 3");
-			lv4.add("Pearson Airport - terminal 1");
+			lv4.add("Pearson Airport terminal 3");
+			lv4.add("Pearson Airport terminal 1");
 			lv4.add("York Dale");
 			lv4.add("Eaton Center");
 			lv4.add("CN Tower");

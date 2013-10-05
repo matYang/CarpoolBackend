@@ -36,7 +36,6 @@ import carpool.model.representation.LocationRepresentation;
 import carpool.model.Message;
 import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
-import carpool.test.mockModel.MockUser;
 import static java.lang.System.out;
 
 public class CarpoolMessageTest {

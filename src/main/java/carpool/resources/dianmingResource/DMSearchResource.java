@@ -24,6 +24,7 @@ import carpool.factory.JSONFactory;
 import carpool.locationService.LocationService;
 import carpool.model.*;
 import carpool.model.representation.LocationRepresentation;
+import carpool.model.representation.SearchRepresentation;
 import carpool.resources.PseudoResource;
 
 
@@ -35,16 +36,13 @@ public class DMSearchResource extends PseudoResource{
 		JSONArray response = new JSONArray();
 		
 		try {
+			String srStr = this.getQueryVal("searchRepresentation");
 			int userId = Integer.parseInt(this.getQueryVal("userId"));
 			
-			LocationRepresentation location = new LocationRepresentation(this.getQueryVal("location"));
-			Calendar date = DateUtility.castFromAPIFormat(this.getQueryVal("date"));
-			String searchStateString = this.getQueryVal("searchState");
-			userSearchState searchState = Constants.userSearchState.values()[Integer.parseInt(searchStateString)];
-			
+			SearchRepresentation sr = new SearchRepresentation(srStr);
 			
 			//not checking for date..because an invalid date will have no search result anyways
-			if (LocationService.isLocationRepresentationValid(location) && searchState != null){
+			if (LocationService.isLocationRepresentationValid(sr.getDepartureLocation()) && LocationService.isLocationRepresentationValid(sr.getArrivalLocation()) ){
 				boolean login = false;
 				try{
 					this.validateAuthentication(userId);
@@ -55,37 +53,9 @@ public class DMSearchResource extends PseudoResource{
 				}
 						
 				ArrayList<Message> searchResult = new ArrayList<Message>();
+				searchResult = MessageDaoService.primaryMessageSearch(sr, login, userId);
 				
-				//if not loged in only basic search can be used
-				if (!login){
-					//only basic userState types
-					if(searchState == Constants.userSearchState.universityAsk || searchState == Constants.userSearchState.universityHelp || searchState == Constants.userSearchState.regionAsk || searchState == Constants.userSearchState.regionHelp){
-						searchResult = MessageDaoService.primaryMessageSearch(location, date, searchState);
-						if (searchResult == null){
-							setStatus(Status.SERVER_ERROR_INTERNAL);
-						}
-						else{
-							response = JSONFactory.toJSON(searchResult);
-							setStatus(Status.SUCCESS_OK);
-						}
-					}
-					//other wise unauthorized, must login
-					else{
-						setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-					}
-				}
-				//if logged in, extended search used to record search state
-				else{
-					searchResult = MessageDaoService.primaryMessageSearch(location, date, searchState);
-					if (searchResult == null){
-						setStatus(Status.SERVER_ERROR_INTERNAL);
-					}
-					else{
-						response = JSONFactory.toJSON(searchResult);
-						setStatus(Status.SUCCESS_OK);
-					}
-				}
-				
+				response = JSONFactory.toJSON(searchResult);
 			}
 			else{
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);

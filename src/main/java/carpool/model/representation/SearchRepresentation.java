@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DateUtility;
+import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.messageType;
@@ -45,9 +46,9 @@ public class SearchRepresentation implements PseudoRepresentation{
 		this.arrivalTimeSlot = arrivalTimeSlot;
 	}
 
-	//separated by "-"
+	//separated by "+"
 	public SearchRepresentation(String serializedSearchString){
-		String[] representationArray = serializedSearchString.split("-");
+		String[] representationArray = serializedSearchString.split(CarpoolConfig.urlSeperatorRegx);
 		this.isRoundTrip = Boolean.parseBoolean(representationArray[0]);
 		this.departureLocation = new LocationRepresentation(representationArray[1]);
 		this.arrivalLocation = new LocationRepresentation(representationArray[2]);
@@ -139,8 +140,8 @@ public class SearchRepresentation implements PseudoRepresentation{
 
 	@Override
 	public String toSerializedString(){
-		return this.isRoundTrip + "-" + this.departureLocation.toSerializedString()  + "-" + this.arrivalLocation.toSerializedString() + 
-				DateUtility.castToAPIFormat(this.departureDate)  + "-" + DateUtility.castToAPIFormat(this.arrivalDate)  + "-" + this.targetType.code + this.departureTimeSlot.code + this.arrivalTimeSlot.code;
+		return this.isRoundTrip + CarpoolConfig.urlSeperator + this.departureLocation.toSerializedString()  + CarpoolConfig.urlSeperator + this.arrivalLocation.toSerializedString() + CarpoolConfig.urlSeperator + 
+				DateUtility.castToAPIFormat(this.departureDate)  + CarpoolConfig.urlSeperator + DateUtility.castToAPIFormat(this.arrivalDate)  + CarpoolConfig.urlSeperator + this.targetType.code + CarpoolConfig.urlSeperator + this.departureTimeSlot.code + CarpoolConfig.urlSeperator + this.arrivalTimeSlot.code;
 	}
 	
 	@Override
@@ -161,7 +162,8 @@ public class SearchRepresentation implements PseudoRepresentation{
 	
 	public boolean equals(SearchRepresentation s){
 		return this.isRoundTrip == s.isRoundTrip() && this.departureLocation.equals(s.getDepartureLocation()) && this.arrivalLocation.equals(s.getArrivalLocation()) &&
-				this.departureDate.equals(s.getDepartureDate()) && this.arrivalDate.equals(s.getArrivalDate()) && this.targetType == s.getTargetType() &&
+				//this.departureDate.equals(s.getDepartureDate()) && this.arrivalDate.equals(s.getArrivalDate()) && 
+				this.targetType == s.getTargetType() &&
 				this.departureTimeSlot == s.getDepartureTimeSlot() && this.arrivalTimeSlot == s.getArrivalTimeSlot();
 	}
 

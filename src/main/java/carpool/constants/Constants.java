@@ -39,7 +39,7 @@ public class Constants {
     public static final String access_admin = "4rkozalh48z1";
 
     public static enum messageType{
-    	ask(0),help(1);
+    	ask(0),help(1), both(2);
         public int code;
         messageType(int code){
             this.code = code;

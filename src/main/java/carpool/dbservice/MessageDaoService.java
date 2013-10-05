@@ -23,6 +23,7 @@ import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
+import carpool.model.representation.SearchRepresentation;
 
 
 
@@ -52,13 +53,9 @@ public class MessageDaoService{
 		return retVal;
 	}
 	
-	
-	/**
-	 * note that, should include both types of messages
-	 * note that only use year-month-date in this calendar instance to search for matching messages, not the matching of entire date strings
-	 */
-	public static ArrayList<Message> primaryMessageSearch(LocationRepresentation location,Calendar date, userSearchState searchState) throws UnacceptableSearchStateException{
-		//universityAsk(0), universityHelp(1), regionAsk(2), regionHelp(3), universityGroupAsk(4), universityGroupHelp(5);
+
+	public static ArrayList<Message> primaryMessageSearch(SearchRepresentation userSearch, boolean isLogin, int userId) throws UnacceptableSearchStateException{
+		//TODO store userSearch if login
 		int remainder = searchState.code % 2;
 		messageType type = messageType.ask;
 		if(remainder==1){
@@ -74,7 +71,7 @@ public class MessageDaoService{
 	}
 
 	public static Message createNewMessage(Message newMessage){
-		sendFollowerNewPostNotification(newMessage);
+		//sendFollowerNewPostNotification(newMessage);
 		return DaoMessage.addMessageToDatabase(newMessage);
 	}
 	
@@ -88,7 +85,7 @@ public class MessageDaoService{
 			throw new MessageOwnerNotMatchException();
 		}
 		DaoMessage.UpdateMessageInDatabase(message);
-		sendMessageUpDateNotification(message);
+		//sendMessageUpDateNotification(message);
 		return message;
 	}
 	
@@ -101,73 +98,73 @@ public class MessageDaoService{
 		if(oldMessage.getOwnerId()!=ownerId){
 			throw new MessageOwnerNotMatchException();
 		}
-		ArrayList<Transaction> tList = getRelatedTransactions(messageId);
-		for(Transaction t : tList){
-			if(t.getState().code < 5 || t.getState().code == 6){
-				throw new ValidationException("Message Has Active Transactions");
-			}
-		}
-		DaoMessage.deleteMessageFromDatabase(oldMessage.getMessageId());
-		sendMessageDeleteNotification(oldMessage);
+//		ArrayList<Transaction> tList = getRelatedTransactions(messageId);
+//		for(Transaction t : tList){
+//			if(t.getState().code < 5 || t.getState().code == 6){
+//				throw new ValidationException("Message Has Active Transactions");
+//			}
+//		}
+//		DaoMessage.deleteMessageFromDatabase(oldMessage.getMessageId());
+//		sendMessageDeleteNotification(oldMessage);
 		return true;
 	}
-	
-
-	
-	/**
-	 * retrives a list of transactions associated with the target message ID
-	 * @param messageId
-	 * @return	an arrayList of transactions based on the target message, null if any errors occurred
-	 * @throws MessageNotFoundException
-	 */
-	public static ArrayList<Transaction> getRelatedTransactions(int messageId) throws MessageNotFoundException {
-		MessageDaoService.getMessageById(messageId);
-		return DaoTransaction.getTransactionByMessage(messageId);
-	}
-	
-	
-	
-	private static void sendMessageUpDateNotification(Message msg){
-		ArrayList<Notification> notifications = new ArrayList<Notification>();
-		
-//		TODO		
-//		for(User user : DaoUser.getUserWhoWatchedMessage(msg.getMessageId())){
-//			Notification n = new Notification(-1, Constants.notificationType.on_user, Constants.notificationEvent.watchingMessageModified,
-//					msg.getOwnerId(), msg.getOwnerName(),msg.getMessageId(), 0, user.getUserId(),
-//					"The Message you've watched has change",Calendar.getInstance(), false, false);
-//			notifications.add(n);
-//		}
-		
-		NotificationDaoService.createNewNotificationQueue(notifications);
-	}
-	
-	private static void sendMessageDeleteNotification(Message msg){
-		ArrayList<Notification> notifications = new ArrayList<Notification>();
-		
-//		TODO		
-//		for(User user : DaoUser.getUserWhoWatchedMessage(msg.getMessageId())){
-//			Notification n = new Notification(-1, Constants.notificationType.on_user, Constants.notificationEvent.watchingMessageModified,
-//					msg.getOwnerId(), msg.getOwnerName(),msg.getMessageId(), 0, user.getUserId(),
-//					"The Message you've watched no longer exsit",Calendar.getInstance(), false, false);
-//			notifications.add(n);
-//		}
-		
-		NotificationDaoService.createNewNotificationQueue(notifications);
-	}
-	
-	private static void sendFollowerNewPostNotification(Message msg){
-		ArrayList<Notification> notifications = new ArrayList<Notification>();
-		
-//		TODO
-//		for(User user : DaoUser.getUserWhoWatchedUser(msg.getOwnerId())){
-//			Notification n = new Notification(-1, Constants.notificationType.on_user, Constants.notificationEvent.followerNewPost,
-//					msg.getOwnerId(), msg.getOwnerName(), msg.getMessageId(), 0, user.getUserId(),
-//					"The User you followed has just post a new Message.", Calendar.getInstance(), false, false);
-//			notifications.add(n);
-//		}
-		
-		NotificationDaoService.createNewNotificationQueue(notifications);
-	}
+//	
+//
+//	
+//	/**
+//	 * retrives a list of transactions associated with the target message ID
+//	 * @param messageId
+//	 * @return	an arrayList of transactions based on the target message, null if any errors occurred
+//	 * @throws MessageNotFoundException
+//	 */
+//	public static ArrayList<Transaction> getRelatedTransactions(int messageId) throws MessageNotFoundException {
+//		MessageDaoService.getMessageById(messageId);
+//		return DaoTransaction.getTransactionByMessage(messageId);
+//	}
+//	
+//	
+//	
+//	private static void sendMessageUpDateNotification(Message msg){
+//		ArrayList<Notification> notifications = new ArrayList<Notification>();
+//		
+////		TODO		
+////		for(User user : DaoUser.getUserWhoWatchedMessage(msg.getMessageId())){
+////			Notification n = new Notification(-1, Constants.notificationType.on_user, Constants.notificationEvent.watchingMessageModified,
+////					msg.getOwnerId(), msg.getOwnerName(),msg.getMessageId(), 0, user.getUserId(),
+////					"The Message you've watched has change",Calendar.getInstance(), false, false);
+////			notifications.add(n);
+////		}
+//		
+//		NotificationDaoService.createNewNotificationQueue(notifications);
+//	}
+//	
+//	private static void sendMessageDeleteNotification(Message msg){
+//		ArrayList<Notification> notifications = new ArrayList<Notification>();
+//		
+////		TODO		
+////		for(User user : DaoUser.getUserWhoWatchedMessage(msg.getMessageId())){
+////			Notification n = new Notification(-1, Constants.notificationType.on_user, Constants.notificationEvent.watchingMessageModified,
+////					msg.getOwnerId(), msg.getOwnerName(),msg.getMessageId(), 0, user.getUserId(),
+////					"The Message you've watched no longer exsit",Calendar.getInstance(), false, false);
+////			notifications.add(n);
+////		}
+//		
+//		NotificationDaoService.createNewNotificationQueue(notifications);
+//	}
+//	
+//	private static void sendFollowerNewPostNotification(Message msg){
+//		ArrayList<Notification> notifications = new ArrayList<Notification>();
+//		
+////		TODO
+////		for(User user : DaoUser.getUserWhoWatchedUser(msg.getOwnerId())){
+////			Notification n = new Notification(-1, Constants.notificationType.on_user, Constants.notificationEvent.followerNewPost,
+////					msg.getOwnerId(), msg.getOwnerName(), msg.getMessageId(), 0, user.getUserId(),
+////					"The User you followed has just post a new Message.", Calendar.getInstance(), false, false);
+////			notifications.add(n);
+////		}
+//		
+//		NotificationDaoService.createNewNotificationQueue(notifications);
+//	}
 
 	
 }
