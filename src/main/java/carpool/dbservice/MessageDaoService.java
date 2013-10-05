@@ -54,20 +54,14 @@ public class MessageDaoService{
 	}
 	
 
-	public static ArrayList<Message> primaryMessageSearch(SearchRepresentation userSearch, boolean isLogin, int userId) throws UnacceptableSearchStateException{
-		//TODO store userSearch if login
-		int remainder = searchState.code % 2;
-		messageType type = messageType.ask;
-		if(remainder==1){
-			type = messageType.help;
+	public static ArrayList<Message> primaryMessageSearch(SearchRepresentation userSearch, boolean isLogin, int userId) throws ValidationException{
+
+		ArrayList<Message> searchReuslt = new ArrayList<Message>();
+		searchResult = CarpoolDAOMessage.searchMessage(userSearch);
+		if (isLogin){
+			//UserDaoSerice.updateUserSearch();
 		}
-		if(searchState.code<2){
-			return DaoMessage.searchMessageSingle(location.toString(),DateUtility.toSQLDateTime(date),type.code+"");
-		}else if(searchState.code<4){
-			return DaoMessage.searchMessageRegion(location.toString(),DateUtility.toSQLDateTime(date),type.code+"");
-		}else{
-			throw new UnacceptableSearchStateException();
-		}
+		return searchResult;
 	}
 
 	public static Message createNewMessage(Message newMessage){

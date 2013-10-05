@@ -46,7 +46,7 @@ public class SessionRedirect extends PseudoResource{
 			
 			DebugLog.d("session redirect receving session string: " + sessionString);
 			
-			topBarUser = authDaoService.getUserFromSession(sessionString);
+			topBarUser = AuthDaoService.getUserFromSession(sessionString);
 			
 			//if able to login, return toBarUser with valid id, front end will redirect to use session mode
 			if (topBarUser != null && topBarUser.isAbleToLogin()){

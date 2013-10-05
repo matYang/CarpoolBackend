@@ -28,9 +28,10 @@ public class LocationResource extends PseudoResource{
 			//get query parameter _depth *_name
 			int depth = Integer.parseInt(this.getQueryVal("depth"));
 			
-			if (depth == 0){
+			//counties do not have parent node, so use depth=-1 as an indicator of their parent's depth
+			if (depth == -1){
 				DebugLog.d("SearchLocation: depth: " + depth);
-				searchResult = LocationService.getAllNamesWithDepth(depth);
+				searchResult = LocationService.getAllNamesWithDepth(depth+1);
 			}
 			else{
 				String name = this.getQueryVal("name");

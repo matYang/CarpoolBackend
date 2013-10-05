@@ -16,7 +16,7 @@ import carpool.dbservice.EmailDaoService;
 import carpool.dbservice.MessageDaoService;
 import carpool.dbservice.NotificationDaoService;
 import carpool.dbservice.UserDaoService;
-import carpool.dbservice.authDaoService;
+import carpool.dbservice.AuthDaoService;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
 import carpool.model.Notification;
@@ -141,11 +141,11 @@ public class DaoUserServiceTest {
 				calender,calender,"paypal");
 		UserDaoService.createNewUser(defaultUser);
 		
-		String str = authDaoService.generateUserSession(1);
-		assertTrue(authDaoService.validateUserSession(1, str));
-		assertTrue(authDaoService.getUserFromSession(str).getName().equals("name"));
-		assertTrue(authDaoService.closeUserSession(str));
-		assertFalse(authDaoService.validateUserSession(1, str));
+		String str = AuthDaoService.generateUserSession(1);
+		assertTrue(AuthDaoService.validateUserSession(1, str));
+		assertTrue(AuthDaoService.getUserFromSession(str).getName().equals("name"));
+		assertTrue(AuthDaoService.closeUserSession(str));
+		assertFalse(AuthDaoService.validateUserSession(1, str));
 	}
 	
 	@Test

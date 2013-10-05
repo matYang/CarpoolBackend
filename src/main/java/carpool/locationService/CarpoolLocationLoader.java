@@ -311,7 +311,7 @@ public class CarpoolLocationLoader {
 		
 		loadedFlag = true;
 		
-		DebugLog.d("Location loaded succesfully, total depth: " + depthTracker);
+		DebugLog.d("Location loaded succesfully, ending depth: " + depthTracker);
 	}
 
 	public static boolean isLoaded(){

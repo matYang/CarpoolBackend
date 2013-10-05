@@ -108,7 +108,7 @@ public class ForgetPasswordResource extends PseudoResource{
 			newPassword = jsonString.getString("newPassword");
 			confirmNewPassword = jsonString.getString("confirmNewPassword");
 			
-			isValid = authDaoService.isResetPasswordValid(userId, authCode);
+			isValid = AuthDaoService.isResetPasswordValid(userId, authCode);
 			if (isValid){
 				if (Validator.isPasswordFormatValid(newPassword) && newPassword.equals(confirmNewPassword)){
 					passwordChanged = UserDaoService.resetUserPassword(userId, newPassword);
