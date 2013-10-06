@@ -418,22 +418,22 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 			jsonMessage.put("isRoundTrip", this.isRoundTrip());
 			jsonMessage.put("departure_location", this.getDeparture_location().toJSON());
 			jsonMessage.put("departure_time", DateUtility.castToAPIFormat(this.getDeparture_time()));
-			jsonMessage.put("departure_timeSlot", this.departure_timeSlot);
+			jsonMessage.put("departure_timeSlot", this.departure_timeSlot.code);
 			jsonMessage.put("departure_seatsNumber", this.getDeparture_seatsNumber());
 			jsonMessage.put("departure_seatsBooked", this.getDeparture_seatsBooked());
 			jsonMessage.put("daparture_priceList", new JSONArray(this.getDeparture_priceList()));
 			jsonMessage.put("arrival_location", this.getArrival_location().toJSON());
 			jsonMessage.put("arrival_time", DateUtility.castToAPIFormat(this.getArrival_time()));
-			jsonMessage.put("arrival_timeSlot", this.arrival_timeSlot);
+			jsonMessage.put("arrival_timeSlot", this.arrival_timeSlot.code);
 			jsonMessage.put("arrival_seatsNumber", this.getArrival_seatsNumber());
 			jsonMessage.put("arrival_seatsBooked", this.getArrival_seatsBooked());
 			jsonMessage.put("arrival_priceList", new JSONArray(this.getArrival_priceList()));
 			
-			jsonMessage.put("paymentMethod", this.getPaymentMethod());
+			jsonMessage.put("paymentMethod", this.getPaymentMethod().code);
 			jsonMessage.put("note", this.getNote());
-			jsonMessage.put("type", this.getType());
-			jsonMessage.put("genderRequirement", this.getGenderRequirement());
-			jsonMessage.put("state", this.getState());
+			jsonMessage.put("type", this.getType().code);
+			jsonMessage.put("genderRequirement", this.getGenderRequirement().code);
+			jsonMessage.put("state", this.getState().code);
 			jsonMessage.put("creationTime", DateUtility.castToAPIFormat(this.getCreationTime()));
 			jsonMessage.put("editTime",DateUtility.castToAPIFormat(this.getEditTime()));
 			jsonMessage.put("historyDeleted", this.isHistoryDeleted());

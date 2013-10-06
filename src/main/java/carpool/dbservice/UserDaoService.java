@@ -147,47 +147,6 @@ public class UserDaoService{
 		return false;
 	}
 
-
-	public static Message watchMessage(int id, int targetMessageId) throws UserNotFoundException{
-		User user = DaoUser.getUserById(id);
-		try {
-			Message msg = DaoMessage.getMessageById(targetMessageId);
-			if(user.getWatchList().contains(msg)){
-				return msg;
-			}
-			user.getWatchList().add(msg);
-			DaoUser.UpdateUserInDatabase(user);
-			//sent Message Watched Notification
-			Notification n = new Notification(-1, Constants.notificationType.on_user, Constants.notificationEvent.messageWatched,
-					id, user.getName(), targetMessageId, 0, msg.getOwnerId(), "Your Message XXX has beed watched by XXX",
-					Calendar.getInstance(), false, false);
-			NotificationDaoService.createNewNotification(n);
-			return msg;
-		} catch (MessageNotFoundException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-
-	public static boolean deWatchMessage(int userId, int targetMessageId) throws UserNotFoundException{
-		User user = DaoUser.getUserById(userId);
-		try {
-			Message msg = DaoMessage.getMessageById(targetMessageId);
-			HelperOperator.removeFromWatchList(user.getWatchList(), msg.getMessageId());
-			DaoUser.UpdateUserInDatabase(user);
-			return true;
-		} catch (MessageNotFoundException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return false;
-	}
-
 	
 	public static ArrayList<User> getWatchedUsers(int id) throws UserNotFoundException{
 		User user = DaoUser.getUserById(id);
@@ -197,14 +156,6 @@ public class UserDaoService{
 		return user.getSocialList();
 	}
 	
-	
-	public static ArrayList<Message> getWatchedMessaegs(int id) throws UserNotFoundException{
-		User user = DaoUser.getUserById(id);
-		if(user==null){
-			return null;
-		}
-		return user.getWatchList();
-	}
 
 
 	public static ArrayList<Message> getHistoryMessageByUserId(int id) throws UserNotFoundException{
