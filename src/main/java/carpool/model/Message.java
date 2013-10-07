@@ -451,24 +451,20 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		try{
 			return msg != null
 				    && this.getArrival_location().equals(msg.getArrival_location()) 
-				//	&& this.getArrival_Time().equals(msg.getArrival_Time()) 
-					&&
-					HelperOperator.isArrayListEqual(this.getArrival_priceList(), msg.getArrival_priceList()) && this.getArrival_seatsBooked() == msg.getArrival_seatsBooked()&&
-					this.getArrival_seatsNumber() == msg.getArrival_seatsNumber() && this.category == msg.getCategory() 
-				//	&& this.getCreationTime().equals(msg.getCreationTime())
-				//	&&this.departure_location.equals(msg.getDeparture_Location()) 
-				//	&& this.getDeparture_Time().equals(msg.getDeparture_Time())
-					&&
-					HelperOperator.isArrayListEqual(this.getDeparture_priceList(), msg.getDeparture_priceList()) && this.getDeparture_seatsBooked() == msg.getDeparture_seatsBooked() &&
-					this.getDeparture_seatsNumber() == msg.getDeparture_seatsNumber() 
-				//	&& this.getEditTime().equals(msg.getEditTime()) 
-					&&
-				    this.getGenderRequirement() == msg.getGenderRequirement() && this.isHistoryDeleted() == msg.isHistoryDeleted() &&
-					this.isRoundTrip == msg.isRoundTrip && this.getMessageId() == msg.getMessageId() && this.getNote().equals(msg.getNote()) &&
-					this.getOwnerId() == msg.getOwnerId() && this.getPaymentMethod() == msg.getPaymentMethod() 
-			        && 
-			        //this.getState() == msg.getState() &&
-					this.getType() == msg.getType()
+					&& this.getArrival_time().getTime().toString().equals(msg.getArrival_time().getTime().toString()) 
+					&& HelperOperator.isArrayListEqual(this.getArrival_priceList(), msg.getArrival_priceList()) && this.getArrival_seatsBooked() == msg.getArrival_seatsBooked()
+					&& this.getArrival_seatsNumber() == msg.getArrival_seatsNumber() && this.category == msg.getCategory() 
+					&& this.getCreationTime().getTime().toString().equals(msg.getCreationTime().getTime().toString())
+					&& this.departure_location.equals(msg.getDeparture_location()) 
+					&& this.getDeparture_time().getTime().toString().equals(msg.getDeparture_time().getTime().toString())
+					&& HelperOperator.isArrayListEqual(this.getDeparture_priceList(), msg.getDeparture_priceList()) && this.getDeparture_seatsBooked() == msg.getDeparture_seatsBooked() 
+					&& this.getDeparture_seatsNumber() == msg.getDeparture_seatsNumber() 
+					&& this.getEditTime().getTime().toString().equals(msg.getEditTime().getTime().toString()) 
+					&& this.getGenderRequirement().code == msg.getGenderRequirement().code && this.isHistoryDeleted() == msg.isHistoryDeleted()
+					&& this.isRoundTrip == msg.isRoundTrip && this.getMessageId() == msg.getMessageId() && this.getNote().equals(msg.getNote()) 
+					&& this.getOwnerId() == msg.getOwnerId() && this.getPaymentMethod().code == msg.getPaymentMethod().code 
+			        && this.getState().code == msg.getState().code 
+			        && this.getType().code == msg.getType().code
 					&& this.getDeparture_timeSlot() == msg.getDeparture_timeSlot()
 					&& this.getArrival_timeSlot() == msg.getArrival_timeSlot();
 				
