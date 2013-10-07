@@ -231,7 +231,7 @@ public class Notification implements PseudoModel{
 		JSONObject jsonNotification = new JSONObject(this);
 		
 		try {
-			jsonNotification.put("creationTime", DateUtility.CalendarToUTCString(this.getCreationTime()));
+			jsonNotification.put("creationTime", DateUtility.castToAPIFormat(this.getCreationTime()));
 			
 			jsonNotification.put("notificationType", this.getNotificationType());
 			jsonNotification.put("notificationEvent", this.getNotificationEvent());

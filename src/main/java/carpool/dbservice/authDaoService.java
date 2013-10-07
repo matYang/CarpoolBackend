@@ -12,7 +12,7 @@ import carpool.exception.ValidationException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.User;
 
-public class authDaoService {
+public class AuthDaoService {
 
 	/**
 	 * only checks for login, compares email and password to results from db,

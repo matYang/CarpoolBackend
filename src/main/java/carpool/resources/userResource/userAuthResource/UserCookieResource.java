@@ -17,10 +17,7 @@ import carpool.exception.PseudoException;
 import carpool.exception.auth.AccountAuthenticationException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
-import carpool.mappings.*;
 import carpool.model.*;
-
-
 
 public class UserCookieResource extends ServerResource{
 
@@ -51,7 +48,7 @@ public class UserCookieResource extends ServerResource{
 		else{
 			try{
 				String decryptedString = SessionCrypto.decrypt(sessionString.get(0));
-				login =  authDaoService.validateUserSession(id, decryptedString);
+				login =  AuthDaoService.validateUserSession(id, decryptedString);
 			}
 			catch (Exception e){
 				e.printStackTrace();
@@ -105,7 +102,7 @@ public class UserCookieResource extends ServerResource{
 	 */
 	public static CookieSetting openCookieSession(int id) throws PseudoException{
 		// generate session string and stores session in Redis
-        String sessionString = authDaoService.generateUserSession(id);
+        String sessionString = AuthDaoService.generateUserSession(id);
         String encryptedString = "";
         CookieSetting newCookieSetting;
         
@@ -151,7 +148,7 @@ public class UserCookieResource extends ServerResource{
 		else{
 			try{
 				String decryptedString = SessionCrypto.decrypt(sessionString.get(0));
-				logout =  authDaoService.closeUserSession(decryptedString);
+				logout =  AuthDaoService.closeUserSession(decryptedString);
 			}
 			catch (Exception e){
 				throw new SessionEncodingException();

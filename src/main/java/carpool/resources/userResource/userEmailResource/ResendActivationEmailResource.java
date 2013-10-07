@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.*;
 import org.restlet.util.Series;
 import org.restlet.data.Cookie;
@@ -25,10 +26,8 @@ import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.factory.JSONFactory;
-import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
-
 
 
 public class ResendActivationEmailResource extends PseudoResource{
@@ -61,7 +60,8 @@ public class ResendActivationEmailResource extends PseudoResource{
         	}
         	
 		} catch(PseudoException e){
-			this.doPseudoException(e);
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
 		} catch (Exception e) {
 			this.doException(e);
 		}

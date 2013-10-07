@@ -27,6 +27,9 @@ public class LocationService {
 		CarpoolLocationLoader.loadLocationFromFile("LocationData.txt");
 		parentNodeMap = CarpoolLocationLoader.getParentNodeMap();
 		lookupMap = CarpoolLocationLoader.getLookupMap();
+		if (!CarpoolLocationLoader.isLoaded()){
+			throw new LocationException("Location data not successfully loaded");
+		}
 	}
 	
 	private static final CarpoolLocation getNode(int depth, String name) throws LocationException{

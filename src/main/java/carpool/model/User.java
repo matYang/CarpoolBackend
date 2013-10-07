@@ -642,11 +642,11 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 			jsonUser.put("phone", this.getPhone());
 			jsonUser.put("qq", this.getQq());
 			jsonUser.put("age", this.getAge());
-			jsonUser.put("gender", this.getGender());
-			jsonUser.put("birthday", DateUtility.CalendarToUTCString(this.getBirthday()));
+			jsonUser.put("gender", this.getGender().code);
+			jsonUser.put("birthday", DateUtility.castToAPIFormat(this.getBirthday()));
 			jsonUser.put("location", this.location.toJSON());
-			jsonUser.put("lastLogin", DateUtility.CalendarToUTCString(this.getLastLogin()));
-			jsonUser.put("creationTime", DateUtility.CalendarToUTCString(this.getCreationTime()));
+			jsonUser.put("lastLogin", DateUtility.castToAPIFormat(this.getLastLogin()));
+			jsonUser.put("creationTime", DateUtility.castToAPIFormat(this.getCreationTime()));
 
 			jsonUser.put("historyList", JSONFactory.toJSON(this.getHistoryList()));
 			jsonUser.put("watchList", JSONFactory.toJSON(this.getWatchList()));
@@ -660,8 +660,8 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 			jsonUser.put("emailNotice", this.isEmailNotice());
 			jsonUser.put("phoneNotice", this.isPhoneNotice());
 			
-			jsonUser.put("state", this.getState());
-			jsonUser.put("searchState", this.getSearchState());
+			jsonUser.put("state", this.getState().code);
+			jsonUser.put("searchState", this.getSearchState().code);
 			jsonUser.put("level", this.getLevel());
 			jsonUser.put("averageScore", this.getAverageScore());
 			jsonUser.put("totalTranscations", this.getTotalTranscations());

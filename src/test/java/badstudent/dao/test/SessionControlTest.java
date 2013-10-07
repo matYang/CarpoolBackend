@@ -16,7 +16,7 @@ import carpool.database.DaoBasic;
 import carpool.database.DaoUser;
 import carpool.dbservice.EmailDaoService;
 import carpool.dbservice.UserDaoService;
-import carpool.dbservice.authDaoService;
+import carpool.dbservice.AuthDaoService;
 import carpool.encryption.SessionCrypto;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
@@ -55,7 +55,7 @@ public class SessionControlTest {
 		
 		User topBarUser;
 		try {
-			topBarUser = authDaoService.authenticateUserLogin("uwse@me.com", "1");
+			topBarUser = AuthDaoService.authenticateUserLogin("uwse@me.com", "1");
 			assertTrue(topBarUser != null);
 			if (topBarUser != null && topBarUser.isAbleToLogin()){
 				CookieSetting newCookie = UserCookieResource.openCookieSession(topBarUser.getUserId());
@@ -65,7 +65,7 @@ public class SessionControlTest {
 				
 				Series<Cookie> cookies = new Series<Cookie>(null);
 				cookies.add(newCookie);
-				User newUser1 = authDaoService.getUserFromSession(UserCookieResource.getSessionString(cookies));
+				User newUser1 = AuthDaoService.getUserFromSession(UserCookieResource.getSessionString(cookies));
 
 //				Common.d(newUser1.toString());
 				

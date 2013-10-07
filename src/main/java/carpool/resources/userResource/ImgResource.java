@@ -17,6 +17,7 @@ import java.util.Random;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.FileRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.*;
 import org.restlet.util.Series;
 import org.restlet.engine.header.Header;
@@ -76,7 +77,8 @@ public class ImgResource extends PseudoResource{
 
 			
 		} catch (PseudoException e){
-        	this.doPseudoException(e);
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
         }  catch (Exception e) {
 			this.doException(e);
 		}
@@ -139,7 +141,8 @@ public class ImgResource extends PseudoResource{
 			}
 
         } catch (PseudoException e){
-        	this.doPseudoException(e);
+        	this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
         } catch (Exception e) {
             this.doException(e);
         }

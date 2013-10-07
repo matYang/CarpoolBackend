@@ -1,13 +1,11 @@
 package carpool.resources.userResource;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import org.restlet.engine.header.Header;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.*;
 import org.restlet.util.Series;
 import org.restlet.data.*;
@@ -20,14 +18,9 @@ import carpool.common.DebugLog;
 import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
-import carpool.exception.auth.DuplicateSessionCookieException;
-import carpool.exception.auth.SessionEncodingException;
-import carpool.exception.user.UserNotFoundException;
 import carpool.factory.JSONFactory;
-import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
-
 
 
 public class UserWatchUserResource extends PseudoResource{  
@@ -59,7 +52,8 @@ public class UserWatchUserResource extends PseudoResource{
         	}
         	
 		} catch (PseudoException e){
-        	this.doPseudoException(e);
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
         } catch(Exception e){
 			this.doException(e);
 		}
@@ -93,7 +87,8 @@ public class UserWatchUserResource extends PseudoResource{
 			}
 
 		} catch (PseudoException e) {
-			this.doPseudoException(e);
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
 		} catch (Exception e) {
 			this.doException(e);
 		}
@@ -124,7 +119,8 @@ public class UserWatchUserResource extends PseudoResource{
 			}
 
 		} catch (PseudoException e) {
-			this.doPseudoException(e);
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
 		} catch(Exception e){
 			this.doException(e);
 		}

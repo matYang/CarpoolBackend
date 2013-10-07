@@ -9,6 +9,7 @@ import java.util.Calendar;
 import org.restlet.engine.header.Header;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.*;
 import org.restlet.util.Series;
 import org.restlet.data.*;
@@ -66,7 +67,8 @@ public class TransactionResourceId extends PseudoResource{
         	}
 			
 		} catch (PseudoException e){
-        	this.doPseudoException(e);
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
         } catch(Exception e){
 			this.doException(e);
 		}
@@ -131,7 +133,8 @@ public class TransactionResourceId extends PseudoResource{
 	        newJsonTransaction = JSONFactory.toJSON(transaction);
 
 		} catch (PseudoException e){
-        	this.doPseudoException(e);
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
         } catch(Exception e){
 			this.doException(e);
 		}
@@ -166,7 +169,8 @@ public class TransactionResourceId extends PseudoResource{
 		    }
 			
         } catch (PseudoException e){
-        	this.doPseudoException(e);
+        	this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
         } catch(Exception e){
 			this.doException(e);
 		}

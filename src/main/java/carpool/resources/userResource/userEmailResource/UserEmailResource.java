@@ -22,11 +22,8 @@ import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.factory.JSONFactory;
-import carpool.mappings.*;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
-
-
 
 public class UserEmailResource extends PseudoResource{
 

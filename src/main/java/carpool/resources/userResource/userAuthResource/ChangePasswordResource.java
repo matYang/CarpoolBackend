@@ -2,6 +2,7 @@ package carpool.resources.userResource.userAuthResource;
 
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.*;
 import org.restlet.data.Status;
 import org.json.JSONObject;
@@ -76,8 +77,8 @@ public class ChangePasswordResource extends PseudoResource{
 				quickResponseText = "Invalid passwod format";
 			}
 		} catch (PseudoException e){
-			this.doPseudoException(e);
-			quickResponseText = "Password change failed with exception type " + e.getExeceptionType() + " text: " + e.getExceptionText();
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
         } catch (Exception e){
         	this.doException(e);
         	quickResponseText = "Password change failed with exception " + e.toString();

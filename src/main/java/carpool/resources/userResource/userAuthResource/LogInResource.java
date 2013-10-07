@@ -11,6 +11,7 @@ import java.util.Random;
 
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.*;
 import org.restlet.util.Series;
 import org.restlet.data.Cookie;
@@ -57,7 +58,7 @@ public class LogInResource extends PseudoResource{
 			password = jsonString.getString("password");
 			
 			DebugLog.d("log in, receving paramters: " + email + " " + password);
-			user = authDaoService.authenticateUserLogin(email, password);
+			user = AuthDaoService.authenticateUserLogin(email, password);
 			
 			if (user != null && user.isAbleToLogin()){
 				
@@ -83,7 +84,8 @@ public class LogInResource extends PseudoResource{
 			}
 		
 		} catch (PseudoException e){
-        	this.doPseudoException(e);
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
         } 
 		catch (Exception e) {
 			this.doException(e);

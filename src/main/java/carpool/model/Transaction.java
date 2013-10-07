@@ -504,9 +504,9 @@ public class Transaction implements PseudoModel{
 		JSONObject jsonTransaction = new JSONObject(this);
 		
 		try {
-			jsonTransaction.put("startTime", DateUtility.CalendarToUTCString(this.getStartTime()));
-			jsonTransaction.put("endTime", DateUtility.CalendarToUTCString(this.getEndTime()));
-			jsonTransaction.put("creationTime", DateUtility.CalendarToUTCString(this.getCreationTime()));
+			jsonTransaction.put("startTime", DateUtility.castToAPIFormat(this.getStartTime()));
+			jsonTransaction.put("endTime", DateUtility.castToAPIFormat(this.getEndTime()));
+			jsonTransaction.put("creationTime", DateUtility.castToAPIFormat(this.getCreationTime()));
 			
 			jsonTransaction.put("location", this.location.toJSON());
 			

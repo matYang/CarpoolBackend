@@ -31,7 +31,7 @@ public class EmailDaoService {
 			user.setEmail(newEmail);
 			user.setEmailActivated(false);
 			DaoUser.UpdateUserInDatabase(user);
-			authDaoService.closeUserSession(sessionString);
+			AuthDaoService.closeUserSession(sessionString);
 			EmailDaoService.sendActivationEmail(userId, newEmail);
 			return true;
 		} catch (Exception e) {

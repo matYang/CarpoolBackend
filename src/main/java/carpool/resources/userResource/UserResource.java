@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.restlet.engine.header.Header;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.*;
 import org.restlet.util.Series;
 import org.restlet.data.Status;
@@ -21,10 +22,10 @@ import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.ValidationException;
 import carpool.factory.JSONFactory;
+import carpool.locationService.LocationService;
 import carpool.model.*;
 import carpool.model.representation.LocationRepresentation;
 import carpool.resources.PseudoResource;
-
 
 
 public class UserResource extends PseudoResource{
@@ -46,7 +47,7 @@ public class UserResource extends PseudoResource{
 				throw new ValidationException("Email already in use");
 			}
 			
-			if (Validator.isPasswordFormatValid(password) && Validator.isEmailFormatValid(email) && LocationRepresentation.isLocationVaild(location)){
+			if (Validator.isPasswordFormatValid(password) && Validator.isEmailFormatValid(email) && LocationService.isLocationRepresentationValid(location)){
 				user = new User(password, email, location);
 			}
 		} catch (JSONException|IOException e) {
@@ -96,7 +97,8 @@ public class UserResource extends PseudoResource{
 			}
 
 		} catch(PseudoException e){
-			this.doPseudoException(e);
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
 		}
 
 		Representation result = new JsonRepresentation(newJsonUser);

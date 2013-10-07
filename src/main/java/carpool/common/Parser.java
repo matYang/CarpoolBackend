@@ -4,6 +4,8 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.junit.Test;
 
 public class Parser {
@@ -39,6 +41,21 @@ public class Parser {
 		
 		return null;
 	}
+	
+	public static ArrayList<Integer> parsePriceList(JSONArray jsonList){
+		ArrayList<Integer> list = new ArrayList<Integer>();   
+		try {
+			if (jsonList != null) { 
+				for (int i = 0; i < jsonList.length(); i++){ 
+					list.add(new Integer(jsonList.getInt(i)));
+				}  
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+			
 	
 	
 	@Test

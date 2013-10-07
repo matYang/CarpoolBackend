@@ -1,39 +1,26 @@
 package carpool.resources.dianmingResource;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
 
 import org.restlet.engine.header.Header;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.*;
 import org.restlet.util.Series;
 import org.restlet.data.*;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
+import carpool.common.Parser;
 import carpool.constants.Constants;
-import carpool.constants.Constants.messageState;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
-import carpool.exception.auth.DuplicateSessionCookieException;
-import carpool.exception.auth.SessionEncodingException;
-import carpool.exception.message.MessageNotFoundException;
-import carpool.exception.message.MessageOwnerNotMatchException;
 import carpool.factory.JSONFactory;
-import carpool.mappings.*;
 import carpool.model.*;
 import carpool.model.representation.LocationRepresentation;
 import carpool.resources.PseudoResource;
-import carpool.resources.userResource.UserResource;
-import carpool.resources.userResource.userAuthResource.UserCookieResource;
 
 
 
@@ -48,9 +35,14 @@ public class DMResourceId extends PseudoResource{
 			jsonMessage = (new JsonRepresentation(entity)).getJsonObject();
 			DebugLog.d("@Post::receive jsonMessage: " +  jsonMessage.toString());
 			
-			message = new Message(messageId, jsonMessage.getInt("ownerId"), Constants.paymentMethod.values()[jsonMessage.getInt("paymentMethod")], 
-					new LocationRepresentation(jsonMessage.getJSONObject("location").getString("province"), jsonMessage.getJSONObject("location").getString("city"), jsonMessage.getJSONObject("location").getString("region"),jsonMessage.getJSONObject("location").getString("university")), DateUtility.parseDateString(jsonMessage.getString("startTime")), DateUtility.parseDateString(jsonMessage.getString("endTime")), 
-					jsonMessage.getString("note"), Constants.messageType.values()[jsonMessage.getInt("type")], Constants.gender.values()[jsonMessage.getInt("genderRequirement")], jsonMessage.getInt("price"));
+			message = new Message(jsonMessage.getInt("ownerId"), jsonMessage.getBoolean("isRoundTrip"),
+					new LocationRepresentation(jsonMessage.getJSONObject("departure_location")), DateUtility.castFromAPIFormat(jsonMessage.getString("departure_time")), Constants.DayTimeSlot.values()[jsonMessage.getInt("departure_timeSlot")],
+					jsonMessage.getInt("departure_seatsNumber"), Parser.parsePriceList(jsonMessage.getJSONArray("departure_priceList")),
+					new LocationRepresentation(jsonMessage.getJSONObject("arrival_location")), DateUtility.castFromAPIFormat(jsonMessage.getString("arrival_time")), Constants.DayTimeSlot.values()[jsonMessage.getInt("arrival_timeSlot")],
+					jsonMessage.getInt("arrival_seatsNumber"), Parser.parsePriceList(jsonMessage.getJSONArray("arrival_priceList")),
+					Constants.paymentMethod.values()[jsonMessage.getInt("paymentMethod")],
+					jsonMessage.getString("note"), Constants.messageType.values()[jsonMessage.getInt("type")], Constants.gender.values()[jsonMessage.getInt("genderRequirement")]);
+		
 		} catch (Exception e){
 			  e.printStackTrace();
 			  DebugLog.d("DMResourceId:: parseJSON error, likely invalid gender format");
@@ -86,7 +78,8 @@ public class DMResourceId extends PseudoResource{
         	}
 			
 		} catch (PseudoException e){
-        	this.doPseudoException(e);
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
         } catch (Exception e){
 			this.doException(e);
 		}
@@ -134,7 +127,8 @@ public class DMResourceId extends PseudoResource{
 	        }
 			
 		} catch (PseudoException e){
-        	this.doPseudoException(e);
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
         } catch (Exception e){
 			this.doException(e);
 		}
@@ -167,7 +161,8 @@ public class DMResourceId extends PseudoResource{
 			}
 			
         } catch (PseudoException e){
-        	this.doPseudoException(e);
+        	this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
         } catch (Exception e){
 			this.doException(e);
 		}

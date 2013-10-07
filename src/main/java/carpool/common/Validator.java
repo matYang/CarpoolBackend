@@ -8,8 +8,6 @@ import java.util.Date;
 
 import carpool.constants.Constants;
 import carpool.constants.Constants.userSearchState;
-import carpool.mappings.AllProvinceMappings;
-import carpool.mappings.MappingBase;
 
 
 public class Validator {

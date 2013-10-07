@@ -1,44 +1,31 @@
 package carpool.resources.dianmingResource;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.*;
 import org.restlet.util.Series;
 import org.restlet.engine.header.Header;
 import org.restlet.data.Status;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import carpool.common.DateUtility;
-import carpool.common.Validator;
 import carpool.constants.Constants;
-import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.userSearchState;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.AccountAuthenticationException;
-import carpool.exception.auth.DuplicateSessionCookieException;
-import carpool.exception.auth.SessionEncodingException;
-import carpool.exception.message.MessageNotFoundException;
-import carpool.exception.user.UserNotFoundException;
-import carpool.exception.validation.UnacceptableSearchStateException;
 import carpool.factory.JSONFactory;
-import carpool.mappings.*;
+import carpool.locationService.LocationService;
 import carpool.model.*;
 import carpool.model.representation.LocationRepresentation;
+import carpool.model.representation.SearchRepresentation;
 import carpool.resources.PseudoResource;
-import carpool.resources.userResource.UserResource;
-import carpool.resources.userResource.userAuthResource.UserCookieResource;
-
 
 
 public class DMSearchResource extends PseudoResource{
@@ -49,16 +36,13 @@ public class DMSearchResource extends PseudoResource{
 		JSONArray response = new JSONArray();
 		
 		try {
+			String srStr = this.getQueryVal("searchRepresentation");
 			int userId = Integer.parseInt(this.getQueryVal("userId"));
 			
-			LocationRepresentation location = new LocationRepresentation(this.getQueryVal("location"));
-			Calendar date = DateUtility.parseDateString(this.getQueryVal("date"));
-			String searchStateString = this.getQueryVal("searchState");
-			userSearchState searchState = Constants.userSearchState.values()[Integer.parseInt(searchStateString)];
-			
+			SearchRepresentation sr = new SearchRepresentation(srStr);
 			
 			//not checking for date..because an invalid date will have no search result anyways
-			if (LocationRepresentation.isLocationVaild(location) && searchState != null){
+			if (LocationService.isLocationRepresentationValid(sr.getDepartureLocation()) && LocationService.isLocationRepresentationValid(sr.getArrivalLocation()) ){
 				boolean login = false;
 				try{
 					this.validateAuthentication(userId);
@@ -69,44 +53,17 @@ public class DMSearchResource extends PseudoResource{
 				}
 						
 				ArrayList<Message> searchResult = new ArrayList<Message>();
+				searchResult = MessageDaoService.primaryMessageSearch(sr, login, userId);
 				
-				//if not loged in only basic search can be used
-				if (!login){
-					//only basic userState types
-					if(searchState == Constants.userSearchState.universityAsk || searchState == Constants.userSearchState.universityHelp || searchState == Constants.userSearchState.regionAsk || searchState == Constants.userSearchState.regionHelp){
-						searchResult = MessageDaoService.primaryMessageSearch(location, date, searchState);
-						if (searchResult == null){
-							setStatus(Status.SERVER_ERROR_INTERNAL);
-						}
-						else{
-							response = JSONFactory.toJSON(searchResult);
-							setStatus(Status.SUCCESS_OK);
-						}
-					}
-					//other wise unauthorized, must login
-					else{
-						setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-					}
-				}
-				//if logged in, extended search used to record search state
-				else{
-					searchResult = MessageDaoService.primaryMessageSearch(location, date, searchState);
-					if (searchResult == null){
-						setStatus(Status.SERVER_ERROR_INTERNAL);
-					}
-					else{
-						response = JSONFactory.toJSON(searchResult);
-						setStatus(Status.SUCCESS_OK);
-					}
-				}
-				
+				response = JSONFactory.toJSON(searchResult);
 			}
 			else{
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			}
 			
 		} catch (PseudoException e){
-        	this.doPseudoException(e);
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
         } catch (Exception e){
 			this.doException(e);
 		}
