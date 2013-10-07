@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.Validator;
 import carpool.constants.Constants;
@@ -43,6 +44,7 @@ public class UserContactResource extends PseudoResource{
 			int gender = jsonContact.getInt("gender");
 			String phone = jsonContact.getString("phone");
 			String qq = jsonContact.getString("qq");
+			String birthday = jsonContact.getString("birthday");
 			//no DB interaction here
 			if (!(Validator.isNameFormatValid(name) && Validator.isAgeValid(age) && Constants.gender.values()[gender] != null && Validator.isPhoneFormatValid(phone) && Validator.isQqFormatValid(qq))){
 				return null;
@@ -85,6 +87,7 @@ public class UserContactResource extends PseudoResource{
 				user.setGender(Constants.gender.values()[contact.getInt("gender")]);
 				user.setPhone(contact.getString("phone"));
 				user.setQq(contact.getString("qq"));
+				user.setBirthday(DateUtility.castFromAPIFormat(contact.getString("birthday")));
 				UserDaoService.updateUser(user);
 				
 				response = JSONFactory.toJSON(user);

@@ -61,8 +61,10 @@ public class UserDaoService{
 
 	public static User updateUser(User user) throws PseudoException{
 		try {
+
 			DaoUser.UpdateUserInDatabase(user);
 			return user;
+			
 		}catch(Exception e){
 			DebugLog.d(e.getMessage());
 			throw new PseudoException(e.getMessage());
@@ -167,6 +169,10 @@ public class UserDaoService{
 	}
 	
 	
+	
+	
+	
+	//TODO
 	public static ArrayList<Transaction> getTransactionByUserId(int id) throws UserNotFoundException{
 		User user = getUserById(id);
 		if(user==null){

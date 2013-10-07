@@ -49,47 +49,8 @@ import carpool.model.*;
 import carpool.resources.PseudoResource;
 
 
-
-
 public class ImgResource extends PseudoResource{
 
-	@Get 
-	public Representation getImage(Representation entity){
-		
-        int id = -1;
-        boolean goOn = false;
-        JSONObject jsonObject = new JSONObject();
-        String imgPath = "";
-        
-        try {
-			id = Integer.parseInt(this.getReqAttr("id"));
-			this.validateAuthentication(id);
-			DebugLog.d("API::GetImage:: " + id);
-			
-        	imgPath = UserDaoService.getUserById(id).getImgPath();
-        	if (imgPath != null){
-        		setStatus(Status.SUCCESS_OK);
-        		jsonObject = JSONFactory.toJSON(imgPath);
-        	}
-        	else{
-        		setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-        	}
-
-			
-		} catch (PseudoException e){
-			this.addCORSHeader();
-			return new StringRepresentation(this.doPseudoException(e));
-        }  catch (Exception e) {
-			this.doException(e);
-		}
-        
-        
-        Representation result = new JsonRepresentation(jsonObject);
-        
-        this.addCORSHeader(); 
-        return result;
-		
-	}
 		
 	@Put
 	//check for FileRepresentation

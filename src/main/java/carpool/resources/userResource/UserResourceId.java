@@ -39,7 +39,6 @@ public class UserResourceId extends PseudoResource{
 			//used for personal page, able to retrieve any user's information
 	    	User user = UserDaoService.getUserById(intendedUserId);
 	    	if (user != null){
-	        	//TODO user.setPassword(Message.goofyPasswordTrickHackers);
 	            jsonObject = JSONFactory.toJSON(user);
 	    	}
 	    	else{
