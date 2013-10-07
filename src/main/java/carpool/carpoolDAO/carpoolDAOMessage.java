@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import carpool.common.Parser;
 import carpool.constants.Constants;
+import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.userSearchState;
 import carpool.common.DateUtility;
@@ -21,38 +22,81 @@ import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
+import carpool.model.representation.SearchRepresentation;
 
 
 public class carpoolDAOMessage{
 	
-	public static ArrayList<Message> searchMessageSingle(String location, String date,String type) throws UserNotFoundException {
-		date = date.split(" ")[0];
+	public static ArrayList<Message> searchMessage(SearchRepresentation SR) throws UserNotFoundException {
+		 boolean isRoundTrip = SR.isRoundTrip();
+		 LocationRepresentation departureLocation = SR.getDepartureLocation();		 
+		 LocationRepresentation arrivalLocation = SR.getArrivalLocation();		 
+		 Calendar departureDate = SR.getDepartureDate();		 
+		 Calendar arrivalDate = SR.getArrivalDate();			 
+		 messageType targetType = SR.getTargetType();
+//		 DayTimeSlot departureTimeSlot = SR.getDepartureTimeSlot();
+//		 DayTimeSlot arrivalTimeSlot = SR.getArrivalTimeSlot();
 		ArrayList<Message> retVal = new ArrayList<Message>();
-		String query = "SELECT * from carpoolDAOMessage WHERE location LIKE ? AND (startTime <= ? OR endTime >= ?) AND type LIKE ?;";
+		//SR.isRoundTrip()==false
+		String query = "SELECT * from carpoolDAOMessage WHERE((isRoundTrip NOT LIKE ? AND (((departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ?"+
+		"AND arrival_primaryLocation LIKE ? AND departure_Time LIKE ?) OR ((arrival_seatsNumber > arrival_seatsBooked) AND arrival_primaryLocation LIKE ? AND departure_primaryLocation LIKE ? AND arrival_Time LIKE ?)))"+
+		"OR(isRoundTrip LIKE ? AND (departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ? AND arrival_primaryLocation LIKE ? AND departure_Time LIKE ?)) AND messageType LIKE ?;";
+		//SR.isRoundTrip()==true		
+		String query2="SELECT * from carpoolDAOMessage WHERE((isRoundTrip LIKE ? AND departure_primaryLocation LIKE ?"+
+				"AND arrival_primaryLocation LIKE ? AND ((departure_Time LIKE ?AND (departure_seatsNumber > departure_seatsBooked)) OR (arrival_Time LIKE ? AND (arrival_seatsNumber > arrival_seatsBooked))))OR(isRoundTrip NOT LIKE ? "+
+				"AND (((departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ? AND arrival_primaryLocation LIKE ? AND departure_Time LIKE ?) OR ((departure_seatsNumber > departure_seatsBooked) AND "+
+				"arrival_primaryLocation LIKE ? AND departure_primaryLocation LIKE ? AND departure_Time LIKE ?)) ))AND messageType LIKE ?;";
+		
+		if(!isRoundTrip){
 		try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
-			stmt.setString(1, location);
-			stmt.setString(2, date);
-			stmt.setString(3, date);
-			stmt.setString(4, type);
-			ResultSet rs = stmt.executeQuery();
-			
-				while(rs.next()){
+			stmt.setInt(1, isRoundTrip ? 1 : 0);			
+			stmt.setString(2, departureLocation.getPrimaryLocationString());							
+			stmt.setString(3, arrivalLocation.getPrimaryLocationString());	
+			stmt.setString(4, DateUtility.toSQLDateTime(departureDate));
+			stmt.setString(5, departureLocation.getPrimaryLocationString());							
+			stmt.setString(6, arrivalLocation.getPrimaryLocationString());	
+			stmt.setString(7, DateUtility.toSQLDateTime(departureDate));			
+			stmt.setInt(8, isRoundTrip ? 1 :0);
+			stmt.setString(9, departureLocation.getPrimaryLocationString());			
+			stmt.setString(10, arrivalLocation.getPrimaryLocationString());		
+			stmt.setString(11, DateUtility.toSQLDateTime(departureDate));			
+			stmt.setInt(12,targetType.code);
+			ResultSet rs = stmt.executeQuery();			
+				while(rs.next()){									
 					retVal.add(createMessageByResultSet(rs));
-				}
-			
+					}			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DebugLog.d(e.getMessage());
 		}
+		}
+		else{
+			try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query2)){
+				stmt.setInt(1, isRoundTrip ? 1 : 0);
+				stmt.setString(2, departureLocation.getPrimaryLocationString());		
+				stmt.setString(3, arrivalLocation.getPrimaryLocationString());	
+				stmt.setString(4, DateUtility.toSQLDateTime(departureDate));				
+				stmt.setString(5, DateUtility.toSQLDateTime(arrivalDate));
+				stmt.setInt(6, isRoundTrip ? 1 : 0);
+				stmt.setString(7, departureLocation.getPrimaryLocationString());
+				stmt.setString(8, arrivalLocation.getPrimaryLocationString());			
+				stmt.setString(9, DateUtility.toSQLDateTime(departureDate));
+				stmt.setString(10, departureLocation.getPrimaryLocationString());
+				stmt.setString(11, arrivalLocation.getPrimaryLocationString());
+				stmt.setString(12, DateUtility.toSQLDateTime(arrivalDate));
+				stmt.setInt(13,targetType.code);				
+				ResultSet rs = stmt.executeQuery();				
+					while(rs.next()){									
+						retVal.add(createMessageByResultSet(rs));
+					}				
+			} catch (SQLException e) {
+				e.printStackTrace();
+				DebugLog.d(e.getMessage());
+			}
+		}
 		return retVal;
 	}
 	
-	public static ArrayList<Message> searchMessageRegion(String location,String date, String type) throws UserNotFoundException {
-		date = date.split(" ")[0];
-		String[] locations = location.split(" ");
-		location = locations[0]+" "+locations[1]+" "+locations[2]+" %";
-		return searchMessageSingle(location, date, type);
-	}
 	
 	public static Message addMessageToDatabase(Message msg){
 		String query = "INSERT INTO carpoolDAOMessage (ownerId,isRoundTrip," +
@@ -187,9 +231,9 @@ public class carpoolDAOMessage{
 		return message;
 	}
 	
-	public static ArrayList<Message> getAll() throws UserNotFoundException{
+	public static ArrayList<Message> getRecentMessages() throws UserNotFoundException{
 		ArrayList<Message> retVal = new ArrayList<Message>();
-		String query = "SELECT * from carpoolDAOMessage;";
+		String query = "SELECT * from carpoolDAOMessage ORDER BY creationTime DESC LIMIT 10;";
 		try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){

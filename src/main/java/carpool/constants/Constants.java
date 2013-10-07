@@ -175,7 +175,7 @@ public class Constants {
     }
     //states of the message, more states reserved for future uses
     public static enum messageState{
-    	deleted(2),expired(1),normal(0);
+    	deleted(0),expired(1),normal(2);
         public int code;
         messageState(int code){
             this.code = code;
