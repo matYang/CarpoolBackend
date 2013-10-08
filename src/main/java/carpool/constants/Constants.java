@@ -4,7 +4,7 @@ package carpool.constants;
 
 public class Constants {
 
-    public static final int max_recents = 3;
+    public static final int max_recents = 10;
     public static final int max_displayRecents = 4;
     public static final long max_userLength = 4194304l;
     public static final long max_feedBackLength = 200000l;

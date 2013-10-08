@@ -12,10 +12,10 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.Constants;
 import carpool.constants.Constants.paymentMethod;
-import carpool.database.DaoBasic;
-import carpool.database.DaoMessage;
+import carpool.database.carpoolDaoBasic;
+import carpool.database.carpoolDaoMessage;
 import carpool.database.DaoTransaction;
-import carpool.database.DaoUser;
+import carpool.database.carpoolDaoUser;
 import carpool.dbservice.MessageDaoService;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.model.Message;
@@ -70,14 +70,14 @@ public class DaoDMMessageTest {
 				1, "targetUserImgPath", "targetUserName", 1,1,1, 3, "messageNote", paymentMethod.offline, 1,
 				"requestInfo", "responseInfo", calender, calender, new LocationRepresentation("a a a a"), false, false, Constants.transactionState.init, true, calender);
 		try {
-			DaoUser.addUserToDatabase(defaultUser1);
-			DaoUser.addUserToDatabase(defaultUser2);
+			carpoolDaoUser.addUserToDatabase(defaultUser1);
+			carpoolDaoUser.addUserToDatabase(defaultUser2);
 		} catch (Exception e) {
 			assertTrue(false);
 		}
-		DaoMessage.addMessageToDatabase(default1);
-		DaoMessage.addMessageToDatabase(default2);
-		DaoMessage.addMessageToDatabase(default3);
+		carpoolDaoMessage.addMessageToDatabase(default1);
+		carpoolDaoMessage.addMessageToDatabase(default2);
+		carpoolDaoMessage.addMessageToDatabase(default3);
 		DaoTransaction.addTransactionToDatabase(defaultT1);
 		DaoTransaction.addTransactionToDatabase(defaultT2);
 		try {
@@ -94,26 +94,26 @@ public class DaoDMMessageTest {
 	public void updateMessage(){
 		init();
 		try {
-			DaoUser.addUserToDatabase(new User());
+			carpoolDaoUser.addUserToDatabase(new User());
 			User user = new User();
 			user.setPhone("aaa");
 			user.setEmail("bbb");
-			DaoUser.addUserToDatabase(user);
+			carpoolDaoUser.addUserToDatabase(user);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			assertTrue(false);
 		}
-		int oldid = DaoMessage.addMessageToDatabase(default1).getMessageId();
+		int oldid = carpoolDaoMessage.addMessageToDatabase(default1).getMessageId();
 		default2.setMessageId(oldid);
 		try {
-			DaoMessage.UpdateMessageInDatabase(default2);
+			carpoolDaoMessage.UpdateMessageInDatabase(default2);
 		} catch (MessageNotFoundException e) {
 			DebugLog.d("Message Not Found");
 			assertTrue(false);
 		}
 		Message msg = null;
 		try {
-			msg = DaoMessage.getMessageById(1);
+			msg = carpoolDaoMessage.getMessageById(1);
 		} catch (MessageNotFoundException e) {
 			DebugLog.d("Message Not Found");
 			assertTrue(false);
@@ -147,14 +147,14 @@ public class DaoDMMessageTest {
 	public void createMessage(){
 		init();
 		try {
-			DaoUser.addUserToDatabase(new User());
+			carpoolDaoUser.addUserToDatabase(new User());
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			assertTrue(false);
 		}
-		Message msg = DaoMessage.addMessageToDatabase(default1);
+		Message msg = carpoolDaoMessage.addMessageToDatabase(default1);
 		try {
-			msg = DaoMessage.getMessageById(msg.getMessageId());
+			msg = carpoolDaoMessage.getMessageById(msg.getMessageId());
 		} catch (MessageNotFoundException e) {
 			DebugLog.d("Message Not Found");
 			assertTrue(false);
@@ -198,7 +198,7 @@ public class DaoDMMessageTest {
 		group.add("a a a a");
 		defaultUser1.setUniversityGroup(group);
 		try {
-			DaoUser.addUserToDatabase(defaultUser1);
+			carpoolDaoUser.addUserToDatabase(defaultUser1);
 		} catch (Exception e) {
 			assertTrue(false);
 		}
@@ -212,7 +212,7 @@ public class DaoDMMessageTest {
 		group.add("a a a b");
 		defaultUser2.setUniversityGroup(group);
 		try {
-			DaoUser.addUserToDatabase(defaultUser2);
+			carpoolDaoUser.addUserToDatabase(defaultUser2);
 		} catch (Exception e) {
 			assertTrue(false);
 		}
@@ -226,7 +226,7 @@ public class DaoDMMessageTest {
 		group.add("a a b c");
 		defaultUser3.setUniversityGroup(group);
 		try {
-			DaoUser.addUserToDatabase(defaultUser3);
+			carpoolDaoUser.addUserToDatabase(defaultUser3);
 		} catch (Exception e) {
 			assertTrue(false);
 		}
@@ -244,19 +244,19 @@ public class DaoDMMessageTest {
 		Message default4 = new Message(3,3,"ImgPath4","Name4",30,40,"phone4","email4","qq4",Constants.paymentMethod.all,
 				new LocationRepresentation("a4 a4 a4 a4"),calender1,calender4,"note4",Constants.messageType.ask,Constants.gender.both,
 				Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calender4);
-		DaoMessage.addMessageToDatabase(default1);
-		DaoMessage.addMessageToDatabase(default2);
-		DaoMessage.addMessageToDatabase(default3);
-		DaoMessage.addMessageToDatabase(default4);
+		carpoolDaoMessage.addMessageToDatabase(default1);
+		carpoolDaoMessage.addMessageToDatabase(default2);
+		carpoolDaoMessage.addMessageToDatabase(default3);
+		carpoolDaoMessage.addMessageToDatabase(default4);
 		//init Message finish
-		ArrayList<Message> results = DaoMessage.searchMessageRegion("a a a bla", DateUtility.toSQLDateTime(calender3), Constants.messageType.ask.code+"");
+		ArrayList<Message> results = carpoolDaoMessage.searchMessageRegion("a a a bla", DateUtility.toSQLDateTime(calender3), Constants.messageType.ask.code+"");
 		assertTrue(results.get(0).getOwnerImgPath().equals("ImgPath"));
 
-		assertTrue(DaoMessage.searchMessageSingle("%", DateUtility.toSQLDateTime(calender4), "%").size()==4);
+		assertTrue(carpoolDaoMessage.searchMessageSingle("%", DateUtility.toSQLDateTime(calender4), "%").size()==4);
 		init();
 	}
 
 	private void init(){
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 	}
 }

@@ -68,7 +68,7 @@ public class UserWatchUserResource extends PseudoResource{
 		int id = -1;
 		int targetUserId = -1;
 		JSONObject response = new JSONObject();
-		User watchedUser = null;
+		boolean watched = false;
 
 		try {
 			this.checkEntity(entity);
@@ -78,9 +78,8 @@ public class UserWatchUserResource extends PseudoResource{
 
 			this.validateAuthentication(id);
 
-			watchedUser = UserDaoService.watchUser(id, targetUserId);
-			if (watchedUser != null) {
-				response = JSONFactory.toJSON(watchedUser);
+			watched = UserDaoService.watchUser(id, targetUserId);
+			if (watched) {
 				setStatus(Status.SUCCESS_OK);
 			} else {
 				setStatus(Status.CLIENT_ERROR_FORBIDDEN);

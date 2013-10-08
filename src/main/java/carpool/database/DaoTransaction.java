@@ -23,7 +23,7 @@ public class DaoTransaction {
 		String query = "INSERT INTO Transaction (initUserId,targetUserId,initUserImgPath,initUserName,initUserLevel,targetUserImgPath,targetUserName,"+
 				"targetUserLevel,initUserEval,targetUserEval,messageId,messageNote,paymentMethod,price,requestInfo,responseInfo,startTime,endTime," +
 				"location,established,success,state,historyDeleted,creationTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 			stmt.setInt(1, t.getInitUserId());
 			stmt.setInt(2, t.getTargetUserId());
 			stmt.setString(3, t.getInitUserImgPath());
@@ -61,7 +61,7 @@ public class DaoTransaction {
 	
 	public static void deleteTransactionFromDatabase(int id) throws TransactionNotFoundException{
 		String query = "DELETE from Transaction where transactionId = ?";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, id);
 			if(stmt.executeUpdate()==0){
 				throw new TransactionNotFoundException();
@@ -76,7 +76,7 @@ public class DaoTransaction {
 				"targetUserImgPath=?,targetUserName=?,targetUserLevel=?,initUserEval=?,targetUserEval=?,messageId=?," +
 				"messageNote=?,paymentMethod=?,price=?,requestInfo=?,responseInfo=?,startTime=?,endTime=?,location=?," +
 				"established=?,success=?,state=?,historyDeleted=?,creationTime=? WHERE transactionId=?";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, t.getInitUserId());
 			stmt.setInt(2, t.getTargetUserId());
 			stmt.setString(3, t.getInitUserImgPath());
@@ -114,7 +114,7 @@ public class DaoTransaction {
 	public static ArrayList<Transaction> getALL(){
 		String query = "SELECT * FROM Transaction;";
 		ArrayList<Transaction> retVal = new ArrayList<Transaction>();
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
 				retVal.add(createTransactionByResultSet(rs));
@@ -128,7 +128,7 @@ public class DaoTransaction {
 	public static Transaction getTransactionById(int id) throws TransactionNotFoundException{
 		String query = "SELECT * FROM Transaction WHERE transactionId = ?;";
 		Transaction t = null;
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, id);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
@@ -145,7 +145,7 @@ public class DaoTransaction {
 	public static ArrayList<Transaction> getTransactionByMessage(int id){
 		String query = "SELECT * FROM Transaction WHERE messageId = ?;";
 		ArrayList<Transaction> retVal = new ArrayList<Transaction>();
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, id);
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){

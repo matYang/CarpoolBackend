@@ -16,8 +16,8 @@ import java.util.Random;
 
 import org.junit.Test;
 
-import carpool.carpoolDAO.carpoolDAOBasic;
-import carpool.carpoolDAO.carpoolDAOMessage;
+import carpool.carpoolDAO.CarpoolDaoBasic;
+import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.HelperOperator;
@@ -27,8 +27,8 @@ import carpool.constants.Constants.gender;
 import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.paymentMethod;
-import carpool.database.DaoBasic;
-import carpool.database.DaoUser;
+import carpool.database.carpoolDaoBasic;
+import carpool.database.carpoolDaoUser;
 import carpool.dbservice.*;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -45,7 +45,7 @@ public class CarpoolMessageTest {
 	
 	@Test
 	public void testCreate() throws UserNotFoundException {
-		carpoolDAOBasic.clearBothDatabase();
+		CarpoolDaoBasic.clearBothDatabase();
 		Calendar time = DateUtility.DateToCalendar(new Date(0));
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
@@ -61,7 +61,7 @@ public class CarpoolMessageTest {
 				time,timeSlot,1, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement ,
 				state, time, time,false);
-		carpoolDAOMessage.addMessageToDatabase(message);
+		CarpoolDaoMessage.addMessageToDatabase(message);
 		//Has user
 		User user = new User("HarryXiong","c2xiong@uwaterloo.ca",new LocationRepresentation("p_c_d_2"));
 		Message message2=new Message(1, 2, user,false
@@ -69,12 +69,12 @@ public class CarpoolMessageTest {
 				time,timeSlot,5, 6,priceList,paymentMethod,
 				"test",  type, genderRequirement ,
 				state, time, time,false);
-		carpoolDAOMessage.addMessageToDatabase(message);
+		CarpoolDaoMessage.addMessageToDatabase(message);
 	}
 	
 	@Test
 	public void testRead(){
-		carpoolDAOBasic.clearBothDatabase();
+		CarpoolDaoBasic.clearBothDatabase();
 		Calendar time = DateUtility.DateToCalendar(new Date(0));
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
@@ -92,11 +92,11 @@ public class CarpoolMessageTest {
 				, new LocationRepresentation("p_c_d_2"),time,timeSlot,1 , priceList,new LocationRepresentation("p_c_d_2"),
 				time,timeSlot, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message);		
+		CarpoolDaoMessage.addMessageToDatabase(message);		
 		
 		//Test
 	    try {
-	    	Message temp = carpoolDAOMessage.getMessageById(message.getMessageId());
+	    	Message temp = CarpoolDaoMessage.getMessageById(message.getMessageId());
 			if(!message.equals(temp)){
 				fail();
 			}
@@ -110,7 +110,7 @@ public class CarpoolMessageTest {
 	
 	@Test
 	public void testUpdate() throws MessageNotFoundException, UserNotFoundException{
-		carpoolDAOBasic.clearBothDatabase();
+		CarpoolDaoBasic.clearBothDatabase();
 		Calendar time = DateUtility.DateToCalendar(new Date(0));
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
@@ -128,7 +128,7 @@ public class CarpoolMessageTest {
 				, new LocationRepresentation("p_c_d_2"),time,timeSlot,1 , priceList,new LocationRepresentation("p_c_d_2"),
 				time, timeSlot,1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message);
+		CarpoolDaoMessage.addMessageToDatabase(message);
 		//Update Location, paymentMethod, and type, state,genderRequirement,timeSlot as well as priceList
 	   message.setArrival_location(new LocationRepresentation("Ontario_Waterloo_UniversityOfWaterloo_2"));
 	   message.setGenderRequirement(gender.fromInt(1));
@@ -139,16 +139,16 @@ public class CarpoolMessageTest {
 	   message.setArrival_priceList(priceList);
 	   message.setArrival_timeSlot(DayTimeSlot.fromInt(1));
 	   message.setDeparture_timeSlot(DayTimeSlot.fromInt(2));
-	   carpoolDAOMessage.UpdateMessageInDatabase(message);
+	   CarpoolDaoMessage.UpdateMessageInDatabase(message);
 	
 	   //Test
-	   if(!message.equals(carpoolDAOMessage.getMessageById(message.getMessageId()))){fail();}
+	   if(!message.equals(CarpoolDaoMessage.getMessageById(message.getMessageId()))){fail();}
 	    
 	
 	}
 	@Test
 	public void testDelete(){
-		carpoolDAOBasic.clearBothDatabase();
+		CarpoolDaoBasic.clearBothDatabase();
 		Calendar time = DateUtility.DateToCalendar(new Date(0));
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
@@ -166,15 +166,15 @@ public class CarpoolMessageTest {
 				, new LocationRepresentation("p_c_d_2"),time,timeSlot,1 , priceList,new LocationRepresentation("p_c_d_2"),
 				time,timeSlot, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message);
+		CarpoolDaoMessage.addMessageToDatabase(message);
 		//Delete
 		try {
-			carpoolDAOMessage.deleteMessageFromDatabase(message.getMessageId());
+			CarpoolDaoMessage.deleteMessageFromDatabase(message.getMessageId());
 		} catch (MessageNotFoundException e) {
 			fail();
 		}
 		try{
-			carpoolDAOMessage.getMessageById(message.getMessageId());
+			CarpoolDaoMessage.getMessageById(message.getMessageId());
 		}catch (UserNotFoundException e) {
 			fail();
 			
@@ -186,7 +186,7 @@ public class CarpoolMessageTest {
 	
 	@Test
 	public void testSearch(){
-		carpoolDAOBasic.clearBothDatabase();
+		CarpoolDaoBasic.clearBothDatabase();
 		//Date
 		Calendar dt = Calendar.getInstance();		
 		Calendar at = Calendar.getInstance();
@@ -212,48 +212,48 @@ public class CarpoolMessageTest {
 		//These messages should pass the search	
 		//Message	
 		Message message=new Message(userId,false, dl,dt,timeSlot,1 , priceList,al,at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message);
+		CarpoolDaoMessage.addMessageToDatabase(message);
 		//Message2
 		Message message2=new Message(userId,true, dl,dt,timeSlot,1 , priceList,al,at,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message2);
+		CarpoolDaoMessage.addMessageToDatabase(message2);
 		//Message3
 		Message message3=new Message(userId,true, al,dt2,timeSlot,1 , priceList,dl,dt,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message3);
+		CarpoolDaoMessage.addMessageToDatabase(message3);
 		//Message4
 		Message message4=new Message(userId,false, al,dt2,timeSlot,1 , priceList,dl,dt,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message4);
+		CarpoolDaoMessage.addMessageToDatabase(message4);
 		//Other messages
 		Message message5=new Message(userId,false, al,dt3,timeSlot,1 , priceList,dl,dt,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message5);
+		CarpoolDaoMessage.addMessageToDatabase(message5);
 		Message message6=new Message(userId,true, al,dt3,timeSlot,1 , priceList,dl,dt,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message6);
+		CarpoolDaoMessage.addMessageToDatabase(message6);
 		Message message7=new Message(userId,false, dl,dt3,timeSlot,1 , priceList,al,dt2,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message7);
+		CarpoolDaoMessage.addMessageToDatabase(message7);
 		Message message8=new Message(userId,true, dl,dt3,timeSlot,1 , priceList,al,dt2,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message8);
+		CarpoolDaoMessage.addMessageToDatabase(message8);
 		//Seats adjust
 		Message message9=new Message(userId,false, dl,dt,timeSlot,10 , priceList,al,at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
 		message9.setDeparture_seatsBooked(11);
-		carpoolDAOMessage.addMessageToDatabase(message9);
+		CarpoolDaoMessage.addMessageToDatabase(message9);
 		Message message10=new Message(userId,true, dl,dt,timeSlot,1 , priceList,al,at,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
 		message10.setDeparture_seatsBooked(2);
 		message10.setArrival_seatsBooked(2);
-		carpoolDAOMessage.addMessageToDatabase(message10);
+		CarpoolDaoMessage.addMessageToDatabase(message10);
 		Message message11=new Message(userId,true, al,dt2,timeSlot,1 , priceList,dl,dt,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
 		message11.setDeparture_seatsBooked(2);
 		message11.setArrival_seatsBooked(2);
-		carpoolDAOMessage.addMessageToDatabase(message11);
+		CarpoolDaoMessage.addMessageToDatabase(message11);
 		Message message12=new Message(userId,false, al,dt2,timeSlot,10 , priceList,dl,dt,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
 		message12.setDeparture_seatsBooked(11);
-		carpoolDAOMessage.addMessageToDatabase(message12);	
+		CarpoolDaoMessage.addMessageToDatabase(message12);	
 		Message message13=new Message(userId,true, al,dt3,timeSlot,1 , priceList,dl,dt,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
 		message13.setDeparture_seatsBooked(2);
 		message13.setArrival_seatsBooked(2);
-		carpoolDAOMessage.addMessageToDatabase(message13);
+		CarpoolDaoMessage.addMessageToDatabase(message13);
 		Message message14=new Message(userId,true, dl,dt3,timeSlot,1 , priceList,al,dt2,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
 		message14.setDeparture_seatsBooked(2);
 		message14.setArrival_seatsBooked(2);
-		carpoolDAOMessage.addMessageToDatabase(message14);
+		CarpoolDaoMessage.addMessageToDatabase(message14);
 		//SRs
 		SearchRepresentation SR = new SearchRepresentation(false,dl,al,dt,at,type,timeSlot,timeSlot);		
 		SearchRepresentation SR2 = new SearchRepresentation(true,al,dl,dt2,dt,type,timeSlot,timeSlot);
@@ -262,7 +262,7 @@ public class CarpoolMessageTest {
 		//Test
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();
-			mlist = carpoolDAOMessage.searchMessage(SR);
+			mlist = CarpoolDaoMessage.searchMessage(SR);
 			if(mlist !=null && mlist.size()==4 && mlist.get(0).equals(message)&&mlist.get(1).equals(message2)&&mlist.get(2).equals(message3)&&mlist.get(3).equals(message6)){
 				//Passed;				
 			}else{
@@ -275,7 +275,7 @@ public class CarpoolMessageTest {
 		}
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();
-			mlist = carpoolDAOMessage.searchMessage(SR2);
+			mlist = CarpoolDaoMessage.searchMessage(SR2);
 			if(mlist !=null && mlist.size()==4 && mlist.get(0).equals(message)&&mlist.get(1).equals(message3)&&mlist.get(2).equals(message4)&&mlist.get(3).equals(message6)){
 				//Passed;
 			}else{
@@ -289,7 +289,7 @@ public class CarpoolMessageTest {
 		}
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();
-			mlist = carpoolDAOMessage.searchMessage(SR3);
+			mlist = CarpoolDaoMessage.searchMessage(SR3);
 			if(mlist !=null && mlist.size()==3 && mlist.get(0).equals(message3)&&mlist.get(1).equals(message4)&&mlist.get(2).equals(message8)){
 				//Passed;
 			}else{
@@ -303,7 +303,7 @@ public class CarpoolMessageTest {
 		}
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();
-			mlist = carpoolDAOMessage.searchMessage(SR4);
+			mlist = CarpoolDaoMessage.searchMessage(SR4);
 			if(mlist !=null && mlist.size()==2 && mlist.get(0).equals(message)&&mlist.get(1).equals(message2)){
 				//Passed;
 			}else{
@@ -320,7 +320,7 @@ public class CarpoolMessageTest {
 	
 	@Test
 	public void getRecentMessages(){
-		carpoolDAOBasic.clearBothDatabase();
+		CarpoolDaoBasic.clearBothDatabase();
 		//Date
 		Calendar dt = Calendar.getInstance();		
 		Calendar at = Calendar.getInstance();			
@@ -341,37 +341,37 @@ public class CarpoolMessageTest {
 		
 		//Message	
 		Message message=new Message(userId,false, dl,dt,timeSlot,1 , priceList,al,at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message);		
+		CarpoolDaoMessage.addMessageToDatabase(message);		
 		Message message2=new Message(userId,true, dl,dt,timeSlot,1 , priceList,al,at,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message2);		
+		CarpoolDaoMessage.addMessageToDatabase(message2);		
 		Message message3=new Message(userId,true, al,dt,timeSlot,1 , priceList,dl,dt,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message3);		
+		CarpoolDaoMessage.addMessageToDatabase(message3);		
 		Message message4=new Message(userId,false, al,dt,timeSlot,1 , priceList,dl,dt,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message4);		
+		CarpoolDaoMessage.addMessageToDatabase(message4);		
 		Message message5=new Message(userId,false, al,dt,timeSlot,1 , priceList,dl,dt,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message5);
+		CarpoolDaoMessage.addMessageToDatabase(message5);
 		Message message6=new Message(userId,true, al,dt,timeSlot,1 , priceList,dl,dt,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message6);
+		CarpoolDaoMessage.addMessageToDatabase(message6);
 		Message message7=new Message(userId,false, dl,dt,timeSlot,1 , priceList,al,dt,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message7);
+		CarpoolDaoMessage.addMessageToDatabase(message7);
 		Message message8=new Message(userId,true, dl,dt,timeSlot,1 , priceList,al,dt,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message8);		
+		CarpoolDaoMessage.addMessageToDatabase(message8);		
 		Message message9=new Message(userId,false, dl,dt,timeSlot,10 , priceList,al,at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message9);
+		CarpoolDaoMessage.addMessageToDatabase(message9);
 		Message message10=new Message(userId,true, dl,dt,timeSlot,1 , priceList,al,at,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message10);
+		CarpoolDaoMessage.addMessageToDatabase(message10);
 		Message message11=new Message(userId,true, al,dt,timeSlot,1 , priceList,dl,dt,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message11);
+		CarpoolDaoMessage.addMessageToDatabase(message11);
 		Message message12=new Message(userId,false, al,dt,timeSlot,10 , priceList,dl,dt,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message12);	
+		CarpoolDaoMessage.addMessageToDatabase(message12);	
 		Message message13=new Message(userId,true, al,dt,timeSlot,1 , priceList,dl,dt,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message13);
+		CarpoolDaoMessage.addMessageToDatabase(message13);
 		Message message14=new Message(userId,true, dl,dt,timeSlot,1 , priceList,al,dt,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
-		carpoolDAOMessage.addMessageToDatabase(message14);
+		CarpoolDaoMessage.addMessageToDatabase(message14);
 		//Test
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();
-			mlist = carpoolDAOMessage.getRecentMessages();
+			mlist = CarpoolDaoMessage.getRecentMessages();
 			if(mlist !=null && mlist.size()==10 && mlist.get(0).equals(message)&& mlist.get(1).equals(message2)&& mlist.get(2).equals(message3)&& mlist.get(3).equals(message4)&& mlist.get(4).equals(message5)&& mlist.get(5).equals(message6)&& mlist.get(6).equals(message7)&& mlist.get(7).equals(message8)&& mlist.get(8).equals(message9)&& mlist.get(9).equals(message10)){
 			//Passed;
 			}else{				
@@ -398,7 +398,7 @@ public class CarpoolMessageTest {
 	
 	//@Test
 	public void testBenchmark(){
-		carpoolDAOBasic.clearBothDatabase();
+		CarpoolDaoBasic.clearBothDatabase();
 		Calendar  before = Calendar.getInstance();
 		Calendar time = DateUtility.DateToCalendar(new Date(0));
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
@@ -419,10 +419,10 @@ public class CarpoolMessageTest {
 					time,timeSlot, 1,priceList,paymentMethod,
 					"test",  type, genderRequirement);
 			//add
-			carpoolDAOMessage.addMessageToDatabase(message);
+			CarpoolDaoMessage.addMessageToDatabase(message);
 			//read
 			try {
-				if(!carpoolDAOMessage.getMessageById(message.getMessageId()).equals(message)){fail();}
+				if(!CarpoolDaoMessage.getMessageById(message.getMessageId()).equals(message)){fail();}
 			} catch (MessageNotFoundException e) {
 				e.printStackTrace();
 				fail();
@@ -453,7 +453,7 @@ public class CarpoolMessageTest {
 			   message.setDeparture_timeSlot(DayTimeSlot.fromInt(2));
 			   
 			   try {
-				carpoolDAOMessage.UpdateMessageInDatabase(message);
+				CarpoolDaoMessage.UpdateMessageInDatabase(message);
 				
 			} catch (MessageNotFoundException e) {
 				fail();
@@ -462,7 +462,7 @@ public class CarpoolMessageTest {
 		  try {
 			  
 			
-			   if(!message.equals(carpoolDAOMessage.getMessageById(message.getMessageId()))){fail();}
+			   if(!message.equals(CarpoolDaoMessage.getMessageById(message.getMessageId()))){fail();}
 			 
 		} catch (MessageNotFoundException e) {
 			fail();
@@ -472,12 +472,12 @@ public class CarpoolMessageTest {
 		  
 		 //delete
 		  try {
-				carpoolDAOMessage.deleteMessageFromDatabase(message.getMessageId());
+				CarpoolDaoMessage.deleteMessageFromDatabase(message.getMessageId());
 			} catch (MessageNotFoundException e) {
 				fail();
 			}
 			try{
-				carpoolDAOMessage.getMessageById(message.getMessageId());
+				CarpoolDaoMessage.getMessageById(message.getMessageId());
 			}catch (UserNotFoundException e) {
 				fail();
 				

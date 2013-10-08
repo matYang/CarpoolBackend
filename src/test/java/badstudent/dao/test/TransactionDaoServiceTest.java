@@ -10,10 +10,10 @@ import org.junit.Test;
 import carpool.common.Validator;
 import carpool.constants.Constants;
 import carpool.constants.Constants.paymentMethod;
-import carpool.database.DaoBasic;
-import carpool.database.DaoMessage;
+import carpool.database.carpoolDaoBasic;
+import carpool.database.carpoolDaoMessage;
 import carpool.database.DaoTransaction;
-import carpool.database.DaoUser;
+import carpool.database.carpoolDaoUser;
 import carpool.dbservice.NotificationDaoService;
 import carpool.dbservice.TransactionDaoService;
 import carpool.dbservice.UserDaoService;
@@ -35,7 +35,7 @@ public class TransactionDaoServiceTest {
 
 	@Test
 	public void basic(){
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 		User defaultUser1 = new User(0, "password", "name", 0, 0,0, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
@@ -55,12 +55,12 @@ public class TransactionDaoServiceTest {
 				1, "targetUserImgPath", "targetUserName", 1,1,1, 1, "messageNote", paymentMethod.offline, 1,
 				"requestInfo", "responseInfo", calender, calender, new LocationRepresentation("a a a a"), false, false, Constants.transactionState.success, true, calender);
 		try {
-			DaoUser.addUserToDatabase(defaultUser1);
-			DaoUser.addUserToDatabase(defaultUser2);
+			carpoolDaoUser.addUserToDatabase(defaultUser1);
+			carpoolDaoUser.addUserToDatabase(defaultUser2);
 		} catch (Exception e) {
 			assertTrue(false);
 		}
-		DaoMessage.addMessageToDatabase(default1);
+		carpoolDaoMessage.addMessageToDatabase(default1);
 		TransactionDaoService.createNewTransaction(defaultT1);
 		assertTrue(NotificationDaoService.getAllNotifications().size()==1);
 		assertTrue(TransactionDaoService.getAllTransactions().size()==1);
@@ -79,7 +79,7 @@ public class TransactionDaoServiceTest {
 	
 	@Test
 	public void functional(){
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 		User defaultUser1 = new User(0, "password", "name", 0, 0,0, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
@@ -99,12 +99,12 @@ public class TransactionDaoServiceTest {
 				1, "targetUserImgPath", "targetUserName", 1,1,1, 1, "messageNote", paymentMethod.offline, 1,
 				"requestInfo", "responseInfo", calender, calender, new LocationRepresentation("a a a a"), false, false, Constants.transactionState.init, true, calender);
 		try {
-			DaoUser.addUserToDatabase(defaultUser1);
-			DaoUser.addUserToDatabase(defaultUser2);
+			carpoolDaoUser.addUserToDatabase(defaultUser1);
+			carpoolDaoUser.addUserToDatabase(defaultUser2);
 		} catch (Exception e) {
 			assertTrue(false);
 		}
-		DaoMessage.addMessageToDatabase(default1);
+		carpoolDaoMessage.addMessageToDatabase(default1);
 		TransactionDaoService.createNewTransaction(defaultT1);
 		try {
 			assertTrue(TransactionDaoService.refuseTransaction(1, 1).getState()==Constants.transactionState.refused);

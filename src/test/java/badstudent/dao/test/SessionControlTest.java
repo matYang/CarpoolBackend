@@ -12,8 +12,8 @@ import org.restlet.util.Series;
 
 import carpool.common.Validator;
 import carpool.constants.Constants;
-import carpool.database.DaoBasic;
-import carpool.database.DaoUser;
+import carpool.database.carpoolDaoBasic;
+import carpool.database.carpoolDaoUser;
 import carpool.dbservice.EmailDaoService;
 import carpool.dbservice.UserDaoService;
 import carpool.dbservice.AuthDaoService;
@@ -31,7 +31,7 @@ public class SessionControlTest {
 
 	@Test
 	public void test() {
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 		
 		Calendar calender = Calendar.getInstance();
 		
@@ -46,7 +46,7 @@ public class SessionControlTest {
 		EmailDaoService.sendActivationEmail(defaultUser.getUserId(), defaultUser.getEmail());
 		
 		try {
-			EmailDaoService.activateUserEmail(defaultUser.getUserId(), DaoBasic.getJedis().get(Constants.key_emailActivationAuth + defaultUser.getUserId()));
+			EmailDaoService.activateUserEmail(defaultUser.getUserId(), carpoolDaoBasic.getJedis().get(Constants.key_emailActivationAuth + defaultUser.getUserId()));
 			
 		} catch (UserNotFoundException e) {
 			e.printStackTrace();

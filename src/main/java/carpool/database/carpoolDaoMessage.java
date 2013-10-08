@@ -23,13 +23,13 @@ import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
 
 
-public class DaoMessage{
+public class carpoolDaoMessage{
 	
 	public static ArrayList<Message> searchMessageSingle(String location, String date,String type) {
 		date = date.split(" ")[0];
 		ArrayList<Message> retVal = new ArrayList<Message>();
 		String query = "SELECT * from Message WHERE location LIKE ? AND (startTime <= ? OR endTime >= ?) AND type LIKE ?;";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setString(1, location);
 			stmt.setString(2, date);
 			stmt.setString(3, date);
@@ -55,7 +55,7 @@ public class DaoMessage{
 		String query = "INSERT INTO Message (ownerId,ownerImgPath,ownerName,ownerLevel," +
 				"ownerAverageScore,ownerPhone,ownerEmail,ownerQq,paymentMethod,location,startTime," +
 				"endTime,note,type,genderRequirement,state,price,active,historyDeleted,creationTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 			stmt.setInt(1, msg.getOwnerId());
 			stmt.setString(2, msg.getOwnerImgPath());
 			stmt.setString(3, msg.getOwnerName());
@@ -89,7 +89,7 @@ public class DaoMessage{
 	public static void deleteMessageFromDatabase(int id) throws MessageNotFoundException{
 		String query = "DELETE from WatchList where Message_messageId = '" + id +"'";
 		String query2 = "DELETE from Message where messageId = '" + id + "'";
-		try(Statement stmt = DaoBasic.getSQLConnection().createStatement()){
+		try(Statement stmt = carpoolDaoBasic.getSQLConnection().createStatement()){
 			stmt.addBatch(query);
 			stmt.addBatch(query2);
 			int resultSet[] = stmt.executeBatch();
@@ -105,7 +105,7 @@ public class DaoMessage{
 		String query = "UPDATE Message SET ownerImgPath=?,ownerName=?,ownerLevel=?,ownerAverageScore=?,ownerPhone=?,ownerEmail=?,ownerQq=?," +
 				"paymentMethod=?,location=?,startTime=?,endTime=?,note=?,type=?,genderRequirement=?,state=?,price=?,active=?,historyDeleted=?," +
 				"creationTime=? WHERE messageId=?";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setString(1, msg.getOwnerImgPath());
 			stmt.setString(2, msg.getOwnerName());
 			stmt.setInt(3, msg.getOwnerLevel());
@@ -138,7 +138,7 @@ public class DaoMessage{
 	public static Message getMessageById(int id) throws MessageNotFoundException{
 		String query = "SELECT * FROM Message WHERE messageId = ?;";
 		Message message = null;
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, id);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
@@ -167,7 +167,7 @@ public class DaoMessage{
 	public static ArrayList<Message> getAll() {
 		ArrayList<Message> retVal = new ArrayList<Message>();
 		String query = "SELECT * from Message;";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
 				retVal.add(createMessageByResultSet(rs));

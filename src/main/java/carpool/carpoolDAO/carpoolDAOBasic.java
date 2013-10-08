@@ -12,7 +12,7 @@ import carpool.common.DebugLog;
 
 import redis.clients.jedis.Jedis;
 
-public class carpoolDAOBasic {
+public class CarpoolDaoBasic {
     private static Jedis jedis = new Jedis("localhost");
     private static Connection connection = null;
     

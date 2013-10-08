@@ -14,9 +14,9 @@ import java.util.Random;
 
 import org.junit.Test;
 
-import carpool.carpoolDAO.carpoolDAOBasic;
-import carpool.carpoolDAO.carpoolDAOMessage;
-import carpool.carpoolDAO.carpoolDAOUser;
+import carpool.carpoolDAO.CarpoolDaoBasic;
+import carpool.carpoolDAO.CarpoolDaoMessage;
+import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.HelperOperator;
@@ -26,8 +26,8 @@ import carpool.constants.Constants.gender;
 import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.paymentMethod;
-import carpool.database.DaoBasic;
-import carpool.database.DaoUser;
+import carpool.database.carpoolDaoBasic;
+import carpool.database.carpoolDaoUser;
 import carpool.dbservice.*;
 import carpool.exception.ValidationException;
 import carpool.exception.message.MessageNotFoundException;
@@ -36,24 +36,23 @@ import carpool.model.representation.LocationRepresentation;
 import carpool.model.Message;
 import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
-import carpool.test.mockModel.MockUser;
 import static java.lang.System.out;
 
 public class CarpoolUserTest {
 	
 	@Test
 	public void testCreate() throws ValidationException{
-		carpoolDAOBasic.clearBothDatabase();
+		CarpoolDaoBasic.clearBothDatabase();
 		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
 		//Test
-		carpoolDAOUser.addUserToDatabase(user);		
+		CarpoolDaoUser.addUserToDatabase(user);		
 	}
 	@Test
 	public void testRead(){
-		carpoolDAOBasic.clearBothDatabase();
+		CarpoolDaoBasic.clearBothDatabase();
 		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
 		try {
-			carpoolDAOUser.addUserToDatabase(user);
+			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {
 				e.printStackTrace();
 				fail();
@@ -61,7 +60,7 @@ public class CarpoolUserTest {
 		//Test
 		try {
 			try {
-				if(!user.equals(carpoolDAOUser.getUserById(user.getUserId()))){
+				if(!user.equals(CarpoolDaoUser.getUserById(user.getUserId()))){
 					fail();
 				}
 			} catch (ValidationException e) {				
@@ -73,7 +72,7 @@ public class CarpoolUserTest {
 			fail();
 		}
 		try {
-			if(!user.equals(carpoolDAOUser.getUserByEmail(user.getEmail()))){
+			if(!user.equals(CarpoolDaoUser.getUserByEmail(user.getEmail()))){
 				fail();
 			}
 		} catch (UserNotFoundException e) {
@@ -86,10 +85,10 @@ public class CarpoolUserTest {
 	}
 	@Test
 	public void testUpdate(){
-		carpoolDAOBasic.clearBothDatabase();
+		CarpoolDaoBasic.clearBothDatabase();
 		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
 		try {
-			carpoolDAOUser.addUserToDatabase(user);
+			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {
 			e.printStackTrace();
 		}
@@ -106,14 +105,14 @@ public class CarpoolUserTest {
 		user.setAge(100);
 		user.setEmailActivated(true);
 		try {
-			carpoolDAOUser.UpdateUserInDatabase(user);
+			CarpoolDaoUser.UpdateUserInDatabase(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		//Test
 		try {
-			if(!user.equals(carpoolDAOUser.getUserById(user.getUserId()))){
+			if(!user.equals(CarpoolDaoUser.getUserById(user.getUserId()))){
 				fail();
 			}
 		} catch (UserNotFoundException e) {
@@ -124,7 +123,7 @@ public class CarpoolUserTest {
 			fail();
 		}
 		try {
-			if(!user.equals(carpoolDAOUser.getUserByEmail(user.getEmail()))){
+			if(!user.equals(CarpoolDaoUser.getUserByEmail(user.getEmail()))){
 				fail();
 			}
 		} catch (UserNotFoundException e) {
@@ -137,44 +136,44 @@ public class CarpoolUserTest {
 	}
    @Test
     public void testDelete(){
-	   carpoolDAOBasic.clearBothDatabase();
+	   CarpoolDaoBasic.clearBothDatabase();
 	   User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
 		try {
-			carpoolDAOUser.addUserToDatabase(user);
+			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {
 			e.printStackTrace();
 		}
 		try {
-			carpoolDAOUser.deleteUserFromDatabase(user.getUserId());
+			CarpoolDaoUser.deleteUserFromDatabase(user.getUserId());
 		} catch (UserNotFoundException e) {
 			e.printStackTrace();
 			fail();
 		}
 		//Test
 		try {
-			carpoolDAOUser.getUserById(user.getUserId());
+			CarpoolDaoUser.getUserById(user.getUserId());
 		} catch (UserNotFoundException e) {
 			//passed();
 		}
    }
     @Test
     public void testUpdateSocialList() throws ValidationException{
-    	carpoolDAOBasic.clearBothDatabase();
+    	CarpoolDaoBasic.clearBothDatabase();
 		User user =  new User("password1", "email1", new LocationRepresentation ("primary","custom",1));
-		carpoolDAOUser.addUserToDatabase(user);	
+		CarpoolDaoUser.addUserToDatabase(user);	
 		
 		User user2 =  new User("password2", "email2", new LocationRepresentation ("primary2","custom2",1));
-		carpoolDAOUser.addUserToDatabase(user2);
-		carpoolDAOUser.addToSocialList(user,user2);
+		CarpoolDaoUser.addUserToDatabase(user2);
+		CarpoolDaoUser.addToSocialList(user,user2);
 		
 		
 		User user3 =  new User("password3", "email3", new LocationRepresentation ("primary3","custom3",1));
-		carpoolDAOUser.addUserToDatabase(user3);
-		carpoolDAOUser.addToSocialList(user,user3);
+		CarpoolDaoUser.addUserToDatabase(user3);
+		CarpoolDaoUser.addToSocialList(user,user3);
 		
 		User user4 =  new User("password4", "email4", new LocationRepresentation ("primary4","custom4",1));
-		carpoolDAOUser.addUserToDatabase(user4);
-		carpoolDAOUser.addToSocialList(user,user4);
+		CarpoolDaoUser.addUserToDatabase(user4);
+		CarpoolDaoUser.addToSocialList(user,user4);
 		
 		
 		try{
@@ -190,13 +189,13 @@ public class CarpoolUserTest {
 			e.printStackTrace();
 			fail();
 		}
-		carpoolDAOUser.addToSocialList(user,user2);
-		carpoolDAOUser.addToSocialList(user,user3);
-		carpoolDAOUser.addToSocialList(user,user4);
+		CarpoolDaoUser.addToSocialList(user,user2);
+		CarpoolDaoUser.addToSocialList(user,user3);
+		CarpoolDaoUser.addToSocialList(user,user4);
 		
 		try{
 			ArrayList<User> slist = new ArrayList<User>();
-	    	slist = carpoolDAOUser.getSocialListOfUser(user);
+	    	slist = CarpoolDaoUser.getSocialListOfUser(user);
 	    	if(slist !=null && slist.size()==3 && slist.get(0).equals(user2)&&slist.get(1).equals(user3)&&slist.get(2).equals(user4)){
 	    		//Passed;
 	      	}else{
@@ -207,8 +206,8 @@ public class CarpoolUserTest {
 			e.printStackTrace();
 			fail();
 		}
-		carpoolDAOUser.addToSocialList(user2,user3);
-		carpoolDAOUser.addToSocialList(user2,user4);
+		CarpoolDaoUser.addToSocialList(user2,user3);
+		CarpoolDaoUser.addToSocialList(user2,user4);
 		try{
 			ArrayList<User> slist = new ArrayList<User>();
 	    	slist = user2.getSocialList();
@@ -222,9 +221,9 @@ public class CarpoolUserTest {
 			e.printStackTrace();
 			fail();
 		}
-		carpoolDAOUser.deleteFromSocialList(user, user2);
-		carpoolDAOUser.deleteFromSocialList(user, user3);
-		carpoolDAOUser.deleteFromSocialList(user, user4);
+		CarpoolDaoUser.deleteFromSocialList(user, user2);
+		CarpoolDaoUser.deleteFromSocialList(user, user3);
+		CarpoolDaoUser.deleteFromSocialList(user, user4);
 		try{
 			ArrayList<User> slist = new ArrayList<User>();
 	    	slist = user.getSocialList();
@@ -239,7 +238,7 @@ public class CarpoolUserTest {
 			fail();
 		}
 		//Double Check
-		carpoolDAOUser.deleteFromSocialList(user, user);		
+		CarpoolDaoUser.deleteFromSocialList(user, user);		
 		try{
 			ArrayList<User> slist = new ArrayList<User>();
 	    	slist = user.getSocialList();
@@ -254,8 +253,8 @@ public class CarpoolUserTest {
 			fail();
 		}
 		
-		carpoolDAOUser.deleteFromSocialList(user2, user3);
-		carpoolDAOUser.deleteFromSocialList(user2, user4);
+		CarpoolDaoUser.deleteFromSocialList(user2, user3);
+		CarpoolDaoUser.deleteFromSocialList(user2, user4);
 		try{
 			ArrayList<User> slist = new ArrayList<User>();
 	    	slist = user2.getSocialList();
@@ -272,11 +271,11 @@ public class CarpoolUserTest {
     }
     @Test
     public void testgetUserMessageHistory(){
-    	carpoolDAOBasic.clearBothDatabase();
+    	CarpoolDaoBasic.clearBothDatabase();
 		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
 		
 		try {
-			carpoolDAOUser.addUserToDatabase(user);
+			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}		
@@ -293,23 +292,23 @@ public class CarpoolUserTest {
 				time,timeSlot,5, 6,priceList,paymentmethod,
 				"test",  type, genderRequirement ,
 				state, time, time,false);
-		carpoolDAOMessage.addMessageToDatabase(message);
+		CarpoolDaoMessage.addMessageToDatabase(message);
 		Message message2=new Message(2, user.getUserId(), user,false
 				, new LocationRepresentation("p_c_d_2"),time,timeSlot,3,4 , priceList,new LocationRepresentation("p_c_d_2"),
 				time,timeSlot,5, 6,priceList,paymentmethod,
 				"test",  type, genderRequirement ,
 				state, time, time,false);
-		carpoolDAOMessage.addMessageToDatabase(message2);
+		CarpoolDaoMessage.addMessageToDatabase(message2);
 		Message message3=new Message(3, user.getUserId(), user,false
 				, new LocationRepresentation("p_c_d_2"),time,timeSlot,3,4 , priceList,new LocationRepresentation("p_c_d_2"),
 				time,timeSlot,5, 6,priceList,paymentmethod,
 				"test",  type, genderRequirement ,
 				state, time, time,false);
-		carpoolDAOMessage.addMessageToDatabase(message3);
+		CarpoolDaoMessage.addMessageToDatabase(message3);
 		//Test
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();
-			mlist = carpoolDAOUser.getUserMessageHistory(user);
+			mlist = CarpoolDaoUser.getUserMessageHistory(user);
 			if(mlist !=null && mlist.size()==3 && mlist.get(0).equals(message) && mlist.get(1).equals(message2) && mlist.get(2).equals(message3)){
 			//Passed;	
 			}else{
