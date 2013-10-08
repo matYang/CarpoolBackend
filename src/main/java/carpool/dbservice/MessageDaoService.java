@@ -1,28 +1,17 @@
 package carpool.dbservice;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
-import carpool.common.DateUtility;
+import carpool.carpoolDAO.*;
 import carpool.common.DebugLog;
-import carpool.constants.Constants;
-import carpool.constants.Constants.gender;
-import carpool.constants.Constants.messageType;
-import carpool.constants.Constants.paymentMethod;
-import carpool.constants.Constants.userSearchState;
-import carpool.database.DaoMessage;
-import carpool.database.DaoTransaction;
-import carpool.database.DaoUser;
 import carpool.exception.ValidationException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.message.MessageOwnerNotMatchException;
 import carpool.exception.user.UserNotFoundException;
-import carpool.exception.validation.UnacceptableSearchStateException;
 import carpool.model.Message;
 import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
-import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
 
 
@@ -31,54 +20,48 @@ public class MessageDaoService{
 	
 	
 	public static ArrayList<Message> getAllMessages() {
-		return DaoMessage.getAll();
+		return CarpoolDaoMessage.getAllMessages();
 	}
 	
 
-	public static Message getMessageById(int messageId) throws MessageNotFoundException{
-		return DaoMessage.getMessageById(messageId);
+	public static Message getMessageById(int messageId) throws MessageNotFoundException, UserNotFoundException{
+		return CarpoolDaoMessage.getMessageById(messageId);
 	}
 	
 	
 	/**
-	 * gets the recently posted messages, length specified by Constants.max_recents (currently 3)
+	 * gets the recently posted messages, length specified by Constants.max_recents (currently 10)
 	 */
-	public static ArrayList<Message> getRecentMessages() {
-		//TODO can not use getAll
-		ArrayList<Message> all = DaoMessage.getAll();
-		ArrayList<Message> retVal = new ArrayList<Message>();
-		for(int i=0; i< Constants.max_recents;i++){
-			retVal.add(all.get(all.size()-1-i));
-		}
-		return retVal;
+	public static ArrayList<Message> getRecentMessages(){
+		return CarpoolDaoMessage.getRecentMessages();
 	}
 	
 
-	public static ArrayList<Message> primaryMessageSearch(SearchRepresentation userSearch, boolean isLogin, int userId) throws ValidationException{
+	public static ArrayList<Message> primaryMessageSearch(SearchRepresentation userSearch, boolean isLogin, int userId) throws ValidationException, UserNotFoundException{
 
-		ArrayList<Message> searchReuslt = new ArrayList<Message>();
-		searchResult = CarpoolDAOMessage.searchMessage(userSearch);
+		ArrayList<Message> searchResult = new ArrayList<Message>();
+		searchResult = CarpoolDaoMessage.searchMessage(userSearch);
 		if (isLogin){
-			//UserDaoSerice.updateUserSearch();
+			//TODO UserDaoSerice.updateUserSearch();
 		}
 		return searchResult;
 	}
+	
 
 	public static Message createNewMessage(Message newMessage){
-		//sendFollowerNewPostNotification(newMessage);
-		return DaoMessage.addMessageToDatabase(newMessage);
+		return CarpoolDaoMessage.addMessageToDatabase(newMessage);
 	}
 	
 	
 	/**
 	 * check if the retrieved message's ownerId matches current message's ownerId, if not, throw MessageOwnerNotMatchException (some for methods below)
 	 */
-	public static Message updateMessage(Message message) throws MessageNotFoundException, MessageOwnerNotMatchException{
-		Message oldMessage = DaoMessage.getMessageById(message.getMessageId());
+	public static Message updateMessage(Message message) throws MessageNotFoundException, MessageOwnerNotMatchException, UserNotFoundException{
+		Message oldMessage = CarpoolDaoMessage.getMessageById(message.getMessageId());
 		if(oldMessage.getOwnerId()!=message.getOwnerId()){
 			throw new MessageOwnerNotMatchException();
 		}
-		DaoMessage.UpdateMessageInDatabase(message);
+		CarpoolDaoMessage.UpdateMessageInDatabase(message);
 		//sendMessageUpDateNotification(message);
 		return message;
 	}
@@ -87,11 +70,12 @@ public class MessageDaoService{
 	/**
 	 * can not delete if this message has active transactions
 	 */
-	public static boolean deleteMessage(int messageId, int ownerId) throws MessageNotFoundException, MessageOwnerNotMatchException, ValidationException{
-		Message oldMessage = DaoMessage.getMessageById(messageId);
+	public static boolean deleteMessage(int messageId, int ownerId) throws MessageNotFoundException, MessageOwnerNotMatchException, ValidationException, UserNotFoundException{
+		Message oldMessage = CarpoolDaoMessage.getMessageById(messageId);
 		if(oldMessage.getOwnerId()!=ownerId){
 			throw new MessageOwnerNotMatchException();
 		}
+		return true;
 //		ArrayList<Transaction> tList = getRelatedTransactions(messageId);
 //		for(Transaction t : tList){
 //			if(t.getState().code < 5 || t.getState().code == 6){
@@ -100,7 +84,7 @@ public class MessageDaoService{
 //		}
 //		DaoMessage.deleteMessageFromDatabase(oldMessage.getMessageId());
 //		sendMessageDeleteNotification(oldMessage);
-		return true;
+//		return true;
 	}
 //	
 //

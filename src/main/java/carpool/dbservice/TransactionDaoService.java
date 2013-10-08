@@ -7,7 +7,7 @@ import javax.swing.text.DateFormatter;
 import carpool.common.*;
 import carpool.constants.Constants;
 import carpool.database.DaoTransaction;
-import carpool.database.DaoUser;
+import carpool.database.carpoolDaoUser;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.message.MessageOwnerNotMatchException;
 import carpool.exception.transaction.TransactionAccessViolationException;
@@ -273,7 +273,7 @@ public class TransactionDaoService{
 						DaoTransaction.UpdateTransactionInDatabase(t);
 						targetUser.setAverageScore((targetUser.getAverageScore()*(targetUser.getTotalTranscations()-1)+score)/targetUser.getTotalTranscations());
 						try {
-							DaoUser.UpdateUserInDatabase(targetUser);
+							carpoolDaoUser.UpdateUserInDatabase(targetUser);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -283,7 +283,7 @@ public class TransactionDaoService{
 						DaoTransaction.UpdateTransactionInDatabase(t);
 						targetUser.setAverageScore((targetUser.getAverageScore()*(targetUser.getTotalTranscations()-1)+score)/targetUser.getTotalTranscations());
 						try {
-							DaoUser.UpdateUserInDatabase(targetUser);
+							carpoolDaoUser.UpdateUserInDatabase(targetUser);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -297,7 +297,7 @@ public class TransactionDaoService{
 						DaoTransaction.UpdateTransactionInDatabase(t);
 						initUser.setAverageScore((initUser.getAverageScore()*(initUser.getTotalTranscations()-1)+score)/initUser.getTotalTranscations());
 						try {
-							DaoUser.UpdateUserInDatabase(initUser);
+							carpoolDaoUser.UpdateUserInDatabase(initUser);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -307,7 +307,7 @@ public class TransactionDaoService{
 						DaoTransaction.UpdateTransactionInDatabase(t);
 						initUser.setAverageScore((initUser.getAverageScore()*(initUser.getTotalTranscations()-1)+score)/initUser.getTotalTranscations());
 						try {
-							DaoUser.UpdateUserInDatabase(initUser);
+							carpoolDaoUser.UpdateUserInDatabase(initUser);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

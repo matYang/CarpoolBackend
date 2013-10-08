@@ -12,9 +12,9 @@ import org.junit.Test;
 import carpool.common.Validator;
 import carpool.constants.Constants;
 import carpool.constants.Constants.userSearchState;
-import carpool.database.DaoBasic;
-import carpool.database.DaoMessage;
-import carpool.database.DaoUser;
+import carpool.database.carpoolDaoBasic;
+import carpool.database.carpoolDaoMessage;
+import carpool.database.carpoolDaoUser;
 import carpool.dbservice.UserDaoService;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -49,11 +49,11 @@ public class WatchListTest {
 	
     @Test
     public void setup() {
-    	DaoBasic.clearBothDatabase();
+    	carpoolDaoBasic.clearBothDatabase();
     	try{
-    		DaoUser.addUserToDatabase(defaultUser1);
-    		DaoMessage.addMessageToDatabase(default1);
-    		DaoMessage.addMessageToDatabase(default2);
+    		carpoolDaoUser.addUserToDatabase(defaultUser1);
+    		carpoolDaoMessage.addMessageToDatabase(default1);
+    		carpoolDaoMessage.addMessageToDatabase(default2);
     	}catch(Exception e){
     		e.printStackTrace();
     		assertTrue(false);
@@ -67,13 +67,13 @@ public class WatchListTest {
     	defaultUser2.setWatchList(Watch);
     	User user = null;
     	try{
-    		user = DaoUser.addUserToDatabase(defaultUser2);
+    		user = carpoolDaoUser.addUserToDatabase(defaultUser2);
     	}catch(Exception e){
     		e.printStackTrace();
     		assertTrue(false);
     	}
     	try{
-    		user = DaoUser.getUserById(user.getUserId());
+    		user = carpoolDaoUser.getUserById(user.getUserId());
     	}catch(Exception e){
     		e.printStackTrace();
     		assertTrue(false);    		
@@ -90,19 +90,19 @@ public class WatchListTest {
     	watch2.add(user.getWatchList().get(1));
     	try {
     		user.setWatchList(watch1);
-			DaoUser.UpdateUserInDatabase(user);
-			user = DaoUser.getUserById(1);
+			carpoolDaoUser.UpdateUserInDatabase(user);
+			user = carpoolDaoUser.getUserById(1);
 			user.setWatchList(watch2);
-			DaoUser.UpdateUserInDatabase(user);
+			carpoolDaoUser.UpdateUserInDatabase(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(false); 
 		}
     	
     	try{
-    		user = DaoUser.getUserById(1);
+    		user = carpoolDaoUser.getUserById(1);
     		assertTrue(user.getWatchList().get(0).getOwnerImgPath().equals("ImgPath2"));
-    		user = DaoUser.getUserById(2);
+    		user = carpoolDaoUser.getUserById(2);
     		assertTrue(user.getWatchList().get(0).getOwnerImgPath().equals("ImgPath"));
     	}catch(Exception e){
     		e.printStackTrace();
@@ -111,13 +111,13 @@ public class WatchListTest {
     	
     	//do a search on both user and make sure the Watch list is correct
     	
-    	assertTrue(DaoUser.searchUser("%", "phone", "%", "%").get(0).getWatchList().get(0).getOwnerImgPath().equals("ImgPath2"));
-    	assertTrue(DaoUser.searchUser("%", "%", "qq1", "%").get(0).getWatchList().get(0).getOwnerImgPath().equals("ImgPath2"));
+    	assertTrue(carpoolDaoUser.searchUser("%", "phone", "%", "%").get(0).getWatchList().get(0).getOwnerImgPath().equals("ImgPath2"));
+    	assertTrue(carpoolDaoUser.searchUser("%", "%", "qq1", "%").get(0).getWatchList().get(0).getOwnerImgPath().equals("ImgPath2"));
     	
     	//remove a message make sure Watch is removed
     	try {
-			DaoMessage.deleteMessageFromDatabase(1);
-			user = DaoUser.getUserById(2);
+			carpoolDaoMessage.deleteMessageFromDatabase(1);
+			user = carpoolDaoUser.getUserById(2);
 			assertTrue(user.getWatchList().size()==0);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -127,7 +127,7 @@ public class WatchListTest {
     	//remove a user make sure Watch is removed 
     	
     	try{
-    		DaoUser.deleteUserFromDatabase(1);
+    		carpoolDaoUser.deleteUserFromDatabase(1);
     	}catch (Exception e){
 			e.printStackTrace();
 			assertTrue(false);     		

@@ -12,7 +12,7 @@ import java.sql.Statement;
 import org.junit.Test;
 
 import carpool.common.DebugLog;
-import carpool.database.DaoBasic;
+import carpool.database.carpoolDaoBasic;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.User;
 
@@ -61,7 +61,7 @@ public class SimleDatabaseTest {
         }
         
         String query = "INSERT INTO Harry (simpleString, value) VALUES (?,?);";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 			stmt.setString(1, testString);
 			stmt.setString(2, value);
 			stmt.executeUpdate();
@@ -78,7 +78,7 @@ public class SimleDatabaseTest {
 	public void simpleGet(){
 		String query = "SELECT * FROM Harry WHERE value = ?";
 		String response = "";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setString(1, value);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){

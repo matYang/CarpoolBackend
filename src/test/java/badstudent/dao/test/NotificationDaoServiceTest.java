@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import carpool.common.Validator;
 import carpool.constants.Constants;
-import carpool.database.DaoBasic;
+import carpool.database.carpoolDaoBasic;
 import carpool.database.DaoNotification;
 import carpool.dbservice.MessageDaoService;
 import carpool.dbservice.NotificationDaoService;
@@ -53,7 +53,7 @@ public class NotificationDaoServiceTest {
 	
 	@Test
 	public void create(){
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 		UserDaoService.createNewUser(defaultUser);
 		UserDaoService.createNewUser(defaultUser2);
 		MessageDaoService.createNewMessage(default1);

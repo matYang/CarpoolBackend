@@ -36,7 +36,7 @@ public class SessionRedirect extends PseudoResource{
 	public Representation sessionRedirect(Representation entity){
 		DebugLog.d("enter session redirect");
 		
-		User topBarUser = null;
+		User user = null;
 		JSONObject jsonObject = new JSONObject();
 		String sessionString = "";
 		
@@ -46,12 +46,12 @@ public class SessionRedirect extends PseudoResource{
 			
 			DebugLog.d("session redirect receving session string: " + sessionString);
 			
-			topBarUser = AuthDaoService.getUserFromSession(sessionString);
+			user = AuthDaoService.getUserFromSession(sessionString);
 			
 			//if able to login, return toBarUser with valid id, front end will redirect to use session mode
-			if (topBarUser != null && topBarUser.isAbleToLogin()){
+			if (user != null && user.isAbleToLogin()){
 				
-				jsonObject = JSONFactory.toJSON(topBarUser);
+				jsonObject = JSONFactory.toJSON(user);
 			}
 			//if not, retun defeault user, front end will detect invalid id==-1 and will use non-session
 			else{

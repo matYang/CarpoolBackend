@@ -6,8 +6,8 @@ import java.util.Calendar;
 import org.junit.Test;
 
 import carpool.constants.Constants;
-import carpool.database.DaoBasic;
-import carpool.database.DaoUser;
+import carpool.database.carpoolDaoBasic;
+import carpool.database.carpoolDaoUser;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
 import carpool.model.Notification;
@@ -39,29 +39,29 @@ public class SocialListTest {
 			calender,calender,"paypal3");
 	@Test
 	public void init(){
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 		//add 3 user to user table (A,B,C) A has no friend B has friend A C has friend B
 		ArrayList<User> friend = new ArrayList<User>();
 		friend.add(A);
 		B.setSocialList(friend);
 		try {
-			DaoUser.addUserToDatabase(A);
-			DaoUser.addUserToDatabase(B);
+			carpoolDaoUser.addUserToDatabase(A);
+			carpoolDaoUser.addUserToDatabase(B);
 			friend.clear();
 			friend.add(B);
 			C.setSocialList(friend);
-			DaoUser.addUserToDatabase(C);
+			carpoolDaoUser.addUserToDatabase(C);
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(false);
 		}
 		//test the above relationship
 		try {
-			User userA = DaoUser.getUserById(1);
+			User userA = carpoolDaoUser.getUserById(1);
 			assertTrue(userA.getSocialList().size()==0);
-			User userB = DaoUser.getUserById(2);
+			User userB = carpoolDaoUser.getUserById(2);
 			assertTrue(userB.getSocialList().get(0).getName().equals("name"));
-			User userC = DaoUser.getUserById(3);
+			User userC = carpoolDaoUser.getUserById(3);
 			assertTrue(userC.getSocialList().get(0).getName().equals("name2"));
 		} catch (UserNotFoundException e) {
 			e.printStackTrace();
@@ -69,17 +69,17 @@ public class SocialListTest {
 		}
 		//Add B,C to A | C to B | now A has friend B,C B has friend A,C C has friend B
 		try {
-			User userA = DaoUser.getUserById(1);
+			User userA = carpoolDaoUser.getUserById(1);
 			ArrayList<User> AList = userA.getSocialList();
 			AList.add(B);
 			AList.add(C);
 			userA.setSocialList(AList);
-			DaoUser.UpdateUserInDatabase(userA);
-			User userB = DaoUser.getUserById(2);
+			carpoolDaoUser.UpdateUserInDatabase(userA);
+			User userB = carpoolDaoUser.getUserById(2);
 			ArrayList<User> BList = userB.getSocialList();
 			BList.add(C);
 			userB.setSocialList(BList);
-			DaoUser.UpdateUserInDatabase(userB);
+			carpoolDaoUser.UpdateUserInDatabase(userB);
 		} catch (UserNotFoundException e) {
 			e.printStackTrace();
 			assertTrue(false);
@@ -89,13 +89,13 @@ public class SocialListTest {
 		}
 		//test the above relationship
 			try {
-				User userA = DaoUser.getUserById(1);
+				User userA = carpoolDaoUser.getUserById(1);
 				assertTrue(userA.getSocialList().get(0).getName().equals("name2"));
 				assertTrue(userA.getSocialList().get(1).getName().equals("name3"));
-				User userB = DaoUser.getUserById(2);
+				User userB = carpoolDaoUser.getUserById(2);
 				assertTrue(userB.getSocialList().get(0).getName().equals("name"));
 				assertTrue(userB.getSocialList().get(1).getName().equals("name3"));
-				User userC = DaoUser.getUserById(3);
+				User userC = carpoolDaoUser.getUserById(3);
 				assertTrue(userC.getSocialList().get(0).getName().equals("name2"));
 			} catch (UserNotFoundException e) {
 				e.printStackTrace();

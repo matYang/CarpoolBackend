@@ -10,9 +10,9 @@ import org.junit.Test;
 
 import carpool.common.DateUtility;
 import carpool.constants.Constants;
-import carpool.database.DaoBasic;
-import carpool.database.DaoMessage;
-import carpool.database.DaoUser;
+import carpool.database.carpoolDaoBasic;
+import carpool.database.carpoolDaoMessage;
+import carpool.database.carpoolDaoUser;
 import carpool.dbservice.MessageDaoService;
 import carpool.dbservice.NotificationDaoService;
 import carpool.dbservice.UserDaoService;
@@ -30,7 +30,7 @@ public class DMMessageDaoServiceTest {
 
 	@Test
 	public void updateTest(){
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 		Calendar calender = Calendar.getInstance();
 		Calendar calender2 = DateUtility.DateToCalendar(new Date(9999999));
 		User defaultUser = new User(0, "password", "name", 0, 0,0, new ArrayList<Message>(),
@@ -40,7 +40,7 @@ public class DMMessageDaoServiceTest {
 				Constants.userState.normal,Constants.userSearchState.universityAsk,
 				calender,calender,"paypal");
 		try {
-			DaoUser.addUserToDatabase(defaultUser);
+			carpoolDaoUser.addUserToDatabase(defaultUser);
 		} catch (Exception e1) {
 			assertTrue(false);
 		}
@@ -147,7 +147,7 @@ public class DMMessageDaoServiceTest {
 	
 	@Test
 	public void searchTest(){
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 		Calendar calenderx = Calendar.getInstance();
 		//init user
 		ArrayList<String> group = new ArrayList<String>();
@@ -160,7 +160,7 @@ public class DMMessageDaoServiceTest {
 		group.add("a a a a");
 		defaultUser1.setUniversityGroup(group);
 		try {
-			DaoUser.addUserToDatabase(defaultUser1);
+			carpoolDaoUser.addUserToDatabase(defaultUser1);
 		} catch (Exception e) {
 			assertTrue(false);
 		}
@@ -174,7 +174,7 @@ public class DMMessageDaoServiceTest {
 		group.add("a a a b");
 		defaultUser2.setUniversityGroup(group);
 		try {
-			DaoUser.addUserToDatabase(defaultUser2);
+			carpoolDaoUser.addUserToDatabase(defaultUser2);
 		} catch (Exception e) {
 			assertTrue(false);
 		}
@@ -188,7 +188,7 @@ public class DMMessageDaoServiceTest {
 		group.add("a a b c");
 		defaultUser3.setUniversityGroup(group);
 		try {
-			DaoUser.addUserToDatabase(defaultUser3);
+			carpoolDaoUser.addUserToDatabase(defaultUser3);
 		} catch (Exception e) {
 			assertTrue(false);
 		}
@@ -210,10 +210,10 @@ public class DMMessageDaoServiceTest {
 		Message default4 = new Message(3,3,"ImgPath4","Name4",30,40,"phone4","email4","qq4",Constants.paymentMethod.all,
 				new LocationRepresentation("a a b c"),calender1,calender4,"note4",Constants.messageType.ask,Constants.gender.both,
 				Constants.messageState.deleted,50,true,false,new ArrayList<Transaction>(),calenderx);
-		DaoMessage.addMessageToDatabase(default1);
-		DaoMessage.addMessageToDatabase(default2);
-		DaoMessage.addMessageToDatabase(default3);
-		DaoMessage.addMessageToDatabase(default4);
+		carpoolDaoMessage.addMessageToDatabase(default1);
+		carpoolDaoMessage.addMessageToDatabase(default2);
+		carpoolDaoMessage.addMessageToDatabase(default3);
+		carpoolDaoMessage.addMessageToDatabase(default4);
 		//init Message finish
 		try {
 			assertTrue(MessageDaoService.extendedMessageSearch(new LocationRepresentation("a a b c"), calender3, Constants.userSearchState.universityAsk, 1000).get(0).getOwnerImgPath().equals("ImgPath4"));

@@ -62,9 +62,9 @@ public class UserSingleLocationResource extends PseudoResource{
 				
 				User user = UserDaoService.getUserById(userId);
 				user.setLocation(location);
-				UserDaoService.updateUser(user);
+				user = UserDaoService.updateUser(user);
 				
-				response = location.toJSON();
+				response = user.toJSON();
 				setStatus(Status.SUCCESS_OK);
 
 			}

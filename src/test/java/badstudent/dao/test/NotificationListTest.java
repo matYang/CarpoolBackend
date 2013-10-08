@@ -8,11 +8,11 @@ import java.util.Calendar;
 import org.junit.Test;
 
 import carpool.constants.Constants;
-import carpool.database.DaoBasic;
-import carpool.database.DaoMessage;
+import carpool.database.carpoolDaoBasic;
+import carpool.database.carpoolDaoMessage;
 import carpool.database.DaoNotification;
 import carpool.database.DaoTransaction;
-import carpool.database.DaoUser;
+import carpool.database.carpoolDaoUser;
 import carpool.dbservice.UserDaoService;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
@@ -51,20 +51,20 @@ public class NotificationListTest {
 	
 	@Test
 	public void create(){
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 		try {
-			DaoUser.addUserToDatabase(defaultUser1);
-			DaoUser.addUserToDatabase(defaultUser2);
+			carpoolDaoUser.addUserToDatabase(defaultUser1);
+			carpoolDaoUser.addUserToDatabase(defaultUser2);
 		} catch (Exception e) {
 			assertTrue(false);
 		}
-		DaoMessage.addMessageToDatabase(default1);
+		carpoolDaoMessage.addMessageToDatabase(default1);
 		DaoTransaction.addTransactionToDatabase(t);
 		DaoNotification.addNotificationToDatabase(n1);
 		DaoNotification.addNotificationToDatabase(n2);
 		
 		try {
-			User user = DaoUser.getUserById(1);
+			User user = carpoolDaoUser.getUserById(1);
 			assertTrue(user.getNotificationList().size()==2);
 		} catch (UserNotFoundException e) {
 			assertTrue(false);
@@ -77,7 +77,7 @@ public class NotificationListTest {
 		}
 		
 		try {
-			User user = DaoUser.getUserById(2);
+			User user = carpoolDaoUser.getUserById(2);
 			assertTrue(user.getNotificationList().size()==0);
 		} catch (UserNotFoundException e) {
 			assertTrue(false);

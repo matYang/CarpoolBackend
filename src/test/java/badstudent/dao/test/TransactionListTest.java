@@ -9,10 +9,10 @@ import org.junit.Test;
 
 import carpool.constants.Constants;
 import carpool.constants.Constants.paymentMethod;
-import carpool.database.DaoBasic;
-import carpool.database.DaoMessage;
+import carpool.database.carpoolDaoBasic;
+import carpool.database.carpoolDaoMessage;
 import carpool.database.DaoTransaction;
-import carpool.database.DaoUser;
+import carpool.database.carpoolDaoUser;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
@@ -55,21 +55,21 @@ public class TransactionListTest {
 	
 	@Test
 	public void create(){
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 		try {
-			DaoUser.addUserToDatabase(defaultUser1);
-			DaoUser.addUserToDatabase(defaultUser2);
+			carpoolDaoUser.addUserToDatabase(defaultUser1);
+			carpoolDaoUser.addUserToDatabase(defaultUser2);
 		} catch (Exception e) {
 			assertTrue(false);
 		}
-		DaoMessage.addMessageToDatabase(default1);
-		DaoMessage.addMessageToDatabase(default2);
-		DaoMessage.addMessageToDatabase(default3);
+		carpoolDaoMessage.addMessageToDatabase(default1);
+		carpoolDaoMessage.addMessageToDatabase(default2);
+		carpoolDaoMessage.addMessageToDatabase(default3);
 		DaoTransaction.addTransactionToDatabase(defaultT1);
 		DaoTransaction.addTransactionToDatabase(defaultT2);
 		try {
-			assertTrue(DaoUser.getUserById(1).getTransactionList().size()==2);
-			assertTrue(DaoUser.getUserById(2).getTransactionList().size()==2);
+			assertTrue(carpoolDaoUser.getUserById(1).getTransactionList().size()==2);
+			assertTrue(carpoolDaoUser.getUserById(2).getTransactionList().size()==2);
 		} catch (UserNotFoundException e) {
 			assertTrue(false);
 		}

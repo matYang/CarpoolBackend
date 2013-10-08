@@ -10,11 +10,11 @@ import org.junit.Test;
 
 import carpool.common.DateUtility;
 import carpool.constants.Constants;
-import carpool.database.DaoBasic;
-import carpool.database.DaoMessage;
+import carpool.database.carpoolDaoBasic;
+import carpool.database.carpoolDaoMessage;
 import carpool.database.DaoNotification;
 import carpool.database.DaoTransaction;
-import carpool.database.DaoUser;
+import carpool.database.carpoolDaoUser;
 import carpool.exception.notification.NotificationNotFoundException;
 import carpool.model.Message;
 import carpool.model.Notification;
@@ -51,15 +51,15 @@ public class DaoNotificationTest {
 	
 	@Test
 	public void create(){
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 		try {
-			DaoUser.addUserToDatabase(defaultUser);
-			DaoUser.addUserToDatabase(defaultUser2);
+			carpoolDaoUser.addUserToDatabase(defaultUser);
+			carpoolDaoUser.addUserToDatabase(defaultUser2);
 		} catch (Exception e) {
 			assertTrue(false);
 		}
-		DaoMessage.addMessageToDatabase(default1);
-		DaoMessage.addMessageToDatabase(default2);
+		carpoolDaoMessage.addMessageToDatabase(default1);
+		carpoolDaoMessage.addMessageToDatabase(default2);
 		DaoTransaction.addTransactionToDatabase(t);
 		
 		Notification n = new Notification(1, Constants.notificationType.on_message, Constants.notificationEvent.followed,

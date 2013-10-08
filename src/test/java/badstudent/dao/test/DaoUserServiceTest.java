@@ -9,9 +9,9 @@ import org.junit.Test;
 
 import carpool.constants.Constants;
 import carpool.constants.Constants.paymentMethod;
-import carpool.database.DaoBasic;
+import carpool.database.carpoolDaoBasic;
 import carpool.database.DaoTransaction;
-import carpool.database.DaoUser;
+import carpool.database.carpoolDaoUser;
 import carpool.dbservice.EmailDaoService;
 import carpool.dbservice.MessageDaoService;
 import carpool.dbservice.NotificationDaoService;
@@ -30,7 +30,7 @@ public class DaoUserServiceTest {
 
 	@Test
 	public void updateTest(){
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 		User defaultUser = new User(1, "password", "name", 0, 0,0, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
@@ -132,7 +132,7 @@ public class DaoUserServiceTest {
 	
 	@Test
 	public void redisSessionTest(){
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 		User defaultUser = new User(1, "password", "name", 0, 0,0, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
@@ -150,7 +150,7 @@ public class DaoUserServiceTest {
 	
 	@Test
 	public void listsTest(){
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 		User defaultUser = new User(1, "password", "name", 0, 0,0, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
@@ -175,7 +175,7 @@ public class DaoUserServiceTest {
 		DaoTransaction.addTransactionToDatabase(defaultT1);
 		try {
 			UserDaoService.watchUser(1, 2);
-			assertTrue(DaoUser.getUserWhoWatchedUser(2).size()==1);
+			assertTrue(carpoolDaoUser.getUserWhoWatchedUser(2).size()==1);
 			assertTrue(NotificationDaoService.getAllNotifications().size()==1);
 			assertTrue(UserDaoService.getWatchedUsers(1).get(0).getName().equals("name2"));
 			UserDaoService.deWatchUser(1, 2);
@@ -186,7 +186,7 @@ public class DaoUserServiceTest {
 		
 		try {
 			UserDaoService.watchMessage(1, 1);
-			assertTrue(DaoUser.getUserWhoWatchedMessage(1).size()==1);
+			assertTrue(carpoolDaoUser.getUserWhoWatchedMessage(1).size()==1);
 			assertTrue(NotificationDaoService.getAllNotifications().size()==2);
 			assertTrue(UserDaoService.getWatchedMessaegs(1).get(0).getOwnerImgPath().equals("ImgPath"));
 			UserDaoService.deWatchMessage(1, 1);
@@ -209,7 +209,7 @@ public class DaoUserServiceTest {
 	
 	//@Test
 	public void EmailActivationTest(){
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 		User defaultUser = new User(1, "password", "name", 0, 0,0, new ArrayList<Message>(),
 				new ArrayList<Message>(),new ArrayList<User>(),new ArrayList<Transaction>(),
 				new ArrayList<Notification>(),new ArrayList<String>(),20,Constants.gender.male,
@@ -225,7 +225,7 @@ public class DaoUserServiceTest {
 		assertTrue(EmailDaoService.sendActivationEmail(1, "shhyfz@hotmail.com"));
 		assertTrue(EmailDaoService.reSendActivationEmail(1));
 		try {
-			EmailDaoService.activateUserEmail(1, DaoBasic.getJedis().get(Constants.key_emailActivationAuth+"1"));
+			EmailDaoService.activateUserEmail(1, carpoolDaoBasic.getJedis().get(Constants.key_emailActivationAuth+"1"));
 		} catch (UserNotFoundException e) {
 			assertTrue(false);
 		}

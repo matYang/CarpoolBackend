@@ -10,8 +10,8 @@ import org.junit.Test;
 
 import carpool.common.DateUtility;
 import carpool.constants.Constants;
-import carpool.database.DaoBasic;
-import carpool.database.DaoUser;
+import carpool.database.carpoolDaoBasic;
+import carpool.database.carpoolDaoUser;
 import carpool.dbservice.UserDaoService;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
@@ -42,17 +42,17 @@ public class DaoUserTest {
 	public void search(){
 		init();
 		try {
-			DaoUser.addUserToDatabase(defaultUser);
-			DaoUser.addUserToDatabase(defaultUser2);
+			carpoolDaoUser.addUserToDatabase(defaultUser);
+			carpoolDaoUser.addUserToDatabase(defaultUser2);
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(false);
 		}
-		ArrayList<User> set = DaoUser.searchUser("name", "phon2", "%", "%");
+		ArrayList<User> set = carpoolDaoUser.searchUser("name", "phon2", "%", "%");
 		assertTrue(set.size()==2);
 		
 		try {
-			DaoUser.deleteUserFromDatabase(1);
+			carpoolDaoUser.deleteUserFromDatabase(1);
 		} catch (UserNotFoundException e) {
 			e.printStackTrace();
 			assertTrue(false);
@@ -65,16 +65,16 @@ public class DaoUserTest {
 		init();
 		User user = null;
 		try {
-			user = DaoUser.addUserToDatabase(defaultUser);
+			user = carpoolDaoUser.addUserToDatabase(defaultUser);
 			int oldid = user.getUserId();
-			user = DaoUser.getUserByEmail("email");
+			user = carpoolDaoUser.getUserByEmail("email");
 			assertTrue(user.getUserId()==oldid);
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(false);
 		}
 		try {
-			user = DaoUser.getUserById(user.getUserId());
+			user = carpoolDaoUser.getUserById(user.getUserId());
 			assertTrue(user.isPasswordCorrect("password"));
 			assertTrue(user.getName().equals("name"));
 			assertTrue(user.getLevel()==0);
@@ -109,13 +109,13 @@ public class DaoUserTest {
 		
 		defaultUser2.setUserId(user.getUserId());
 		try {
-			DaoUser.UpdateUserInDatabase(defaultUser2);
+			carpoolDaoUser.UpdateUserInDatabase(defaultUser2);
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertTrue(false);
 		}
 		try {
-			user = DaoUser.getUserById(defaultUser2.getUserId());
+			user = carpoolDaoUser.getUserById(defaultUser2.getUserId());
 			assertTrue(user.isPasswordCorrect("password2"));
 			assertTrue(user.getName().equals("name2"));
 			assertTrue(user.getLevel()==1);
@@ -148,7 +148,7 @@ public class DaoUserTest {
 			assertTrue(false);
 		}
 		try {
-			DaoUser.deleteUserFromDatabase(user.getUserId());
+			carpoolDaoUser.deleteUserFromDatabase(user.getUserId());
 		} catch (UserNotFoundException e) {
 			e.printStackTrace();
 			assertTrue(false);
@@ -156,6 +156,6 @@ public class DaoUserTest {
 	}
 	
 	public void init(){
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 	}
 }

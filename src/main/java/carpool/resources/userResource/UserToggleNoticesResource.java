@@ -43,9 +43,9 @@ public class UserToggleNoticesResource extends PseudoResource{
 			User user = UserDaoService.getUserById(userId);
 			user.setEmailNotice(emailNotice);
 			user.setPhoneNotice(phoneNotice);
-			UserDaoService.updateUser(user);
+			user = UserDaoService.updateUser(user);
 			
-			response = JSONFactory.toJSON(emailNotice);
+			response = JSONFactory.toJSON(user);
 			setStatus(Status.SUCCESS_OK);
 
 

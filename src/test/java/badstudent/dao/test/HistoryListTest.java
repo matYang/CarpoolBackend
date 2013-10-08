@@ -13,10 +13,10 @@ import carpool.common.Validator;
 import carpool.constants.Constants;
 import carpool.constants.Constants.paymentMethod;
 import carpool.constants.Constants.userSearchState;
-import carpool.database.DaoBasic;
-import carpool.database.DaoMessage;
+import carpool.database.carpoolDaoBasic;
+import carpool.database.carpoolDaoMessage;
 import carpool.database.DaoTransaction;
-import carpool.database.DaoUser;
+import carpool.database.carpoolDaoUser;
 import carpool.dbservice.UserDaoService;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -60,21 +60,21 @@ public class HistoryListTest {
 	
     @Test
     public void setup() {
-    	DaoBasic.clearBothDatabase();
+    	carpoolDaoBasic.clearBothDatabase();
     	try{
-    		DaoUser.addUserToDatabase(defaultUser1);
-    		DaoUser.addUserToDatabase(defaultUser2);
-    		DaoMessage.addMessageToDatabase(default1);
-    		DaoMessage.addMessageToDatabase(default2);
-    		DaoMessage.addMessageToDatabase(default3);
-    		DaoMessage.addMessageToDatabase(default4);
+    		carpoolDaoUser.addUserToDatabase(defaultUser1);
+    		carpoolDaoUser.addUserToDatabase(defaultUser2);
+    		carpoolDaoMessage.addMessageToDatabase(default1);
+    		carpoolDaoMessage.addMessageToDatabase(default2);
+    		carpoolDaoMessage.addMessageToDatabase(default3);
+    		carpoolDaoMessage.addMessageToDatabase(default4);
     	}catch(Exception e){
     		assertTrue(false);
     	}
     	DaoTransaction.addTransactionToDatabase(defaultT1);
     
         try {
-			assertTrue(DaoUser.getUserById(2).getHistoryList().size()==3);
+			assertTrue(carpoolDaoUser.getUserById(2).getHistoryList().size()==3);
 		} catch (UserNotFoundException e) {
 			e.printStackTrace();
 		}

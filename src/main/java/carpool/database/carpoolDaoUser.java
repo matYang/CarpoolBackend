@@ -25,12 +25,12 @@ import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
 
 
-public class DaoUser {
+public class carpoolDaoUser {
 
 	public static ArrayList<User> searchUser(String name, String phone, String email, String qq){
 		ArrayList<User> retVal = new ArrayList<User>();
 		String query = "SELECT * FROM User WHERE name LIKE ? OR phone LIKE ? OR email LIKE ? OR qq LIKE ?;";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setString(1, name);
 			stmt.setString(2, phone);
 			stmt.setString(3, email);
@@ -56,7 +56,7 @@ public class DaoUser {
 				"totalTranscations,universityGroup,age,gender,phone,email,qq," +
 				"imgPath,location,emailActivated,phoneActivated,emailNotice," +
 				"phoneNotice,state,searchState,lastLogin,creationTime,paypal) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 			stmt.setString(1, user.getPassword());
 			stmt.setString(2, user.getName());
 			stmt.setInt(3, user.getLevel());
@@ -101,7 +101,7 @@ public class DaoUser {
 		String query3 = "DELETE from Message where ownerId = '" + id +"'";
 		String query4 = "DELETE from SocialList where mainUser = '" + id +"'";
 		String query5 = "DELETE FROM Transaction WHERE initUserId="+id+" OR targetUserId = "+id;
-		try(Statement stmt = DaoBasic.getSQLConnection().createStatement()){
+		try(Statement stmt = carpoolDaoBasic.getSQLConnection().createStatement()){
 			stmt.addBatch(query);
 			stmt.addBatch(query2);
 			stmt.addBatch(query3);
@@ -120,7 +120,7 @@ public class DaoUser {
 				"universityGroup = ?,age = ?,gender = ?,phone = ?,email = ?,qq = ?,imgPath = ?,location = ?," +
 				"emailActivated = ?,phoneActivated = ?,emailNotice = ?,phoneNotice = ?,state = ?,searchState = ?," +
 				"lastLogin = ?,creationTime = ?,paypal = ? WHERE userId = ?";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setString(1, user.getPassword());
 			stmt.setString(2, user.getName());
 			stmt.setInt(3, user.getLevel());
@@ -158,7 +158,7 @@ public class DaoUser {
 	public static User getUserById(int id) throws UserNotFoundException{
 		String query = "SELECT * FROM User WHERE userId = ?";
 		User user = null;
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, id);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
@@ -180,7 +180,7 @@ public class DaoUser {
 	public static User getUserByEmail(String email) throws UserNotFoundException{
 		String query = "SELECT * FROM User WHERE email = ?";
 		User user = null;
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setString(1, email);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
@@ -202,7 +202,7 @@ public class DaoUser {
 	public static ArrayList<User> getUserWhoWatchedMessage(int messageId){
 		String query = "SELECT * FROM User JOIN WatchList ON (User.userId = WatchList.User_userId AND WatchList.Message_messageId = ?)";
 		ArrayList<User> users = new ArrayList<User>();
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, messageId);
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
@@ -217,7 +217,7 @@ public class DaoUser {
 	public static ArrayList<User> getUserWhoWatchedUser(int userId){
 		String query = "SELECT * FROM User JOIN SocialList ON (User.userId = SocialList.mainUser AND SocialList.subUser = ?)";
 		ArrayList<User> users = new ArrayList<User>();
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, userId);
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
@@ -258,21 +258,21 @@ public class DaoUser {
 	private static User addHistoryListToUser(User user) {
 		ArrayList<Message> historyList = new ArrayList<Message>();
 		String query = "SELECT * from Message WHERE ownerId = ?";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, user.getUserId());
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
-				historyList.add(DaoMessage.createMessageByResultSet(rs));
+				historyList.add(carpoolDaoMessage.createMessageByResultSet(rs));
 			}
 		}catch(SQLException e){
 			DebugLog.d(e.getMessage());
 		}
 		query = "SELECT * FROM Message JOIN Transaction ON ( Transaction.messageId = Message.messageId AND Transaction.initUserId = ?)";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, user.getUserId());
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
-				historyList.add(DaoMessage.createMessageByResultSet(rs));
+				historyList.add(carpoolDaoMessage.createMessageByResultSet(rs));
 			}
 		}catch(SQLException e){
 			DebugLog.d(e.getMessage());
@@ -289,7 +289,7 @@ public class DaoUser {
 		}
 		query2 = query2.substring(0,query2.length()-1);
 		query2 = query2 + ";";
-		try(Statement stmt = DaoBasic.getSQLConnection().createStatement()){
+		try(Statement stmt = carpoolDaoBasic.getSQLConnection().createStatement()){
 			stmt.addBatch(query);
 			if(user.getWatchList().size()!=0){
 				stmt.addBatch(query2);
@@ -303,11 +303,11 @@ public class DaoUser {
 	private static User addWatchListToUser(User user) {
 		ArrayList<Message> watchLsit = new ArrayList<Message>();
 		String query = "SELECT * FROM Message JOIN WatchList ON (Message.messageId = WatchList.Message_messageId AND WatchList.User_userId = ?);";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, user.getUserId());
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
-				watchLsit.add(DaoMessage.createMessageByResultSet(rs));
+				watchLsit.add(carpoolDaoMessage.createMessageByResultSet(rs));
 			}
 		} catch (SQLException e) {
 			DebugLog.d(e.getMessage());
@@ -324,7 +324,7 @@ public class DaoUser {
 		}
 		query2 = query2.substring(0,query2.length()-1);
 		query2 = query2 + ";";
-		try(Statement stmt = DaoBasic.getSQLConnection().createStatement()){
+		try(Statement stmt = carpoolDaoBasic.getSQLConnection().createStatement()){
 			stmt.addBatch(query);
 			if(user.getSocialList().size()!=0){
 				stmt.addBatch(query2);
@@ -338,11 +338,11 @@ public class DaoUser {
 	private static User addSocialListToUser(User user) {
 		ArrayList<User> socialLsit = new ArrayList<User>();
 		String query = "SELECT * FROM User JOIN SocialList ON (User.userId = SocialList.subUser AND SocialList.mainUser = ?);";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, user.getUserId());
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
-				socialLsit.add(DaoUser.createUserByResultSet(rs));
+				socialLsit.add(carpoolDaoUser.createUserByResultSet(rs));
 			}
 		} catch (SQLException e) {
 			DebugLog.d(e.getMessage());
@@ -354,7 +354,7 @@ public class DaoUser {
 	private static User addTransactionListToUser(User user){
 		ArrayList<Transaction> transactionList = new ArrayList<Transaction>();
 		String query = "SELECT * FROM Transaction WHERE initUserId=? OR targetUserId = ?";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, user.getUserId());
 			stmt.setInt(2, user.getUserId());
 			ResultSet rs = stmt.executeQuery();
@@ -371,7 +371,7 @@ public class DaoUser {
 	private static User addNotificationListToUser(User user){
 		ArrayList<Notification> notificationList = new ArrayList<Notification>();
 		String query = "SELECT * FROM Notification WHERE targetUserId = ?;";
-		try(PreparedStatement stmt = DaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, user.getUserId());
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){

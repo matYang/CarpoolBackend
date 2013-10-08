@@ -12,7 +12,7 @@ import carpool.common.DateUtility;
 import carpool.constants.Constants;
 import carpool.constants.Constants.paymentMethod;
 import carpool.constants.Constants.transactionState;
-import carpool.database.DaoBasic;
+import carpool.database.carpoolDaoBasic;
 import carpool.database.DaoTransaction;
 import carpool.dbservice.MessageDaoService;
 import carpool.dbservice.UserDaoService;
@@ -52,7 +52,7 @@ public class DaoTransactionTest {
 				targetUserImgPath, targetUserName, targetUserLevel, messageId, messageNote, paymentMethod, price, requestInfo,
 				responseInfo, startTime, endTime, location, established, success, state, historyDeleted, creationTime)
 		*/
-		DaoBasic.clearBothDatabase();
+		carpoolDaoBasic.clearBothDatabase();
 		UserDaoService.createNewUser(defaultUser);
 		UserDaoService.createNewUser(defaultUser2);
 		MessageDaoService.createNewMessage(default1);

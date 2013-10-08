@@ -42,8 +42,10 @@ public class UserResource extends PseudoResource{
 			String email = jsonUser.getString("email");
 			LocationRepresentation location = new LocationRepresentation(jsonUser.getJSONObject("location"));
 			
+			DebugLog.d(jsonUser.toString());
+			
 			//if email is used, do not register
-			if (EmailDaoService.isEmailAvailable(email)){
+			if (!EmailDaoService.isEmailAvailable(email)){
 				throw new ValidationException("Email already in use");
 			}
 			
