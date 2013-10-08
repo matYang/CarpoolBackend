@@ -44,7 +44,7 @@ public class carpoolDAOUser {
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
 				User user = createUserByResultSet(rs);
-				user = addHistoryListToUser(user);
+				//user = addHistoryListToUser(user);
 				user = addWatchListToUser(user);
 				user = addSocialListToUser(user);
 				user = addTransactionListToUser(user);
@@ -202,7 +202,7 @@ public class carpoolDAOUser {
 		}catch(SQLException e){
 			DebugLog.d(e.getMessage());
 		}
-		user = addHistoryListToUser(user);
+		//user = addHistoryListToUser(user);
 		user = addWatchListToUser(user);
 		user = addSocialListToUser(user);
 		user = addTransactionListToUser(user);
@@ -224,7 +224,7 @@ public class carpoolDAOUser {
 		}catch(SQLException e){
 			DebugLog.d(e.getMessage());
 		}
-		user = addHistoryListToUser(user);
+		//user = addHistoryListToUser(user);
 		user = addWatchListToUser(user);
 		user = addSocialListToUser(user);
 		user = addTransactionListToUser(user);
@@ -278,31 +278,31 @@ public class carpoolDAOUser {
 		return user;
 	}
 
-	private static User addHistoryListToUser(User user) throws UserNotFoundException {
-		ArrayList<Message> historyList = new ArrayList<Message>();
-		String query = "SELECT * from carpoolDAOMessage WHERE ownerId = ?";
-		try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
-			stmt.setInt(1, user.getUserId());
-			ResultSet rs = stmt.executeQuery();
-			while(rs.next()){
-				historyList.add(carpoolDAOMessage.createMessageByResultSet(rs));
-			}
-		}catch(SQLException e){
-			DebugLog.d(e.getMessage());
-		}
-		query = "SELECT * FROM carpoolDAOMessage JOIN Transaction ON ( Transaction.messageId = carpoolDAOMessage.messageId AND Transaction.initUserId = ?)";
-		try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
-			stmt.setInt(1, user.getUserId());
-			ResultSet rs = stmt.executeQuery();
-			while(rs.next()){
-				historyList.add(carpoolDAOMessage.createMessageByResultSet(rs));
-			}
-		}catch(SQLException e){
-			DebugLog.d(e.getMessage());
-		}
-		user.setHistoryList(historyList);
-		return user;
-	}
+//	private static User addHistoryListToUser(User user) throws UserNotFoundException {
+//		ArrayList<Message> historyList = new ArrayList<Message>();
+//		String query = "SELECT * from carpoolDAOMessage WHERE ownerId = ?";
+//		try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
+//			stmt.setInt(1, user.getUserId());
+//			ResultSet rs = stmt.executeQuery();
+//			while(rs.next()){
+//				historyList.add(carpoolDAOMessage.createMessageByResultSet(rs));
+//			}
+//		}catch(SQLException e){
+//			DebugLog.d(e.getMessage());
+//		}
+//		query = "SELECT * FROM carpoolDAOMessage JOIN Transaction ON ( Transaction.messageId = carpoolDAOMessage.messageId AND Transaction.initUserId = ?)";
+//		try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
+//			stmt.setInt(1, user.getUserId());
+//			ResultSet rs = stmt.executeQuery();
+//			while(rs.next()){
+//				historyList.add(carpoolDAOMessage.createMessageByResultSet(rs));
+//			}
+//		}catch(SQLException e){
+//			DebugLog.d(e.getMessage());
+//		}
+//		user.setHistoryList(historyList);
+//		return user;
+//	}
 
 	private static void updateWatchList(User user) {
 		String query = "DELETE from WatchList where User_userId = " + user.getUserId();
@@ -330,7 +330,7 @@ public class carpoolDAOUser {
 			stmt.setInt(1, user.getUserId());
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
-				watchLsit.add(carpoolDAOMessage.createMessageByResultSet(rs));
+				watchLsit.add(carpoolDAOMessage.createMessageByResultSet(rs,true));
 			}
 		} catch (SQLException e) {
 			DebugLog.d(e.getMessage());
@@ -338,44 +338,43 @@ public class carpoolDAOUser {
 		user.setWatchList(watchLsit);
 		return user;
 	}
-    private static boolean hasUserInSocialList(User mainUser, User subUser){
-    	ArrayList<User> slist = new ArrayList<User>();
-    	slist = mainUser.getSocialList();
-    	
-    	for(int i = 0; i<slist.size() ;i++)
-    	{
-    		try {
-				if(slist.get(i).equals(subUser)){
+    private static boolean hasUserInSocialList(int mainUser, int subUser){
+    	String query = "SELECT COUNT(*) AS total FROM SocialList WHERE mainUser =" +mainUser+ " AND subUser ="+subUser+";";
+    	try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
+    		ResultSet rs = stmt.executeQuery();
+			if(rs.next()){
+				if(rs.getInt("total")==1){
 					return true;
+				}else{
+					return false;
 				}
-			} catch (ValidationException e) {				
-				e.printStackTrace();
+				
 			}
-    	}
+    	} catch (SQLException e) {
+			e.printStackTrace();
+		}
     	return false;
     }
-   public static void addToSocialList(User user,User subUser) {
+   public static void addToSocialList(int user,int subUser) {
 		String query = "SET foreign_key_checks = 0;INSERT INTO SocialList (mainUser,subUser) VALUES(?,?);SET foreign_key_checks = 1;";
 if(!hasUserInSocialList(user,subUser)){
 		try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
-		stmt.setInt(1, user.getUserId());
-		stmt.setInt(2, subUser.getUserId());
-		stmt.executeUpdate();
-		user.getSocialList().add(subUser);
+			stmt.setInt(1, user);
+			stmt.setInt(2, subUser);
+			stmt.executeUpdate();		
 		}catch(SQLException e){
 			DebugLog.d(e.getMessage());
 		}
 	 }
    }	
    
-   public static void deleteFromSocialList(User user,User subUser){
+   public static void deleteFromSocialList(int user,int subUser){
 	   String query = "SET foreign_key_checks = 0;DELETE FROM SocialList WHERE mainUser =? AND subUser = ?;SET foreign_key_checks = 1;";
 	   if(hasUserInSocialList(user,subUser)){
 		   try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
-				stmt.setInt(1, user.getUserId());
-				stmt.setInt(2, subUser.getUserId());
-				stmt.executeUpdate();
-				user.getSocialList().remove(subUser);
+				stmt.setInt(1, user);
+				stmt.setInt(2, subUser);
+				stmt.executeUpdate();				
 				}catch(SQLException e){
 					DebugLog.d(e.getMessage());
 				}
@@ -383,11 +382,11 @@ if(!hasUserInSocialList(user,subUser)){
 	   
    }
     
-   public static ArrayList<User> getSocialListOfUser(User user){
+   public static ArrayList<User> getSocialListOfUser(int user){
 	   ArrayList<User> slist = new ArrayList<User>();
 	   String query = "SELECT * FROM carpoolDAOUser JOIN SocialList ON (carpoolDAOUser.userId = SocialList.subUser AND SocialList.mainUser = ?);";
 	   try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
-			stmt.setInt(1, user.getUserId());
+			stmt.setInt(1, user);
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
 				slist.add(carpoolDAOUser.createUserByResultSet(rs));
@@ -415,14 +414,14 @@ if(!hasUserInSocialList(user,subUser)){
 		return user;
 	}	
 	
-	public static ArrayList<Message> getUserMessageHistory(User user) throws UserNotFoundException{
+	public static ArrayList<Message> getUserMessageHistory(int user) throws UserNotFoundException{
 		ArrayList<Message> mlist = new ArrayList<Message>();
 		String query ="SELECT * FROM carpoolDAOMessage WHERE ownerId = ?";
 		try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
-			stmt.setInt(1, user.getUserId());
+			stmt.setInt(1, user);
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
-				mlist.add(carpoolDAOMessage.createMessageByResultSet(rs));
+				mlist.add(carpoolDAOMessage.createMessageByResultSet(rs,false));
 			}
 		} catch (SQLException e) {
 			DebugLog.d(e.getMessage());

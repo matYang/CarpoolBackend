@@ -63,7 +63,7 @@ public class carpoolDAOMessage{
 			stmt.setInt(12,targetType.code);
 			ResultSet rs = stmt.executeQuery();			
 				while(rs.next()){									
-					retVal.add(createMessageByResultSet(rs));
+					retVal.add(createMessageByResultSet(rs,false));
 					}			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -87,7 +87,7 @@ public class carpoolDAOMessage{
 				stmt.setInt(13,targetType.code);				
 				ResultSet rs = stmt.executeQuery();				
 					while(rs.next()){									
-						retVal.add(createMessageByResultSet(rs));
+						retVal.add(createMessageByResultSet(rs,false));
 					}				
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -205,7 +205,7 @@ public class carpoolDAOMessage{
 			stmt.setInt(1, id);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
-				message = createMessageByResultSet(rs);
+				message = createMessageByResultSet(rs,false);
 			}else{
 				throw new MessageNotFoundException();
 			}
@@ -216,10 +216,9 @@ public class carpoolDAOMessage{
 		return message;
 	}
 
-	protected static Message createMessageByResultSet(ResultSet rs) throws SQLException, UserNotFoundException {
-		//User owner;
-		//owner = DaoUser.getUserById(rs.getInt("ownerId"));
-		Message message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),null,rs.getBoolean("isRoundTrip"),new LocationRepresentation(rs.getString("departure_primaryLocation"),rs.getString("departure_customLocation"),rs.getInt("departure_customDepthIndex")),
+	protected static Message createMessageByResultSet(ResultSet rs,boolean shouldAddUser) throws SQLException, UserNotFoundException {
+		User owner = shouldAddUser ? DaoUser.getUserById(rs.getInt("ownerId")) : null;
+		Message message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),owner,rs.getBoolean("isRoundTrip"),new LocationRepresentation(rs.getString("departure_primaryLocation"),rs.getString("departure_customLocation"),rs.getInt("departure_customDepthIndex")),
 				DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("departure_timeSlot")),rs.getInt("departure_seatsNumber"),rs.getInt("departure_seatsBooked"),(ArrayList<Integer>)Parser.stringToList(rs.getString("departure_priceList"),new Integer(0)),
 				new LocationRepresentation(rs.getString("arrival_primaryLocation"),rs.getString("arrival_customLocation"),rs.getInt("arrival_customDepthIndex")),	DateUtility.DateToCalendar(rs.getTimestamp("arrival_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("arrival_timeSlot")),rs.getInt("arrival_seatsNumber"),rs.getInt("arrival_seatsBooked"),
 				(ArrayList<Integer>)Parser.stringToList(rs.getString("arrival_priceList"),new Integer(0)),Constants.paymentMethod.fromInt(rs.getInt("paymentMethod")),rs.getString("note"),
@@ -237,7 +236,7 @@ public class carpoolDAOMessage{
 		try(PreparedStatement stmt = carpoolDAOBasic.getSQLConnection().prepareStatement(query)){
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
-				retVal.add(createMessageByResultSet(rs));
+				retVal.add(createMessageByResultSet(rs,false));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

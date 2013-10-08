@@ -36,7 +36,6 @@ import carpool.model.representation.LocationRepresentation;
 import carpool.model.Message;
 import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
-import carpool.test.mockModel.MockUser;
 import static java.lang.System.out;
 
 public class CarpoolUserTest {
@@ -165,21 +164,21 @@ public class CarpoolUserTest {
 		
 		User user2 =  new User("password2", "email2", new LocationRepresentation ("primary2","custom2",1));
 		carpoolDAOUser.addUserToDatabase(user2);
-		carpoolDAOUser.addToSocialList(user,user2);
+		carpoolDAOUser.addToSocialList(user.getUserId(),user2.getUserId());
 		
 		
 		User user3 =  new User("password3", "email3", new LocationRepresentation ("primary3","custom3",1));
 		carpoolDAOUser.addUserToDatabase(user3);
-		carpoolDAOUser.addToSocialList(user,user3);
+		carpoolDAOUser.addToSocialList(user.getUserId(),user3.getUserId());
 		
 		User user4 =  new User("password4", "email4", new LocationRepresentation ("primary4","custom4",1));
 		carpoolDAOUser.addUserToDatabase(user4);
-		carpoolDAOUser.addToSocialList(user,user4);
+		carpoolDAOUser.addToSocialList(user.getUserId(),user4.getUserId());
 		
 		
 		try{
 			ArrayList<User> slist = new ArrayList<User>();
-	    	slist = user.getSocialList();
+	    	slist = carpoolDAOUser.getSocialListOfUser(user.getUserId());
 	    	if(slist !=null && slist.size()==3 && slist.get(0).equals(user2)&&slist.get(1).equals(user3)&&slist.get(2).equals(user4)){
 	    		//Passed;
 	      	}else{
@@ -190,13 +189,13 @@ public class CarpoolUserTest {
 			e.printStackTrace();
 			fail();
 		}
-		carpoolDAOUser.addToSocialList(user,user2);
-		carpoolDAOUser.addToSocialList(user,user3);
-		carpoolDAOUser.addToSocialList(user,user4);
+		carpoolDAOUser.addToSocialList(user.getUserId(),user2.getUserId());
+		carpoolDAOUser.addToSocialList(user.getUserId(),user3.getUserId());
+		carpoolDAOUser.addToSocialList(user.getUserId(),user4.getUserId());
 		
 		try{
 			ArrayList<User> slist = new ArrayList<User>();
-	    	slist = carpoolDAOUser.getSocialListOfUser(user);
+	    	slist = carpoolDAOUser.getSocialListOfUser(user.getUserId());
 	    	if(slist !=null && slist.size()==3 && slist.get(0).equals(user2)&&slist.get(1).equals(user3)&&slist.get(2).equals(user4)){
 	    		//Passed;
 	      	}else{
@@ -207,11 +206,11 @@ public class CarpoolUserTest {
 			e.printStackTrace();
 			fail();
 		}
-		carpoolDAOUser.addToSocialList(user2,user3);
-		carpoolDAOUser.addToSocialList(user2,user4);
+		carpoolDAOUser.addToSocialList(user2.getUserId(),user3.getUserId());
+		carpoolDAOUser.addToSocialList(user2.getUserId(),user4.getUserId());
 		try{
 			ArrayList<User> slist = new ArrayList<User>();
-	    	slist = user2.getSocialList();
+	    	slist = carpoolDAOUser.getSocialListOfUser(user2.getUserId());
 	    	if(slist !=null && slist.size()==2 && slist.get(0).equals(user3)&&slist.get(1).equals(user4)){
 	    		//Passed;
 	      	}else{
@@ -222,12 +221,12 @@ public class CarpoolUserTest {
 			e.printStackTrace();
 			fail();
 		}
-		carpoolDAOUser.deleteFromSocialList(user, user2);
-		carpoolDAOUser.deleteFromSocialList(user, user3);
-		carpoolDAOUser.deleteFromSocialList(user, user4);
+		carpoolDAOUser.deleteFromSocialList(user.getUserId(), user2.getUserId());
+		carpoolDAOUser.deleteFromSocialList(user.getUserId(), user3.getUserId());
+		carpoolDAOUser.deleteFromSocialList(user.getUserId(), user4.getUserId());
 		try{
 			ArrayList<User> slist = new ArrayList<User>();
-	    	slist = user.getSocialList();
+	    	slist = carpoolDAOUser.getSocialListOfUser(user.getUserId());
 	    	if(slist !=null && slist.size()==0){
 	    		//Passed;
 	      	}else{
@@ -239,10 +238,10 @@ public class CarpoolUserTest {
 			fail();
 		}
 		//Double Check
-		carpoolDAOUser.deleteFromSocialList(user, user);		
+		carpoolDAOUser.deleteFromSocialList(user.getUserId(), user.getUserId());		
 		try{
 			ArrayList<User> slist = new ArrayList<User>();
-	    	slist = user.getSocialList();
+	    	slist = carpoolDAOUser.getSocialListOfUser(user.getUserId());
 	    	if(slist !=null && slist.size()==0){
 	    		//Passed;
 	      	}else{
@@ -254,11 +253,11 @@ public class CarpoolUserTest {
 			fail();
 		}
 		
-		carpoolDAOUser.deleteFromSocialList(user2, user3);
-		carpoolDAOUser.deleteFromSocialList(user2, user4);
+		carpoolDAOUser.deleteFromSocialList(user2.getUserId(), user3.getUserId());
+		carpoolDAOUser.deleteFromSocialList(user2.getUserId(), user4.getUserId());
 		try{
 			ArrayList<User> slist = new ArrayList<User>();
-	    	slist = user2.getSocialList();
+	    	slist = carpoolDAOUser.getSocialListOfUser(user2.getUserId());
 	    	if(slist !=null && slist.size()==0){
 	    		//Passed;
 	      	}else{
@@ -309,7 +308,7 @@ public class CarpoolUserTest {
 		//Test
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();
-			mlist = carpoolDAOUser.getUserMessageHistory(user);
+			mlist = carpoolDAOUser.getUserMessageHistory(user.getUserId());
 			if(mlist !=null && mlist.size()==3 && mlist.get(0).equals(message) && mlist.get(1).equals(message2) && mlist.get(2).equals(message3)){
 			//Passed;	
 			}else{
