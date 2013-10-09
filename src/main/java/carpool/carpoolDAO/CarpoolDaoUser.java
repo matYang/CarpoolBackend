@@ -17,7 +17,6 @@ import carpool.constants.Constants;
 import carpool.constants.Constants.gender;
 import carpool.constants.Constants.userSearchState;
 import carpool.constants.Constants.userState;
-import carpool.database.carpoolDaoBasic;
 import carpool.database.DaoNotification;
 import carpool.database.DaoTransaction;
 import carpool.exception.ValidationException;

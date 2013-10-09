@@ -4,9 +4,9 @@ import java.util.Calendar;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import carpool.carpoolDAO.CarpoolDaoBasic;
+import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.constants.Constants;
-import carpool.database.carpoolDaoBasic;
-import carpool.database.carpoolDaoUser;
 import carpool.exception.PseudoException;
 import carpool.exception.ValidationException;
 import carpool.exception.user.UserNotFoundException;
@@ -25,7 +25,7 @@ public class AuthDaoService {
 	
 		User user;
 		try {
-			user = carpoolDaoUser.getUserByEmail(email);
+			user = CarpoolDaoUser.getUserByEmail(email);
 			if(!user.validate()){
 				throw new ValidationException("Account not valid");
 			}
@@ -47,7 +47,7 @@ public class AuthDaoService {
 	 */
 	public static boolean isResetPasswordValid(int userId, String authCode){
 		String key = Constants.key_forgetPasswordAuth+userId;
-		String match = carpoolDaoBasic.getJedis().get(key);
+		String match = CarpoolDaoBasic.getJedis().get(key);
 		return match.equals(authCode);
 	}
 
@@ -61,7 +61,7 @@ public class AuthDaoService {
 	 * @return	the topBarUser currently associated with this sessionString
 	 */
 	public static User getUserFromSession(String sessionString) {
-		String idTimeStamp = carpoolDaoBasic.getJedis().get(sessionString);
+		String idTimeStamp = CarpoolDaoBasic.getJedis().get(sessionString);
 		if(idTimeStamp==null){
 			return null;
 		}
@@ -71,7 +71,7 @@ public class AuthDaoService {
 			return null;
 		}
 		try {
-			User user = carpoolDaoUser.getUserById(Integer.parseInt(id));
+			User user = CarpoolDaoUser.getUserById(Integer.parseInt(id));
 			return user;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -97,7 +97,7 @@ public class AuthDaoService {
 		String timeStamp = c.getTimeInMillis()+"";
 		String randomString = generateRandomString();
 		String sessionString = randomString + "+" + id;
-		carpoolDaoBasic.getJedis().set(sessionString, id+"+"+timeStamp);
+		CarpoolDaoBasic.getJedis().set(sessionString, id+"+"+timeStamp);
 		return sessionString;
 	}
 
@@ -111,7 +111,7 @@ public class AuthDaoService {
 	 * @return authentication status
 	 */
 	public static boolean validateUserSession(int id, String userSessionString){
-		String IDTimeStamp = carpoolDaoBasic.getJedis().get(userSessionString);
+		String IDTimeStamp = CarpoolDaoBasic.getJedis().get(userSessionString);
 		if(IDTimeStamp==null){
 			return false;
 		}else{
@@ -123,13 +123,13 @@ public class AuthDaoService {
 			}
 			//Maximum age
 			if((Calendar.getInstance().getTimeInMillis()-Long.parseLong(timeStamp))>Constants.session_expireThreshould){
-				carpoolDaoBasic.getJedis().del(userSessionString);
+				CarpoolDaoBasic.getJedis().del(userSessionString);
 				return false;
 			}
 			if ((Calendar.getInstance().getTimeInMillis()-Long.parseLong(timeStamp))>Constants.session_updateThreshould){
 				Calendar c = Calendar.getInstance();
 				timeStamp = c.getTimeInMillis()+"";
-				carpoolDaoBasic.getJedis().set(userSessionString, ID+"+"+timeStamp);
+				CarpoolDaoBasic.getJedis().set(userSessionString, ID+"+"+timeStamp);
 			}
 		}
 		return true;
@@ -141,7 +141,7 @@ public class AuthDaoService {
 	 * @return  true if delete successfully
 	 */
 	public static boolean closeUserSession(String sessionString){
-		return carpoolDaoBasic.getJedis().del(sessionString)==1;
+		return CarpoolDaoBasic.getJedis().del(sessionString)==1;
 	}
 
 }

@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.Constants;
@@ -19,7 +20,7 @@ public class DaoNotification {
 	public static Notification addNotificationToDatabase(Notification n){
 		String query = "INSERT INTO Notification (notificationType,notificationEvent,initUserId,initUserName,messageId,transcationId," +
 				"targetUserId,summary,creationTime,checked,historyDeleted) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 			stmt.setInt(1, n.getNotificationType().code);
 			stmt.setInt(2, n.getNotificationEvent().code);
 			stmt.setInt(3, n.getInitUserId());
@@ -45,7 +46,7 @@ public class DaoNotification {
 	public static ArrayList<Notification> addNotificationToDatabase(ArrayList<Notification> notifications){
 		String query = "INSERT INTO Notification (notificationType,notificationEvent,initUserId,initUserName,messageId,transcationId," +
 				"targetUserId,summary,creationTime,checked,historyDeleted) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 			for(Notification n : notifications){
 				stmt.setInt(1, n.getNotificationType().code);
 				stmt.setInt(2, n.getNotificationEvent().code);
@@ -72,7 +73,7 @@ public class DaoNotification {
 
 	public static void deleteNotificationFromDatabase(int id) throws NotificationNotFoundException{
 		String query = "DELETE from Notification where notificationId = ?";
-		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, id);
 			if(stmt.executeUpdate()==0){
 				throw new NotificationNotFoundException();
@@ -85,7 +86,7 @@ public class DaoNotification {
 	public static void updateNotificationToDatabase(Notification n) throws NotificationNotFoundException{
 		String query = "UPDATE Notification SET notificationType=?,notificationEvent=?,initUserId=?,initUserName=?,messageId=?,transcationId=?," +
 				"targetUserId=?,summary=?,creationTime=?,checked=?,historyDeleted=? WHERE notificationId=?";
-		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, n.getNotificationType().code);
 			stmt.setInt(2, n.getNotificationEvent().code);
 			stmt.setInt(3, n.getInitUserId());
@@ -110,7 +111,7 @@ public class DaoNotification {
 	public static ArrayList<Notification> getALL(){
 		String query = "SELECT * FROM Notification;";
 		ArrayList<Notification> retVal = new ArrayList<Notification>();
-		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
 				retVal.add(createNotificationByResultSet(rs));
@@ -124,7 +125,7 @@ public class DaoNotification {
 	public static Notification getNotificationById(int id) throws NotificationNotFoundException{
 		String query = "SELECT * FROM Notification WHERE notificationId = ?;";
 		Notification n = null;
-		try(PreparedStatement stmt = carpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, id);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){

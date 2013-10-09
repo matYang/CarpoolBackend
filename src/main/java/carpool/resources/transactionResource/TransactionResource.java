@@ -49,7 +49,7 @@ public class TransactionResource extends PseudoResource{
 			
 			transaction = new Transaction(jsonTransaction.getInt("initUserId"), jsonTransaction.getInt("targetUserId"), jsonTransaction.getInt("messageId"), Constants.paymentMethod.values()[jsonTransaction.getInt("paymentMethod")], 
 					jsonTransaction.getInt("price"), jsonTransaction.getString("requestInfo"),  DateUtility.castFromAPIFormat(jsonTransaction.getString("startTime")), 
-					DateUtility.castFromAPIFormat(jsonTransaction.getString("endTime")), new LocationRepresentation(jsonTransaction.getJSONObject("location").getString("province"), jsonTransaction.getJSONObject("location").getString("city"), jsonTransaction.getJSONObject("location").getString("region"),jsonTransaction.getJSONObject("location").getString("university")) );
+					DateUtility.castFromAPIFormat(jsonTransaction.getString("endTime")), new LocationRepresentation(jsonTransaction.getJSONObject("location")));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -100,7 +100,7 @@ public class TransactionResource extends PseudoResource{
 	        	if (transaction.getInitUserId() == id){
 		        	//check the state of the message, and if the transaction matches the message
 	        		Message message = MessageDaoService.getMessageById(transaction.getMessageId());
-	        		if (message.validate() && message.getStartTime().compareTo(transaction.getStartTime()) == 0 && message.getEndTime().compareTo(transaction.getEndTime()) == 0){
+	        		if (message.validate()){
 	        			Transaction creationFeedBack = TransactionDaoService.createNewTransaction(transaction);
 			            if (creationFeedBack != null){
 			                newJsonTransaction = JSONFactory.toJSON(creationFeedBack);

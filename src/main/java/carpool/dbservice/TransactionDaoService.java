@@ -4,10 +4,11 @@ import java.util.*;
 
 import javax.swing.text.DateFormatter;
 
+import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.common.*;
 import carpool.constants.Constants;
 import carpool.database.DaoTransaction;
-import carpool.database.carpoolDaoUser;
+import carpool.exception.PseudoException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.message.MessageOwnerNotMatchException;
 import carpool.exception.transaction.TransactionAccessViolationException;
@@ -86,12 +87,9 @@ public class TransactionDaoService{
 	 * @param transactionId
 	 * @param userId
 	 * @return	the changed transaction, constructed by the full constructor
-	 * @throws TransactionNotFoundException	 throw if the transaction is not found in the first place
-	 * @throws TransactionOwnerNotMatchException	throw if the initUserId and targetUserId both does not match given userId
-	 * @throws TransactionAccessViolationException	throw if the userId is actually the initUserId, but not targetUserId
-	 * @throws TransactionStateViolationException(currentState, expected state)	throw if the current state of the transaction is not "init", expected state if "init"
+	 * @throws PseudoException 
 	 */
-	public static Transaction confirmTransaction(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionAccessViolationException, TransactionStateViolationException{
+	public static Transaction confirmTransaction(int transactionId, int userId) throws PseudoException{
 		Transaction t = DaoTransaction.getTransactionById(transactionId);
 		try {
 			User initUser = UserDaoService.getUserById(t.getInitUserId());
@@ -107,8 +105,8 @@ public class TransactionDaoService{
 					initUser.setTotalTranscations(initUser.getTotalTranscations()+1);
 					targetUser.setTotalTranscations(targetUser.getTotalTranscations()+1);
 					DaoTransaction.UpdateTransactionInDatabase(t);
-					UserDaoService.updateUser(initUser, initUser.getUserId());
-					UserDaoService.updateUser(targetUser, targetUser.getUserId());
+					UserDaoService.updateUser(initUser);
+					UserDaoService.updateUser(targetUser);
 					// send transaction Comfirmed notification
 					Notification n = new Notification(-1, Constants.notificationType.on_transaction, Constants.notificationEvent.transactionConfrimed,
 							t.getTargetUserId(), t.getTargetUserName(), 0, t.getTransactionId(), t.getInitUserId(),
@@ -273,7 +271,7 @@ public class TransactionDaoService{
 						DaoTransaction.UpdateTransactionInDatabase(t);
 						targetUser.setAverageScore((targetUser.getAverageScore()*(targetUser.getTotalTranscations()-1)+score)/targetUser.getTotalTranscations());
 						try {
-							carpoolDaoUser.UpdateUserInDatabase(targetUser);
+							CarpoolDaoUser.UpdateUserInDatabase(targetUser);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -283,7 +281,7 @@ public class TransactionDaoService{
 						DaoTransaction.UpdateTransactionInDatabase(t);
 						targetUser.setAverageScore((targetUser.getAverageScore()*(targetUser.getTotalTranscations()-1)+score)/targetUser.getTotalTranscations());
 						try {
-							carpoolDaoUser.UpdateUserInDatabase(targetUser);
+							CarpoolDaoUser.UpdateUserInDatabase(targetUser);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -297,7 +295,7 @@ public class TransactionDaoService{
 						DaoTransaction.UpdateTransactionInDatabase(t);
 						initUser.setAverageScore((initUser.getAverageScore()*(initUser.getTotalTranscations()-1)+score)/initUser.getTotalTranscations());
 						try {
-							carpoolDaoUser.UpdateUserInDatabase(initUser);
+							CarpoolDaoUser.UpdateUserInDatabase(initUser);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -307,7 +305,7 @@ public class TransactionDaoService{
 						DaoTransaction.UpdateTransactionInDatabase(t);
 						initUser.setAverageScore((initUser.getAverageScore()*(initUser.getTotalTranscations()-1)+score)/initUser.getTotalTranscations());
 						try {
-							carpoolDaoUser.UpdateUserInDatabase(initUser);
+							CarpoolDaoUser.UpdateUserInDatabase(initUser);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -333,8 +331,9 @@ public class TransactionDaoService{
 	 * @param transactionId
 	 * @param userId
 	 * @return true if transaction exists and deleted
+	 * @throws PseudoException 
 	 */
-	public static boolean deleteTransaction(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionStateViolationException{
+	public static boolean deleteTransaction(int transactionId, int userId) throws PseudoException{
 		Transaction t = DaoTransaction.getTransactionById(transactionId);
 		try {
 			User initUser = UserDaoService.getUserById(t.getInitUserId());
@@ -347,8 +346,8 @@ public class TransactionDaoService{
 					initUser.setTotalTranscations(initUser.getTotalTranscations()-1);
 					targetUser.setTotalTranscations(targetUser.getTotalTranscations()-1);
 					DaoTransaction.deleteTransactionFromDatabase(transactionId);
-					UserDaoService.updateUser(initUser, initUser.getUserId());
-					UserDaoService.updateUser(targetUser, targetUser.getUserId());
+					UserDaoService.updateUser(initUser);
+					UserDaoService.updateUser(targetUser);
 				}
 			}else{
 				throw new TransactionOwnerNotMatchException();

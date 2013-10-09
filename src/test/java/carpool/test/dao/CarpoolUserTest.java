@@ -26,8 +26,6 @@ import carpool.constants.Constants.gender;
 import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.paymentMethod;
-import carpool.database.carpoolDaoBasic;
-import carpool.database.carpoolDaoUser;
 import carpool.dbservice.*;
 import carpool.exception.ValidationException;
 import carpool.exception.message.MessageNotFoundException;

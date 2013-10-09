@@ -15,7 +15,6 @@ import carpool.constants.Constants;
 import carpool.constants.Constants.paymentMethod;
 import carpool.constants.Constants.transactionState;
 import carpool.interfaces.PseudoModel;
-import carpool.mappings.MappingManager;
 import carpool.model.representation.LocationRepresentation;
 
 
@@ -81,7 +80,7 @@ public class Transaction implements PseudoModel{
 
 		this.startTime = Calendar.getInstance();
 		this.endTime = Calendar.getInstance();
-		this.location =  new LocationRepresentation();
+		this.location =  new LocationRepresentation("Canada_Ontario_Waterloo_undetermined");
 
 		this.established = false;
 		this.success = false;
@@ -115,7 +114,7 @@ public class Transaction implements PseudoModel{
 
 		this.startTime = Calendar.getInstance();
 		this.endTime = Calendar.getInstance();
-		this.location =  new LocationRepresentation();
+		this.location =  new LocationRepresentation("Canada_Ontario_Waterloo_undetermined");
 
 		this.established = false;
 		this.success = false;

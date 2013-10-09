@@ -7,7 +7,6 @@ import javax.swing.text.DateFormatter;
 import carpool.asyncRelayExecutor.ExecutorProvider;
 import carpool.common.*;
 import carpool.database.DaoNotification;
-import carpool.database.carpoolDaoUser;
 import carpool.exception.notification.NotificationNotFoundException;
 import carpool.exception.notification.NotificationOwnerNotMatchException;
 import carpool.model.*;

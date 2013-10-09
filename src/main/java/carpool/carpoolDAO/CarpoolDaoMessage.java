@@ -13,7 +13,6 @@ import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.userSearchState;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.database.carpoolDaoUser;
 import carpool.dbservice.NotificationDaoService;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -237,7 +236,7 @@ public class CarpoolDaoMessage{
 
 	
 	protected static Message createMessageByResultSet(ResultSet rs, boolean shouldAddUser) throws SQLException, UserNotFoundException {
-		User owner = shouldAddUser ? owner = carpoolDaoUser.getUserById(rs.getInt("ownerId")) : null;
+		User owner = shouldAddUser ? owner = CarpoolDaoUser.getUserById(rs.getInt("ownerId")) : null;
 		Message message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),owner,rs.getBoolean("isRoundTrip"),new LocationRepresentation(rs.getString("departure_primaryLocation"),rs.getString("departure_customLocation"),rs.getInt("departure_customDepthIndex")),
 				DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("departure_timeSlot")),rs.getInt("departure_seatsNumber"),rs.getInt("departure_seatsBooked"),(ArrayList<Integer>)Parser.stringToList(rs.getString("departure_priceList"),new Integer(0)),
 				new LocationRepresentation(rs.getString("arrival_primaryLocation"),rs.getString("arrival_customLocation"),rs.getInt("arrival_customDepthIndex")),	DateUtility.DateToCalendar(rs.getTimestamp("arrival_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("arrival_timeSlot")),rs.getInt("arrival_seatsNumber"),rs.getInt("arrival_seatsBooked"),
