@@ -83,6 +83,7 @@ public class PseudoResource extends ServerResource{
 	}
 	
 	public String getQueryVal(String fieldName) throws UnsupportedEncodingException{
+		System.out.println(getQuery());
 		return java.net.URLDecoder.decode(getQuery().getValues(fieldName), "utf-8");
 	}
 	

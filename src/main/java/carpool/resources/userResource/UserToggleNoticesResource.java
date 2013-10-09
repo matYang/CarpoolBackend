@@ -32,7 +32,7 @@ public class UserToggleNoticesResource extends PseudoResource{
 		boolean phoneNotice = false;
 
 		try {
-			this.checkEntity(entity);
+			//this.checkEntity(entity);
 			
 			userId = Integer.parseInt(this.getReqAttr("id"));
 			this.validateAuthentication(userId);

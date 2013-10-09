@@ -28,6 +28,7 @@ import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
+import carpool.model.representation.SearchRepresentation;
 
 
 public class CarpoolDaoUser {
@@ -36,7 +37,7 @@ public class CarpoolDaoUser {
 	public static User addUserToDatabase(User user) throws ValidationException{
 		String query = "INSERT INTO carpoolDAOUser (password,name,email,phone,qq,age,gender,birthday,"+
 	            "imgPath,user_primaryLocation,user_customLocation,user_customDepthIndex,lastLogin,creationTime,"+
-				"emailActivated,phoneActivated,emailNotice,phoneNotice,state,searchState,"+
+				"emailActivated,phoneActivated,emailNotice,phoneNotice,state,searchRepresentation,"+
 	            "level,averageScore,totalTranscations,verifications,googleToken,facebookToken,twitterToken,"+
 				"paypalToken,id_docType,id_docNum,id_path,id_vehicleImgPath,accountId,accountPass,accountToken,accountValue)"+
 	            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
@@ -60,7 +61,7 @@ public class CarpoolDaoUser {
 			stmt.setInt(17, user.isEmailNotice() ? 1:0);
 			stmt.setInt(18, user.isPhoneNotice() ? 1:0);
 			stmt.setInt(19, user.getState().code);
-			stmt.setInt(20, user.getSearchState().code);
+			stmt.setString(20, user.getSearchRepresentation().toSerializedString());
 			stmt.setInt(21, user.getLevel());
 			stmt.setInt(22, user.getAverageScore());
 			stmt.setInt(23, user.getTotalTranscations());
@@ -114,7 +115,7 @@ public class CarpoolDaoUser {
 	public static void UpdateUserInDatabase(User user) throws Exception{
 		String query = "UPDATE carpoolDAOUser SET password=?,name=?,email=?,phone=?,qq=?,age=?,gender=?,birthday=?," +
 	            "imgPath=?,user_primaryLocation=?,user_customLocation=?,user_customDepthIndex=?,lastLogin=?,"+
-				"creationTime=?,emailActivated = ?,phoneActivated = ?,emailNotice = ?,phoneNotice = ?,state = ?,searchState = ?," +
+				"creationTime=?,emailActivated = ?,phoneActivated = ?,emailNotice = ?,phoneNotice = ?,state = ?,searchRepresentation = ?," +
 				"level=?,averageScore=?,totalTranscations=?,verifications=?,googleToken=?,facebookToken=?,twitterToken=?,paypalToken=?,"+
 				"id_docType=?,id_docNum=?,id_path=?,id_vehicleImgPath=?,accountId=?,accountPass=?,accountToken=?,accountValue=? WHERE userId = ?";
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
@@ -137,7 +138,7 @@ public class CarpoolDaoUser {
 			stmt.setInt(17, user.isEmailNotice() ? 1:0);
 			stmt.setInt(18, user.isPhoneNotice() ? 1:0);
 			stmt.setInt(19, user.getState().code);
-			stmt.setInt(20, user.getSearchState().code);
+			stmt.setString(20, user.getSearchRepresentation().toSerializedString());
 			stmt.setInt(21, user.getLevel());
 			stmt.setInt(22, user.getAverageScore());
 			stmt.setInt(23, user.getTotalTranscations());
@@ -241,7 +242,7 @@ public class CarpoolDaoUser {
 				DateUtility.DateToCalendar(rs.getTimestamp("lastLogin")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
 				(ArrayList<String>)Parser.stringToList(rs.getString("verifications"),new String("")),
 				rs.getBoolean("emailActivated"),rs.getBoolean("phoneActivated"),rs.getBoolean("emailNotice"),rs.getBoolean("phoneNotice"),
-				Constants.userState.fromInt(rs.getInt("state")),Constants.userSearchState.fromInt(rs.getInt("searchState")),
+				Constants.userState.fromInt(rs.getInt("state")),new SearchRepresentation(rs.getString("searchRepresentation")),
 				rs.getInt("level"),rs.getInt("averageScore"),rs.getInt("totalTranscations"),
 				rs.getString("googleToken"),rs.getString("facebookToken"),rs.getString("twitterToken"),rs.getString("paypalToken"),
 				rs.getString("id_docType"),rs.getString("id_docNum"),rs.getString("id_path"),rs.getString("id_vehicleImgPath"),

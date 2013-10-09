@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import carpool.common.DateUtility;
 import carpool.common.HelperOperator;
 import carpool.common.Validator;
+import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants;
 import carpool.constants.Constants.gender;
 import carpool.constants.Constants.userSearchState;
@@ -22,6 +23,7 @@ import carpool.factory.JSONFactory;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoValidatable;
 import carpool.model.representation.LocationRepresentation;
+import carpool.model.representation.SearchRepresentation;
 
 
 public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
@@ -65,7 +67,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     private boolean emailNotice;
     private boolean phoneNotice;
     private userState state;
-    private userSearchState searchState;
+    private SearchRepresentation searchRepresentation;
 
     
     /*****
@@ -137,7 +139,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	    this.emailNotice = false;
 	    this.phoneNotice = false;
 	    this.state = Constants.userState.normal;
-	    this.searchState = Constants.userSearchState.regionAsk;
+	    this.searchRepresentation = new SearchRepresentation(CarpoolConfig.default_searchRepresentationString);
 	    
 	    this.level = 0;
 	    this.averageScore = 0;
@@ -169,7 +171,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 			String imgPath, LocationRepresentation location, Calendar lastLogin,
 			Calendar creationTime, ArrayList<String> verifications, boolean emailActivated,
 			boolean phoneActivated, boolean emailNotice, boolean phoneNotice,
-			userState state, userSearchState searchState, int level,
+			userState state, SearchRepresentation searchRepresentation, int level,
 			int averageScore, int totalTranscations, String googleToken,
 			String facebookToken, String twitterToken, String paypalToken,
 			String id_docType, String id_docNum, String id_path,
@@ -195,7 +197,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.emailNotice = emailNotice;
 		this.phoneNotice = phoneNotice;
 		this.state = state;
-		this.searchState = searchState;
+		this.searchRepresentation = searchRepresentation;
 		this.level = level;
 		this.averageScore = averageScore;
 		this.totalTranscations = totalTranscations;
@@ -447,13 +449,13 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	}
 
 
-	public userSearchState getSearchState() {
-		return searchState;
+	public SearchRepresentation getSearchRepresentation() {
+		return searchRepresentation;
 	}
 
 
-	public void setSearchState(userSearchState searchState) {
-		this.searchState = searchState;
+	public void setSearchRepresentation(SearchRepresentation searchRepresentation) {
+		this.searchRepresentation = searchRepresentation;
 	}
 
 
@@ -661,7 +663,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 			jsonUser.put("phoneNotice", this.isPhoneNotice());
 			
 			jsonUser.put("state", this.getState().code);
-			jsonUser.put("searchState", this.getSearchState().code);
+			jsonUser.put("searchRepresentation", this.getSearchRepresentation().toJSON());
 			jsonUser.put("level", this.getLevel());
 			jsonUser.put("averageScore", this.getAverageScore());
 			jsonUser.put("totalTranscations", this.getTotalTranscations());
@@ -702,8 +704,8 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 				+ verifications + ", emailActivated="
 				+ emailActivated + ", phoneActivated=" + phoneActivated
 				+ ", emailNotice=" + emailNotice + ", phoneNotice="
-				+ phoneNotice + ", state=" + state + ", searchState="
-				+ searchState + ", level=" + level + ", averageScore="
+				+ phoneNotice + ", state=" + state + ", searchRepresentation="
+				+ searchRepresentation.toSerializedString() + ", level=" + level + ", averageScore="
 				+ averageScore + ", totalTranscations=" + totalTranscations
 				+ ", googleToken=" + googleToken + ", facebookToken="
 				+ facebookToken + ", twitterToken=" + twitterToken
@@ -753,7 +755,6 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     			              && this.paypalToken.equals(newUser.getPaypalToken())
     			              && this.phone.equals(newUser.getPhone())
     			              && this.qq.equals(newUser.getQq())
-    			              && this.searchState.code==newUser.getSearchState().code
     			              && this.state.code==newUser.getState().code
     			              && this.twitterToken.equals(newUser.getTwitterToken())
     			              && HelperOperator.isArrayListEqual(this.watchList, newUser.getWatchList())
