@@ -15,6 +15,7 @@ import org.restlet.data.Status;
 import org.json.JSONArray;
 
 import carpool.common.DateUtility;
+import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants;
 import carpool.constants.Constants.userSearchState;
 import carpool.dbservice.*;
@@ -39,22 +40,21 @@ public class DMSearchResource extends PseudoResource{
 			String srStr = this.getQueryVal("searchRepresentation");
 			int userId = Integer.parseInt(this.getQueryVal("userId"));
 			
-			SearchRepresentation sr = new SearchRepresentation(srStr);
+			boolean login = false;
+			try{
+				this.validateAuthentication(userId);
+				login = true;
+			}
+			catch (AccountAuthenticationException e){
+				login = false;
+			}
+			
+			SearchRepresentation sr = srStr != null ? new SearchRepresentation(srStr) : CarpoolConfig.getDefaultSearchRepresentation();
 			
 			//not checking for date..because an invalid date will have no search result anyways
 			if (LocationService.isLocationRepresentationValid(sr.getDepartureLocation()) && LocationService.isLocationRepresentationValid(sr.getArrivalLocation()) ){
-				boolean login = false;
-				try{
-					this.validateAuthentication(userId);
-					login = true;
-				}
-				catch (AccountAuthenticationException e){
-					login = false;
-				}
-						
 				ArrayList<Message> searchResult = new ArrayList<Message>();
 				searchResult = MessageDaoService.primaryMessageSearch(sr, login, userId);
-				
 				response = JSONFactory.toJSON(searchResult);
 			}
 			else{

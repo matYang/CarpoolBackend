@@ -139,7 +139,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	    this.emailNotice = false;
 	    this.phoneNotice = false;
 	    this.state = Constants.userState.normal;
-	    this.searchRepresentation = new SearchRepresentation(CarpoolConfig.default_searchRepresentationString);
+	    this.searchRepresentation = CarpoolConfig.getDefaultSearchRepresentation();
 	    
 	    this.level = 0;
 	    this.averageScore = 0;
