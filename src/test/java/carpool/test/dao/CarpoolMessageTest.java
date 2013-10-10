@@ -18,16 +18,20 @@ import org.junit.Test;
 
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoMessage;
+import carpool.carpoolDAO.CarpoolDaoUser;
+import carpool.clean.MessageCleaner;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.HelperOperator;
 import carpool.common.Parser;
+import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.gender;
 import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.paymentMethod;
 import carpool.dbservice.*;
+import carpool.exception.ValidationException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.representation.LocationRepresentation;
@@ -73,6 +77,13 @@ public class CarpoolMessageTest {
 	@Test
 	public void testRead(){
 		CarpoolDaoBasic.clearBothDatabase();
+        User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		
+		try {
+			CarpoolDaoUser.addUserToDatabase(user);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}	
 		Calendar time = DateUtility.DateToCalendar(new Date(0));
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
@@ -82,11 +93,10 @@ public class CarpoolMessageTest {
 		gender genderRequirement = gender.fromInt(0);
 		messageState state = messageState.fromInt(0);
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
-		int messageId=-1;
-		int userId=-1;
+		
 				
 		//Message	
-		Message message=new Message(userId,false
+		Message message=new Message(user.getUserId(),false
 				, new LocationRepresentation("p_c_d_2"),time,timeSlot,1 , priceList,new LocationRepresentation("p_c_d_2"),
 				time,timeSlot, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
@@ -100,6 +110,7 @@ public class CarpoolMessageTest {
 			}
 					
 		} catch (MessageNotFoundException | UserNotFoundException e) {
+			e.printStackTrace();
 			fail();
 		}
 			
@@ -109,6 +120,13 @@ public class CarpoolMessageTest {
 	@Test
 	public void testUpdate() throws MessageNotFoundException, UserNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
+        User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		
+		try {
+			CarpoolDaoUser.addUserToDatabase(user);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}		
 		Calendar time = DateUtility.DateToCalendar(new Date(0));
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
@@ -118,11 +136,10 @@ public class CarpoolMessageTest {
 		gender genderRequirement = gender.fromInt(0);
 		messageState state = messageState.fromInt(0);
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
-		int messageId=-1;
-		int userId=-1;
+		
 				
 		//Message	
-		Message message=new Message(userId,false
+		Message message=new Message(user.getUserId(),false
 				, new LocationRepresentation("p_c_d_2"),time,timeSlot,1 , priceList,new LocationRepresentation("p_c_d_2"),
 				time, timeSlot,1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
@@ -140,7 +157,14 @@ public class CarpoolMessageTest {
 	   CarpoolDaoMessage.UpdateMessageInDatabase(message);
 	
 	   //Test
-	   if(!message.equals(CarpoolDaoMessage.getMessageById(message.getMessageId()))){fail();}
+	   try{
+		   if(!message.equals(CarpoolDaoMessage.getMessageById(message.getMessageId()))){
+			   fail();
+		   }
+	   }
+	   catch(Exception e){
+		   e.printStackTrace();
+	   }
 	    
 	
 	}
@@ -193,6 +217,7 @@ public class CarpoolMessageTest {
 		dt2.add(Calendar.DAY_OF_YEAR, -1);	
 		Calendar dt3 = Calendar.getInstance();	
 		dt3.add(Calendar.DAY_OF_YEAR, -2);
+		
 		//Location
 		LocationRepresentation dl=new LocationRepresentation("Canada_Ontario_Toronto_2");
 		LocationRepresentation al=new LocationRepresentation("Canada_Ontario_Waterloo_2");		
@@ -383,16 +408,104 @@ public class CarpoolMessageTest {
 	}
 	
 	@Test
-	public void testIntergrated(){
-		//Test a method at a time
-	
+	public void testMessageCleaner(){
+		CarpoolDaoBasic.clearBothDatabase();
+        User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		
+		try {
+			CarpoolDaoUser.addUserToDatabase(user);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}		
+		
+		
+		Calendar dt1 = Calendar.getInstance();	
+		Calendar at1 = Calendar.getInstance();
+		
+		Calendar dt2 = Calendar.getInstance();	
+	    dt2.add(Calendar.DAY_OF_YEAR,-1);
+		Calendar at2 = Calendar.getInstance();
+		at2.add(Calendar.DAY_OF_YEAR,-1);
+		
+		Calendar dt3 = Calendar.getInstance();			
+		dt3.add(Calendar.DAY_OF_YEAR, 1);
+		Calendar at3 = Calendar.getInstance();
+		at3.add(Calendar.DAY_OF_YEAR, 1);
+				
+		ArrayList<Integer> priceList = new ArrayList<Integer>();
+		priceList.add(30);
+		paymentMethod paymentMethod =null;
+		paymentMethod = paymentMethod.fromInt(0);
+		messageType type = messageType.fromInt(2);
+		gender genderRequirement = gender.fromInt(0);
+		messageState state = messageState.fromInt(0);
+		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
+		
+				
+		//Message: message2	, message5 , message7 and message8 shouldn't pass
+		Message message=new Message(user.getUserId(),false
+				, new LocationRepresentation("p_c_d_2"),dt1,timeSlot,1 , priceList,new LocationRepresentation("p_c_a_2"),
+				at1, timeSlot,1,priceList,paymentMethod,
+				"test",  type, genderRequirement);
+		CarpoolDaoMessage.addMessageToDatabase(message);
+		Message message2=new Message(user.getUserId(),false
+				, new LocationRepresentation("p_c_d_2"),dt2,timeSlot,1 , priceList,new LocationRepresentation("p_c_a_2"),
+				at3, timeSlot,1,priceList,paymentMethod,
+				"test",  type, genderRequirement);
+		CarpoolDaoMessage.addMessageToDatabase(message2);
+		Message message3=new Message(user.getUserId(),false
+				, new LocationRepresentation("p_c_d_2"),dt1,timeSlot,1 , priceList,new LocationRepresentation("p_c_a_2"),
+				at3, timeSlot,1,priceList,paymentMethod,
+				"test",  type, genderRequirement);
+		CarpoolDaoMessage.addMessageToDatabase(message3);
+		Message message4=new Message(user.getUserId(),true
+				, new LocationRepresentation("p_c_d_2"),dt2,timeSlot,1 , priceList,new LocationRepresentation("p_c_a_2"),
+				at1, timeSlot,1,priceList,paymentMethod,
+				"test",  type, genderRequirement);
+		CarpoolDaoMessage.addMessageToDatabase(message4);
+		Message message5=new Message(user.getUserId(),true
+				, new LocationRepresentation("p_c_d_2"),dt2,timeSlot,1 , priceList,new LocationRepresentation("p_c_a_2"),
+				at2, timeSlot,1,priceList,paymentMethod,
+				"test",  type, genderRequirement);
+		CarpoolDaoMessage.addMessageToDatabase(message5);
+		Message message6=new Message(user.getUserId(),true
+				, new LocationRepresentation("p_c_d_2"),dt3,timeSlot,1 , priceList,new LocationRepresentation("p_c_a_2"),
+				at3, timeSlot,1,priceList,paymentMethod,
+				"test",  type, genderRequirement);
+		CarpoolDaoMessage.addMessageToDatabase(message6);
+		Message message7=new Message(user.getUserId(),true
+				, new LocationRepresentation("p_c_d_2"),dt3,timeSlot,1 , priceList,new LocationRepresentation("p_c_a_2"),
+				at3, timeSlot,1,priceList,paymentMethod,
+				"test",  type, genderRequirement);
+		message7.setState(Constants.messageState.fromInt(1));
+		CarpoolDaoMessage.addMessageToDatabase(message7);
+		Message message8=new Message(user.getUserId(),true
+				, new LocationRepresentation("p_c_d_2"),dt3,timeSlot,1 , priceList,new LocationRepresentation("p_c_a_2"),
+				at3, timeSlot,1,priceList,paymentMethod,
+				"test",  type, genderRequirement);
+		message8.setState(Constants.messageState.fromInt(0));
+		CarpoolDaoMessage.addMessageToDatabase(message8);
+		MessageCleaner.Clean();
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		String query = "SELECT * from carpoolDAOMessage WHERE ownerId = ?";
+		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			stmt.setInt(1, message.getOwnerId());
+			ResultSet rs = stmt.executeQuery();			
+				while(rs.next()){	
+					list.add(rs.getInt("messageState"));
+					}			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			DebugLog.d(e.getMessage());
+		}
+		
+		if(list !=null && list.size()==8 && list.get(0)==2&&list.get(1)==1&& list.get(2)==2&&list.get(3)==2&& list.get(4)==1&&list.get(5)==2&& list.get(6)==1&&list.get(7)==0){
+			//Passed;
+		}else{			
+			fail();
+		}
 	}
-	
-	@Test
-	public void testAdvanced(){
-		//Test a method at a time
-	
-	}
+
 	
 	//@Test
 	public void testBenchmark(){

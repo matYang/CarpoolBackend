@@ -351,7 +351,7 @@ public class CarpoolDaoUser {
 			stmt.setInt(1, user);
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
-				mlist.add(CarpoolDaoMessage.createMessageByResultSet(rs, false));
+				mlist.add(CarpoolDaoMessage.createMessageByResultSet(rs, true));
 			}
 		} catch (SQLException e) {
 			DebugLog.d(e.getMessage());

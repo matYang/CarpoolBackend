@@ -39,12 +39,12 @@ public class CarpoolDaoMessage{
 		//SR.isRoundTrip()==false
 		String query = "SELECT * from carpoolDAOMessage WHERE((isRoundTrip NOT LIKE ? AND (((departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ?"+
 		"AND arrival_primaryLocation LIKE ? AND departure_Time LIKE ?) OR ((arrival_seatsNumber > arrival_seatsBooked) AND arrival_primaryLocation LIKE ? AND departure_primaryLocation LIKE ? AND arrival_Time LIKE ?)))"+
-		"OR(isRoundTrip LIKE ? AND (departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ? AND arrival_primaryLocation LIKE ? AND departure_Time LIKE ?)) AND messageType LIKE ?;";
+		"OR(isRoundTrip LIKE ? AND (departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ? AND arrival_primaryLocation LIKE ? AND departure_Time LIKE ?)) AND messageType LIKE ?  AND messageState=2;";
 		//SR.isRoundTrip()==true		
 		String query2="SELECT * from carpoolDAOMessage WHERE((isRoundTrip LIKE ? AND departure_primaryLocation LIKE ?"+
 				"AND arrival_primaryLocation LIKE ? AND ((departure_Time LIKE ?AND (departure_seatsNumber > departure_seatsBooked)) OR (arrival_Time LIKE ? AND (arrival_seatsNumber > arrival_seatsBooked))))OR(isRoundTrip NOT LIKE ? "+
 				"AND (((departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ? AND arrival_primaryLocation LIKE ? AND departure_Time LIKE ?) OR ((departure_seatsNumber > departure_seatsBooked) AND "+
-				"arrival_primaryLocation LIKE ? AND departure_primaryLocation LIKE ? AND departure_Time LIKE ?)) ))AND messageType LIKE ?;";
+				"arrival_primaryLocation LIKE ? AND departure_primaryLocation LIKE ? AND departure_Time LIKE ?)) ))AND messageType LIKE ?  AND messageState=2;";
 		
 		if(!isRoundTrip){
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
