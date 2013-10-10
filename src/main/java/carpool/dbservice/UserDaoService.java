@@ -11,6 +11,7 @@ import carpool.exception.PseudoException;
 import carpool.exception.ValidationException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.*;
+import carpool.model.representation.SearchRepresentation;
 
 public class UserDaoService{
 	
@@ -150,6 +151,12 @@ public class UserDaoService{
 	public static ArrayList<Notification> getNotificationByUserId(int id) throws UserNotFoundException{
 		User user = getUserById(id);
 		return user.getNotificationList();
+	}
+
+	public static void updateUserSearch(SearchRepresentation userSearch, int id) throws PseudoException {
+		User user = getUserById(id);
+		user.setSearchRepresentation(userSearch);
+		updateUser(user);
 	}
 
 

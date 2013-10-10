@@ -62,7 +62,7 @@ public class LogInResource extends PseudoResource{
 			
 			if (user != null && user.isAbleToLogin()){
 				
-				UserCookieResource.validateCookieSession(user.getUserId(), cookies);
+				//UserCookieResource.validateCookieSession(user.getUserId(), cookies);
 					
 				this.closeAuthenticationSession(user.getUserId());
 	            this.clearUserCookies();

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import carpool.carpoolDAO.*;
 import carpool.common.DebugLog;
+import carpool.exception.PseudoException;
 import carpool.exception.ValidationException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.message.MessageOwnerNotMatchException;
@@ -37,12 +38,12 @@ public class MessageDaoService{
 	}
 	
 
-	public static ArrayList<Message> primaryMessageSearch(SearchRepresentation userSearch, boolean isLogin, int userId) throws ValidationException, UserNotFoundException{
+	public static ArrayList<Message> primaryMessageSearch(SearchRepresentation userSearch, boolean isLogin, int userId) throws PseudoException{
 
 		ArrayList<Message> searchResult = new ArrayList<Message>();
 		searchResult = CarpoolDaoMessage.searchMessage(userSearch);
 		if (isLogin){
-			//TODO UserDaoSerice.updateUserSearch();
+			UserDaoService.updateUserSearch(userSearch, userId);
 		}
 		return searchResult;
 	}

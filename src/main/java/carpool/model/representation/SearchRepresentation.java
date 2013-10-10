@@ -29,7 +29,6 @@ public class SearchRepresentation implements PseudoRepresentation{
 	@SuppressWarnings("unused")
 	private SearchRepresentation(){}
 	
-	//used for sql
 	public SearchRepresentation(boolean isRoundTrip,
 			LocationRepresentation departureLocation,
 			LocationRepresentation arrivalLocation, Calendar departureDate,
