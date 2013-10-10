@@ -79,12 +79,14 @@ public class PseudoResource extends ServerResource{
 	}
 	
 	public String getReqAttr(String fieldName) throws UnsupportedEncodingException{
-		return java.net.URLDecoder.decode((String)this.getRequestAttributes().get(fieldName), "utf-8");
+		Object attr = this.getRequestAttributes().get(fieldName);
+		return attr != null ? java.net.URLDecoder.decode((String)attr, "utf-8") : null;
 	}
 	
 	public String getQueryVal(String fieldName) throws UnsupportedEncodingException{
 		System.out.println(getQuery());
-		return java.net.URLDecoder.decode(getQuery().getValues(fieldName), "utf-8");
+		String val = getQuery().getValues(fieldName);
+		return val != null ? java.net.URLDecoder.decode(val, "utf-8") : null;
 	}
 	
 	public String doPseudoException(PseudoException e){

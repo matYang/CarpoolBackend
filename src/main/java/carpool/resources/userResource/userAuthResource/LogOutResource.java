@@ -50,7 +50,7 @@ public class LogOutResource extends PseudoResource{
 			id = Integer.parseInt(this.getReqAttr("id"));
 			
 			this.closeAuthenticationSession(id);
-			
+			setStatus(Status.SUCCESS_OK);
 		} catch (PseudoException e){
 			this.addCORSHeader();
 			return new StringRepresentation(this.doPseudoException(e));
