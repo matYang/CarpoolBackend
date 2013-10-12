@@ -94,8 +94,8 @@ public class LocationTest {
 			lv3.add("Waterloo");
 			
 			lv4.add("Square One");
-			lv4.add("Pearson Airport terminal 3");
-			lv4.add("Pearson Airport terminal 1");
+			lv4.add("Pearson Airport - terminal 3");
+			lv4.add("Pearson Airport - terminal 1");
 			lv4.add("York Dale");
 			lv4.add("Eaton Center");
 			lv4.add("CN Tower");
@@ -119,7 +119,8 @@ public class LocationTest {
 			assertTrue(LocationService.isLocationRepresentationValid(validLocRepB));
 			assertTrue(!LocationService.isLocationRepresentationValid(invalidLocRepA));
 			assertTrue(!LocationService.isLocationRepresentationValid(invalidLocRepB));
-			assertTrue(!LocationService.isLocationRepresentationValid(invalidLocRepC));
+			assertTrue(LocationService.isLocationRepresentationValid(invalidLocRepC));
+			assertTrue(!LocationService.isLocationRepresentationStored(invalidLocRepC));
 			
 			System.out.println(LocationService.getAllSubLocationNamesWithNode(2, lv3.get(1)));
 			System.out.println(LocationService.getAllSubLocationNamesWithNode(1, lv2.get(0)));
