@@ -17,6 +17,7 @@ import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
+import carpool.model.representation.SearchRepresentation;
 
 
 
@@ -28,8 +29,30 @@ public class JSONFactory {
 	public static JSONObject toJSON(PseudoModel obj){
 		if (obj == null){
 			DebugLog.d("JSONFactory::toJSON_Model receving null obj");
+			return new JSONObject();
 		}
-		return obj != null ? obj.toJSON() : new JSONObject();
+		else if (obj instanceof User){
+			return ((User)obj).toJSON();
+		}
+		else if (obj instanceof Message){
+			return ((Message)obj).toJSON();
+		}
+		else if (obj instanceof Transaction){
+			return ((Transaction)obj).toJSON();
+		}
+		else if (obj instanceof Notification){
+			return ((Notification)obj).toJSON();
+		}
+		else if (obj instanceof LocationRepresentation){
+			return ((LocationRepresentation)obj).toJSON();
+		}
+		else if (obj instanceof SearchRepresentation){
+			return ((SearchRepresentation)obj).toJSON();
+		}
+		else{
+			return new JSONObject();
+		}
+		
 	}
 	
 	public static JSONObject toJSON(String s){
@@ -84,17 +107,21 @@ public class JSONFactory {
 	}
 	
 	public static JSONArray toJSON(ArrayList<? extends PseudoModel> objs){
-		JSONArray jsonObjs = new JSONArray();
+		ArrayList<JSONObject> temps = new ArrayList<JSONObject>();
 		if (objs == null){
 			DebugLog.d("JSONFactory::toJSON_ArrayList receving null objs");
 			return new JSONArray();
 		}
 		for (int i = 0; i < objs.size(); i++){
-			jsonObjs.put(toJSON(objs.get(i)));
+			if (objs.get(i) != null){
+				JSONObject jsonResult = toJSON(objs.get(i));
+				temps.add(jsonResult);
+				
+			}
 		}
-		
-		return jsonObjs;
+		return new JSONArray(temps);
 	}
+	
 	
 	
 	public static JSONArray toJSON_arr_str(ArrayList<String> strings){

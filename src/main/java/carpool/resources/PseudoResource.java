@@ -13,6 +13,7 @@ import org.restlet.data.*;
 import org.json.JSONObject;
 
 import carpool.common.DebugLog;
+import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants;
 import carpool.exception.PseudoException;
 import carpool.exception.validation.EntityTooLargeException;
@@ -51,9 +52,13 @@ public class PseudoResource extends ServerResource{
 			throw new EntityTooLargeException();
 		}
 	}
+
 	
 	public boolean validateAuthentication(int userId) throws PseudoException{
-		return UserCookieResource.validateCookieSession(userId, this.getRequest().getCookies());
+		if (!CarpoolConfig.cookieEnabled){
+			return true;
+		}
+		return UserCookieResource.validateCookieSession(userId, this.getSessionString());
 	}
 	
 	public void clearUserCookies(){
@@ -75,7 +80,8 @@ public class PseudoResource extends ServerResource{
 	
 	public String getSessionString() throws PseudoException{
 		Series<Cookie> cookies = this.getRequest().getCookies();
-		return UserCookieResource.getSessionString(cookies);
+		String sessionString = UserCookieResource.getSessionString(cookies);
+		return sessionString;
 	}
 	
 	public String getReqAttr(String fieldName) throws UnsupportedEncodingException{
@@ -87,6 +93,12 @@ public class PseudoResource extends ServerResource{
 		System.out.println(getQuery());
 		String val = getQuery().getValues(fieldName);
 		return val != null ? java.net.URLDecoder.decode(val, "utf-8") : null;
+	}
+	
+	public String getSearchQueryVal(String fieldName){
+		System.out.println(getQuery());
+		String val = getQuery().getValues(fieldName);
+		return val;
 	}
 	
 	public String doPseudoException(PseudoException e){

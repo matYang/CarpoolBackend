@@ -19,9 +19,6 @@ public class Constants {
     public static final String key_infoChanged = "infoChanged";
     public static final String key_emailActivationAuth = "ea";
     public static final String key_forgetPasswordAuth = "fp";
-    //public static final String domainName = "www.huaixuesheng.com";
-    public static final String domainName = "localhost:8015";
-    
     public static final String cookie_userSession = "userSessionCookie";
     public static final int cookie_maxAge = 5184000; //2 month
 

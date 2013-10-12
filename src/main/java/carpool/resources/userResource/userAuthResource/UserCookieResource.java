@@ -28,26 +28,17 @@ public class UserCookieResource extends ServerResource{
 	 * @return  true or false the current user has an active login session, if so, login the user and send data back, if not, open login modal window
 	 * @throws Exception 
 	 */
-	public static boolean validateCookieSession(int id, Series<Cookie> cookies) throws PseudoException{
+	public static boolean validateCookieSession(int id, String sessionString) throws PseudoException{
 		if (id == -1){
 			throw new AccountAuthenticationException("UserCookieResource:: validateCookieSession:: Invalid ID, ID is -1");
 		}
-		ArrayList<String> sessionString = new ArrayList<String>();
 		boolean login = false;
-		for( Cookie cookie : cookies){ 
-			if (cookie.getName().equals(Constants.cookie_userSession)){
-				sessionString.add(cookie.getValue()); 
-			}
-		} 
-		if (sessionString.size() > 1){
-			throw new DuplicateSessionCookieException();
-		}
-		if (sessionString.size() == 0){
+		if (sessionString == null){
 			throw new AccountAuthenticationException("UserCookieResource:: validateCookieSession:: Session Not Exist");
 		}
 		else{
 			try{
-				String decryptedString = SessionCrypto.decrypt(sessionString.get(0));
+				String decryptedString = SessionCrypto.decrypt(sessionString);
 				login =  AuthDaoService.validateUserSession(id, decryptedString);
 			}
 			catch (Exception e){

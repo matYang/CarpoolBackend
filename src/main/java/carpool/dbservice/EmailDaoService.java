@@ -5,6 +5,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import carpool.asyncRelayExecutor.ExecutorProvider;
 import carpool.common.DebugLog;
 import carpool.common.EmailHandler;
+import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants;
 import carpool.carpoolDAO.*;
 import carpool.encryption.EmailCrypto;
@@ -53,7 +54,7 @@ public class EmailDaoService {
 		CarpoolDaoBasic.getJedis().set(Constants.key_emailActivationAuth + userId, authCode);
 		String encryptedEmailKey = EmailCrypto.encrypt(userId, authCode);
 		try {
-			EmailRelayTask emailTask = new EmailRelayTask(newEmail, "Activate your email address", "http://"+Constants.domainName+"/api/v1.0/users/emailActivation?key="+encryptedEmailKey);
+			EmailRelayTask emailTask = new EmailRelayTask(newEmail, "Activate your email address", "http://"+CarpoolConfig.domainName+"/api/v1.0/users/emailActivation?key="+encryptedEmailKey);
 			ExecutorProvider.executeRelay(emailTask);
 		} catch (Exception e) {
 			DebugLog.d(e.getMessage());
@@ -151,7 +152,7 @@ public class EmailDaoService {
 			String authCode = RandomStringUtils.randomAlphanumeric(30);
 			CarpoolDaoBasic.getJedis().set(Constants.key_forgetPasswordAuth + userId, authCode);
 			String encryptedEmailKey = EmailCrypto.encrypt(userId, authCode);
-			EmailHandler.send(email, "Change your password", Constants.domainName+"/forgetPassword?key="+encryptedEmailKey);
+			EmailHandler.send(email, "Change your password", CarpoolConfig.domainName+"/forgetPassword?key="+encryptedEmailKey);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

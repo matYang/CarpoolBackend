@@ -101,12 +101,15 @@ public class LocationRepresentation implements PseudoRepresentation, PseudoValid
 	}
 	
 	@Override
-	public JSONObject toJSON() throws JSONException{
+	public JSONObject toJSON(){
 		JSONArray nameList = new JSONArray(this.hierarchyNameList);
 		JSONObject jsonLocationRepresentation = new JSONObject();
-		jsonLocationRepresentation.put("hierarchyNameList", nameList);
-		jsonLocationRepresentation.put("customDepthIndex", this.customDepthIndex);
-		
+		try{
+			jsonLocationRepresentation.put("hierarchyNameList", nameList);
+			jsonLocationRepresentation.put("customDepthIndex", this.customDepthIndex);
+		} catch (JSONException e){
+			e.printStackTrace();
+		}
 		return jsonLocationRepresentation;
 	}
 

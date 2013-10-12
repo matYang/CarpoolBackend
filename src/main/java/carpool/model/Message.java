@@ -412,8 +412,8 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		try {
 			jsonMessage.put("messageId", this.getMessageId());
 			jsonMessage.put("ownerId", this.getOwnerId());
-			jsonMessage.put("owner", this.owner != null ? this.getOwner() : new User());
-			jsonMessage.put("transactionList", this.transactionList != null ? this.getTransactionList() : new ArrayList<Transaction>());
+			jsonMessage.put("owner", this.owner != null ? this.getOwner().toJSON() : new JSONObject());
+			jsonMessage.put("transactionList", this.transactionList != null ? JSONFactory.toJSON(this.getTransactionList()) : new JSONArray());
 			
 			jsonMessage.put("isRoundTrip", this.isRoundTrip());
 			jsonMessage.put("departure_location", this.getDeparture_location().toJSON());

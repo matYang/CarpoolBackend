@@ -37,14 +37,14 @@ import carpool.resources.PseudoResource;
 public class DMResource extends PseudoResource{
 
 	//passes received json into message
-	protected Message parseJSON(Representation entity, int userId){
+	protected Message parseJSON(Representation entity){
 		JSONObject jsonMessage = null;
 		Message message = null;
 		try {
 			jsonMessage = (new JsonRepresentation(entity)).getJsonObject();
 			DebugLog.d("@Post::receive jsonMessage: " +  jsonMessage.toString());
 			
-			message = new Message(userId, jsonMessage.getBoolean("isRoundTrip"),
+			message = new Message(jsonMessage.getInt("ownerId"), jsonMessage.getBoolean("isRoundTrip"),
 					new LocationRepresentation(jsonMessage.getJSONObject("departure_location")), DateUtility.castFromAPIFormat(jsonMessage.getString("departure_time")), Constants.DayTimeSlot.values()[jsonMessage.getInt("departure_timeSlot")],
 					jsonMessage.getInt("departure_seatsNumber"), Parser.parsePriceList(jsonMessage.getJSONArray("departure_priceList")),
 					new LocationRepresentation(jsonMessage.getJSONObject("arrival_location")), DateUtility.castFromAPIFormat(jsonMessage.getString("arrival_time")), Constants.DayTimeSlot.values()[jsonMessage.getInt("arrival_timeSlot")],
@@ -94,10 +94,10 @@ public class DMResource extends PseudoResource{
 		try {
 			this.checkEntity(entity);
 			
-			id = Integer.parseInt(this.getQueryVal("userId"));
-			this.validateAuthentication(id);
-			
-	        Message message = parseJSON(entity, id);
+	        Message message = parseJSON(entity);
+	        id = message.getOwnerId();
+	        this.validateAuthentication(id);
+	        
 	        if (message != null){
 	        	if (message.validate() && message.getOwnerId() == id){
 		        	//if create the message
