@@ -127,11 +127,7 @@ public class UserDaoService{
 
 
 	public static ArrayList<Message> getHistoryMessageByUserId(int id) throws UserNotFoundException{
-		User user = CarpoolDaoUser.getUserById(id);
-		if(user==null){
-			throw new UserNotFoundException();
-		}
-		return user.getHistoryList();
+		return CarpoolDaoUser.getUserMessageHistory(id);
 	}
 	
 	
