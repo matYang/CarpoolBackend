@@ -9,6 +9,7 @@ import org.restlet.data.Status;
 
 import org.json.JSONArray;
 
+import carpool.common.DebugLog;
 import carpool.dbservice.*;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
@@ -27,13 +28,12 @@ public class RecentMessageResource extends PseudoResource{
 		ArrayList<Message> recentMessages = MessageDaoService.getRecentMessages();
 		JSONArray jsonArray = new JSONArray();
 		
-		if (recentMessages == null){
-			setStatus(Status.SERVER_ERROR_INTERNAL);
-		}
-		else{
-			jsonArray = JSONFactory.toJSON(recentMessages);
-			setStatus(Status.SUCCESS_OK);
-		}
+		DebugLog.d(recentMessages.toString());
+
+		jsonArray = JSONFactory.toJSON(recentMessages);
+		DebugLog.d(jsonArray.toString());
+		setStatus(Status.SUCCESS_OK);
+		
 		
 		Representation result = new JsonRepresentation(jsonArray);
 		this.addCORSHeader();

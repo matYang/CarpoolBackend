@@ -47,7 +47,7 @@ public class LocationService {
 	
 	public static final boolean isLocationRepresentationValid(LocationRepresentation locRep){
 		try{
-			if (locRep.getCustomDepthIndex() >= locRep.getHierarchyNameList().size() || locRep.getCustomDepthIndex() >= lookupMap.size()){
+			if (locRep.getCustomDepthIndex() >= locRep.getHierarchyNameList().size() || locRep.getCustomDepthIndex() >= lookupMap.size() || locRep.getHierarchyNameList().size() > lookupMap.size()){
 				return false;
 			}
 			
@@ -55,7 +55,35 @@ public class LocationService {
 			int tracker = 0;
 			CarpoolLocation curLoc = parentNodeMap.get(hierachyNameList.get(tracker));
 			tracker++;
-			while(tracker < hierachyNameList.size()){
+			while(tracker < locRep.getCustomDepthIndex()){
+				curLoc = curLoc.getSubLocation(hierachyNameList.get(tracker));
+				tracker++;
+			}
+			
+			CarpoolLocation parentLoc;
+			while (curLoc != null && tracker < locRep.getHierarchyNameList().size()){
+				parentLoc = curLoc;
+				curLoc = lookupMap.get(tracker).get(hierachyNameList.get(tracker));
+				if (curLoc != null && !curLoc.getParent().getName().equals(parentLoc.getName())){
+					return false;
+				}
+				tracker++;
+			}
+			return true;
+
+		} catch (NullPointerException e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public static final boolean isLocationRepresentationStored(LocationRepresentation locRep){
+		try{
+			ArrayList<String> hierachyNameList = locRep.getHierarchyNameList();
+			int tracker = 0;
+			CarpoolLocation curLoc = parentNodeMap.get(hierachyNameList.get(tracker));
+			tracker++;
+			while(tracker < locRep.getHierarchyNameList().size()){
 				curLoc = curLoc.getSubLocation(hierachyNameList.get(tracker));
 				tracker++;
 			}

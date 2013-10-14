@@ -11,6 +11,7 @@ import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.messageType;
+import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoRepresentation;
 import carpool.model.representation.LocationRepresentation;
 
@@ -144,17 +145,20 @@ public class SearchRepresentation implements PseudoRepresentation{
 	}
 	
 	@Override
-	public JSONObject toJSON() throws JSONException{
+	public JSONObject toJSON(){
 		JSONObject jsonSearchRepresentation = new JSONObject();
-		jsonSearchRepresentation.put("isRoundTrip", this.isRoundTrip);
-		jsonSearchRepresentation.put("departureLocation", this.departureLocation.toJSON());
-		jsonSearchRepresentation.put("arrivalLocation", this.arrivalLocation.toJSON());
-		jsonSearchRepresentation.put("departureDate", DateUtility.castToAPIFormat(this.departureDate));
-		jsonSearchRepresentation.put("arrivalDate", DateUtility.castToAPIFormat(this.arrivalDate));
-		jsonSearchRepresentation.put("targetType", this.targetType.code);
-		jsonSearchRepresentation.put("departureTimeSlot", this.departureTimeSlot.code);
-		jsonSearchRepresentation.put("arrivalTimeSlot", this.arrivalTimeSlot.code);
-		
+		try{
+			jsonSearchRepresentation.put("isRoundTrip", this.isRoundTrip);
+			jsonSearchRepresentation.put("departureLocation", this.departureLocation.toJSON());
+			jsonSearchRepresentation.put("arrivalLocation", this.arrivalLocation.toJSON());
+			jsonSearchRepresentation.put("departureDate", DateUtility.castToAPIFormat(this.departureDate));
+			jsonSearchRepresentation.put("arrivalDate", DateUtility.castToAPIFormat(this.arrivalDate));
+			jsonSearchRepresentation.put("targetType", this.targetType.code);
+			jsonSearchRepresentation.put("departureTimeSlot", this.departureTimeSlot.code);
+			jsonSearchRepresentation.put("arrivalTimeSlot", this.arrivalTimeSlot.code);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		return jsonSearchRepresentation;
 		
 	}

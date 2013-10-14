@@ -27,7 +27,7 @@ import carpool.resources.PseudoResource;
 public class DMResourceId extends PseudoResource{
 
 
-	private Message parseJSON(Representation entity, int messageId, int userId){
+	private Message parseJSON(Representation entity, int messageId){
 		JSONObject jsonMessage = null;
 		Message message = null;
 		
@@ -42,6 +42,7 @@ public class DMResourceId extends PseudoResource{
 					jsonMessage.getInt("arrival_seatsNumber"), Parser.parsePriceList(jsonMessage.getJSONArray("arrival_priceList")),
 					Constants.paymentMethod.values()[jsonMessage.getInt("paymentMethod")],
 					jsonMessage.getString("note"), Constants.messageType.values()[jsonMessage.getInt("type")], Constants.gender.values()[jsonMessage.getInt("genderRequirement")]);
+			message.setMessageId(messageId);
 		
 		} catch (Exception e){
 			  e.printStackTrace();
@@ -66,6 +67,7 @@ public class DMResourceId extends PseudoResource{
         	messageId = Integer.parseInt(this.getReqAttr("id"));
 			id = Integer.parseInt(this.getQueryVal("userId"));
 			
+			String ssr = this.getSessionString();
 			this.validateAuthentication(id);
 			
         	Message message = MessageDaoService.getMessageById(messageId);
@@ -101,13 +103,13 @@ public class DMResourceId extends PseudoResource{
 			this.checkEntity(entity);
 			
 			messageId = Integer.parseInt(this.getReqAttr("id"));
-			id = Integer.parseInt(this.getQueryVal("userId"));
-			
+			Message message = parseJSON(entity, messageId);
+			id = message.getOwnerId();
 			this.validateAuthentication(id);
 			
-	        Message message = parseJSON(entity, messageId, id);
+	        
 	        if (message != null){
-	        	if (message.validate() && message.getOwnerId() == id){
+	        	if (message.validate()){
 		        	//if available, update the message
 		            Message updateFeedBack = MessageDaoService.updateMessage(message);
 		            if (updateFeedBack != null){

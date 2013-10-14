@@ -34,6 +34,7 @@ public class UserResourceId extends PseudoResource{
 			String intendedIdString = this.getQueryVal("intendedUserId"); 
 			intendedUserId = intendedIdString != null ? Integer.parseInt(this.getQueryVal("intendedUserId")) : id;
 			
+			String ss = this.getSessionString();
 			this.validateAuthentication(id);
 			DebugLog.d("API::GetUserById:: " + id);
 			

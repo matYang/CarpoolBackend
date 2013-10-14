@@ -262,6 +262,12 @@ public class CarpoolDaoMessage{
 			e.printStackTrace();
 			DebugLog.d(e.getMessage());
 		}
+		//TODO
+		for(int i = retVal.size()-1; i>= 0; i--){
+			if (retVal.get(i) == null){
+				retVal.remove(i);
+			}
+		}
 		return retVal;
 	}
 
