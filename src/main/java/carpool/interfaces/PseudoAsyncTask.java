@@ -1,6 +1,6 @@
 package carpool.interfaces;
 
-public interface PesudoRelayTask {
+public interface PseudoAsyncTask {
 	
 	public boolean execute();
 	

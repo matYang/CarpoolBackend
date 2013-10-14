@@ -29,11 +29,33 @@ import carpool.model.Transaction;
 import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
+import carpool.model.representation.UserSearchRepresentation;
 
 
 public class CarpoolDaoUser {
 
-
+    public static ArrayList<User> searchForUser(UserSearchRepresentation usr){
+    	ArrayList<User> ulist = new ArrayList<User>();
+    	String name = usr.getName();
+    	gender Gender = usr.getGender();
+    	LocationRepresentation location = usr.getLocation();
+    	
+    	String query = "SELECT * FROM carpoolDAOUser WHERE name REGEXP ? AND gender LIKE ? AND user_primaryLocation LIKE ?;";
+    	try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			stmt.setString(1, name);
+			stmt.setInt(2,Gender.code);
+			stmt.setString(3, location.getPrimaryLocationString());
+			ResultSet rs = stmt.executeQuery();			
+				while(rs.next()){									
+					ulist.add(createUserByResultSet(rs));
+					}			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			DebugLog.d(e.getMessage());
+		}
+    	return ulist;
+    	
+    }
 	public static User addUserToDatabase(User user) throws ValidationException{
 		String query = "INSERT INTO carpoolDAOUser (password,name,email,phone,qq,age,gender,birthday,"+
 	            "imgPath,user_primaryLocation,user_customLocation,user_customDepthIndex,lastLogin,creationTime,"+

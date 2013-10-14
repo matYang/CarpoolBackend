@@ -1,4 +1,4 @@
-package carpool.relayTask;
+package carpool.asyncTask.relayTask;
 
 import java.util.Date;
 import java.util.Properties;
@@ -13,10 +13,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import carpool.common.DebugLog;
-import carpool.interfaces.PesudoRelayTask;
+import carpool.interfaces.PseudoAsyncTask;
 
 
-public class EmailRelayTask implements PesudoRelayTask{
+public class EmailRelayTask implements PseudoAsyncTask{
 
 	private static final String smtpServer = "smtp.live.com";
 	private static final String sender = "huaixuesheng@hotmail.com";

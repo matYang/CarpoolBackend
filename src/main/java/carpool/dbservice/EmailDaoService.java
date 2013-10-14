@@ -3,6 +3,7 @@ package carpool.dbservice;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import carpool.asyncRelayExecutor.ExecutorProvider;
+import carpool.asyncTask.relayTask.EmailRelayTask;
 import carpool.common.DebugLog;
 import carpool.common.EmailHandler;
 import carpool.constants.Constants;
@@ -10,7 +11,6 @@ import carpool.carpoolDAO.*;
 import carpool.encryption.EmailCrypto;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.User;
-import carpool.relayTask.EmailRelayTask;
 
 public class EmailDaoService {
 
