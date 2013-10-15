@@ -62,7 +62,7 @@ public class CarpoolDaoMessage{
 			stmt.setInt(12,targetType.code);
 			ResultSet rs = stmt.executeQuery();			
 				while(rs.next()){									
-					retVal.add(createMessageByResultSet(rs, false));
+					retVal.add(createMessageByResultSet(rs, true));
 					}			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -256,7 +256,7 @@ public class CarpoolDaoMessage{
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
-				retVal.add(createMessageByResultSet(rs, false));
+				retVal.add(createMessageByResultSet(rs, true));
 			}
 		} catch (SQLException | UserNotFoundException e) {
 			e.printStackTrace();
