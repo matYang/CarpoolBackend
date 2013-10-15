@@ -56,6 +56,7 @@ public class CarpoolDaoUser {
     	return ulist;
     	
     }
+    
 	public static User addUserToDatabase(User user) throws ValidationException{
 		String query = "INSERT INTO carpoolDAOUser (password,name,email,phone,qq,age,gender,birthday,"+
 	            "imgPath,user_primaryLocation,user_customLocation,user_customDepthIndex,lastLogin,creationTime,"+
@@ -300,7 +301,7 @@ public class CarpoolDaoUser {
 //	}
 
 	
-    private static boolean hasUserInSocialList(int mainUser, int subUser){
+    public static boolean hasUserInSocialList(int mainUser, int subUser){
     	String query = "SELECT COUNT(*) AS total FROM SocialList WHERE mainUser =" +mainUser+ " AND subUser ="+subUser+";";
     	try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
     		ResultSet rs = stmt.executeQuery();
