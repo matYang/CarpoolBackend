@@ -365,7 +365,6 @@ public class CarpoolDaoUser {
    }
    
 
-
 	
 	public static ArrayList<Message> getUserMessageHistory(int user) throws UserNotFoundException{
 		ArrayList<Message> mlist = new ArrayList<Message>();

@@ -12,6 +12,8 @@ import org.json.JSONObject;
 
 import carpool.common.DateUtility;
 import carpool.constants.Constants;
+import carpool.constants.Constants.DayTimeSlot;
+import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.paymentMethod;
 import carpool.constants.Constants.transactionState;
 import carpool.interfaces.PseudoModel;
@@ -25,69 +27,47 @@ public class Transaction implements PseudoModel{
 	public final int category = Constants.category_DM;
 	
 	private int transactionId;
-	private int initUserId;
-	private int targetUserId;
 	
-	private String initUserImgPath;
-	private String initUserName;
-	private int initUserLevel;
-	private String targetUserImgPath;
-	private String targetUserName;
-	private int targetUserLevel;
-	
-	private int initUserEval;
-	private int targetUserEval;
-	
+	private int providerId;
+	private int customerId;
 	private int messageId;
-	private String messageNote;    //the note inside the message
+	
+	private User provider;
+	private User customer;
+	private Message message;
+	
 	private paymentMethod paymentMethod;
-	private int price;
-	private String requestInfo;
-	private String responseInfo;
-
-	private Calendar startTime;
-	private Calendar endTime;
-	private LocationRepresentation location;
-
-	private boolean established;
-	private boolean success;
+	private String customerNote;
+	private String providerNote;
+	private int customerEvaluation;
+	private int providerEvaluation;
+	
+	
+	//transactions have their data set upon initialization, further change to the base message itself will not effect transaction details
+	private boolean isRoundTrip;
+	private LocationRepresentation departure_location;
+	private Calendar departure_time;
+	private DayTimeSlot departure_timeSlot;
+	private int departure_seatsNumber;
+	private int departure_seatsBooked;
+	private ArrayList<Integer> departure_priceList;
+	
+	private LocationRepresentation arrival_location;
+	private Calendar arrival_time;
+	private DayTimeSlot arrival_timeSlot;
+	private int arrival_seatsNumber;
+	private int arrival_seatsBooked;
+	private ArrayList<Integer> arrival_priceList;
+	
+	
+	private int totalPrice;
 	private transactionState state;
-	private boolean historyDeleted;
+	
 	private Calendar creationTime;
-    
-	//this constructor is used for serialization
-	public Transaction(){
-		this.transactionId = -1;
-		this.initUserId = -1;
-		this.targetUserId = -1;
-		
-		this.initUserImgPath = "default";
-		this.initUserName = "default";
-		this.initUserLevel = -1;
-		this.targetUserImgPath = "default";
-		this.targetUserName = "default";
-		this.targetUserLevel = -1;
-		
-		this.initUserEval = 0;
-		this.targetUserEval = 0;
-		
-		this.messageId = -1;
-		this.messageNote = "default";
-		this.paymentMethod = Constants.paymentMethod.offline;
-		this.price = -1;
-		this.requestInfo  = "default";
-		this.responseInfo = "default";
+	private boolean historyDeleted;
 
-		this.startTime = Calendar.getInstance();
-		this.endTime = Calendar.getInstance();
-		this.location =  new LocationRepresentation("Canada_Ontario_Waterloo_undetermined");
-
-		this.established = false;
-		this.success = false;
-		this.state = Constants.transactionState.init;
-		this.historyDeleted = false;
-		this.creationTime = Calendar.getInstance();
-	}
+	
+	private Transaction(){}
 	
 	//this constructor is used for testing
 	public Transaction(int transactionId){
