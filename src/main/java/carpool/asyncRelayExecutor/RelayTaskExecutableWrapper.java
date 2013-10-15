@@ -1,12 +1,12 @@
 package carpool.asyncRelayExecutor;
 
-import carpool.interfaces.PesudoRelayTask;
+import carpool.interfaces.PseudoAsyncTask;
 
 public class RelayTaskExecutableWrapper implements Runnable{
 	
-	private PesudoRelayTask task;
+	private PseudoAsyncTask task;
 	
-	public RelayTaskExecutableWrapper(PesudoRelayTask task){
+	public RelayTaskExecutableWrapper(PseudoAsyncTask task){
 		this.task = task;
 	}
 		 

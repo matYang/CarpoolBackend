@@ -21,6 +21,7 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.HelperOperator;
 import carpool.common.Parser;
+import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.gender;
 import carpool.constants.Constants.messageState;
@@ -31,6 +32,7 @@ import carpool.exception.ValidationException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.representation.LocationRepresentation;
+import carpool.model.representation.UserSearchRepresentation;
 import carpool.model.Message;
 import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
@@ -319,6 +321,142 @@ public class CarpoolUserTest {
 		}catch(Exception e){
 			e.printStackTrace();
 			fail();
+		}
+    }
+    
+    @Test
+    public void testUserSearchRepresentation(){
+    	
+    	CarpoolDaoBasic.clearBothDatabase();
+    	//Users
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		user.setName("Harry Xiong");
+		user.setGender(Constants.gender.fromInt(0));
+		try {
+			CarpoolDaoUser.addUserToDatabase(user);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}	
+       User user2 =  new User("yuanFang91", "yuanyuanyuan", new LocationRepresentation ("primary2","custom",1));
+        user2.setName("Yuan Fang");
+		user2.setGender(Constants.gender.fromInt(1));
+		try {
+			CarpoolDaoUser.addUserToDatabase(user2);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}
+       User user3 =  new User("xchxchxch", "xiongchuhan@hotmail.com", new LocationRepresentation ("primary","custom",1));
+        user3.setName("Harry Xiong");
+		user3.setGender(Constants.gender.fromInt(0));
+		try {
+			CarpoolDaoUser.addUserToDatabase(user3);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}	
+       User user4 =  new User("Yuan", "FangFangFang", new LocationRepresentation ("primary2","custom",1));
+        user4.setName("Yuan Fang");
+		user4.setGender(Constants.gender.fromInt(1));
+		try {
+			CarpoolDaoUser.addUserToDatabase(user4);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}
+		User user5 =  new User("Matthew", "YangYangYang", new LocationRepresentation ("primary","custom",1));
+        user5.setName("Yuan Fang");
+		user5.setGender(Constants.gender.fromInt(0));
+		try {
+			CarpoolDaoUser.addUserToDatabase(user5);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}
+		User user6 =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		user6.setName("Chuhan Xiong");
+		user6.setGender(Constants.gender.fromInt(0));
+		try {
+			CarpoolDaoUser.addUserToDatabase(user6);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}
+		User user7 =  new User("Matthew", "YangYangYang", new LocationRepresentation ("primary2","custom",1));
+        user7.setName("Cristina Fang");
+		user7.setGender(Constants.gender.fromInt(1));
+		try {
+			CarpoolDaoUser.addUserToDatabase(user7);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}
+		User user8 =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		user8.setName("han");
+		user8.setGender(Constants.gender.fromInt(0));
+		try {
+			CarpoolDaoUser.addUserToDatabase(user8);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}
+		User user9 =  new User("Matthew", "YangYangYang", new LocationRepresentation ("primary2","custom",1));
+        user9.setName("ang");
+		user9.setGender(Constants.gender.fromInt(1));
+		try {
+			CarpoolDaoUser.addUserToDatabase(user9);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}
+		User user10 =  new User("Matthew", "YangYangYang", new LocationRepresentation ("primary2","custom",1));
+        user10.setName("g");
+		user10.setGender(Constants.gender.fromInt(1));
+		try {
+			CarpoolDaoUser.addUserToDatabase(user10);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}
+		
+		//USRs
+		UserSearchRepresentation usr = new UserSearchRepresentation("Xiong",user.getGender(),user.getLocation());
+		UserSearchRepresentation usr2 = new UserSearchRepresentation("Fang",user2.getGender(),user2.getLocation());
+		UserSearchRepresentation usr3 = new UserSearchRepresentation("Matthew",Constants.gender.fromInt(1),user5.getLocation());
+		UserSearchRepresentation usr4 = new UserSearchRepresentation("g",Constants.gender.fromInt(1),user7.getLocation());
+		//Test
+		ArrayList<User> ulist = new ArrayList<User>();
+		try{
+			ulist = CarpoolDaoUser.searchForUser(usr);
+			if(ulist !=null && ulist.size()==3 && ulist.get(0).equals(user)&&ulist.get(1).equals(user3)&& ulist.get(2).equals(user6)){
+				//Passed;
+			}else{
+				
+				fail();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		try{
+			ulist = CarpoolDaoUser.searchForUser(usr2);
+			if(ulist !=null && ulist.size()==3 && ulist.get(0).equals(user2)&&ulist.get(1).equals(user4)&& ulist.get(2).equals(user7)){
+				//Passed;
+			}else{
+				fail();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		try{
+			ulist = CarpoolDaoUser.searchForUser(usr3);
+			if(ulist==null||ulist.size()==0){
+				//Passed;
+			}else{				
+				fail();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		try{
+			ulist = CarpoolDaoUser.searchForUser(usr4);
+			if(ulist !=null && ulist.size()==5 && ulist.get(0).equals(user2)&&ulist.get(1).equals(user4)&& ulist.get(2).equals(user7)&&ulist.get(3).equals(user9)&&ulist.get(4).equals(user10)){
+				//Passed;
+			}else{
+				fail();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
     }
    

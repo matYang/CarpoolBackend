@@ -1,4 +1,4 @@
-package carpool.relayTask;
+package carpool.asyncTask.relayTask;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,12 +19,12 @@ import org.json.JSONArray;
 
 import carpool.common.DebugLog;
 import carpool.factory.JSONFactory;
-import carpool.interfaces.PesudoRelayTask;
+import carpool.interfaces.PseudoAsyncTask;
 import carpool.model.Notification;
 
 
 
-public class NotificationRelayTask implements PesudoRelayTask{
+public class NotificationRelayTask implements PseudoAsyncTask{
 	
 	public static final String relay_notificationPushUrl = "http://localhost:8017/api/v1.0/notifications/push";
 
