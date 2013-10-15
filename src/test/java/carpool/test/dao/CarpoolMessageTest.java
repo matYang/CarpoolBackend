@@ -227,10 +227,8 @@ public class CarpoolMessageTest {
 		paymentMethod paymentMethod =null;
 		paymentMethod = paymentMethod.fromInt(0);
 		messageType type = messageType.fromInt(0);
-		gender genderRequirement = gender.fromInt(0);
-		messageState state = messageState.fromInt(0);
-		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
-		int messageId=-1;
+		gender genderRequirement = gender.fromInt(0);		
+		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);		
 		int userId=-1;
 		//These messages should pass the search	
 		//Message	

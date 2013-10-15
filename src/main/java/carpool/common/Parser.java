@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.junit.Test;
 
 public class Parser {
+	
 	//Pricelist: Numb-numb-
 	public static String listToString(ArrayList<?> list){
 		String serializedList = null;
