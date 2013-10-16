@@ -153,11 +153,218 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		this.historyDeleted = historyDeleted;
 	}
 	
-	
-	//TODO add getters and setters and toString method
-	
-	
-	
+	public int getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(int transactionId) {
+		this.transactionId = transactionId;
+	}
+
+	public int getProviderId() {
+		return providerId;
+	}
+
+	public void setProviderId(int providerId) {
+		this.providerId = providerId;
+	}
+
+	public int getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
+
+	public int getMessageId() {
+		return messageId;
+	}
+
+	public void setMessageId(int messageId) {
+		this.messageId = messageId;
+	}
+
+	public User getProvider() {
+		return provider;
+	}
+
+	public void setProvider(User provider) {
+		this.provider = provider;
+	}
+
+	public User getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(User customer) {
+		this.customer = customer;
+	}
+
+	public Message getMessage() {
+		return message;
+	}
+
+	public void setMessage(Message message) {
+		this.message = message;
+	}
+
+	public paymentMethod getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(paymentMethod paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+
+	public String getCustomerNote() {
+		return customerNote;
+	}
+
+	public void setCustomerNote(String customerNote) {
+		this.customerNote = customerNote;
+	}
+
+	public String getProviderNote() {
+		return providerNote;
+	}
+
+	public void setProviderNote(String providerNote) {
+		this.providerNote = providerNote;
+	}
+
+	public int getCustomerEvaluation() {
+		return customerEvaluation;
+	}
+
+	public void setCustomerEvaluation(int customerEvaluation) {
+		this.customerEvaluation = customerEvaluation;
+	}
+
+	public int getProviderEvaluation() {
+		return providerEvaluation;
+	}
+
+	public void setProviderEvaluation(int providerEvaluation) {
+		this.providerEvaluation = providerEvaluation;
+	}
+
+	public TransactionDirection getDirection() {
+		return direction;
+	}
+
+	public void setDirection(TransactionDirection direction) {
+		this.direction = direction;
+	}
+
+	public LocationRepresentation getDeparture_location() {
+		return departure_location;
+	}
+
+	public void setDeparture_location(LocationRepresentation departure_location) {
+		this.departure_location = departure_location;
+	}
+
+	public Calendar getDeparture_time() {
+		return departure_time;
+	}
+
+	public void setDeparture_time(Calendar departure_time) {
+		this.departure_time = departure_time;
+	}
+
+	public DayTimeSlot getDeparture_timeSlot() {
+		return departure_timeSlot;
+	}
+
+	public void setDeparture_timeSlot(DayTimeSlot departure_timeSlot) {
+		this.departure_timeSlot = departure_timeSlot;
+	}
+
+	public int getDeparture_seatsBooked() {
+		return departure_seatsBooked;
+	}
+
+	public void setDeparture_seatsBooked(int departure_seatsBooked) {
+		this.departure_seatsBooked = departure_seatsBooked;
+	}
+
+	public ArrayList<Integer> getDeparture_priceList() {
+		return departure_priceList;
+	}
+
+	public void setDeparture_priceList(ArrayList<Integer> departure_priceList) {
+		this.departure_priceList = departure_priceList;
+	}
+
+	public LocationRepresentation getArrival_location() {
+		return arrival_location;
+	}
+
+	public void setArrival_location(LocationRepresentation arrival_location) {
+		this.arrival_location = arrival_location;
+	}
+
+	public Calendar getArrival_time() {
+		return arrival_time;
+	}
+
+	public void setArrival_time(Calendar arrival_time) {
+		this.arrival_time = arrival_time;
+	}
+
+	public DayTimeSlot getArrival_timeSlot() {
+		return arrival_timeSlot;
+	}
+
+	public void setArrival_timeSlot(DayTimeSlot arrival_timeSlot) {
+		this.arrival_timeSlot = arrival_timeSlot;
+	}
+
+	public int getArrival_seatsBooked() {
+		return arrival_seatsBooked;
+	}
+
+	public void setArrival_seatsBooked(int arrival_seatsBooked) {
+		this.arrival_seatsBooked = arrival_seatsBooked;
+	}
+
+	public ArrayList<Integer> getArrival_priceList() {
+		return arrival_priceList;
+	}
+
+	public void setArrival_priceList(ArrayList<Integer> arrival_priceList) {
+		this.arrival_priceList = arrival_priceList;
+	}
+
+	public int getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(int totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public transactionState getState() {
+		return state;
+	}
+
+	public void setState(transactionState state) {
+		this.state = state;
+	}
+
+	public boolean isHistoryDeleted() {
+		return historyDeleted;
+	}
+
+	public void setHistoryDeleted(boolean historyDeleted) {
+		this.historyDeleted = historyDeleted;
+	}
+
+	public Calendar getCreationTime() {
+		return creationTime;
+	}
+
 	@Override
 	public JSONObject toJSON(){
 		JSONObject jsonTransaction = new JSONObject();
@@ -199,34 +406,63 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		return  jsonTransaction;
 	}
 	
+	
+	@Override
+	public String toString() {
+		return "Transaction [category=" + category + ", transactionId="
+				+ transactionId + ", providerId=" + providerId
+				+ ", customerId=" + customerId + ", messageId=" + messageId
+				+ ", provider=" + provider + ", customer=" + customer
+				+ ", message=" + message + ", paymentMethod=" + paymentMethod
+				+ ", customerNote=" + customerNote + ", providerNote="
+				+ providerNote + ", customerEvaluation=" + customerEvaluation
+				+ ", providerEvaluation=" + providerEvaluation + ", direction="
+				+ direction + ", departure_location=" + departure_location
+				+ ", departure_time=" + departure_time
+				+ ", departure_timeSlot=" + departure_timeSlot
+				+ ", departure_seatsBooked=" + departure_seatsBooked
+				+ ", departure_priceList=" + departure_priceList
+				+ ", arrival_location=" + arrival_location + ", arrival_time="
+				+ arrival_time + ", arrival_timeSlot=" + arrival_timeSlot
+				+ ", arrival_seatsBooked=" + arrival_seatsBooked
+				+ ", arrival_priceList=" + arrival_priceList + ", totalPrice="
+				+ totalPrice + ", state=" + state + ", creationTime="
+				+ creationTime + ", historyDeleted=" + historyDeleted + "]";
+	}
+
 	public boolean equals(Transaction t){
-		return t != null &&
-				this.transactionId == t.transactionId &&
-				this.providerId == t.providerId &&
-				this.customerId == t.customerId &&
-				this.messageId == t.messageId &&
-				this.provider.equals(t.provider) &&
-				this.customer.equals(t.customer) &&
-				this.message.equals(t.message) &&
-				this.paymentMethod == t.paymentMethod &&
-				this.customerNote.equals(t.customerNote) &&
-				this.providerNote.equals(t.providerNote) &&
-				this.customerEvaluation == t.customerEvaluation &&
-				this.providerEvaluation == t.providerEvaluation &&
-				this.direction == t.direction &&
-				this.departure_location.equals(t.departure_location) &&
-				this.departure_time.getTime().toString().equals(t.departure_time.getTime().toString()) &&
-				this.departure_timeSlot == t.departure_timeSlot &&
-				this.departure_seatsBooked == t.departure_seatsBooked &&
-				HelperOperator.isArrayListEqual(this.departure_priceList, t.departure_priceList) && 
-				this.arrival_location.equals(t.arrival_location) &&
-				this.arrival_time.getTime().toString().equals(t.arrival_time.getTime().toString()) &&
-				this.arrival_timeSlot == t.arrival_timeSlot &&
-				this.arrival_seatsBooked == t.arrival_seatsBooked &&
-				HelperOperator.isArrayListEqual(this.arrival_priceList, t.arrival_priceList) && 
-				this.totalPrice == t.totalPrice &&
-				this.state == t.state &&
-				this.historyDeleted == t.historyDeleted;
+		try {
+			return t != null &&
+					this.transactionId == t.transactionId &&
+					this.providerId == t.providerId &&
+					this.customerId == t.customerId &&
+					this.messageId == t.messageId &&
+					this.provider.equals(t.provider) &&
+					this.customer.equals(t.customer) &&
+					this.message.equals(t.message) &&
+					this.paymentMethod == t.paymentMethod &&
+					this.customerNote.equals(t.customerNote) &&
+					this.providerNote.equals(t.providerNote) &&
+					this.customerEvaluation == t.customerEvaluation &&
+					this.providerEvaluation == t.providerEvaluation &&
+					this.direction == t.direction &&
+					this.departure_location.equals(t.departure_location) &&
+					this.departure_time.getTime().toString().equals(t.departure_time.getTime().toString()) &&
+					this.departure_timeSlot == t.departure_timeSlot &&
+					this.departure_seatsBooked == t.departure_seatsBooked &&
+					HelperOperator.isArrayListEqual(this.departure_priceList, t.departure_priceList) && 
+					this.arrival_location.equals(t.arrival_location) &&
+					this.arrival_time.getTime().toString().equals(t.arrival_time.getTime().toString()) &&
+					this.arrival_timeSlot == t.arrival_timeSlot &&
+					this.arrival_seatsBooked == t.arrival_seatsBooked &&
+					HelperOperator.isArrayListEqual(this.arrival_priceList, t.arrival_priceList) && 
+					this.totalPrice == t.totalPrice &&
+					this.state == t.state &&
+					this.historyDeleted == t.historyDeleted;
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	
