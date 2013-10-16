@@ -7,22 +7,26 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DateUtility;
+import carpool.common.HelperOperator;
 import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.paymentMethod;
 import carpool.constants.Constants.transactionState;
+import carpool.exception.ValidationException;
 import carpool.interfaces.PseudoModel;
+import carpool.interfaces.PseudoValidatable;
 import carpool.model.representation.LocationRepresentation;
 
 
 
 
-public class Transaction implements PseudoModel{
+public class Transaction implements PseudoModel, PseudoValidatable, Comparable<Transaction>{
 		
 	public final int category = Constants.category_DM;
 	
@@ -69,434 +73,174 @@ public class Transaction implements PseudoModel{
 	
 	private Transaction(){}
 	
-	//this constructor is used for testing
-	public Transaction(int transactionId){
-		this.transactionId = transactionId;
-		this.initUserId = -1;
-		this.targetUserId = -1;
+	//this contructor is used for transaction initialization
+	public Transaction(int providerId, int customerId, int messageId, paymentMethod p, String cNote, String pNote, 
+			TransactionDirection tD, Calendar d_t, DayTimeSlot d_ts, int d_seats, Calendar a_t, DayTimeSlot a_ts, int a_seats){
 		
-		this.initUserImgPath = "default";
-		this.initUserName = "default";
-		this.initUserLevel = -1;
-		this.targetUserImgPath = "default";
-		this.targetUserName = "default";
-		this.targetUserLevel = -1;
+		this.providerId = providerId;
+		this.customerId = customerId;
+		this.messageId = messageId;
 		
-		this.initUserEval = 0;
-		this.targetUserEval = 0;
+		this.provider = null;
+		this.customer = null;
+		this.message = null;
 		
-		this.messageId = -1;
-		this.messageNote = "default";
-		this.paymentMethod = Constants.paymentMethod.offline;
-		this.price = -1;
-		this.requestInfo  = "default";
-		this.responseInfo = "default";
-
-		this.startTime = Calendar.getInstance();
-		this.endTime = Calendar.getInstance();
-		this.location =  new LocationRepresentation("Canada_Ontario_Waterloo_undetermined");
-
-		this.established = false;
-		this.success = false;
-		this.state = Constants.transactionState.init;
-		this.historyDeleted = false;
+		this.paymentMethod = p;
+		this.customerNote = cNote;
+		this.providerNote = pNote;
+		this.customerEvaluation = 0;
+		this.providerEvaluation = 0;
+		
+		this.direction = tD;
+		this.departure_location = null;
+		this.departure_time = d_t;
+		this.departure_timeSlot = d_ts;
+		this.departure_seatsBooked = d_seats;
+		this.departure_priceList = new ArrayList<Integer>();
+		this.arrival_location = null;
+		this.arrival_time = a_t;
+		this.arrival_timeSlot = a_ts;
+		this.arrival_seatsBooked = a_seats;
+		this.arrival_priceList = new ArrayList<Integer>();
+		
+		this.totalPrice = 0;
+		this.state = transactionState.init;
 		this.creationTime = Calendar.getInstance();
-	}
-	
-	/**
-	 * Summary Constructor
-	 * This constructor is used to send a summarized transaction to the front end, only necessary fields need to be filled
-	 * name: summarized transaction
-	 * @param transactionId
-	 * @param initUserId
-	 * @param targetUserId
-	 * @param messageId
-	 * @param messageNote
-	 * @param price
-	 * @param startTime
-	 * @param location
-	 * @param established
-	 * @param success
-	 * @param state
-	 * @param historyDeleted
-	 * @param creationTime
-	 */
-	public Transaction(int transactionId, int initUserId, int targetUserId, int messageId, String messageNote, int price, Calendar startTime, LocationRepresentation location, boolean established, boolean success ,transactionState state, boolean historyDeleted, Calendar creationTime){
-		this.transactionId = -1;
-		this.initUserId = initUserId;
-		this.targetUserId = targetUserId;
-		this.messageId = messageId;
-		this.messageNote = messageNote;
-		
-		this.initUserEval = 0;
-		this.targetUserEval = 0;
-		
-		this.paymentMethod = Constants.paymentMethod.offline;
-		this.price = price;
-		this.requestInfo = "default";
-		this.responseInfo = "default";
-
-		this.startTime = startTime;
-		this.endTime = Calendar.getInstance();
-		this.location = location;
-
-		this.established = established;
-		this.success = success;
-		this.state = state;
-		this.historyDeleted = historyDeleted;
-		this.creationTime = creationTime;
-	}
-	
-	/**
-	 * Initialization Constructor
-	 * This constructor is used as a transaction constructor, the first initialization of a transaction
-	 * @param initUserId
-	 * @param targetUserId
-	 * @param messageId
-	 * @param paymentMethod
-	 * @param price
-	 * @param requestInfo
-	 * @param responseInfo
-	 * @param startTime
-	 * @param endTime
-	 * @param location
-	 */
-	public Transaction(int initUserId, int targetUserId, int messageId ,paymentMethod paymentMethod, int price, String requestInfo, Calendar startTime, Calendar endTime, LocationRepresentation location){
-		this.transactionId = -1;
-		this.initUserId = initUserId;
-		this.targetUserId = targetUserId;
-		this.messageId = messageId;
-		this.messageNote = "default";
-		
-		this.initUserEval = 0;
-		this.targetUserEval = 0;
-		
-		this.paymentMethod = paymentMethod;
-		this.price = price;
-		this.requestInfo = requestInfo;
-		this.responseInfo = "default";
-
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.location = location;
-
-		this.established = false;
-		this.success = false;
-		this.state = Constants.transactionState.init;
 		this.historyDeleted = false;
-		this.creationTime = Calendar.getInstance();
+
 	}
 	
-	
-	/**
-	 * Full Transaction Constructor
-	 */
-	
-	public Transaction(int transactionId,int initUserId,int targetUserId,String initUserImgPath,String initUserName,int initUserLevel,
-			String targetUserImgPath,String targetUserName,int targetUserLevel,int initUserEval, int targetUserEval, int messageId,String messageNote,Constants.paymentMethod paymentMethod,
-			int price,String requestInfo,String responseInfo,Calendar startTime,Calendar endTime,LocationRepresentation location,boolean established,
-			boolean success,Constants.transactionState state,boolean historyDeleted,Calendar creationTime){
+
+	public Transaction(int transactionId, int providerId, int customerId,
+			int messageId, User provider, User customer, Message message,
+			carpool.constants.Constants.paymentMethod paymentMethod,
+			String customerNote, String providerNote, int customerEvaluation,
+			int providerEvaluation, TransactionDirection td,
+			LocationRepresentation departure_location, Calendar departure_time,
+			DayTimeSlot departure_timeSlot, 
+			int departure_seatsBooked, ArrayList<Integer> departure_priceList,
+			LocationRepresentation arrival_location, Calendar arrival_time,
+			DayTimeSlot arrival_timeSlot, 
+			int arrival_seatsBooked, ArrayList<Integer> arrival_priceList,
+			int totalPrice, transactionState state, Calendar creationTime,
+			boolean historyDeleted) {
+		super();
 		this.transactionId = transactionId;
-		this.initUserId = initUserId;
-		this.targetUserId = targetUserId;
-		
-		this.initUserImgPath = initUserImgPath;
-		this.initUserName = initUserName;
-		this.initUserLevel = initUserLevel;
-		this.targetUserImgPath = targetUserImgPath;
-		this.targetUserName = targetUserName;
-		this.targetUserLevel = targetUserLevel;
-		
-		this.initUserEval = initUserEval;
-		this.targetUserEval = targetUserEval;
-		
+		this.providerId = providerId;
+		this.customerId = customerId;
 		this.messageId = messageId;
-		this.messageNote = messageNote;
+		this.provider = provider;
+		this.customer = customer;
+		this.message = message;
 		this.paymentMethod = paymentMethod;
-		this.price = price;
-		this.requestInfo = requestInfo;
-		this.responseInfo = responseInfo;
-
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.location = location;
-
-		this.established = established;
-		this.success = success;
+		this.customerNote = customerNote;
+		this.providerNote = providerNote;
+		this.customerEvaluation = customerEvaluation;
+		this.providerEvaluation = providerEvaluation;
+		this.direction = td;
+		this.departure_location = departure_location;
+		this.departure_time = departure_time;
+		this.departure_timeSlot = departure_timeSlot;
+		this.departure_seatsBooked = departure_seatsBooked;
+		this.departure_priceList = departure_priceList;
+		this.arrival_location = arrival_location;
+		this.arrival_time = arrival_time;
+		this.arrival_timeSlot = arrival_timeSlot;
+		this.arrival_seatsBooked = arrival_seatsBooked;
+		this.arrival_priceList = arrival_priceList;
+		this.totalPrice = totalPrice;
 		this.state = state;
-		this.historyDeleted = historyDeleted;
 		this.creationTime = creationTime;
+		this.historyDeleted = historyDeleted;
 	}
-	 
-
-
+	
+	
+	//TODO add getters and setters and toString method
+	
+	
+	
 	@Override
-	public String toString() {
-		return "Transaction [category=" + category + ", transactionId="
-				+ transactionId + ", initUserId=" + initUserId
-				+ ", targetUserId=" + targetUserId + ", initUserImgPath="
-				+ initUserImgPath + ", initUserName=" + initUserName
-				+ ", intUserLevel=" + initUserLevel + ", targetUserImgPath="
-				+ targetUserImgPath + ", targetUserName=" + targetUserName
-				+ ", targetUserLevel=" + targetUserLevel + ", messageId="
-				+ messageId + ", messageNote=" + messageNote
-				+ ", paymentMethod=" + paymentMethod + ", price=" + price
-				+ ", requestInfo=" + requestInfo + ", responseInfo="
-				+ responseInfo + ", startTime=" + startTime + ", endTime="
-				+ endTime + ", location=" + location + ", established="
-				+ established + ", success=" + success + ", state=" + state
-				+ ", historyDeleted=" + historyDeleted + ", creationTime="
-				+ creationTime + "]";
-	}
-	
-	public String toNotificationSummary(){
-		return DateUtility.getNotificationDateString(this.startTime) + "与您的交易";
-	}
-
-	public String getMessageNote() {
-		return messageNote;
-	}
-
-	public void setMessageNote(String messageNote) {
-		this.messageNote = messageNote;
-	}
-
-	public int getTransactionId() {
-		return transactionId;
-	}
-
-	public void setTransactionId(int transactionId) {
-		this.transactionId = transactionId;
-	}
-
-	public int getInitUserId() {
-		return initUserId;
-	}
-
-	public void setInitUserId(int initUserId) {
-		this.initUserId = initUserId;
-	}
-
-	public int getTargetUserId() {
-		return targetUserId;
-	}
-
-	public void setTargetUserId(int targetUserId) {
-		this.targetUserId = targetUserId;
-	}
-
-	public String getInitUserImgPath() {
-		return initUserImgPath;
-	}
-
-	public void setInitUserImgPath(String initUserImgPath) {
-		this.initUserImgPath = initUserImgPath;
-	}
-
-	public String getInitUserName() {
-		return initUserName;
-	}
-
-	public void setInitUserName(String initUserName) {
-		this.initUserName = initUserName;
-	}
-
-	public int getInitUserLevel() {
-		return initUserLevel;
-	}
-
-	public void setInitUserLevel(int intUserLevel) {
-		this.initUserLevel = intUserLevel;
-	}
-
-	public String getTargetUserImgPath() {
-		return targetUserImgPath;
-	}
-
-	public void setTargetUserImgPath(String targetUserImgPath) {
-		this.targetUserImgPath = targetUserImgPath;
-	}
-
-	public String getTargetUserName() {
-		return targetUserName;
-	}
-
-	public void setTargetUserName(String targetUserName) {
-		this.targetUserName = targetUserName;
-	}
-
-	public int getTargetUserLevel() {
-		return targetUserLevel;
-	}
-
-	public void setTargetUserLevel(int targetUserLevel) {
-		this.targetUserLevel = targetUserLevel;
-	}
-
-	public int getInitUserEval() {
-		return initUserEval;
-	}
-
-	public void setInitUserEval(int initUserEval) {
-		this.initUserEval = initUserEval;
-	}
-
-	public int getTargetUserEval() {
-		return targetUserEval;
-	}
-
-	public void setTargetUserEval(int targetUserEval) {
-		this.targetUserEval = targetUserEval;
-	}
-
-	public int getMessageId() {
-		return messageId;
-	}
-
-	public void setMessageId(int messageId) {
-		this.messageId = messageId;
-	}
-
-	public paymentMethod getPaymentMethod() {
-		return paymentMethod;
-	}
-
-	public void setPaymentMethod(paymentMethod paymentMethod) {
-		this.paymentMethod = paymentMethod;
-	}
-
-	public int getPrice() {
-		return price;
-	}
-
-	public void setPrice(int price) {
-		this.price = price;
-	}
-
-	public String getRequestInfo() {
-		return requestInfo;
-	}
-
-	public void setRequestInfo(String requestInfo) {
-		this.requestInfo = requestInfo;
-	}
-
-	public String getResponseInfo() {
-		return responseInfo;
-	}
-
-	public void setResponseInfo(String responseInfo) {
-		this.responseInfo = responseInfo;
-	}
-
-	public Calendar getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(Calendar startTime) {
-		this.startTime = startTime;
-	}
-
-	public Calendar getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(Calendar endTime) {
-		this.endTime = endTime;
-	}
-
-	public LocationRepresentation getLocation() {
-		return location;
-	}
-
-	public void setLocation(LocationRepresentation location) {
-		this.location = location;
-	}
-
-	public boolean isEstablished() {
-		return established;
-	}
-
-	public void setEstablished(boolean established) {
-		this.established = established;
-	}
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-
-	public transactionState getState() {
-		return state;
-	}
-
-	public void setState(transactionState state) {
-		this.state = state;
-	}
-
-	public boolean isHistoryDeleted() {
-		return historyDeleted;
-	}
-
-	public void setHistoryDeleted(boolean historyDeleted) {
-		this.historyDeleted = historyDeleted;
-	}
-
-	public int getCategory() {
-		return category;
-	}
-
-	public Calendar getCreationTime() {
-		return creationTime;
-	}
-
-	public void setCreationTime(Calendar creationTime) {
-		this.creationTime = creationTime;
-	}
-	
-	/**
-	 * TODO: (this is corresponding to he summarized transaction constructor specified above)
-	 * required fields"
-	 * @param transactionId
-	 * @param initUserId
-	 * @param targetUserId
-	 * @param messageId
-	 * @param messageNote
-	 * @param price
-	 * @param startTime
-	 * @param location
-	 * @param established
-	 * @param success
-	 * @param state
-	 * @param historyDeleted
-	 * @param creationTime
-	 */
-	public void prepareBrief(){
-		
-	}
-	
-	
 	public JSONObject toJSON(){
-		JSONObject jsonTransaction = new JSONObject(this);
+		JSONObject jsonTransaction = new JSONObject();
 		
 		try {
-			jsonTransaction.put("startTime", DateUtility.castToAPIFormat(this.getStartTime()));
-			jsonTransaction.put("endTime", DateUtility.castToAPIFormat(this.getEndTime()));
-			jsonTransaction.put("creationTime", DateUtility.castToAPIFormat(this.getCreationTime()));
-			
-			jsonTransaction.put("location", this.location.toJSON());
-			
-			jsonTransaction.put("paymentMethod", this.getPaymentMethod());
-			jsonTransaction.put("state", this.getState());
+			jsonTransaction.put("transactionId", this.transactionId);
+			jsonTransaction.put("providerId", this.providerId);
+			jsonTransaction.put("customerId", this.customerId);
+			jsonTransaction.put("messageId", this.messageId);
+			jsonTransaction.put("provider", this.provider.toJSON());
+			jsonTransaction.put("customer", this.customer.toJSON());
+			jsonTransaction.put("message", this.message.toJSON());
+			jsonTransaction.put("paymentMethod", this.paymentMethod.code);
+			jsonTransaction.put("customerNote", this.customerNote);
+			jsonTransaction.put("providerNote", this.providerNote);
+			jsonTransaction.put("customerEvaluation", this.customerEvaluation);
+			jsonTransaction.put("providerEvaluation", this.providerEvaluation);
+			jsonTransaction.put("direction", this.direction.code);
+			jsonTransaction.put("departure_location", this.departure_location.toJSON());
+			jsonTransaction.put("departure_time", DateUtility.castToAPIFormat(this.departure_time));
+			jsonTransaction.put("departure_timeSlot", this.departure_timeSlot.code);
+			jsonTransaction.put("departure_seatsBooked", this.departure_seatsBooked);
+			jsonTransaction.put("daparture_priceList", new JSONArray(this.departure_priceList));
+			jsonTransaction.put("arrival_location", this.arrival_location.toJSON());
+			jsonTransaction.put("arrival_time", DateUtility.castToAPIFormat(this.arrival_time));
+			jsonTransaction.put("arrival_timeSlot", this.arrival_timeSlot.code);
+			jsonTransaction.put("arrival_seatsBooked", this.arrival_seatsBooked);
+			jsonTransaction.put("arrival_priceList", new JSONArray(this.arrival_priceList));
+			jsonTransaction.put("totalPrice", this.totalPrice);
+			jsonTransaction.put("state", this.state.code);
+			jsonTransaction.put("creationTime", DateUtility.castToAPIFormat(this.creationTime));
+			jsonTransaction.put("historyDeleted", this.historyDeleted);
+
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		
 		return  jsonTransaction;
+	}
+	
+	public boolean equals(Transaction t){
+		return t != null &&
+				this.transactionId == t.transactionId &&
+				this.providerId == t.providerId &&
+				this.customerId == t.customerId &&
+				this.messageId == t.messageId &&
+				this.provider.equals(t.provider) &&
+				this.customer.equals(t.customer) &&
+				this.message.equals(t.message) &&
+				this.paymentMethod == t.paymentMethod &&
+				this.customerNote.equals(t.customerNote) &&
+				this.providerNote.equals(t.providerNote) &&
+				this.customerEvaluation == t.customerEvaluation &&
+				this.providerEvaluation == t.providerEvaluation &&
+				this.direction == t.direction &&
+				this.departure_location.equals(t.departure_location) &&
+				this.departure_time.getTime().toString().equals(t.departure_time.getTime().toString()) &&
+				this.departure_timeSlot == t.departure_timeSlot &&
+				this.departure_seatsBooked == t.departure_seatsBooked &&
+				HelperOperator.isArrayListEqual(this.departure_priceList, t.departure_priceList) && 
+				this.arrival_location.equals(t.arrival_location) &&
+				this.arrival_time.getTime().toString().equals(t.arrival_time.getTime().toString()) &&
+				this.arrival_timeSlot == t.arrival_timeSlot &&
+				this.arrival_seatsBooked == t.arrival_seatsBooked &&
+				HelperOperator.isArrayListEqual(this.arrival_priceList, t.arrival_priceList) && 
+				this.totalPrice == t.totalPrice &&
+				this.state == t.state &&
+				this.historyDeleted == t.historyDeleted;
+	}
+	
+	
+	@Override
+	public int compareTo(Transaction t) {
+		return this.creationTime.compareTo(t.creationTime);
+	}
+
+	@Override
+	public boolean validate() throws ValidationException {
+		//TODO
+		
+		return true;
 	}
 }
 

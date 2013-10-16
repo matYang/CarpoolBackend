@@ -71,10 +71,8 @@ public class Constants {
     }
 
     //notifications and transactions are more time-sensitive, their states are more related to time and user interactions, event states will be used for their states
-    //below are used to specify events under state sections, below are the event states that will trigger notifications and be used in Transaction states
-    //note these event states are extremely important as they trigger notification types. Strict use-style should be enforced
     public static enum transactionState{
-        init(0), confirm(1), refused(2), aboutToStart(3), cancelled(4), finishedToEvaluate(5), underInvestigation(6), success_noEvaluation(7), success_initUserEvaluated(8), success_targetUserEvaluated(9), success(10);
+        init(0), cancelled(1), aboutToStart(2), finished(3), underInvestigation(4), invalid(5);
         public int code;
         transactionState(int code){
             this.code = code;
