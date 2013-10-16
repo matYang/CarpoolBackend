@@ -189,6 +189,18 @@ public class Constants {
             return map[n];
         }
     }
+    
+    public static enum TransactionDirection{
+    	round(0), departure(1), arrival(2);
+    	public int code;
+    	TransactionDirection(int code){
+    		this.code = code;
+    	}
+    	private final static TransactionDirection[] map = TransactionDirection.values();
+    	public static TransactionDirection fromInt(int n){
+    		return map[n];
+    	}
+    }
 
 
     /*API level constants*/

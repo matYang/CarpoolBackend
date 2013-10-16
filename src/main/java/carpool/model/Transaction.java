@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import carpool.common.DateUtility;
 import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
+import carpool.constants.Constants.TransactionDirection;
 import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.paymentMethod;
 import carpool.constants.Constants.transactionState;
@@ -44,20 +45,18 @@ public class Transaction implements PseudoModel{
 	
 	
 	//transactions have their data set upon initialization, further change to the base message itself will not effect transaction details
-	private boolean isRoundTrip;
+	private TransactionDirection direction;
 	private LocationRepresentation departure_location;
 	private Calendar departure_time;
 	private DayTimeSlot departure_timeSlot;
-	private int departure_seatsNumber;
 	private int departure_seatsBooked;
 	private ArrayList<Integer> departure_priceList;
 	
 	private LocationRepresentation arrival_location;
 	private Calendar arrival_time;
 	private DayTimeSlot arrival_timeSlot;
-	private int arrival_seatsNumber;
 	private int arrival_seatsBooked;
-	private ArrayList<Integer> arrival_priceList;
+	private ArrayList<Integer> arrival_priceList; 
 	
 	
 	private int totalPrice;
