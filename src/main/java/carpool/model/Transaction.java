@@ -199,7 +199,7 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		return  jsonTransaction;
 	}
 	
-	public boolean equals(Transaction t){
+	public boolean equals(Transaction t) throws ValidationException{
 		return t != null &&
 				this.transactionId == t.transactionId &&
 				this.providerId == t.providerId &&
