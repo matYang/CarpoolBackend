@@ -196,34 +196,39 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		return  jsonTransaction;
 	}
 	
-	public boolean equals(Transaction t) throws ValidationException{
-		return t != null &&
-				this.transactionId == t.transactionId &&
-				this.providerId == t.providerId &&
-				this.customerId == t.customerId &&
-				this.messageId == t.messageId &&
-				this.provider.equals(t.provider) &&
-				this.customer.equals(t.customer) &&
-				this.message.equals(t.message) &&
-				this.paymentMethod == t.paymentMethod &&
-				this.customerNote.equals(t.customerNote) &&
-				this.providerNote.equals(t.providerNote) &&
-				this.customerEvaluation == t.customerEvaluation &&
-				this.providerEvaluation == t.providerEvaluation &&
-				this.direction == t.direction &&
-				this.departure_location.equals(t.departure_location) &&
-				this.departure_time.getTime().toString().equals(t.departure_time.getTime().toString()) &&
-				this.departure_timeSlot == t.departure_timeSlot &&
-				this.departure_seatsBooked == t.departure_seatsBooked &&
-				HelperOperator.isArrayListEqual(this.departure_priceList, t.departure_priceList) && 
-				this.arrival_location.equals(t.arrival_location) &&
-				this.arrival_time.getTime().toString().equals(t.arrival_time.getTime().toString()) &&
-				this.arrival_timeSlot == t.arrival_timeSlot &&
-				this.arrival_seatsBooked == t.arrival_seatsBooked &&
-				HelperOperator.isArrayListEqual(this.arrival_priceList, t.arrival_priceList) && 
-				this.totalPrice == t.totalPrice &&
-				this.state == t.state &&
-				this.historyDeleted == t.historyDeleted;
+	public boolean equals(Transaction t){
+		try {
+			return t != null &&
+					this.transactionId == t.transactionId &&
+					this.providerId == t.providerId &&
+					this.customerId == t.customerId &&
+					this.messageId == t.messageId &&
+					this.provider.equals(t.provider) &&
+					this.customer.equals(t.customer) &&
+					this.message.equals(t.message) &&
+					this.paymentMethod == t.paymentMethod &&
+					this.customerNote.equals(t.customerNote) &&
+					this.providerNote.equals(t.providerNote) &&
+					this.customerEvaluation == t.customerEvaluation &&
+					this.providerEvaluation == t.providerEvaluation &&
+					this.direction == t.direction &&
+					this.departure_location.equals(t.departure_location) &&
+					this.departure_time.getTime().toString().equals(t.departure_time.getTime().toString()) &&
+					this.departure_timeSlot == t.departure_timeSlot &&
+					this.departure_seatsBooked == t.departure_seatsBooked &&
+					HelperOperator.isArrayListEqual(this.departure_priceList, t.departure_priceList) && 
+					this.arrival_location.equals(t.arrival_location) &&
+					this.arrival_time.getTime().toString().equals(t.arrival_time.getTime().toString()) &&
+					this.arrival_timeSlot == t.arrival_timeSlot &&
+					this.arrival_seatsBooked == t.arrival_seatsBooked &&
+					HelperOperator.isArrayListEqual(this.arrival_priceList, t.arrival_priceList) && 
+					this.totalPrice == t.totalPrice &&
+					this.state == t.state &&
+					this.historyDeleted == t.historyDeleted;
+		} catch (ValidationException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	
