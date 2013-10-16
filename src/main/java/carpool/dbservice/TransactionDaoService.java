@@ -39,23 +39,23 @@ public class TransactionDaoService{
 	 * @return the full transaction object constructed by the full constructor, return null if any error occurs
 	 * @throws TransactionNotFoundException if the specified transaction id does not exist
 	 */
-	public static Transaction getTransactionById(int transactionId) throws TransactionNotFoundException {
+	private static Transaction getTransactionById(int transactionId) throws TransactionNotFoundException {
 		return DaoTransaction.getTransactionById(transactionId);
 	}
 	
 	/**
-	 * get the transaction by id from API call, adding safety by checking userId ownership since unlink messages, detailed transactions are private data
+	 * get the transaction by id from API call, adding safety by checking userId ownership, since detailed transactions should be viewed by provider or customer only
 	 * @param transactionId
 	 * @param userId
-	 * @return
-	 * @throws TransactionNotFoundException
-	 * @throws TransactionOwnerNotMatchException
+	 * @throws TransactionNotFoundException		//thrown by getTranasctionById
+	 * @throws TransactionOwnerNotMatchException	//thrown when userId not match providerId or customerId
 	 */
 	public static Transaction getUserTransactionById(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException{
 		Transaction transaction = getTransactionById(transactionId);
-		if (transaction.getInitUserId() != userId && transaction.getTargetUserId() != userId){
-			throw new TransactionOwnerNotMatchException();
-		}
+		//TODO add id checking
+//		if (transaction.getInitUserId() != userId && transaction.getTargetUserId() != userId){
+//			throw new TransactionOwnerNotMatchException();
+//		}
 		return transaction;
 	}
 
@@ -63,10 +63,8 @@ public class TransactionDaoService{
 	/**
 	 * created a new Transaction in SQL, the transaction passed in is constructed by the full constructor
 	 * remember to set the creation time, use date string format specified by Common.parseDateString
-	 * transaction slot checking will be conducted at API level, eg checking for list of transactions already taking place based on a message and determine whether a new transaction fits in
 	 * @param newTransaction
-	 * @param userId
-	 * @return	the full Transaction that was just created in database, use the complete constructor for this, return null if any errors occurred
+	 * @return	the full Transaction that was just created in database, use the complete constructor for this, including provider, customer, message
 	 */
 	public static Transaction createNewTransaction(Transaction newTransaction){
 		newTransaction.setCreationTime(Calendar.getInstance());
@@ -79,90 +77,6 @@ public class TransactionDaoService{
 		return t;
 	}
 	
-	//below are transaction state inter=changes, aka Transaction State Matchine manipulator
-	/**
-	 * target user confirms the transaction, changing the state of the transaction from init to confirm
-	 * Expected Condition: current Transaction state in "Constants -> transactonState.init" && userId matches the targetUserId of the transaction
-	 * Action: change the transactionState init -> confirm, established -> false, increment both initUser and targetUsers' total transaction number
-	 * @param transactionId
-	 * @param userId
-	 * @return	the changed transaction, constructed by the full constructor
-	 * @throws PseudoException 
-	 */
-	public static Transaction confirmTransaction(int transactionId, int userId) throws PseudoException{
-		Transaction t = DaoTransaction.getTransactionById(transactionId);
-		try {
-			User initUser = UserDaoService.getUserById(t.getInitUserId());
-			User targetUser = UserDaoService.getUserById(t.getTargetUserId());
-			if(initUser.getUserId()==userId){
-				throw new TransactionAccessViolationException();
-			}else if(targetUser.getUserId()==userId){
-				if(t.getState()!=Constants.transactionState.init){
-					throw new TransactionStateViolationException(t.getState(), Constants.transactionState.init);
-				}else{
-					t.setState(Constants.transactionState.confirm);
-					t.setEstablished(false);
-					initUser.setTotalTranscations(initUser.getTotalTranscations()+1);
-					targetUser.setTotalTranscations(targetUser.getTotalTranscations()+1);
-					DaoTransaction.UpdateTransactionInDatabase(t);
-					UserDaoService.updateUser(initUser);
-					UserDaoService.updateUser(targetUser);
-					// send transaction Comfirmed notification
-					Notification n = new Notification(-1, Constants.notificationType.on_transaction, Constants.notificationEvent.transactionConfrimed,
-							t.getTargetUserId(), t.getTargetUserName(), 0, t.getTransactionId(), t.getInitUserId(),
-							"Your transaction XXX has been accepted by XXX", Calendar.getInstance(), false, false);
-					NotificationDaoService.createNewNotification(n);
-				}
-			}else{
-				throw new TransactionOwnerNotMatchException();
-			}
-		} catch (UserNotFoundException e) {
-			e.printStackTrace();
-		}
-		return t;
-	}
-
-
-	/**
-	 * target user refuses the transaction, changing the state of the transaction from init to refused
-	 * Expected Condition: current Transaction state in "Constants -> transactonState.init" && userId matches the targetUserId of the transaction
-	 * Action: change the transactionState init -> refused, established -> false
-	 * @param transactionId
-	 * @param userId
-	 * @return	the changed transaction, constructed by the full constructor
-	 * @throws TransactionNotFoundException	 throw if the transaction is not found in the first place
-	 * @throws TransactionOwnerNotMatchException	throw if the initUserId and targetUserId both does not match given userId
-	 * @throws TransactionAccessViolationException	throw if the userId is actually the initUserId, but not targetUserId
-	 * @throws TransactionStateViolationException(currentState, expected state)	throw if the current state of the transaction is not "init", expected state is "init"
-	 */
-	public static Transaction refuseTransaction(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionAccessViolationException, TransactionStateViolationException{
-		Transaction t = DaoTransaction.getTransactionById(transactionId);
-		try {
-			User initUser = UserDaoService.getUserById(t.getInitUserId());
-			User targetUser = UserDaoService.getUserById(t.getTargetUserId());
-			if(initUser.getUserId()==userId){
-				throw new TransactionAccessViolationException();
-			}else if(targetUser.getUserId()==userId){
-				if(t.getState()!=Constants.transactionState.init){
-					throw new TransactionStateViolationException(t.getState(), Constants.transactionState.init);
-				}else{
-					t.setState(Constants.transactionState.refused);
-					t.setEstablished(false);
-					DaoTransaction.UpdateTransactionInDatabase(t);
-					// send transaction refused notification
-					Notification n = new Notification(-1, Constants.notificationType.on_transaction, Constants.notificationEvent.transactionRefused,
-							t.getTargetUserId(), t.getTargetUserName(), 0, t.getTransactionId(), t.getInitUserId(),
-							"Your transaction XXX has been refused by XXX", Calendar.getInstance(), false, false);
-					NotificationDaoService.createNewNotification(n);
-				}
-			}else{
-				throw new TransactionOwnerNotMatchException();
-			}
-		} catch (UserNotFoundException e) {
-			e.printStackTrace();
-		}
-		return t;		
-	}
 	
 	/**
 	 * initUser or targetUser cancels the transaction, changing the state of the transaction from confirm to cancelled
@@ -196,6 +110,7 @@ public class TransactionDaoService{
 		}
 		return t;			
 	}
+	
 	
 	/**
 	 * initUser or targetUser reports the transaction for investigation, changing the state of the transaction from finishedToEvaluate to underInvestigation
@@ -321,89 +236,89 @@ public class TransactionDaoService{
 		return t;
 	}
 	
-	
-	/**
-	 * TODO (admin?) deletes the transaction from database (for testing and admin use only)
-	 * first retrieve the transaction from db using the given transaction id
-	 * decrement both initUser and targetUsers' total transaction number
-	 * if not found, throw TransactionNotFoundException
-	 * then check if the retrieved transaction's initUserId or targetUserId matches userId parameter, if not, throw TransactionOwnerNotMatchException
-	 * @param transactionId
-	 * @param userId
-	 * @return true if transaction exists and deleted
-	 * @throws PseudoException 
-	 */
-	public static boolean deleteTransaction(int transactionId, int userId) throws PseudoException{
-		Transaction t = DaoTransaction.getTransactionById(transactionId);
-		try {
-			User initUser = UserDaoService.getUserById(t.getInitUserId());
-			User targetUser = UserDaoService.getUserById(t.getTargetUserId());
-			if(initUser.getUserId()==userId || targetUser.getUserId()==userId){
-				//only finished transactions can be deleted
-				if(t.getState()!=Constants.transactionState.success && t.getState()!=Constants.transactionState.success_initUserEvaluated && t.getState()!=Constants.transactionState.success_noEvaluation && t.getState()!=Constants.transactionState.success_targetUserEvaluated){
-					throw new TransactionStateViolationException(t.getState(), Constants.transactionState.success);
-				}else{
-					initUser.setTotalTranscations(initUser.getTotalTranscations()-1);
-					targetUser.setTotalTranscations(targetUser.getTotalTranscations()-1);
-					DaoTransaction.deleteTransactionFromDatabase(transactionId);
-					UserDaoService.updateUser(initUser);
-					UserDaoService.updateUser(targetUser);
-				}
-			}else{
-				throw new TransactionOwnerNotMatchException();
-			}
-		} catch (UserNotFoundException e) {
-			e.printStackTrace();
-		}
-		return true;
-	}
-	
-	
-	/**TODO API
-	 * admin found a problem with a transaction, and moving it to cancelled
-	 * Expected Condition: current Transaction state in "Constants -> transactonState.underInvestigation"
-	 * Action: change the transactionState underInvestigation -> cancelled
-	 * @param transactionId
-	 * @return	the changed transaction, constructed by the full constructor
-	 * @throws TransactionNotFoundException	 throw if the transaction is not found in the first place
-	 * @throws TransactionStateViolationException(currentState, expected state)	throw if the current state of the transaction is not "underInvestigation"
-	 */
-	public static Transaction investigationCancelTransaction(int transactionId) throws TransactionNotFoundException,  TransactionStateViolationException{
-		Transaction t = DaoTransaction.getTransactionById(transactionId);
-		if(t.getState()==Constants.transactionState.underInvestigation){
-			t.setState(Constants.transactionState.cancelled);
-			DaoTransaction.UpdateTransactionInDatabase(t);
-		}else{
-			throw new TransactionStateViolationException(t.getState(), Constants.transactionState.underInvestigation);
-		}
-		return t;
-	}
-	
-	/**TODO API
-	 * admin did not find a problem with a transaction, and moving it to back to finishedToEvaluated
-	 * Expected Condition: current Transaction state in "Constants -> transactonState.underInvestigation"
-	 * Action: change the transactionState underInvestigation -> finishedToEvaluate
-	 * @param transactionId
-	 * @param userId
-	 * @return	the changed transaction, constructed by the full constructor
-	 * @throws TransactionNotFoundException	 throw if the transaction is not found in the first place
-	 * @throws TransactionStateViolationException(currentState, expected state)	throw if the current state of the transaction is not "underInvestigation"
-	 */
-	public static Transaction investigationReleaseTransaction(int transactionId) throws TransactionNotFoundException,  TransactionStateViolationException{
-		Transaction t = DaoTransaction.getTransactionById(transactionId);
-		if(t.getState()==Constants.transactionState.underInvestigation){
-			t.setState(Constants.transactionState.finishedToEvaluate);
-			DaoTransaction.UpdateTransactionInDatabase(t);
-			// send Transaction released notification
-			Notification n = new Notification(-1, Constants.notificationType.on_transaction, Constants.notificationEvent.transactionReleased,
-					0, "", 0, t.getTransactionId(),t.getInitUserId(),
-					"Your transaction XXX has been released", Calendar.getInstance(), false, false);
-			NotificationDaoService.createNewNotification(n);
-			n.setTargetUserId(t.getTargetUserId());
-			NotificationDaoService.createNewNotification(n);
-		}else{
-			throw new TransactionStateViolationException(t.getState(), Constants.transactionState.underInvestigation);
-		}
-		return t;
-	}
+//	
+//	/**
+//	 * TODO (admin?) deletes the transaction from database (for testing and admin use only)
+//	 * first retrieve the transaction from db using the given transaction id
+//	 * decrement both initUser and targetUsers' total transaction number
+//	 * if not found, throw TransactionNotFoundException
+//	 * then check if the retrieved transaction's initUserId or targetUserId matches userId parameter, if not, throw TransactionOwnerNotMatchException
+//	 * @param transactionId
+//	 * @param userId
+//	 * @return true if transaction exists and deleted
+//	 * @throws PseudoException 
+//	 */
+//	public static boolean deleteTransaction(int transactionId, int userId) throws PseudoException{
+//		Transaction t = DaoTransaction.getTransactionById(transactionId);
+//		try {
+//			User initUser = UserDaoService.getUserById(t.getInitUserId());
+//			User targetUser = UserDaoService.getUserById(t.getTargetUserId());
+//			if(initUser.getUserId()==userId || targetUser.getUserId()==userId){
+//				//only finished transactions can be deleted
+//				if(t.getState()!=Constants.transactionState.success && t.getState()!=Constants.transactionState.success_initUserEvaluated && t.getState()!=Constants.transactionState.success_noEvaluation && t.getState()!=Constants.transactionState.success_targetUserEvaluated){
+//					throw new TransactionStateViolationException(t.getState(), Constants.transactionState.success);
+//				}else{
+//					initUser.setTotalTranscations(initUser.getTotalTranscations()-1);
+//					targetUser.setTotalTranscations(targetUser.getTotalTranscations()-1);
+//					DaoTransaction.deleteTransactionFromDatabase(transactionId);
+//					UserDaoService.updateUser(initUser);
+//					UserDaoService.updateUser(targetUser);
+//				}
+//			}else{
+//				throw new TransactionOwnerNotMatchException();
+//			}
+//		} catch (UserNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//		return true;
+//	}
+//	
+//	
+//	/**TODO API
+//	 * admin found a problem with a transaction, and moving it to cancelled
+//	 * Expected Condition: current Transaction state in "Constants -> transactonState.underInvestigation"
+//	 * Action: change the transactionState underInvestigation -> cancelled
+//	 * @param transactionId
+//	 * @return	the changed transaction, constructed by the full constructor
+//	 * @throws TransactionNotFoundException	 throw if the transaction is not found in the first place
+//	 * @throws TransactionStateViolationException(currentState, expected state)	throw if the current state of the transaction is not "underInvestigation"
+//	 */
+//	public static Transaction investigationCancelTransaction(int transactionId) throws TransactionNotFoundException,  TransactionStateViolationException{
+//		Transaction t = DaoTransaction.getTransactionById(transactionId);
+//		if(t.getState()==Constants.transactionState.underInvestigation){
+//			t.setState(Constants.transactionState.cancelled);
+//			DaoTransaction.UpdateTransactionInDatabase(t);
+//		}else{
+//			throw new TransactionStateViolationException(t.getState(), Constants.transactionState.underInvestigation);
+//		}
+//		return t;
+//	}
+//	
+//	/**TODO API
+//	 * admin did not find a problem with a transaction, and moving it to back to finishedToEvaluated
+//	 * Expected Condition: current Transaction state in "Constants -> transactonState.underInvestigation"
+//	 * Action: change the transactionState underInvestigation -> finishedToEvaluate
+//	 * @param transactionId
+//	 * @param userId
+//	 * @return	the changed transaction, constructed by the full constructor
+//	 * @throws TransactionNotFoundException	 throw if the transaction is not found in the first place
+//	 * @throws TransactionStateViolationException(currentState, expected state)	throw if the current state of the transaction is not "underInvestigation"
+//	 */
+//	public static Transaction investigationReleaseTransaction(int transactionId) throws TransactionNotFoundException,  TransactionStateViolationException{
+//		Transaction t = DaoTransaction.getTransactionById(transactionId);
+//		if(t.getState()==Constants.transactionState.underInvestigation){
+//			t.setState(Constants.transactionState.finishedToEvaluate);
+//			DaoTransaction.UpdateTransactionInDatabase(t);
+//			// send Transaction released notification
+//			Notification n = new Notification(-1, Constants.notificationType.on_transaction, Constants.notificationEvent.transactionReleased,
+//					0, "", 0, t.getTransactionId(),t.getInitUserId(),
+//					"Your transaction XXX has been released", Calendar.getInstance(), false, false);
+//			NotificationDaoService.createNewNotification(n);
+//			n.setTargetUserId(t.getTargetUserId());
+//			NotificationDaoService.createNewNotification(n);
+//		}else{
+//			throw new TransactionStateViolationException(t.getState(), Constants.transactionState.underInvestigation);
+//		}
+//		return t;
+//	}
 }
