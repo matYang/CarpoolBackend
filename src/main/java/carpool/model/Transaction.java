@@ -6,11 +6,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import carpool.common.DateUtility;
 import carpool.common.HelperOperator;
 import carpool.constants.Constants;
