@@ -138,6 +138,12 @@ public class RoutingService extends Application {
 		String UserWatchUserResourcePrefix = "/watchUser";
 		//	API for user watch/de-watch other users: /api/v1.0/users/watchUser/:id
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserWatchUserResourcePrefix + "/{id}", UserWatchUserResource.class);
+		String UserIsWatchedResourcePrefix = "/isWatched";
+		//	API for user watch/de-watch other users: /api/v1.0/users/isWatched/:id
+		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserIsWatchedResourcePrefix + "/{id}", UserIsWatchedResource.class);
+		String UserSearchUserResourcePrefix = "/searchUser";
+		//	API for user watch/de-watch other users: /api/v1.0/users/searchUser
+		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserSearchUserResourcePrefix, UserSearchUserResource.class);
 		String UserMessageHistoryResourcePrefix = "/messageHistory";
 		//	API for user getting history messages: /api/v1.0/users/messageHistory/:id
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserMessageHistoryResourcePrefix + "/{id}", UserMessageHistoryResource.class);

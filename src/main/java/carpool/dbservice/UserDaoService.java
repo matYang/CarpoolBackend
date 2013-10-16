@@ -12,6 +12,7 @@ import carpool.exception.ValidationException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.*;
 import carpool.model.representation.SearchRepresentation;
+import carpool.model.representation.UserSearchRepresentation;
 
 public class UserDaoService{
 	
@@ -124,7 +125,18 @@ public class UserDaoService{
 	public static ArrayList<User> getWatchedUsers(int id) throws UserNotFoundException{
 		return CarpoolDaoUser.getSocialListOfUser(id);
 	}
+	
+	public static boolean isUserWatched(int userId, int targetUserId){
+		return CarpoolDaoUser.hasUserInSocialList(userId, targetUserId);
+	}
 
+	public static ArrayList<User> searchForUser(UserSearchRepresentation uSR, boolean isLoggedIn, int userId){
+		ArrayList<User> searchResult = CarpoolDaoUser.searchForUser(uSR);
+		if (isLoggedIn){
+			//maybe log the userSearch
+		}
+		return searchResult;
+	}
 
 	public static ArrayList<Message> getHistoryMessageByUserId(int id) throws UserNotFoundException{
 		return CarpoolDaoUser.getUserMessageHistory(id);

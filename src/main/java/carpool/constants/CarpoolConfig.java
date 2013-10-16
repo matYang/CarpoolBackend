@@ -10,6 +10,7 @@ public class CarpoolConfig {
 	
 	public static final int customDepthIndex = 3;
 	
+	public static final String locationRepresentationSeperator = "_";
 	public static final String urlSeperator = "+";
 	public static final String urlSeperatorRegx = "\\+";
 	
@@ -34,5 +35,6 @@ public class CarpoolConfig {
 		String dateStr =  sdf.format(Calendar.getInstance().getTime());
 		return new SearchRepresentation("false" + CarpoolConfig.urlSeperator + getDefaultLocationRepresentation().toSerializedString() + CarpoolConfig.urlSeperator + getDefaultLocationRepresentation().toSerializedString() + CarpoolConfig.urlSeperator + dateStr + CarpoolConfig.urlSeperator + dateStr + CarpoolConfig.urlSeperator  + "0" + CarpoolConfig.urlSeperator + "0" + CarpoolConfig.urlSeperator + "0");
 	}
+	
 	
 }

@@ -71,7 +71,7 @@ public class UserWatchUserResource extends PseudoResource{
 		boolean watched = false;
 
 		try {
-			this.checkEntity(entity);
+			//this.checkEntity(entity);
 
 			id = Integer.parseInt(this.getReqAttr("id"));
 			targetUserId = Integer.parseInt(this.getQueryVal("targetUserId"));
