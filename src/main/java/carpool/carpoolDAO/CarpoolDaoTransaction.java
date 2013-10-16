@@ -12,15 +12,16 @@ import carpool.common.Parser;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
+import carpool.model.Transaction;
 
 public class CarpoolDaoTransaction {
 
-	public static void addTransactionToDatabase(int providerId, int customerId,int messageId,int seatsNumber) throws MessageNotFoundException, UserNotFoundException{
+	public static Transaction addTransactionToDatabase(Transaction transaction) throws MessageNotFoundException, UserNotFoundException{
 		String query = "INSERT INTO carpoolDAOTransaction (provider_Id,customer_Id,message_Id,departure_priceList,departure_Time,"+
 	"departure_primaryLocation,departure_customLocation,departure_customDepthIndex,arrival_priceList,arrival_Time,arrival_primaryLocation,"+
 	"arrival_customLocation,arrival_customDepthIndex,seatsNumber,departure_seatsBooked,arrival_seatsBooked,totalPrice,isRoundTrip,"
 	+"messageType,messageState)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-	Message msg = CarpoolDaoMessage.getMessageById(messageId);
+	Message msg = CarpoolDaoMessage.getMessageById(transaction.getMessageId());
 	boolean isRoundTrip = msg.isRoundTrip();
 	int totalPrice = 0;
 	ArrayList<Integer> dplist = new ArrayList<Integer>();
@@ -37,7 +38,7 @@ public class CarpoolDaoTransaction {
 		}
 	}
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
-			stmt.setInt(1,providerId);			
+			stmt.setInt(1,transaction);			
 			stmt.setInt(2, customerId);
 			stmt.setInt(3, messageId);
 			stmt.setString(4, Parser.listToString(dplist));
@@ -70,12 +71,14 @@ public class CarpoolDaoTransaction {
 			stmt.setInt(18, isRoundTrip ? 1 : 0);
 			stmt.setInt(19, msg.getType().code);
 			stmt.setInt(20, msg.getState().code);		
-			stmt.executeUpdate();	      			
+			stmt.executeUpdate();	 
+			ResultSet rs = stmt.getGeneratedKeys();
+			transaction.setTransactionId(rs.getInt(1));
 		}catch(SQLException e){
 			e.printStackTrace();
 			DebugLog.d(e.getMessage());
 		}
-	 
+	 return transaction;
 		
 	}
 	
