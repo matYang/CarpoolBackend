@@ -4,6 +4,7 @@ import java.util.*;
 
 import javax.swing.text.DateFormatter;
 
+import carpool.carpoolDAO.CarpoolDaoTransaction;
 import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.common.*;
 import carpool.constants.Constants;
@@ -61,175 +62,111 @@ public class TransactionDaoService{
 
 
 	/**
-	 * created a new Transaction in SQL, the transaction passed in is constructed by the full constructor
-	 * remember to set the creation time, use date string format specified by Common.parseDateString
-	 * @param newTransaction
+	 * created a new Transaction in SQL
 	 * @return	the full Transaction that was just created in database, use the complete constructor for this, including provider, customer, message
 	 */
 	public static Transaction createNewTransaction(Transaction newTransaction){
-		newTransaction.setCreationTime(Calendar.getInstance());
 		Transaction t = DaoTransaction.addTransactionToDatabase(newTransaction);
 		// send Transaction Pending Notification
-		Notification n = new Notification(-1, Constants.notificationType.on_transaction, Constants.notificationEvent.transactionPending,
-				t.getInitUserId(), t.getInitUserName(), 0, t.getTransactionId(), t.getTargetUserId(),
-				"XXX start a Transaction XXX with you.", Calendar.getInstance(), false, false);
-		NotificationDaoService.createNewNotification(n);
+//		Notification n = new Notification(-1, Constants.notificationType.on_transaction, Constants.notificationEvent.transactionPending,
+//				t.getInitUserId(), t.getInitUserName(), 0, t.getTransactionId(), t.getTargetUserId(),
+//				"XXX start a Transaction XXX with you.", Calendar.getInstance(), false, false);
+//		NotificationDaoService.createNewNotification(n);
 		return t;
 	}
 	
 	
 	/**
-	 * initUser or targetUser cancels the transaction, changing the state of the transaction from confirm to cancelled
-	 * Expected Condition: current Transaction state in "Constants -> transactonState.confirm" && userId matches either initUser or targetUser
-	 * Action: change the transactionState confirm -> cancelled, established -> false
-	 * @param transactionId
-	 * @param userId
-	 * @return	the changed transaction, constructed by the full constructor
-	 * @throws TransactionNotFoundException	 throw if the transaction is not found in the first place
-	 * @throws TransactionOwnerNotMatchException	throw if the initUserId and targetUserId both does not match given userId
-	 * @throws TransactionStateViolationException(currentState, expected state)	throw if the current state of the transaction is not "confirm"
+	 * provider or customer cancels the transaction, changing the state of the transaction from confirm to cancelled
+	 * Expected Condition: current Transaction state in "Constants -> transactonState.init" && userId matches either providerId or messageId
+	 * Action: change state to cancelled, TODO: send notifications, and prompt for explanation
 	 */
 	public static Transaction cancelTransaction(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionStateViolationException{
 		Transaction t = DaoTransaction.getTransactionById(transactionId);
-		try {
-			User initUser = UserDaoService.getUserById(t.getInitUserId());
-			User targetUser = UserDaoService.getUserById(t.getTargetUserId());
-			if(targetUser.getUserId()==userId || initUser.getUserId()==userId){
-				if(t.getState()!=Constants.transactionState.confirm){
-					throw new TransactionStateViolationException(t.getState(), Constants.transactionState.confirm);
-				}else{
-					t.setState(Constants.transactionState.cancelled);
-					t.setEstablished(false);
-					DaoTransaction.UpdateTransactionInDatabase(t);
-				}
+
+		if(t.getProviderId() == userId || t.getCustomerId() == userId){
+			if(t.getState() != Constants.transactionState.init){
+				throw new TransactionStateViolationException(t.getState(), Constants.transactionState.init);
 			}else{
-				throw new TransactionOwnerNotMatchException();
+				t.setState(Constants.transactionState.cancelled);
+				DaoTransaction.UpdateTransactionInDatabase(t);
+				//send notifications
 			}
-		} catch (UserNotFoundException e) {
-			e.printStackTrace();
+		}else{
+			throw new TransactionOwnerNotMatchException();
 		}
-		return t;			
+		
+		return t;	
 	}
 	
 	
 	/**
+	 * TODO send notifications
 	 * initUser or targetUser reports the transaction for investigation, changing the state of the transaction from finishedToEvaluate to underInvestigation
 	 * Expected Condition: current Transaction state in "Constants -> transactonState.finishedToEvaluate" && userId matches either initUser or targetUser
 	 * Action: change the transactionState finishedToEvaluate -> underInvestigation
-	 * @param transactionId
-	 * @param userId
-	 * @return	the changed transaction, constructed by the full constructor
-	 * @throws TransactionNotFoundException	 throw if the transaction is not found in the first place
-	 * @throws TransactionOwnerNotMatchException	throw if the initUserId and targetUserId both does not match given userId
-	 * @throws TransactionStateViolationException(currentState, expected state)	throw if the current state of the transaction is not "finishedToEvaluate"
 	 */
 	public static Transaction reportTransaction(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionStateViolationException{
 		Transaction t = DaoTransaction.getTransactionById(transactionId);
-		try {
-			User initUser = UserDaoService.getUserById(t.getInitUserId());
-			User targetUser = UserDaoService.getUserById(t.getTargetUserId());
-			if(targetUser.getUserId()==userId || initUser.getUserId()==userId){
-				if(t.getState()!=Constants.transactionState.finishedToEvaluate){
-					throw new TransactionStateViolationException(t.getState(), Constants.transactionState.finishedToEvaluate);
-				}else{
-					t.setState(Constants.transactionState.underInvestigation);
-					t.setEstablished(false);
-					DaoTransaction.UpdateTransactionInDatabase(t);
-				}
+
+		if(t.getProviderId() == userId || t.getCustomerId() == userId){
+			if(t.getState() != Constants.transactionState.finished){
+				throw new TransactionStateViolationException(t.getState(), Constants.transactionState.finished);
 			}else{
-				throw new TransactionOwnerNotMatchException();
+				t.setState(Constants.transactionState.underInvestigation);
+				DaoTransaction.UpdateTransactionInDatabase(t);
+				//send notifications
 			}
-		} catch (UserNotFoundException e) {
-			e.printStackTrace();
+		}else{
+			throw new TransactionOwnerNotMatchException();
 		}
+
 		return t;			
 	}
 	
+	private static void updateUserScore(User user, int score){
+		user.setAverageScore(Math.round((user.getAverageScore() * user.getTotalTranscations() + score) / user.getTotalTranscations()));
+	}
 	
 	/**
-	 * initUser or targetUser evaluates the transaction, changing the state of the transaction from:
-	 * finishedToEvaluate -> success_initUserEvaluated || finishedToEvaluate -> success_targetUserEvaluated || (success_initUserEvaluated || success_targetUserEvaluated -> success)
-	 * Expected Conditions and Corresponding Actions: 
-	 * 1. if userId == initUserId:
-	 * 		a. current state is finishedToEvaluate; action:  finishedToEvaluate -> success_initUserEvaluated
-	 * 		b. current state is success_targetUserEvaluated; action: success_targetUserEvaluated -> success
-	 * 		
-	 * 		then: update this initUserEval record, update the target user's average score
-	 * 2. if userId == targetUserId:
-	 * 		a. current state is finishedToEvaluate; action:  finishedToEvaluate -> success_targetUserEvaluated
-	 * 		b. current state is success_initUserEvaluated; action: success_initUserEvaluated -> success
-	 * 
-	 * 		then: update this targetUserEval record, update the init user's average score
-	 * @param transactionId
-	 * @param userId
+	 * initUser or targetUser evaluates the transaction， given the transaction is in finished state
 	 * @return	the changed transaction, constructed by the full constructor
-	 * @throws TransactionNotFoundException	 throw if the transaction is not found in the first place
-	 * @throws TransactionOwnerNotMatchException	throw if the initUserId and targetUserId both does not match given userId
-	 * @throw  TransactionAccessViolationException  throw if userId == initUser and cur-state is initUserEvaluated || userId == targetUserId and curState is targetUserEvaluated
-	 * @throws TransactionStateViolationException(currentState, expected state)	throw if the state condition does not match either finishedToEvaluate || success_initUserEvaluated || success_targetUserEvaluated, expected state in this case is always finishedToEvaluate
 	 */
 	public static Transaction evaluateTransaction(int transactionId, int userId, int score) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionAccessViolationException, TransactionStateViolationException{
 		Transaction t = DaoTransaction.getTransactionById(transactionId);
-		if(t.getState()!= Constants.transactionState.finishedToEvaluate && t.getState()!= Constants.transactionState.success_initUserEvaluated
-				&& t.getState()!= Constants.transactionState.success_targetUserEvaluated){
-			throw new TransactionStateViolationException(t.getState(), Constants.transactionState.finishedToEvaluate);
+		if(t.getState() != Constants.transactionState.finished){
+			throw new TransactionStateViolationException(t.getState(), Constants.transactionState.finished);
 		}else{
 			try {
-				User initUser = UserDaoService.getUserById(t.getInitUserId());
-				User targetUser = UserDaoService.getUserById(t.getTargetUserId());
-				if(userId==initUser.getUserId()){
-					if(t.getState()==Constants.transactionState.success_initUserEvaluated){
+				if(userId == t.getProviderId()){
+					//check if the user has already evaluated
+					if(t.getProviderEvaluation() != 0){
 						throw new TransactionAccessViolationException();
-					}else if(t.getState()==Constants.transactionState.finishedToEvaluate){
-						t.setState(Constants.transactionState.success_initUserEvaluated);
-						t.setInitUserEval(score);
-						DaoTransaction.UpdateTransactionInDatabase(t);
-						targetUser.setAverageScore((targetUser.getAverageScore()*(targetUser.getTotalTranscations()-1)+score)/targetUser.getTotalTranscations());
-						try {
-							CarpoolDaoUser.UpdateUserInDatabase(targetUser);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}else{//success_targetUserEvaluated
-						t.setState(Constants.transactionState.success);
-						t.setInitUserEval(score);
-						DaoTransaction.UpdateTransactionInDatabase(t);
-						targetUser.setAverageScore((targetUser.getAverageScore()*(targetUser.getTotalTranscations()-1)+score)/targetUser.getTotalTranscations());
-						try {
-							CarpoolDaoUser.UpdateUserInDatabase(targetUser);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
 					}
-				}else if(userId==targetUser.getUserId()){
-					if(t.getState()==Constants.transactionState.success_targetUserEvaluated){
+					t.setProviderEvaluation(score);
+					User customer = CarpoolDaoUser.getUserById(t.getCustomerId());
+					updateUserScore(customer, score);
+					
+					CarpoolDaoTransaction.updateTransaction(t);
+					CarpoolDaoUser.UpdateUserInDatabase(customer);
+					
+				}else if(userId == t.getCustomerId()){
+
+					if(t.getCustomerEvaluation() != 0){
 						throw new TransactionAccessViolationException();
-					}else if(t.getState()==Constants.transactionState.finishedToEvaluate){
-						t.setState(Constants.transactionState.success_targetUserEvaluated);
-						t.setTargetUserEval(score);
-						DaoTransaction.UpdateTransactionInDatabase(t);
-						initUser.setAverageScore((initUser.getAverageScore()*(initUser.getTotalTranscations()-1)+score)/initUser.getTotalTranscations());
-						try {
-							CarpoolDaoUser.UpdateUserInDatabase(initUser);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}else{//success_initUserEvaluated
-						t.setState(Constants.transactionState.success);
-						t.setTargetUserEval(score);
-						DaoTransaction.UpdateTransactionInDatabase(t);
-						initUser.setAverageScore((initUser.getAverageScore()*(initUser.getTotalTranscations()-1)+score)/initUser.getTotalTranscations());
-						try {
-							CarpoolDaoUser.UpdateUserInDatabase(initUser);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
 					}
+					t.setCustomerEvaluation(score);
+					User provider = CarpoolDaoUser.getUserById(t.getProviderId());
+					updateUserScore(provider, score);
+					
+					CarpoolDaoTransaction.updateTransaction(t);
+					CarpoolDaoUser.UpdateUserInDatabase(provider);
 				}else{
 					throw new TransactionOwnerNotMatchException();
 				}
 			} catch (UserNotFoundException e) {
 				e.printStackTrace();
+				throw new TransactionOwnerNotMatchException();
 			}
 			
 		}

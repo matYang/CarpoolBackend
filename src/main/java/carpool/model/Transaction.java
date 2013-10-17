@@ -372,9 +372,9 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 			jsonTransaction.put("providerId", this.providerId);
 			jsonTransaction.put("customerId", this.customerId);
 			jsonTransaction.put("messageId", this.messageId);
-			jsonTransaction.put("provider", this.provider.toJSON());
-			jsonTransaction.put("customer", this.customer.toJSON());
-			jsonTransaction.put("message", this.message.toJSON());
+			jsonTransaction.put("provider", this.provider != null ? this.provider.toJSON() : new JSONObject());
+			jsonTransaction.put("customer", this.customer != null ? this.customer.toJSON() : new JSONObject());
+			jsonTransaction.put("message", this.message != null ? this.message.toJSON() : new JSONObject());
 			jsonTransaction.put("paymentMethod", this.paymentMethod.code);
 			jsonTransaction.put("customerNote", this.customerNote);
 			jsonTransaction.put("providerNote", this.providerNote);
