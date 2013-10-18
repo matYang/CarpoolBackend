@@ -148,11 +148,7 @@ public class UserDaoService{
 	
 	//TODO
 	public static ArrayList<Transaction> getTransactionByUserId(int id) throws UserNotFoundException{
-		User user = getUserById(id);
-		if(user==null){
-			throw new UserNotFoundException();
-		}
-		return user.getTransactionList();
+		return CarpoolDaoTransaction.getTransactionByUserId();
 	}
 	
 
