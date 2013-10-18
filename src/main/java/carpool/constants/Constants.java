@@ -84,7 +84,7 @@ public class Constants {
     }
 
     public static enum transactionStateChangeAction{
-    	confirm(0), refuse(1), cancel(2), report(3), evaluate(4);
+    	init(0), cancel(1), report(2);
         public int code;
         transactionStateChangeAction(int code){
             this.code = code;
@@ -95,17 +95,17 @@ public class Constants {
         }
     }
 
-    public static enum transactionStateChangeAdminAction{
-    	investigation_cancel(0), investigation_release(1);
-    	public int code;
-    	transactionStateChangeAdminAction(int code){
-            this.code = code;
-        }
-        private final static transactionStateChangeAdminAction[] map = transactionStateChangeAdminAction.values();
-        public static transactionStateChangeAdminAction fromInt(int n){
-            return map[n];
-        }
-    }
+    //public static enum transactionStateChangeAdminAction{
+    //	investigation_cancel(0), investigation_release(1);
+    //	public int code;
+    //	transactionStateChangeAdminAction(int code){
+    //        this.code = code;
+    //    }
+    //    private final static transactionStateChangeAdminAction[] map = transactionStateChangeAdminAction.values();
+    //    public static transactionStateChangeAdminAction fromInt(int n){
+    //        return map[n];
+    //    }
+    //}
 
 
     public static enum  notificationType{
