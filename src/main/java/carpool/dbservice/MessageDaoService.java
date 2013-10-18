@@ -87,21 +87,20 @@ public class MessageDaoService{
 //		sendMessageDeleteNotification(oldMessage);
 //		return true;
 	}
-//	
-//
-//	
-//	/**
-//	 * retrives a list of transactions associated with the target message ID
-//	 * @param messageId
-//	 * @return	an arrayList of transactions based on the target message, null if any errors occurred
-//	 * @throws MessageNotFoundException
-//	 */
-//	public static ArrayList<Transaction> getRelatedTransactions(int messageId) throws MessageNotFoundException {
-//		MessageDaoService.getMessageById(messageId);
-//		return DaoTransaction.getTransactionByMessage(messageId);
-//	}
-//	
-//	
+	
+
+	
+	/**
+	 * retrives a list of transactions associated with the target message ID
+	 * @param messageId
+	 * @return	an arrayList of transactions based on the target message, null if any errors occurred
+	 * @throws MessageNotFoundException
+	 */
+	public static ArrayList<Transaction> getTransactionByMessageId(int messageId) throws MessageNotFoundException {
+		return CarpoolDaoTransaction.getTransactionByMessageId(messageId);
+	}
+	
+	
 //	
 //	private static void sendMessageUpDateNotification(Message msg){
 //		ArrayList<Notification> notifications = new ArrayList<Notification>();
