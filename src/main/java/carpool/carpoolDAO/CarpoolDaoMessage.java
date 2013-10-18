@@ -200,11 +200,11 @@ public class CarpoolDaoMessage{
 
 	public static ArrayList<Message> getAllMessages(){
 		String query = "SELECT * FROM carpoolDAOMessage;";
-		ArrayList<Message> users = new ArrayList<Message>();
+		ArrayList<Message> mlist = new ArrayList<Message>();
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
-				users.add(createMessageByResultSet(rs, false));
+				mlist.add(createMessageByResultSet(rs, false));
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -213,7 +213,7 @@ public class CarpoolDaoMessage{
 			e.printStackTrace();
 			DebugLog.d(e.getMessage());
 		}
-		return users;
+		return mlist;
 	}
 	
 	public static Message getMessageById(int id) throws MessageNotFoundException,UserNotFoundException{
