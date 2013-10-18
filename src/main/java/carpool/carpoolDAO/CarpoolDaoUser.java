@@ -135,7 +135,7 @@ public class CarpoolDaoUser {
 		}
 	}
 
-	public static void UpdateUserInDatabase(User user) throws Exception{
+	public static void UpdateUserInDatabase(User user) throws UserNotFoundException{
 		String query = "UPDATE carpoolDAOUser SET password=?,name=?,email=?,phone=?,qq=?,age=?,gender=?,birthday=?," +
 	            "imgPath=?,user_primaryLocation=?,user_customLocation=?,user_customDepthIndex=?,lastLogin=?,"+
 				"creationTime=?,emailActivated = ?,phoneActivated = ?,emailNotice = ?,phoneNotice = ?,state = ?,searchRepresentation = ?," +
