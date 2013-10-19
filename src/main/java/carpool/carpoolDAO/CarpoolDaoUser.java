@@ -382,22 +382,8 @@ public class CarpoolDaoUser {
 		return mlist;
 	}
 	
-	private static User addTransactionListToUser(User user){
-		ArrayList<Transaction> transactionList = new ArrayList<Transaction>();
-		String query = "SELECT * FROM Transaction WHERE initUserId=? OR targetUserId = ?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-			stmt.setInt(1, user.getUserId());
-			stmt.setInt(2, user.getUserId());
-			ResultSet rs = stmt.executeQuery();
-			while(rs.next()){
-				transactionList.add(DaoTransaction.createTransactionByResultSet(rs));
-			}
-		} catch (SQLException e){
-			DebugLog.d(e.getMessage());
-		}
-		user.setTransactionList(transactionList);
-		return user;
-	}
+
+	
 	
 	private static User addNotificationListToUser(User user){
 		ArrayList<Notification> notificationList = new ArrayList<Notification>();

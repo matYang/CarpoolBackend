@@ -9,6 +9,7 @@ import carpool.constants.Constants.gender;
 import carpool.carpoolDAO.*;
 import carpool.exception.PseudoException;
 import carpool.exception.ValidationException;
+import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.*;
 import carpool.model.representation.SearchRepresentation;
@@ -147,8 +148,8 @@ public class UserDaoService{
 	
 	
 	//TODO
-	public static ArrayList<Transaction> getTransactionByUserId(int id) throws UserNotFoundException{
-		return CarpoolDaoTransaction.getTransactionByUserId();
+	public static ArrayList<Transaction> getTransactionByUserId(int id) throws UserNotFoundException, MessageNotFoundException{
+		return CarpoolDaoTransaction.getAllTransactionByUserId(id);
 	}
 	
 

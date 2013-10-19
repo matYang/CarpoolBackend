@@ -84,7 +84,7 @@ public class Constants {
     }
 
     public static enum transactionStateChangeAction{
-    	init(0), cancel(1), report(2);
+    	init(0), cancel(1), report(2), evaluate(3);
         public int code;
         transactionStateChangeAction(int code){
             this.code = code;

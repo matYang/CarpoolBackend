@@ -85,7 +85,7 @@ public class TransactionResourceId extends PseudoResource{
         int transactionId = -1;
         int stateIndex = -1;
         JSONObject newJsonTransaction = new JSONObject();
-        Transaction transaction = new Transaction();
+        Transaction transaction = null;
         
 		try {
 			
@@ -99,24 +99,16 @@ public class TransactionResourceId extends PseudoResource{
 			
 	        if (stateChangeAction != null){
 	        	switch(stateChangeAction){
-	        		// case confirm:
-	        		// 	transaction = TransactionDaoService.confirmTransaction(transactionId, userId);
-	        		// 	break;
-	        			
-	        		// case refuse:
-	        		// 	transaction = TransactionDaoService.refuseTransaction(transactionId, userId);
-	        		// 	break;
-	        			
 	        		case cancel:
 	        			transaction = TransactionDaoService.cancelTransaction(transactionId, userId);
 	        			break;
 	        			
-	        		// case report:
-	        		// 	transaction = TransactionDaoService.reportTransaction(transactionId, userId);
-	        		// 	break;
+	        		 case report:
+	        		 	transaction = TransactionDaoService.reportTransaction(transactionId, userId);
+	        		 	break;
 	        			
 	        		case evaluate:
-	        			int score = Integer.parseInt(this.getQueryVal("score"),"utf-8"));
+	        			int score = Integer.parseInt(this.getQueryVal("score"));
 	        			transaction = TransactionDaoService.evaluateTransaction(transactionId, userId, score);
 	        			break;
 	        			
