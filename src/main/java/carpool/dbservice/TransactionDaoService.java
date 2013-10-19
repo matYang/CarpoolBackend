@@ -62,7 +62,7 @@ public class TransactionDaoService{
 	 * @throws ValidationException 
 	 */
 	public static Transaction createNewTransaction(Transaction newTransaction) throws MessageNotFoundException, UserNotFoundException, ValidationException{
-		Transaction t = CarpoolDaoTransaction.addTransactionToDatabase(newTransaction);
+		Transaction t = newTransaction;
 		
 		Message base = CarpoolDaoMessage.getMessageById(t.getMessageId());
 		if (t.getDirection() == Constants.TransactionDirection.round){
@@ -76,6 +76,8 @@ public class TransactionDaoService{
 		if (base.getDeparture_seatsBooked() > base.getDeparture_seatsNumber() || base.getArrival_seatsBooked() > base.getArrival_seatsNumber()){
 			throw new ValidationException("交易发起失败，没有那么多空余位置");
 		}
+		
+		t = CarpoolDaoTransaction.addTransactionToDatabase(newTransaction);
 		
 		// send Transaction Pending Notification
 //		Notification n = new Notification(-1, Constants.notificationType.on_transaction, Constants.notificationEvent.transactionPending,
@@ -97,10 +99,6 @@ public class TransactionDaoService{
 		if(t.getProviderId() == userId || t.getCustomerId() == userId){
 			if(t.getState() != Constants.transactionState.init){
 				throw new TransactionStateViolationException(t.getState(), Constants.transactionState.init);
-			}else{
-				t.setState(Constants.transactionState.cancelled);
-				CarpoolDaoTransaction.UpdateTransactionInDatabase(t);
-				//send notifications
 			}
 			
 			Message base = CarpoolDaoMessage.getMessageById(t.getMessageId());
@@ -115,6 +113,11 @@ public class TransactionDaoService{
 			if (base.getDeparture_seatsBooked() < 0 || base.getArrival_seatsBooked() < 0){
 				throw new ValidationException("交易发起失败，没有那么多空余位置");
 			}
+			
+			t.setState(Constants.transactionState.cancelled);
+			CarpoolDaoTransaction.UpdateTransactionInDatabase(t);
+			//send notifications
+			
 		}else{
 			throw new TransactionOwnerNotMatchException();
 		}
