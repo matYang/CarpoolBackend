@@ -4,12 +4,13 @@ import java.util.*;
 
 import javax.swing.text.DateFormatter;
 
+import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoTransaction;
 import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.common.*;
 import carpool.constants.Constants;
-import carpool.database.DaoTransaction;
 import carpool.exception.PseudoException;
+import carpool.exception.ValidationException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.message.MessageOwnerNotMatchException;
 import carpool.exception.transaction.TransactionAccessViolationException;
@@ -26,10 +27,9 @@ public class TransactionDaoService{
 	
 	/**
 	 * get all the transactions from database
-	 * @return	
 	 */
-	public static ArrayList<Transaction> getAllTransactions() {
-		return DaoTransaction.getALL();
+	public static ArrayList<Transaction> getAllTransactions() throws TransactionNotFoundException, UserNotFoundException, MessageNotFoundException {
+		return CarpoolDaoTransaction.getAllTranscations();
 	}
 	
 	
@@ -38,20 +38,15 @@ public class TransactionDaoService{
 	 * get the full transaction by id
 	 * @param transactionId
 	 * @return the full transaction object constructed by the full constructor, return null if any error occurs
-	 * @throws TransactionNotFoundException if the specified transaction id does not exist
 	 */
-	private static Transaction getTransactionById(int transactionId) throws TransactionNotFoundException {
-		return DaoTransaction.getTransactionById(transactionId);
+	private static Transaction getTransactionById(int transactionId) throws TransactionNotFoundException, UserNotFoundException, MessageNotFoundException {
+		return CarpoolDaoTransaction.getTransactionById(transactionId);
 	}
 	
 	/**
 	 * get the transaction by id from API call, adding safety by checking userId ownership, since detailed transactions should be viewed by provider or customer only
-	 * @param transactionId
-	 * @param userId
-	 * @throws TransactionNotFoundException		//thrown by getTranasctionById
-	 * @throws TransactionOwnerNotMatchException	//thrown when userId not match providerId or customerId
 	 */
-	public static Transaction getUserTransactionById(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException{
+	public static Transaction getUserTransactionById(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, UserNotFoundException, MessageNotFoundException{
 		Transaction transaction = getTransactionById(transactionId);
 		//TODO add id checking
 //		if (transaction.getInitUserId() != userId && transaction.getTargetUserId() != userId){
@@ -64,9 +59,24 @@ public class TransactionDaoService{
 	/**
 	 * created a new Transaction in SQL
 	 * @return	the full Transaction that was just created in database, use the complete constructor for this, including provider, customer, message
+	 * @throws ValidationException 
 	 */
-	public static Transaction createNewTransaction(Transaction newTransaction){
-		Transaction t = DaoTransaction.addTransactionToDatabase(newTransaction);
+	public static Transaction createNewTransaction(Transaction newTransaction) throws MessageNotFoundException, UserNotFoundException, ValidationException{
+		Transaction t = CarpoolDaoTransaction.addTransactionToDatabase(newTransaction);
+		
+		Message base = CarpoolDaoMessage.getMessageById(t.getMessageId());
+		if (t.getDirection() == Constants.TransactionDirection.round){
+			base.setDeparture_seatsBooked(base.getDeparture_seatsBooked() + t.getDeparture_seatsBooked());
+			base.setArrival_seatsBooked(base.getArrival_seatsBooked() + t.getArrival_seatsBooked());
+		} else if (t.getDirection() == Constants.TransactionDirection.departure){
+			base.setDeparture_seatsBooked(base.getDeparture_seatsBooked() + t.getDeparture_seatsBooked());
+		} else{
+			base.setArrival_seatsBooked(base.getArrival_seatsBooked() + t.getArrival_seatsBooked());
+		}
+		if (base.getDeparture_seatsBooked() > base.getDeparture_seatsNumber() || base.getArrival_seatsBooked() > base.getArrival_seatsNumber()){
+			throw new ValidationException("交易发起失败，没有那么多空余位置");
+		}
+		
 		// send Transaction Pending Notification
 //		Notification n = new Notification(-1, Constants.notificationType.on_transaction, Constants.notificationEvent.transactionPending,
 //				t.getInitUserId(), t.getInitUserName(), 0, t.getTransactionId(), t.getTargetUserId(),
@@ -81,16 +91,29 @@ public class TransactionDaoService{
 	 * Expected Condition: current Transaction state in "Constants -> transactonState.init" && userId matches either providerId or messageId
 	 * Action: change state to cancelled, TODO: send notifications, and prompt for explanation
 	 */
-	public static Transaction cancelTransaction(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionStateViolationException{
-		Transaction t = DaoTransaction.getTransactionById(transactionId);
+	public static Transaction cancelTransaction(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionStateViolationException, MessageNotFoundException, UserNotFoundException, ValidationException{
+		Transaction t = CarpoolDaoTransaction.getTransactionById(transactionId);
 
 		if(t.getProviderId() == userId || t.getCustomerId() == userId){
 			if(t.getState() != Constants.transactionState.init){
 				throw new TransactionStateViolationException(t.getState(), Constants.transactionState.init);
 			}else{
 				t.setState(Constants.transactionState.cancelled);
-				DaoTransaction.UpdateTransactionInDatabase(t);
+				CarpoolDaoTransaction.UpdateTransactionInDatabase(t);
 				//send notifications
+			}
+			
+			Message base = CarpoolDaoMessage.getMessageById(t.getMessageId());
+			if (t.getDirection() == Constants.TransactionDirection.round){
+				base.setDeparture_seatsBooked(base.getDeparture_seatsBooked() + t.getDeparture_seatsBooked());
+				base.setArrival_seatsBooked(base.getArrival_seatsBooked() + t.getArrival_seatsBooked());
+			} else if (t.getDirection() == Constants.TransactionDirection.departure){
+				base.setDeparture_seatsBooked(base.getDeparture_seatsBooked() - t.getDeparture_seatsBooked());
+			} else{
+				base.setArrival_seatsBooked(base.getArrival_seatsBooked() - t.getArrival_seatsBooked());
+			}
+			if (base.getDeparture_seatsBooked() < 0 || base.getArrival_seatsBooked() < 0){
+				throw new ValidationException("交易发起失败，没有那么多空余位置");
 			}
 		}else{
 			throw new TransactionOwnerNotMatchException();
@@ -106,15 +129,15 @@ public class TransactionDaoService{
 	 * Expected Condition: current Transaction state in "Constants -> transactonState.finishedToEvaluate" && userId matches either initUser or targetUser
 	 * Action: change the transactionState finishedToEvaluate -> underInvestigation
 	 */
-	public static Transaction reportTransaction(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionStateViolationException{
-		Transaction t = DaoTransaction.getTransactionById(transactionId);
+	public static Transaction reportTransaction(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionStateViolationException, UserNotFoundException, MessageNotFoundException{
+		Transaction t = CarpoolDaoTransaction.getTransactionById(transactionId);
 
 		if(t.getProviderId() == userId || t.getCustomerId() == userId){
 			if(t.getState() != Constants.transactionState.finished){
 				throw new TransactionStateViolationException(t.getState(), Constants.transactionState.finished);
 			}else{
 				t.setState(Constants.transactionState.underInvestigation);
-				DaoTransaction.UpdateTransactionInDatabase(t);
+				CarpoolDaoTransaction.UpdateTransactionInDatabase(t);
 				//send notifications
 			}
 		}else{
@@ -132,8 +155,8 @@ public class TransactionDaoService{
 	 * initUser or targetUser evaluates the transaction， given the transaction is in finished state
 	 * @return	the changed transaction, constructed by the full constructor
 	 */
-	public static Transaction evaluateTransaction(int transactionId, int userId, int score) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionAccessViolationException, TransactionStateViolationException, MessageNotFoundException{
-		Transaction t = DaoTransaction.getTransactionById(transactionId);
+	public static Transaction evaluateTransaction(int transactionId, int userId, int score) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionAccessViolationException, TransactionStateViolationException, MessageNotFoundException, UserNotFoundException{
+		Transaction t = CarpoolDaoTransaction.getTransactionById(transactionId);
 		if(t.getState() != Constants.transactionState.finished){
 			throw new TransactionStateViolationException(t.getState(), Constants.transactionState.finished);
 		}else{

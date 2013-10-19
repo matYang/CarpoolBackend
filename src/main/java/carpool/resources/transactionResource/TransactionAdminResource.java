@@ -22,7 +22,6 @@ import carpool.common.Validator;
 import carpool.constants.Constants;
 import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.transactionStateChangeAction;
-import carpool.constants.Constants.transactionStateChangeAdminAction;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
@@ -41,62 +40,62 @@ import carpool.resources.userResource.userAuthResource.UserCookieResource;
 
 
 public class TransactionAdminResource extends PseudoResource{
-	
-
-    //if authentication passed, local model should have the correct password field, thus checking both password and authCode here, please note under other situations password on the front end would be goofypassword
-    //authCode must not equal to initial authCode -1
-    @Put 
-    public Representation updateTransaction(Representation entity) {
-        int transactionId = -1;
-        int stateIndex = -1;
-        JSONObject newJsonTransaction = new JSONObject();
-        Transaction transaction = new Transaction();
-        String access_admin = "";
-        
-		try {
-			this.checkEntity(entity);
-			
-			transactionId = Integer.parseInt(this.getReqAttr("id"));
-			stateIndex = Integer.parseInt(this.getQueryVal("stateIndex"));
-			access_admin = this.getQueryVal("access_admin");
-			
-			if (!access_admin.equals(Constants.access_admin)){
-				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
-				this.addCORSHeader();
-		        return this.buildQuickResponse("invalid authorization value");
-				
-			}
-			
-			transactionStateChangeAdminAction stateChangeAdminAction = transactionStateChangeAdminAction.fromInt(stateIndex);
-			
-	        if (stateChangeAdminAction != null){
-	        	switch(stateChangeAdminAction){
-	        		case investigation_cancel:
-	        			transaction = TransactionDaoService.investigationCancelTransaction(transactionId);
-	        			break;
-	        		case investigation_release:
-	        			transaction = TransactionDaoService.investigationReleaseTransaction(transactionId);
-	        			break;
-	        		default:
-	        			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-	        			break;
-	        	}
-	        }
-	        else{
-	        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-	        }
-	        newJsonTransaction = JSONFactory.toJSON(transaction);
-			
-		} catch (PseudoException e){
-			this.addCORSHeader();
-			return new StringRepresentation(this.doPseudoException(e));
-        } catch(Exception e){
-			this.doException(e);
-		}
-        
-        Representation result =  new JsonRepresentation(newJsonTransaction);
-        this.addCORSHeader();
-        return result;
-    }
+//	
+//
+//    //if authentication passed, local model should have the correct password field, thus checking both password and authCode here, please note under other situations password on the front end would be goofypassword
+//    //authCode must not equal to initial authCode -1
+//    @Put 
+//    public Representation updateTransaction(Representation entity) {
+//        int transactionId = -1;
+//        int stateIndex = -1;
+//        JSONObject newJsonTransaction = new JSONObject();
+//        Transaction transaction = new Transaction();
+//        String access_admin = "";
+//        
+//		try {
+//			this.checkEntity(entity);
+//			
+//			transactionId = Integer.parseInt(this.getReqAttr("id"));
+//			stateIndex = Integer.parseInt(this.getQueryVal("stateIndex"));
+//			access_admin = this.getQueryVal("access_admin");
+//			
+//			if (!access_admin.equals(Constants.access_admin)){
+//				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
+//				this.addCORSHeader();
+//		        return this.buildQuickResponse("invalid authorization value");
+//				
+//			}
+//			
+//			transactionStateChangeAdminAction stateChangeAdminAction = transactionStateChangeAdminAction.fromInt(stateIndex);
+//			
+//	        if (stateChangeAdminAction != null){
+//	        	switch(stateChangeAdminAction){
+//	        		case investigation_cancel:
+//	        			transaction = TransactionDaoService.investigationCancelTransaction(transactionId);
+//	        			break;
+//	        		case investigation_release:
+//	        			transaction = TransactionDaoService.investigationReleaseTransaction(transactionId);
+//	        			break;
+//	        		default:
+//	        			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+//	        			break;
+//	        	}
+//	        }
+//	        else{
+//	        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+//	        }
+//	        newJsonTransaction = JSONFactory.toJSON(transaction);
+//			
+//		} catch (PseudoException e){
+//			this.addCORSHeader();
+//			return new StringRepresentation(this.doPseudoException(e));
+//        } catch(Exception e){
+//			this.doException(e);
+//		}
+//        
+//        Representation result =  new JsonRepresentation(newJsonTransaction);
+//        this.addCORSHeader();
+//        return result;
+//    }
     
 }

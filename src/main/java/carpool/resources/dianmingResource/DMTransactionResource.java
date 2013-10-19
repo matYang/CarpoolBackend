@@ -34,10 +34,10 @@ public class DMTransactionResource extends PseudoResource{
         JSONArray response = new JSONArray();
         
         try {
-                        curMsgId = Integer.parseInt(this.getReqAttr("id"));
-                        curUserId = Integer.parseInt(this.getQueryVal("userId"));
-                        
-                        this.validateAuthentication(curUserId);
+                curMsgId = Integer.parseInt(this.getReqAttr("id"));
+                curUserId = Integer.parseInt(this.getQueryVal("userId"));
+                
+                this.validateAuthentication(curUserId);
                         
                 ArrayList<Transaction> historyTransactions = MessageDaoService.getTransactionByMessageId(curMsgId);
                 if (historyTransactions != null){

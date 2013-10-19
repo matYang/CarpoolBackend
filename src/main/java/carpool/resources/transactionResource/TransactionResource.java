@@ -26,6 +26,9 @@ import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
+import carpool.exception.message.MessageNotFoundException;
+import carpool.exception.transaction.TransactionNotFoundException;
+import carpool.exception.user.UserNotFoundException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.model.representation.LocationRepresentation;
@@ -66,7 +69,14 @@ public class TransactionResource extends PseudoResource{
 	 */
 	public Representation getAllTransactions() {
 		
-		ArrayList<Transaction> allTransactions = TransactionDaoService.getAllTransactions();
+		ArrayList<Transaction> allTransactions;
+		try {
+			allTransactions = TransactionDaoService.getAllTransactions();
+		} catch (PseudoException e) {
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
+		}
+		
 		JSONArray jsonArray = new JSONArray();
 		
 		if (allTransactions == null){

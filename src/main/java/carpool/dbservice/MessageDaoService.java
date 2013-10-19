@@ -95,9 +95,10 @@ public class MessageDaoService{
 	 * @param messageId
 	 * @return	an arrayList of transactions based on the target message, null if any errors occurred
 	 * @throws MessageNotFoundException
+	 * @throws UserNotFoundException 
 	 */
-	public static ArrayList<Transaction> getTransactionByMessageId(int messageId) throws MessageNotFoundException {
-		return CarpoolDaoTransaction.getTransactionByMessageId(messageId);
+	public static ArrayList<Transaction> getTransactionByMessageId(int messageId) throws MessageNotFoundException, UserNotFoundException {
+		return CarpoolDaoTransaction.getAllTransactionByMessageId(messageId);
 	}
 	
 	
