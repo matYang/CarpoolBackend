@@ -14,7 +14,6 @@ import org.json.JSONObject;
 
 import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants;
 import carpool.exception.PseudoException;
 import carpool.exception.validation.EntityTooLargeException;
 import carpool.factory.JSONFactory;
@@ -48,7 +47,16 @@ public class PseudoResource extends ServerResource{
 		if (entity == null){
 			throw new NullPointerException();
 		}
-		else if (entity != null && entity.getSize() > Constants.max_DMMessageLength){
+		else if (entity != null && entity.getSize() > CarpoolConfig.max_PostLength){
+			throw new EntityTooLargeException();
+		}
+	}
+	
+	public void checkFileEntity(Representation entity) throws NullPointerException, EntityTooLargeException{
+		if (entity == null){
+			throw new NullPointerException();
+		}
+		else if (entity != null && entity.getSize() > CarpoolConfig.max_FileLength){
 			throw new EntityTooLargeException();
 		}
 	}

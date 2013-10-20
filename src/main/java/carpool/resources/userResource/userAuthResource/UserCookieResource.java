@@ -10,7 +10,7 @@ import org.restlet.engine.header.Header;
 import org.restlet.data.Status;
 
 import carpool.common.DebugLog;
-import carpool.constants.Constants;
+import carpool.constants.CarpoolConfig;
 import carpool.dbservice.*;
 import carpool.encryption.SessionCrypto;
 import carpool.exception.PseudoException;
@@ -62,7 +62,7 @@ public class UserCookieResource extends ServerResource{
 		ArrayList<String> sessionString = new ArrayList<String>();
 		String newEncryptedString = "";
 		for( Cookie cookie : cookies){ 
-			if (cookie.getName().equals(Constants.cookie_userSession)){
+			if (cookie.getName().equals(CarpoolConfig.cookie_userSession)){
 				sessionString.add(cookie.getValue()); 
 			}
 		} 
@@ -100,8 +100,8 @@ public class UserCookieResource extends ServerResource{
         // store the session string in a new cookie
         try{
         	 encryptedString = SessionCrypto.encrypt(sessionString);
-        	 newCookieSetting = new CookieSetting(0, Constants.cookie_userSession, encryptedString);
-        	 newCookieSetting.setMaxAge(Constants.cookie_maxAge);
+        	 newCookieSetting = new CookieSetting(0, CarpoolConfig.cookie_userSession, encryptedString);
+        	 newCookieSetting.setMaxAge(CarpoolConfig.cookie_maxAge);
         }
         catch (Exception e){
 			throw new SessionEncodingException();
@@ -125,7 +125,7 @@ public class UserCookieResource extends ServerResource{
 		ArrayList<String> sessionString = new ArrayList<String>();
 		boolean logout = false;
 		for( Cookie cookie : cookies){ 
-			if (cookie.getName().equals(Constants.cookie_userSession)){
+			if (cookie.getName().equals(CarpoolConfig.cookie_userSession)){
 				sessionString.add(cookie.getValue()); 
 			} 
 		} 

@@ -8,6 +8,8 @@ import org.restlet.routing.Router;
 
 import carpool.common.DebugLog;
 import carpool.constants.Constants;
+import carpool.resources.adminResource.AdminRoutineResource;
+import carpool.resources.adminResource.AdminStateChangeResource;
 import carpool.resources.dianmingResource.*;
 import carpool.resources.generalResource.*;
 import carpool.resources.locationResource.*;
@@ -72,9 +74,6 @@ public class RoutingService extends Application {
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + transactionServicePrefix + TransactionResourcePrefix, TransactionResource.class);
 		//	API for Get/Put/Delete transactions: /api/v1.0/transaction/transaction/:id
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + transactionServicePrefix + TransactionResourcePrefix + "/{id}", TransactionResourceId.class);
-		String TransactionAdminResourcePrefix = "/admin";
-		//	API for admin state changes actions on transactions: /api/v1.0/transaction/admin/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + transactionServicePrefix + TransactionAdminResourcePrefix, TransactionAdminResource.class);
 
 		
 		
@@ -162,7 +161,7 @@ public class RoutingService extends Application {
 		
 		/** --------------------- APIs for general module (legacy from v0.9) ------------------ **/
 		String generalServicePrefix = "/general";
-		//   API for single messages:  /api/v1.0/general/*
+		//   API for feedback module:  /api/v1.0/general/*
 		
 		String feedBackResourcePrefix = "/feedBack";
 		//	 API for feed back: /api/v1.0/general/feedBack
@@ -171,13 +170,24 @@ public class RoutingService extends Application {
 		
 		/** APIs for location module**/
 		String locationServicePrefix = "/location";
-		//   API for single messages:  /api/v1.0/location/*
+		//   API for location module:  /api/v1.0/location/*
 				
 		String locationResourcePrefix = "/location";
 		//   API for location resources:  /api/v1.0/location/location
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + locationServicePrefix + locationResourcePrefix, LocationResource.class);
 		
 		
+		
+		/** --------------------- APIs for Administrator ------------------ **/
+		String adminServicePrefix = "/admin";
+		//   API for single messages:  /api/v1.0/admin/*
+		
+		String StateChangeResourcePrefix = "/stateChange";
+		//	API for admin state changes actions on user/message/transaction: /api/v1.0/admin/stateChange
+		router.attach(Constants.applicationPrefix + Constants.versionPrefix + adminServicePrefix + StateChangeResourcePrefix, AdminStateChangeResource.class);
+		String RoutineResourcePrefix = "/routine";
+		//	API for admin to force routine tasks to take place: /api/v1.0/admin/routine
+		router.attach(Constants.applicationPrefix + Constants.versionPrefix + adminServicePrefix + RoutineResourcePrefix, AdminRoutineResource.class);
 		
 		return router;
 	}

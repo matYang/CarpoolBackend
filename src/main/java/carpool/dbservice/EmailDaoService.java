@@ -7,7 +7,6 @@ import carpool.asyncTask.relayTask.EmailRelayTask;
 import carpool.common.DebugLog;
 import carpool.common.EmailHandler;
 import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants;
 import carpool.carpoolDAO.*;
 import carpool.encryption.EmailCrypto;
 import carpool.exception.user.UserNotFoundException;
@@ -49,9 +48,9 @@ public class EmailDaoService {
 	public static boolean sendActivationEmail(int userId, String newEmail){
 		String authCode = RandomStringUtils.randomAlphanumeric(15);
 		//clear previous session whatsoever
-		CarpoolDaoBasic.getJedis().del(Constants.key_emailActivationAuth + userId);
+		CarpoolDaoBasic.getJedis().del(CarpoolConfig.key_emailActivationAuth + userId);
 		//start new session, make sure only one session exists ot a time
-		CarpoolDaoBasic.getJedis().set(Constants.key_emailActivationAuth + userId, authCode);
+		CarpoolDaoBasic.getJedis().set(CarpoolConfig.key_emailActivationAuth + userId, authCode);
 		String encryptedEmailKey = EmailCrypto.encrypt(userId, authCode);
 		try {
 			EmailRelayTask emailTask = new EmailRelayTask(newEmail, "Activate your email address", "http://"+CarpoolConfig.domainName+"/api/v1.0/users/emailActivation?key="+encryptedEmailKey);
@@ -75,7 +74,7 @@ public class EmailDaoService {
 	 */
 	public static User activateUserEmail(int userId, String authCode) throws UserNotFoundException{
 		try{
-			if(!CarpoolDaoBasic.getJedis().get(Constants.key_emailActivationAuth + userId).equals(authCode)){
+			if(!CarpoolDaoBasic.getJedis().get(CarpoolConfig.key_emailActivationAuth + userId).equals(authCode)){
 				DebugLog.d("anthCode does not match");
 				return null;
 			}
@@ -88,7 +87,7 @@ public class EmailDaoService {
 			User user =  CarpoolDaoUser.getUserById(userId);
 			user.setEmailActivated(true);
 			CarpoolDaoUser.UpdateUserInDatabase(user);
-			CarpoolDaoBasic.getJedis().del(Constants.key_emailActivationAuth +  userId);
+			CarpoolDaoBasic.getJedis().del(CarpoolConfig.key_emailActivationAuth +  userId);
 			return user;
 		} catch (Exception e) {
 			DebugLog.d(e.getMessage());
@@ -128,9 +127,9 @@ public class EmailDaoService {
 			return false;
 		}
 		//make sure you have the prefix...don't want to debug this
-		CarpoolDaoBasic.getJedis().del(Constants.key_emailActivationAuth + userId);
+		CarpoolDaoBasic.getJedis().del(CarpoolConfig.key_emailActivationAuth + userId);
 		String authCode = RandomStringUtils.randomAlphanumeric(30);
-		CarpoolDaoBasic.getJedis().set(Constants.key_emailActivationAuth + userId, authCode);
+		CarpoolDaoBasic.getJedis().set(CarpoolConfig.key_emailActivationAuth + userId, authCode);
 		sendActivationEmail(userId, user.getEmail());
 		return true;
 	}
@@ -148,9 +147,9 @@ public class EmailDaoService {
 		try {
 			User user = CarpoolDaoUser.getUserByEmail(email);
 			int  userId = user.getUserId();
-			CarpoolDaoBasic.getJedis().del(Constants.key_forgetPasswordAuth + userId);
+			CarpoolDaoBasic.getJedis().del(CarpoolConfig.key_forgetPasswordAuth + userId);
 			String authCode = RandomStringUtils.randomAlphanumeric(30);
-			CarpoolDaoBasic.getJedis().set(Constants.key_forgetPasswordAuth + userId, authCode);
+			CarpoolDaoBasic.getJedis().set(CarpoolConfig.key_forgetPasswordAuth + userId, authCode);
 			String encryptedEmailKey = EmailCrypto.encrypt(userId, authCode);
 			EmailHandler.send(email, "Change your password", CarpoolConfig.domainName+"/forgetPassword?key="+encryptedEmailKey);
 			return true;

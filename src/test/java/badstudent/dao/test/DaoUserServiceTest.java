@@ -7,6 +7,7 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
+import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants;
 import carpool.constants.Constants.paymentMethod;
 import carpool.database.carpoolDaoBasic;
@@ -225,7 +226,7 @@ public class DaoUserServiceTest {
 		assertTrue(EmailDaoService.sendActivationEmail(1, "shhyfz@hotmail.com"));
 		assertTrue(EmailDaoService.reSendActivationEmail(1));
 		try {
-			EmailDaoService.activateUserEmail(1, carpoolDaoBasic.getJedis().get(Constants.key_emailActivationAuth+"1"));
+			EmailDaoService.activateUserEmail(1, carpoolDaoBasic.getJedis().get(CarpoolConfig.key_emailActivationAuth+"1"));
 		} catch (UserNotFoundException e) {
 			assertTrue(false);
 		}

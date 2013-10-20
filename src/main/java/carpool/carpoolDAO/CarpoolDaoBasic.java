@@ -40,10 +40,6 @@ public class CarpoolDaoBasic {
     }
     
     
-    public static Long generateId(){
-        return jedis.incr(Constants.key_idGenerator);
-    }
-    
     public static Set<String> getWholeDatabase(){
         return jedis.keys("*");  
     }

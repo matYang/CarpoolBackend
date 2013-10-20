@@ -13,7 +13,7 @@ import org.restlet.engine.header.Header;
 import org.restlet.data.Status;
 
 import carpool.common.DebugLog;
-import carpool.constants.Constants;
+import carpool.constants.CarpoolConfig;
 import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserResource;
 
@@ -44,8 +44,8 @@ public class FeedBackResource extends PseudoResource{
 	}
 
 	@Post
-	public String createMessage(Representation entity) {
-		if (entity.getSize() < Constants.max_feedBackLength){
+	public String createFeedback(Representation entity) {
+		if (entity.getSize() < CarpoolConfig.max_feedBackLength){
 			String jsonMessage = "";
 			try {
 				jsonMessage = (new JsonRepresentation(entity)).getText() + "\n";

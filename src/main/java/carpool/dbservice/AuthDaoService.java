@@ -6,7 +6,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoUser;
-import carpool.constants.Constants;
+import carpool.constants.CarpoolConfig;
 import carpool.exception.PseudoException;
 import carpool.exception.ValidationException;
 import carpool.exception.user.UserNotFoundException;
@@ -46,7 +46,7 @@ public class AuthDaoService {
 	 * check against the key_forgetPasswordAuth+id : authCode pair in Redis
 	 */
 	public static boolean isResetPasswordValid(int userId, String authCode){
-		String key = Constants.key_forgetPasswordAuth+userId;
+		String key = CarpoolConfig.key_forgetPasswordAuth+userId;
 		String match = CarpoolDaoBasic.getJedis().get(key);
 		return match.equals(authCode);
 	}
@@ -67,7 +67,7 @@ public class AuthDaoService {
 		}
 		String id = idTimeStamp.split("\\+")[0];
 		String timeStamp = idTimeStamp.split("\\+")[1];
-		if((Calendar.getInstance().getTimeInMillis()-Long.parseLong(timeStamp))>Constants.session_expireThreshould){
+		if((Calendar.getInstance().getTimeInMillis()-Long.parseLong(timeStamp))>CarpoolConfig.session_expireThreshould){
 			return null;
 		}
 		try {
@@ -122,11 +122,11 @@ public class AuthDaoService {
 				return false;
 			}
 			//Maximum age
-			if((Calendar.getInstance().getTimeInMillis()-Long.parseLong(timeStamp))>Constants.session_expireThreshould){
+			if((Calendar.getInstance().getTimeInMillis()-Long.parseLong(timeStamp))>CarpoolConfig.session_expireThreshould){
 				CarpoolDaoBasic.getJedis().del(userSessionString);
 				return false;
 			}
-			if ((Calendar.getInstance().getTimeInMillis()-Long.parseLong(timeStamp))>Constants.session_updateThreshould){
+			if ((Calendar.getInstance().getTimeInMillis()-Long.parseLong(timeStamp))>CarpoolConfig.session_updateThreshould){
 				Calendar c = Calendar.getInstance();
 				timeStamp = c.getTimeInMillis()+"";
 				CarpoolDaoBasic.getJedis().set(userSessionString, ID+"+"+timeStamp);

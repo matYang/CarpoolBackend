@@ -109,7 +109,7 @@ public class TransactionDaoService{
 			}
 			
 			t.setState(Constants.transactionState.cancelled);
-			CarpoolDaoTransaction.UpdateTransactionInDatabase(t);
+			CarpoolDaoTransaction.updateTransactionInDatabase(t);
 			CarpoolDaoMessage.UpdateMessageInDatabase(base);
 			//send notifications
 			
@@ -135,7 +135,7 @@ public class TransactionDaoService{
 				throw new TransactionStateViolationException(t.getState(), Constants.transactionState.finished);
 			}else{
 				t.setState(Constants.transactionState.underInvestigation);
-				CarpoolDaoTransaction.UpdateTransactionInDatabase(t);
+				CarpoolDaoTransaction.updateTransactionInDatabase(t);
 				//send notifications
 			}
 		}else{
@@ -168,7 +168,7 @@ public class TransactionDaoService{
 					User customer = CarpoolDaoUser.getUserById(t.getCustomerId());
 					updateUserScore(customer, score);
 					
-					CarpoolDaoTransaction.UpdateTransactionInDatabase(t);
+					CarpoolDaoTransaction.updateTransactionInDatabase(t);
 					CarpoolDaoUser.UpdateUserInDatabase(customer);
 					
 				}else if(userId == t.getCustomerId()){
@@ -180,7 +180,7 @@ public class TransactionDaoService{
 					User provider = CarpoolDaoUser.getUserById(t.getProviderId());
 					updateUserScore(provider, score);
 					
-					CarpoolDaoTransaction.UpdateTransactionInDatabase(t);
+					CarpoolDaoTransaction.updateTransactionInDatabase(t);
 					CarpoolDaoUser.UpdateUserInDatabase(provider);
 				}else{
 					throw new TransactionOwnerNotMatchException();

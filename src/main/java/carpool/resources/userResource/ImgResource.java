@@ -61,7 +61,7 @@ public class ImgResource extends PseudoResource{
 		boolean previousImgRemoved = false;
 			
 		try {
-			this.checkEntity(entity);
+			this.checkFileEntity(entity);
 			id = Integer.parseInt(this.getReqAttr("id"));
 			String imageNameId = id + "" + Calendar.getInstance().getTimeInMillis();
 			

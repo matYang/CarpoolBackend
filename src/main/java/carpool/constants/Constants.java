@@ -4,36 +4,8 @@ package carpool.constants;
 
 public class Constants {
 
-    public static final int max_recents = 10;
-    public static final int max_displayRecents = 4;
-    public static final long max_userLength = 4194304l;
-    public static final long max_feedBackLength = 200000l;
-	public static final long max_DMMessageLength = 819200l;
-	public static final long max_TransactionLength = 400000l;
-	public static final long max_NotificationLength = 300000l;
-	public static final long max_notificationLifeInMili = 604800000l;
-    public static final String key_message_prefix = "message-";
-    public static final String key_idGenerator = "idGenerator";
-    public static final String key_province = "province";
-    public static final String key_recents = "recentMessages";
-    public static final String key_infoChanged = "infoChanged";
-    public static final String key_emailActivationAuth = "ea";
-    public static final String key_forgetPasswordAuth = "fp";
-    public static final String cookie_userSession = "userSessionCookie";
-    public static final int cookie_maxAge = 5184000; //2 month
-
-    public static final int min_DMMessageHourPrice = 1;
-    public static final int max_DMMessageHourPrice = 999;
-
-    //time stamp on the session will be updated if it is 3 days old
-    public static final long session_updateThreshould = 259200000l;
-    //time stamp 7 days old would result in failure of login
-    public static final long session_expireThreshould = 604800000l;
-
     public static final long A_WEEK = 604800000l; //miliSec in a week
 
-    //the temporary admin access code, admin access will be checked against this code instead of user cookies
-    public static final String access_admin = "4rkozalh48z1";
 
     public static enum messageType{
     	ask(0),help(1), both(2);
@@ -218,6 +190,23 @@ public class Constants {
     public static long max_imageSize = 83886080l;
 	public static String imagePathPrefix = "../../var/www/userImages/profile-";
 	public static String imagePathSufix = ".png";
-
+	
+	
+	
+	/** -------------------Administrator-------------------**/
+    //the temporary admin access code, admin access will be checked against this code instead of user cookies
+    public static final String access_admin = "4rkozalh48z1";
+    
+    public static enum AdminRoutineAction{
+    	clearBothDatabase(0), messageClean(1), transactionMonitor(2), cleanAndMonitor(3);
+    	public int code;
+    	AdminRoutineAction(int code){
+            this.code = code;
+        }
+        private final static AdminRoutineAction[] map = AdminRoutineAction.values();
+        public static AdminRoutineAction fromInt(int n){
+            return map[n];
+        }
+    }
 
 }

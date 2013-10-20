@@ -41,7 +41,7 @@ public class TransactionDaoServiceTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-       User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1));
+		User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1));
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);
@@ -61,7 +61,7 @@ public class TransactionDaoServiceTest {
 		//Messages
 		Message message=new Message(provider.getUserId(),false
 				, new LocationRepresentation("p_c_d_2"),time,timeSlot,2 , priceList,new LocationRepresentation("p_c_d_2"),
-				time,timeSlot, 1,priceList,paymentMethod,
+				time,timeSlot, 2,priceList,paymentMethod,
 				"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message);
 		TransactionType tD = Constants.TransactionType.fromInt(1);
