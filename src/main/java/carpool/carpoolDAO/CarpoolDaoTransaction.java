@@ -196,7 +196,7 @@ public class CarpoolDaoTransaction {
 		return tlist;
 	}
 
-	private static Transaction createTransactionByResultSet(ResultSet rs) throws SQLException, UserNotFoundException, MessageNotFoundException {
+	protected static Transaction createTransactionByResultSet(ResultSet rs) throws SQLException, UserNotFoundException, MessageNotFoundException {
 		Transaction transaction = null;		
 		User provider = CarpoolDaoUser.getUserById(rs.getInt("provider_Id"));
 		User customer = CarpoolDaoUser.getUserById(rs.getInt("customer_Id"));
@@ -253,14 +253,7 @@ public class CarpoolDaoTransaction {
 		return tlist;
   }
 	
-  public static void transactionMonitor(){
-	  String query="";
-	  
-	  
-  }
-	
-	
-	
+ 
 	
 	}
 	

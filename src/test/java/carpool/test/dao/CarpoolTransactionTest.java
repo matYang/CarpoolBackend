@@ -9,6 +9,7 @@ import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoTransaction;
 import carpool.carpoolDAO.CarpoolDaoUser;
+import carpool.clean.TransactionCleaner;
 import carpool.common.DateUtility;
 import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
@@ -17,6 +18,7 @@ import carpool.constants.Constants.gender;
 import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.paymentMethod;
+import carpool.constants.Constants.transactionState;
 import carpool.exception.ValidationException;
 import carpool.model.Message;
 import carpool.model.Transaction;
@@ -239,7 +241,7 @@ public class CarpoolTransactionTest {
 		int dseats = 4;
 		int aseats = 4;
 		//Messages
-		Message message=new Message(provider.getUserId(),false
+		Message message=new Message(provider.getUserId(),true
 				, dl,dt,timeSlot,dseats , priceList,al,
 				at,timeSlot, aseats,alist,p,
 				"test",  type, genderRequirement);
@@ -274,6 +276,167 @@ public class CarpoolTransactionTest {
 		}		
 		
     }
+    
+    
+    public void testTransactionCleaner(){    	
+    	CarpoolDaoBasic.clearBothDatabase();
+		//Users
+        User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		
+		try {
+			CarpoolDaoUser.addUserToDatabase(provider);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}	
+       User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1));
+		
+		try {
+			CarpoolDaoUser.addUserToDatabase(customer);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}
+		
+		Calendar dt = Calendar.getInstance();
+		dt.set(Calendar.HOUR_OF_DAY, 19);
+		Calendar at = Calendar.getInstance();
+		at.add(Calendar.DAY_OF_YEAR, 1);
+		
+		Calendar dt2 = Calendar.getInstance();
+		dt.add(Calendar.DAY_OF_YEAR, -1);
+		Calendar at2 = Calendar.getInstance();
+		at.add(Calendar.DAY_OF_YEAR, 0);
+		
+		Calendar dt3 = Calendar.getInstance();
+		dt3.add(Calendar.DAY_OF_YEAR, 1);
+		Calendar at3 = Calendar.getInstance();
+		at.add(Calendar.DAY_OF_YEAR, 3);
+		
+		ArrayList<Integer> priceList = new ArrayList<Integer>();
+		priceList.add(1);
+		paymentMethod p =Constants.paymentMethod.fromInt(0);
+		messageType type = messageType.fromInt(0);
+		gender genderRequirement = gender.fromInt(0);		
+		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
+		ArrayList<Integer> alist = new ArrayList<Integer>();
+		alist.add(10);
+		
+		LocationRepresentation dl=new LocationRepresentation("Canada_Ontario_Toronto_2");
+		LocationRepresentation al=new LocationRepresentation("Canada_Ontario_Waterloo_2");	
+	    
+		int dseats = 4;
+		int aseats = 4;
+		//Messages
+		Message message=new Message(provider.getUserId(),true
+				, dl,dt,timeSlot,dseats , priceList,al,
+				at,timeSlot, aseats,alist,p,
+				"test",  type, genderRequirement);
+		message = CarpoolDaoMessage.addMessageToDatabase(message);	
+		Message message2=new Message(provider.getUserId(),true
+				, dl,dt2,timeSlot,dseats , priceList,al,
+				at2,timeSlot, aseats,alist,p,
+				"test",  type, genderRequirement);
+		message2 = CarpoolDaoMessage.addMessageToDatabase(message2);
+		Message message3=new Message(provider.getUserId(),true
+				, dl,dt3,timeSlot,dseats , priceList,al,
+				at3,timeSlot, aseats,alist,p,
+				"test",  type, genderRequirement);
+		message3 = CarpoolDaoMessage.addMessageToDatabase(message3);
+		
+		
+		TransactionType ttype = TransactionType.fromInt(0);
+		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+		transaction.setState(transactionState.init);//This should pass the test
+		Transaction transaction2 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+		transaction2.setState(transactionState.init);
+		Transaction transaction3 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+		transaction3.setState(transactionState.finished);
+		Transaction transaction4 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+		transaction4.setState(transactionState.aboutToStart);// This should pass the test
+		Transaction transaction5 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+    	transaction5.setState(transactionState.init);
+    	Transaction transaction6 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+    	transaction6.setState(transactionState.aboutToStart);
+    	Transaction transaction7 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+		transaction7.setState(transactionState.aboutToStart);
+		Transaction transaction8 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+		transaction8.setState(transactionState.finished);
+		Transaction transaction9 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+		transaction9.setState(transactionState.init);
+		Transaction transaction10 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+		transaction10.setState(transactionState.finished);
+		
+		try{
+			CarpoolDaoTransaction.addTransactionToDatabase(transaction);
+			CarpoolDaoTransaction.addTransactionToDatabase(transaction2);
+			CarpoolDaoTransaction.addTransactionToDatabase(transaction3);
+			CarpoolDaoTransaction.addTransactionToDatabase(transaction4);
+			CarpoolDaoTransaction.addTransactionToDatabase(transaction5);
+			CarpoolDaoTransaction.addTransactionToDatabase(transaction6);
+			CarpoolDaoTransaction.addTransactionToDatabase(transaction7);
+			CarpoolDaoTransaction.addTransactionToDatabase(transaction8);
+			CarpoolDaoTransaction.addTransactionToDatabase(transaction9);
+			CarpoolDaoTransaction.addTransactionToDatabase(transaction10);
+			//Test
+			TransactionCleaner.Clean();
+			ArrayList<Integer> list = new ArrayList<Integer>();
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction.getTransactionId()).getType().code);
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction2.getTransactionId()).getType().code);
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction3.getTransactionId()).getType().code);
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction4.getTransactionId()).getType().code);
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction5.getTransactionId()).getType().code);
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction6.getTransactionId()).getType().code);
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction7.getTransactionId()).getType().code);
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction8.getTransactionId()).getType().code);
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction9.getTransactionId()).getType().code);
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction10.getTransactionId()).getType().code);
+			if(list !=null && list.size()==10 && list.get(0)==2 && list.get(1)==0 &&list.get(2)==3 && list.get(3)==3 && list.get(4)==0 && list.get(5)==2 && list.get(6)==2 && list.get(7)==3 && list.get(8)==0&&list.get(9)==3){
+				//Passed;
+			}else{
+				fail();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
     
     
