@@ -65,13 +65,10 @@ public class TransactionDaoService{
 		Transaction t = newTransaction;
 		
 		Message base = CarpoolDaoMessage.getMessageById(t.getMessageId());
-		if (t.getDirection() == Constants.TransactionDirection.round){
-			base.setDeparture_seatsBooked(base.getDeparture_seatsBooked() + t.getDeparture_seatsBooked());
-			base.setArrival_seatsBooked(base.getArrival_seatsBooked() + t.getArrival_seatsBooked());
-		} else if (t.getDirection() == Constants.TransactionDirection.departure){
+		if (t.getType() == Constants.TransactionType.departure){
 			base.setDeparture_seatsBooked(base.getDeparture_seatsBooked() + t.getDeparture_seatsBooked());
 		} else{
-			base.setArrival_seatsBooked(base.getArrival_seatsBooked() + t.getArrival_seatsBooked());
+			base.setArrival_seatsBooked(base.getArrival_seatsBooked() + t.getDeparture_seatsBooked());
 		}
 		if (base.getDeparture_seatsBooked() > base.getDeparture_seatsNumber() || base.getArrival_seatsBooked() > base.getArrival_seatsNumber()){
 			throw new ValidationException("交易发起失败，没有那么多空余位置");
@@ -102,16 +99,13 @@ public class TransactionDaoService{
 			}
 			
 			Message base = CarpoolDaoMessage.getMessageById(t.getMessageId());
-			if (t.getDirection() == Constants.TransactionDirection.round){
-				base.setDeparture_seatsBooked(base.getDeparture_seatsBooked() + t.getDeparture_seatsBooked());
-				base.setArrival_seatsBooked(base.getArrival_seatsBooked() + t.getArrival_seatsBooked());
-			} else if (t.getDirection() == Constants.TransactionDirection.departure){
+			if (t.getType() == Constants.TransactionType.departure){
 				base.setDeparture_seatsBooked(base.getDeparture_seatsBooked() - t.getDeparture_seatsBooked());
 			} else{
-				base.setArrival_seatsBooked(base.getArrival_seatsBooked() - t.getArrival_seatsBooked());
+				base.setArrival_seatsBooked(base.getArrival_seatsBooked() - t.getDeparture_seatsBooked());
 			}
 			if (base.getDeparture_seatsBooked() < 0 || base.getArrival_seatsBooked() < 0){
-				throw new ValidationException("交易发起失败，没有那么多空余位置");
+				throw new ValidationException("交易取消失败，涉及座位数不匹配");
 			}
 			
 			t.setState(Constants.transactionState.cancelled);

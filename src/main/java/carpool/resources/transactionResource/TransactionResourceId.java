@@ -134,40 +134,5 @@ public class TransactionResourceId extends PseudoResource{
         this.addCORSHeader(); 
         return result;
     }
-    
-    
-    //now front end sending delete must expose authCode as a parameter, must not equal to initial authCode -1
-  //  @Delete
-  //  public Representation deleteTransaction() {
-  //  	boolean deleted = false;
-    	
-  //  	int id = -1;
-  //  	int transactionId = -1;
-		// try {
-		// 	transactionId = Integer.parseInt(this.getReqAttr("id"));
-		// 	id = Integer.parseInt(this.getQueryVal("userId"));
-			
-		// 	this.validateAuthentication(id);
-			
-	 //  		deleted = TransactionDaoService.deleteTransaction(transactionId, id);
-	 //  		if (deleted){
-		//       	setStatus(Status.SUCCESS_OK);
-		//       	DebugLog.d("@Delete with id: " + transactionId);
-		//     }
-		//     else{
-		//     	setStatus(Status.CLIENT_ERROR_CONFLICT);
-		//     }
-			
-  //      } catch (PseudoException e){
-  //      	this.addCORSHeader();
-		// 	return new StringRepresentation(this.doPseudoException(e));
-  //      } catch(Exception e){
-		// 	this.doException(e);
-		// }
-		
-	 //   this.addCORSHeader();  
-  //      return null;
-  //  }
-
 
 }
