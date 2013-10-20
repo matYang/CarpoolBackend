@@ -97,7 +97,7 @@ public class CarpoolDaoTransaction {
 		
 	}
 	
-	public static void UpdateTransactionInDatabase(Transaction transaction) throws TransactionNotFoundException, MessageNotFoundException, UserNotFoundException{
+	public static void updateTransactionInDatabase(Transaction transaction) throws TransactionNotFoundException, MessageNotFoundException, UserNotFoundException{
 		String query="UPDATE carpoolDAOTransaction SET departure_priceList=?,departure_Time=?,"+
 	"departure_primaryLocation=?,departure_customLocation=?,departure_customDepthIndex=?,arrival_priceList=?,arrival_Time=?,arrival_primaryLocation=?,"+
 	"arrival_customLocation=?,arrival_customDepthIndex=?,departure_seatsBooked=?,arrival_seatsBooked=?,totalPrice=?,direction=?,"+
@@ -197,9 +197,7 @@ public class CarpoolDaoTransaction {
 	}
 
 	private static Transaction createTransactionByResultSet(ResultSet rs) throws SQLException, UserNotFoundException, MessageNotFoundException {
-		Transaction transaction = null;
-		System.out.println(rs.getTimestamp("departure_Time"));
-		System.out.println(rs.getTimestamp("arrival_Time"));
+		Transaction transaction = null;		
 		User provider = CarpoolDaoUser.getUserById(rs.getInt("provider_Id"));
 		User customer = CarpoolDaoUser.getUserById(rs.getInt("customer_Id"));
 		Message msg = CarpoolDaoMessage.getMessageById(rs.getInt("message_Id"));
@@ -255,7 +253,11 @@ public class CarpoolDaoTransaction {
 		return tlist;
   }
 	
-	
+  public static void transactionMonitor(){
+	  String query="";
+	  
+	  
+  }
 	
 	
 	

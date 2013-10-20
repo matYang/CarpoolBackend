@@ -123,7 +123,7 @@ public class CarpoolTransactionTest {
 			CarpoolDaoTransaction.addTransactionToDatabase(transaction);
 			transaction = CarpoolDaoTransaction.getTransactionById(transaction.getTransactionId());
 			
-			if(transaction.getProvider().equals(provider)&&transaction.getCustomer().equals(customer)&&transaction.getDeparture_location().equals(dl)&&transaction.getArrival_location().equals(al)&&transaction.getCustomerNote().equals("cNote")&&transaction.getProviderNote().equals("pNote")&&transaction.getPaymentMethod().equals(p)){
+			if(transaction.getProvider().equals(provider)&&transaction.getCustomer().equals(customer)&&transaction.getDeparture_location().equals(dl)&&transaction.getArrival_location().equals(al)&&transaction.getCustomerNote().equals("cNote")&&transaction.getProviderNote().equals("pNote")&&transaction.getPaymentMethod().equals(p)&&transaction.getTotalPrice()==1){
 				//Passed;
 			}else{
 				fail();
@@ -137,20 +137,14 @@ public class CarpoolTransactionTest {
 		try{
 	    CarpoolDaoTransaction.addTransactionToDatabase(t2);
 		t2 = CarpoolDaoTransaction.getTransactionById(t2.getTransactionId());
-		ArrayList<Transaction> tlist = new ArrayList<Transaction>();
-		
-		System.out.println("---");
-		System.out.println(DateUtility.toSQLDateTime(transaction.getArrival_time()));
-		System.out.println(DateUtility.toSQLDateTime(t2.getArrival_time()));
-		System.out.println("---");
-		
-//		tlist = CarpoolDaoTransaction.getAllTranscations();	
-//		if(tlist !=null && tlist.size()==2&& tlist.get(0).equals(transaction)&&tlist.get(1).equals(t2)){
-//			//Passed;
-//			
-//		}else{
-//			fail();
-//		}
+		ArrayList<Transaction> tlist = new ArrayList<Transaction>();		
+		tlist = CarpoolDaoTransaction.getAllTranscations();	
+		if(tlist !=null && tlist.size()==2&& tlist.get(0).equals(transaction)&&tlist.get(1).equals(t2)){
+			//Passed;
+			
+		}else{
+			fail();
+		}
 		}catch(Exception e){
 			e.printStackTrace();
 			fail();
@@ -159,8 +153,7 @@ public class CarpoolTransactionTest {
 			ArrayList<Transaction> tlist = new ArrayList<Transaction>();
 			tlist = CarpoolDaoTransaction.getAllTransactionByMessageId(message.getMessageId());
 			if(tlist !=null && tlist.size()==2&& tlist.get(0).equals(transaction)&&tlist.get(1).equals(t2)){
-				//Passed;
-				
+				//Passed;				
 			}else{
 				fail();
 			}
@@ -168,8 +161,48 @@ public class CarpoolTransactionTest {
 			e.printStackTrace();
 			fail();
 		}
-		
-				
+		try{
+			ArrayList<Transaction> tlist = new ArrayList<Transaction>();
+			tlist = CarpoolDaoTransaction.getAllTransctionByUserId(provider.getUserId());
+			if(tlist !=null && tlist.size()==2&& tlist.get(0).equals(transaction)&&tlist.get(1).equals(t2)){
+				//Passed;				
+			}else{
+				fail();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		try{
+			ArrayList<Transaction> tlist = new ArrayList<Transaction>();
+			tlist = CarpoolDaoTransaction.getAllTransctionByUserId(customer.getUserId());
+			if(tlist !=null && tlist.size()==2&& tlist.get(0).equals(transaction)&&tlist.get(1).equals(t2)){
+				//Passed;				
+			}else{
+				fail();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		Message message2=new Message(provider.getUserId(),true
+				, dl,dt,timeSlot,dseats , priceList,al,
+				at,timeSlot, aseats,priceList,p,
+				"test",  type, genderRequirement);
+		message2 = CarpoolDaoMessage.addMessageToDatabase(message2);		 
+		TransactionDirection tD2 = Constants.TransactionDirection.fromInt(0);
+	    transaction = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",tD2,dt,timeSlot,dseats,at,timeSlot,aseats);
+	    try{
+	    	transaction = CarpoolDaoTransaction.addTransactionToDatabase(transaction);
+	    	if(transaction.getProvider().equals(provider)&& transaction.getCustomer().equals(customer)&&transaction.getMessage().equals(message2)&&transaction.getTotalPrice()==2){
+	    		//Passed;
+	    	}else{
+	    		
+	    	}
+	    }catch(Exception e){
+	    	e.printStackTrace();
+	    	fail();
+	    }
     }
     @Test
     public void testUpdateTransaction(){
@@ -229,9 +262,9 @@ public class CarpoolTransactionTest {
 		
 		//Test
 		try{
-			CarpoolDaoTransaction.UpdateTransactionInDatabase(transaction);
+			CarpoolDaoTransaction.updateTransactionInDatabase(transaction);
 			transaction = CarpoolDaoTransaction.getTransactionById(transaction.getTransactionId());
-			if(transaction.getCustomerEvaluation()==100&&transaction.getDirection().equals(Constants.TransactionDirection.fromInt(0))&&transaction.getProvider().equals(provider)&&transaction.getCustomer().equals(customer)&&transaction.getDeparture_location().equals(dl)&&transaction.getArrival_location().equals(al)&&transaction.getCustomerNote().equals("Good")&&transaction.getProviderNote().equals("pNote")&&transaction.getPaymentMethod().equals(p)){
+			if(transaction.getCustomerEvaluation()==100&&transaction.getDirection().equals(Constants.TransactionDirection.fromInt(0))&&transaction.getProvider().equals(provider)&&transaction.getCustomer().equals(customer)&&transaction.getDeparture_location().equals(dl)&&transaction.getArrival_location().equals(al)&&transaction.getCustomerNote().equals("Good")&&transaction.getProviderNote().equals("pNote")&&transaction.getPaymentMethod().equals(p)&&transaction.getTotalPrice()==2){
 				
 			}else{
 				fail();
