@@ -51,9 +51,9 @@ public class TransactionResource extends PseudoResource{
 			DebugLog.d("@Post::receive jsonTransaction: " +  jsonTransaction.toString());
 			
 			transaction = new Transaction(jsonTransaction.getInt("providerId"), jsonTransaction.getInt("customerId"), jsonTransaction.getInt("messageId"), Constants.paymentMethod.values()[jsonTransaction.getInt("paymentMethod")], 
-					jsonTransaction.getString("customerNote"), jsonTransaction.getString("providerNote"), Constants.TransactionDirection.values()[jsonTransaction.getInt("transactionDirection")],
+					jsonTransaction.getString("customerNote"), jsonTransaction.getString("providerNote"),
 					DateUtility.castFromAPIFormat(jsonTransaction.getString("departure_time")), Constants.DayTimeSlot.values()[jsonTransaction.getInt("departure_timeSlot")], jsonTransaction.getInt("departure_seatsBooked"),
-					DateUtility.castFromAPIFormat(jsonTransaction.getString("arrival_time")), Constants.DayTimeSlot.values()[jsonTransaction.getInt("arrival_timeSlot")], jsonTransaction.getInt("arrival_seatsBooked"));
+					Constants.TransactionType.values()[jsonTransaction.getInt("transactionType")]);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

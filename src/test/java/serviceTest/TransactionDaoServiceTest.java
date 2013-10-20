@@ -15,7 +15,7 @@ import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.common.DateUtility;
 import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
-import carpool.constants.Constants.TransactionDirection;
+import carpool.constants.Constants.TransactionType;
 import carpool.constants.Constants.gender;
 import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.paymentMethod;
@@ -64,10 +64,10 @@ public class TransactionDaoServiceTest {
 				time,timeSlot, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message);
-		TransactionDirection tD = Constants.TransactionDirection.fromInt(1);
-		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",tD,time,timeSlot,1,time,timeSlot,1);
-		Transaction transaction2 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",tD,time,timeSlot,1,time,timeSlot,1);
-		Transaction transaction3 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",tD,time,timeSlot,1,time,timeSlot,1);
+		TransactionType tD = Constants.TransactionType.fromInt(1);
+		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",time,timeSlot,1,tD);
+		Transaction transaction2 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",time,timeSlot,1,tD);
+		Transaction transaction3 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",time,timeSlot,1,tD);
 		//Test
 		try{
 			transaction = TransactionDaoService.createNewTransaction(transaction);
