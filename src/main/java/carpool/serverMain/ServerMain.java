@@ -74,18 +74,7 @@ public class ServerMain {
 
 
 	public static void main(String... args) throws Exception {
-		/*
-		boolean lol = false;
-		gender g = gender.male;
-		JSONObject json = new JSONObject(lol);
-		json.put("lol", g);
-		System.out.println(json);
-		
-		ArrayList<String> lols = new ArrayList<String>();
-		lols.add("1321");
-		lols.add("das");
-		System.out.println(JSONFactory.toJSON_arr_str(lols));
-		*/
+
 		DebugLog.d("Excuting");
 		// Load server logic
 		try {
@@ -95,9 +84,8 @@ public class ServerMain {
 			//log.error("Failed to start server", e);
 		}
 		
-		//clocked cleaner, clocked to run at 3:00AM, cleans schedules finished before 2:00AM
-		//Thread thread = new CleanThreadService();
-		//thread.start();
+		Thread thread = new CleanThreadService();
+		thread.start();
 	}
 
 }

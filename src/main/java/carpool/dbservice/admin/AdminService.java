@@ -1,6 +1,8 @@
 package carpool.dbservice.admin;
 
 import carpool.carpoolDAO.*;
+import carpool.cleanRoutineTask.MessageCleaner;
+import carpool.cleanRoutineTask.TransactionCleaner;
 import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.transactionState;
 import carpool.constants.Constants.userState;
@@ -32,11 +34,11 @@ public class AdminService {
 	}
 	
 	public static void forceMessageClean(){
-		
+		MessageCleaner.Clean();
 	}
 	
 	public static void forceTransactionMonitoring(){
-		
+		TransactionCleaner.Clean();
 	}
 
 }

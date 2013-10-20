@@ -19,7 +19,7 @@ import org.junit.Test;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoUser;
-import carpool.clean.MessageCleaner;
+import carpool.cleanRoutineTask.MessageCleaner;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.HelperOperator;

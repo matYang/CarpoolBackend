@@ -9,7 +9,7 @@ import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoTransaction;
 import carpool.carpoolDAO.CarpoolDaoUser;
-import carpool.clean.TransactionCleaner;
+import carpool.cleanRoutineTask.TransactionCleaner;
 import carpool.common.DateUtility;
 import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
