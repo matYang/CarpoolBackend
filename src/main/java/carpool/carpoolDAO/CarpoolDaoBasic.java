@@ -53,7 +53,7 @@ public class CarpoolDaoBasic {
         String query0 = "SET FOREIGN_KEY_CHECKS=0 ";
         String query1 = "TRUNCATE TABLE User ";
         String query2 = "TRUNCATE TABLE Message ";
-        String query3 = "TRUNCATE TABLE carpoolDAOTransaction ";
+        String query3 = "TRUNCATE TABLE Transaction ";
         String query4 = "TRUNCATE TABLE SocialList ";
         String query5 = "TRUNCATE TABLE WatchList ";
         String query6 = "TRUNCATE TABLE Notification ";
