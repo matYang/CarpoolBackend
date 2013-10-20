@@ -85,10 +85,9 @@ public class TransactionResourceId extends PseudoResource{
         int transactionId = -1;
         int stateIndex = -1;
         JSONObject newJsonTransaction = new JSONObject();
-        Transaction transaction = new Transaction();
+        Transaction transaction = null;
         
 		try {
-			this.checkEntity(entity);
 			
 			transactionId = Integer.parseInt(this.getReqAttr("id"));
 			userId = Integer.parseInt(this.getQueryVal("userId"));
@@ -100,24 +99,16 @@ public class TransactionResourceId extends PseudoResource{
 			
 	        if (stateChangeAction != null){
 	        	switch(stateChangeAction){
-	        		case confirm:
-	        			transaction = TransactionDaoService.confirmTransaction(transactionId, userId);
-	        			break;
-	        			
-	        		case refuse:
-	        			transaction = TransactionDaoService.refuseTransaction(transactionId, userId);
-	        			break;
-	        			
 	        		case cancel:
 	        			transaction = TransactionDaoService.cancelTransaction(transactionId, userId);
 	        			break;
 	        			
-	        		case report:
-	        			transaction = TransactionDaoService.reportTransaction(transactionId, userId);
-	        			break;
+	        		 case report:
+	        		 	transaction = TransactionDaoService.reportTransaction(transactionId, userId);
+	        		 	break;
 	        			
 	        		case evaluate:
-	        			int score = Integer.parseInt(java.net.URLDecoder.decode(getQuery().getValues("score"),"utf-8"));
+	        			int score = Integer.parseInt(this.getQueryVal("score"));
 	        			transaction = TransactionDaoService.evaluateTransaction(transactionId, userId, score);
 	        			break;
 	        			
@@ -146,37 +137,37 @@ public class TransactionResourceId extends PseudoResource{
     
     
     //now front end sending delete must expose authCode as a parameter, must not equal to initial authCode -1
-    @Delete
-    public Representation deleteTransaction() {
-    	boolean deleted = false;
+  //  @Delete
+  //  public Representation deleteTransaction() {
+  //  	boolean deleted = false;
     	
-    	int id = -1;
-    	int transactionId = -1;
-		try {
-			transactionId = Integer.parseInt(this.getReqAttr("id"));
-			id = Integer.parseInt(this.getQueryVal("userId"));
+  //  	int id = -1;
+  //  	int transactionId = -1;
+		// try {
+		// 	transactionId = Integer.parseInt(this.getReqAttr("id"));
+		// 	id = Integer.parseInt(this.getQueryVal("userId"));
 			
-			this.validateAuthentication(id);
+		// 	this.validateAuthentication(id);
 			
-	   		deleted = TransactionDaoService.deleteTransaction(transactionId, id);
-	   		if (deleted){
-		      	setStatus(Status.SUCCESS_OK);
-		      	DebugLog.d("@Delete with id: " + transactionId);
-		    }
-		    else{
-		    	setStatus(Status.CLIENT_ERROR_CONFLICT);
-		    }
+	 //  		deleted = TransactionDaoService.deleteTransaction(transactionId, id);
+	 //  		if (deleted){
+		//       	setStatus(Status.SUCCESS_OK);
+		//       	DebugLog.d("@Delete with id: " + transactionId);
+		//     }
+		//     else{
+		//     	setStatus(Status.CLIENT_ERROR_CONFLICT);
+		//     }
 			
-        } catch (PseudoException e){
-        	this.addCORSHeader();
-			return new StringRepresentation(this.doPseudoException(e));
-        } catch(Exception e){
-			this.doException(e);
-		}
+  //      } catch (PseudoException e){
+  //      	this.addCORSHeader();
+		// 	return new StringRepresentation(this.doPseudoException(e));
+  //      } catch(Exception e){
+		// 	this.doException(e);
+		// }
 		
-	    this.addCORSHeader();  
-        return null;
-    }
+	 //   this.addCORSHeader();  
+  //      return null;
+  //  }
 
 
 }

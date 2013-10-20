@@ -58,6 +58,9 @@ public class RoutingService extends Application {
 		String DMSearchResourcePrefix = "/search";
 		//	API for DM message change gender: /api/v1.0/dianming/search
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMSearchResourcePrefix, DMSearchResource.class);
+		String DMTransactionResourcePrefix = "/transaction";
+		//	API for DM message change gender: /api/v1.0/dianming/transacion/:id
+		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMTransactionResourcePrefix, DMTransactionResource.class);
 		
 		
 		/** -------------------- APIs for transaction module -------------- **/

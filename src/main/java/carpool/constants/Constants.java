@@ -84,7 +84,7 @@ public class Constants {
     }
 
     public static enum transactionStateChangeAction{
-    	init(0), cancel(1), report(2);
+    	init(0), cancel(1), report(2), evaluate(3);
         public int code;
         transactionStateChangeAction(int code){
             this.code = code;
@@ -176,6 +176,18 @@ public class Constants {
         }
     }
     
+    public static enum TransactionType{
+    	departure(0), arrival(1);
+    	public int code;
+    	TransactionType(int code){
+            this.code = code;
+        }
+        private final static TransactionType[] map = TransactionType.values();
+        public static TransactionType fromInt(int n){
+            return map[n];
+        }
+    }
+    
     public static enum DayTimeSlot{
     	all(0), morning(1), afternoon(2), night(3), specific(4);
     	public int code;
@@ -186,18 +198,6 @@ public class Constants {
         public static DayTimeSlot fromInt(int n){
             return map[n];
         }
-    }
-    
-    public static enum TransactionDirection{
-    	round(0), departure(1), arrival(2);
-    	public int code;
-    	TransactionDirection(int code){
-    		this.code = code;
-    	}
-    	private final static TransactionDirection[] map = TransactionDirection.values();
-    	public static TransactionDirection fromInt(int n){
-    		return map[n];
-    	}
     }
 
 

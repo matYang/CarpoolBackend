@@ -26,6 +26,9 @@ import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
+import carpool.exception.message.MessageNotFoundException;
+import carpool.exception.transaction.TransactionNotFoundException;
+import carpool.exception.user.UserNotFoundException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.model.representation.LocationRepresentation;
@@ -39,7 +42,7 @@ public class TransactionResource extends PseudoResource{
 
 	//passes received json into message
 	//note that this parseJSON
-	protected Transaction parseJSON(Representation entity, int userId){
+	protected Transaction parseJSON(Representation entity){
 		JSONObject jsonTransaction = null;
 
 		Transaction transaction = null;
@@ -47,9 +50,10 @@ public class TransactionResource extends PseudoResource{
 			jsonTransaction = (new JsonRepresentation(entity)).getJsonObject();
 			DebugLog.d("@Post::receive jsonTransaction: " +  jsonTransaction.toString());
 			
-			transaction = new Transaction(jsonTransaction.getInt("initUserId"), jsonTransaction.getInt("targetUserId"), jsonTransaction.getInt("messageId"), Constants.paymentMethod.values()[jsonTransaction.getInt("paymentMethod")], 
-					jsonTransaction.getInt("price"), jsonTransaction.getString("requestInfo"),  DateUtility.castFromAPIFormat(jsonTransaction.getString("startTime")), 
-					DateUtility.castFromAPIFormat(jsonTransaction.getString("endTime")), new LocationRepresentation(jsonTransaction.getJSONObject("location")));
+			transaction = new Transaction(jsonTransaction.getInt("providerId"), jsonTransaction.getInt("customerId"), jsonTransaction.getInt("messageId"), Constants.paymentMethod.values()[jsonTransaction.getInt("paymentMethod")], 
+					jsonTransaction.getString("customerNote"), jsonTransaction.getString("providerNote"), Constants.TransactionDirection.values()[jsonTransaction.getInt("transactionDirection")],
+					DateUtility.castFromAPIFormat(jsonTransaction.getString("departure_time")), Constants.DayTimeSlot.values()[jsonTransaction.getInt("departure_timeSlot")], jsonTransaction.getInt("departure_seatsBooked"),
+					DateUtility.castFromAPIFormat(jsonTransaction.getString("arrival_time")), Constants.DayTimeSlot.values()[jsonTransaction.getInt("arrival_timeSlot")], jsonTransaction.getInt("arrival_seatsBooked"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -65,7 +69,14 @@ public class TransactionResource extends PseudoResource{
 	 */
 	public Representation getAllTransactions() {
 		
-		ArrayList<Transaction> allTransactions = TransactionDaoService.getAllTransactions();
+		ArrayList<Transaction> allTransactions;
+		try {
+			allTransactions = TransactionDaoService.getAllTransactions();
+		} catch (PseudoException e) {
+			this.addCORSHeader();
+			return new StringRepresentation(this.doPseudoException(e));
+		}
+		
 		JSONArray jsonArray = new JSONArray();
 		
 		if (allTransactions == null){
@@ -95,20 +106,16 @@ public class TransactionResource extends PseudoResource{
 			id = Integer.parseInt(this.getQueryVal("userId"));
 			this.validateAuthentication(id);
 			
-	        Transaction transaction = parseJSON(entity, id);
+	        Transaction transaction = parseJSON(entity);
 	        if (transaction != null){
-	        	if (transaction.getInitUserId() == id){
+	        	if (transaction.getProviderId() == id || transaction.getCustomerId() == id){
 		        	//check the state of the message, and if the transaction matches the message
 	        		Message message = MessageDaoService.getMessageById(transaction.getMessageId());
 	        		if (message.validate()){
 	        			Transaction creationFeedBack = TransactionDaoService.createNewTransaction(transaction);
-			            if (creationFeedBack != null){
 			                newJsonTransaction = JSONFactory.toJSON(creationFeedBack);
 			                setStatus(Status.SUCCESS_OK);
-			            }
-			            else{
-			            	setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-			            }
+
 	        		}
 	        		else{
 	        			setStatus(Status.CLIENT_ERROR_CONFLICT);

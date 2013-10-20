@@ -220,7 +220,7 @@ public class CarpoolDaoTransaction {
 		}
 	}
 	
-  public static ArrayList<Transaction> getAllTransctionByUserId(int userId) throws UserNotFoundException, MessageNotFoundException{	  
+  public static ArrayList<Transaction> getAllTransactionByUserId(int userId) throws UserNotFoundException, MessageNotFoundException{	  
 	  String query = "SELECT * FROM carpoolDAOTransaction where provider_Id = ? OR customer_Id = ?;";
 	  ArrayList<Transaction> tlist = new ArrayList<Transaction>();
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){		
