@@ -78,7 +78,7 @@ public class TransactionDaoService{
 		}
 		
 		t = CarpoolDaoTransaction.addTransactionToDatabase(newTransaction);
-		
+		CarpoolDaoMessage.UpdateMessageInDatabase(base);
 		// send Transaction Pending Notification
 //		Notification n = new Notification(-1, Constants.notificationType.on_transaction, Constants.notificationEvent.transactionPending,
 //				t.getInitUserId(), t.getInitUserName(), 0, t.getTransactionId(), t.getTargetUserId(),
@@ -116,6 +116,7 @@ public class TransactionDaoService{
 			
 			t.setState(Constants.transactionState.cancelled);
 			CarpoolDaoTransaction.UpdateTransactionInDatabase(t);
+			CarpoolDaoMessage.UpdateMessageInDatabase(base);
 			//send notifications
 			
 		}else{

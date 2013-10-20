@@ -13,7 +13,7 @@ import carpool.common.DateUtility;
 import carpool.common.HelperOperator;
 import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
-import carpool.constants.Constants.TransactionDirection;
+import carpool.constants.Constants.TransactionType;
 import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.paymentMethod;
 import carpool.constants.Constants.transactionState;
@@ -21,7 +21,6 @@ import carpool.exception.ValidationException;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoValidatable;
 import carpool.model.representation.LocationRepresentation;
-
 
 
 
@@ -45,22 +44,15 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 	private int customerEvaluation;
 	private int providerEvaluation;
 	
-	
 	//transactions have their data set upon initialization, further change to the base message itself will not effect transaction details
-	private TransactionDirection direction;
 	private LocationRepresentation departure_location;
+	private LocationRepresentation arrival_location;
 	private Calendar departure_time;
 	private DayTimeSlot departure_timeSlot;
 	private int departure_seatsBooked;
 	private ArrayList<Integer> departure_priceList;
 	
-	private LocationRepresentation arrival_location;
-	private Calendar arrival_time;
-	private DayTimeSlot arrival_timeSlot;
-	private int arrival_seatsBooked;
-	private ArrayList<Integer> arrival_priceList; 
-	
-	
+	private TransactionType type;
 	private int totalPrice;
 	private transactionState state;
 	
@@ -68,12 +60,13 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 	private boolean historyDeleted;
 
 	
+	@SuppressWarnings("unused")
 	private Transaction(){}
 	
-	//this contructor is used for transaction initialization
+	//this constructor is used for transaction initialization
 	public Transaction(int providerId, int customerId, int messageId, paymentMethod p, String cNote, String pNote, 
-			TransactionDirection tD, Calendar d_t, DayTimeSlot d_ts, int d_seats, Calendar a_t, DayTimeSlot a_ts, int a_seats){
-		
+			 Calendar d_t, DayTimeSlot d_ts, int d_seats, TransactionType type){
+		super();
 		this.providerId = providerId;
 		this.customerId = customerId;
 		this.messageId = messageId;
@@ -88,18 +81,14 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		this.customerEvaluation = 0;
 		this.providerEvaluation = 0;
 		
-		this.direction = tD;
 		this.departure_location = null;
+		this.arrival_location = null;
 		this.departure_time = d_t;
 		this.departure_timeSlot = d_ts;
 		this.departure_seatsBooked = d_seats;
 		this.departure_priceList = new ArrayList<Integer>();
-		this.arrival_location = null;
-		this.arrival_time = a_t;
-		this.arrival_timeSlot = a_ts;
-		this.arrival_seatsBooked = a_seats;
-		this.arrival_priceList = new ArrayList<Integer>();
 		
+		this.type = type;
 		this.totalPrice = 0;
 		this.state = transactionState.init;
 		this.creationTime = Calendar.getInstance();
@@ -107,17 +96,15 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 	}
 	
 
+	
 	public Transaction(int transactionId, int providerId, int customerId,
-			int messageId, User provider, User customer, Message message,
+			int messageId,
 			carpool.constants.Constants.paymentMethod paymentMethod,
 			String customerNote, String providerNote, int customerEvaluation,
-			int providerEvaluation, TransactionDirection td,
-			LocationRepresentation departure_location, Calendar departure_time,
-			DayTimeSlot departure_timeSlot, 
-			int departure_seatsBooked, ArrayList<Integer> departure_priceList,
-			LocationRepresentation arrival_location, Calendar arrival_time,
-			DayTimeSlot arrival_timeSlot, 
-			int arrival_seatsBooked, ArrayList<Integer> arrival_priceList,
+			int providerEvaluation, LocationRepresentation departure_location,
+			LocationRepresentation arrival_location, Calendar departure_time,
+			DayTimeSlot departure_timeSlot, int departure_seatsBooked,
+			ArrayList<Integer> departure_priceList, TransactionType type,
 			int totalPrice, transactionState state, Calendar creationTime,
 			boolean historyDeleted) {
 		super();
@@ -125,32 +112,25 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		this.providerId = providerId;
 		this.customerId = customerId;
 		this.messageId = messageId;
-		this.provider = provider;
-		this.customer = customer;
-		this.message = message;
 		this.paymentMethod = paymentMethod;
 		this.customerNote = customerNote;
 		this.providerNote = providerNote;
 		this.customerEvaluation = customerEvaluation;
 		this.providerEvaluation = providerEvaluation;
-		this.direction = td;
 		this.departure_location = departure_location;
+		this.arrival_location = arrival_location;
 		this.departure_time = departure_time;
 		this.departure_timeSlot = departure_timeSlot;
 		this.departure_seatsBooked = departure_seatsBooked;
 		this.departure_priceList = departure_priceList;
-		this.arrival_location = arrival_location;
-		this.arrival_time = arrival_time;
-		this.arrival_timeSlot = arrival_timeSlot;
-		this.arrival_seatsBooked = arrival_seatsBooked;
-		this.arrival_priceList = arrival_priceList;
+		this.type = type;
 		this.totalPrice = totalPrice;
 		this.state = state;
 		this.creationTime = creationTime;
 		this.historyDeleted = historyDeleted;
 	}
 	
-	
+
 	public int getTransactionId() {
 		return transactionId;
 	}
@@ -247,20 +227,20 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		this.providerEvaluation = providerEvaluation;
 	}
 
-	public TransactionDirection getDirection() {
-		return direction;
-	}
-
-	public void setDirection(TransactionDirection direction) {
-		this.direction = direction;
-	}
-
 	public LocationRepresentation getDeparture_location() {
 		return departure_location;
 	}
 
 	public void setDeparture_location(LocationRepresentation departure_location) {
 		this.departure_location = departure_location;
+	}
+
+	public LocationRepresentation getArrival_location() {
+		return arrival_location;
+	}
+
+	public void setArrival_location(LocationRepresentation arrival_location) {
+		this.arrival_location = arrival_location;
 	}
 
 	public Calendar getDeparture_time() {
@@ -295,44 +275,12 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		this.departure_priceList = departure_priceList;
 	}
 
-	public LocationRepresentation getArrival_location() {
-		return arrival_location;
+	public TransactionType getType() {
+		return type;
 	}
 
-	public void setArrival_location(LocationRepresentation arrival_location) {
-		this.arrival_location = arrival_location;
-	}
-
-	public Calendar getArrival_time() {
-		return arrival_time;
-	}
-
-	public void setArrival_time(Calendar arrival_time) {
-		this.arrival_time = arrival_time;
-	}
-
-	public DayTimeSlot getArrival_timeSlot() {
-		return arrival_timeSlot;
-	}
-
-	public void setArrival_timeSlot(DayTimeSlot arrival_timeSlot) {
-		this.arrival_timeSlot = arrival_timeSlot;
-	}
-
-	public int getArrival_seatsBooked() {
-		return arrival_seatsBooked;
-	}
-
-	public void setArrival_seatsBooked(int arrival_seatsBooked) {
-		this.arrival_seatsBooked = arrival_seatsBooked;
-	}
-
-	public ArrayList<Integer> getArrival_priceList() {
-		return arrival_priceList;
-	}
-
-	public void setArrival_priceList(ArrayList<Integer> arrival_priceList) {
-		this.arrival_priceList = arrival_priceList;
+	public void setType(TransactionType type) {
+		this.type = type;
 	}
 
 	public int getTotalPrice() {
@@ -380,17 +328,15 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 			jsonTransaction.put("providerNote", this.providerNote);
 			jsonTransaction.put("customerEvaluation", this.customerEvaluation);
 			jsonTransaction.put("providerEvaluation", this.providerEvaluation);
-			jsonTransaction.put("direction", this.direction.code);
+			
 			jsonTransaction.put("departure_location", this.departure_location.toJSON());
+			jsonTransaction.put("arrival_location", this.arrival_location.toJSON());
 			jsonTransaction.put("departure_time", DateUtility.castToAPIFormat(this.departure_time));
 			jsonTransaction.put("departure_timeSlot", this.departure_timeSlot.code);
 			jsonTransaction.put("departure_seatsBooked", this.departure_seatsBooked);
 			jsonTransaction.put("daparture_priceList", new JSONArray(this.departure_priceList));
-			jsonTransaction.put("arrival_location", this.arrival_location.toJSON());
-			jsonTransaction.put("arrival_time", DateUtility.castToAPIFormat(this.arrival_time));
-			jsonTransaction.put("arrival_timeSlot", this.arrival_timeSlot.code);
-			jsonTransaction.put("arrival_seatsBooked", this.arrival_seatsBooked);
-			jsonTransaction.put("arrival_priceList", new JSONArray(this.arrival_priceList));
+
+			jsonTransaction.put("type", this.type.code);
 			jsonTransaction.put("totalPrice", this.totalPrice);
 			jsonTransaction.put("state", this.state.code);
 			jsonTransaction.put("creationTime", DateUtility.castToAPIFormat(this.creationTime));
@@ -404,7 +350,7 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		return  jsonTransaction;
 	}
 	
-	
+
 	@Override
 	public String toString() {
 		return "Transaction [category=" + category + ", transactionId="
@@ -414,18 +360,16 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 				+ ", message=" + message + ", paymentMethod=" + paymentMethod
 				+ ", customerNote=" + customerNote + ", providerNote="
 				+ providerNote + ", customerEvaluation=" + customerEvaluation
-				+ ", providerEvaluation=" + providerEvaluation + ", direction="
-				+ direction + ", departure_location=" + departure_location
+				+ ", providerEvaluation=" + providerEvaluation
+				+ ", departure_location=" + departure_location
+				+ ", arrival_location=" + arrival_location
 				+ ", departure_time=" + departure_time
 				+ ", departure_timeSlot=" + departure_timeSlot
 				+ ", departure_seatsBooked=" + departure_seatsBooked
-				+ ", departure_priceList=" + departure_priceList
-				+ ", arrival_location=" + arrival_location + ", arrival_time="
-				+ arrival_time + ", arrival_timeSlot=" + arrival_timeSlot
-				+ ", arrival_seatsBooked=" + arrival_seatsBooked
-				+ ", arrival_priceList=" + arrival_priceList + ", totalPrice="
-				+ totalPrice + ", state=" + state + ", creationTime="
-				+ creationTime + ", historyDeleted=" + historyDeleted + "]";
+				+ ", departure_priceList=" + departure_priceList + ", type="
+				+ type + ", totalPrice=" + totalPrice + ", state=" + state
+				+ ", creationTime=" + creationTime + ", historyDeleted="
+				+ historyDeleted + "]";
 	}
 
 	public boolean equals(Transaction t){
@@ -442,18 +386,14 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 					this.customerNote.equals(t.customerNote) &&
 					this.providerNote.equals(t.providerNote) &&
 					this.customerEvaluation == t.customerEvaluation &&
-					this.providerEvaluation == t.providerEvaluation &&
-					this.direction == t.direction &&
+					this.providerEvaluation == t.providerEvaluation &&	
 					this.departure_location.equals(t.departure_location) &&
 					this.departure_time.getTime().toString().equals(t.departure_time.getTime().toString()) &&
 					this.departure_timeSlot == t.departure_timeSlot &&
 					this.departure_seatsBooked == t.departure_seatsBooked &&
 					HelperOperator.isArrayListEqual(this.departure_priceList, t.departure_priceList) && 
 					this.arrival_location.equals(t.arrival_location) &&
-					this.arrival_time.getTime().toString().equals(t.arrival_time.getTime().toString()) &&
-					this.arrival_timeSlot == t.arrival_timeSlot &&
-					this.arrival_seatsBooked == t.arrival_seatsBooked &&
-					HelperOperator.isArrayListEqual(this.arrival_priceList, t.arrival_priceList) && 
+					this.type == t.type &&
 					this.totalPrice == t.totalPrice &&
 					this.state == t.state &&
 					this.historyDeleted == t.historyDeleted;
