@@ -62,13 +62,13 @@ public class DaoNotificationTest {
 		carpoolDaoMessage.addMessageToDatabase(default2);
 		DaoTransaction.addTransactionToDatabase(t);
 		
-		Notification n = new Notification(1, Constants.notificationType.on_message, Constants.notificationEvent.followed,
+		Notification n = new Notification(1, Constants.notificationType.on_message, Constants.NotificationEvent.followed,
 				1, "initUserName", 1, 1, 1, "summary", calender, false, true);
 		DaoNotification.addNotificationToDatabase(n);
 		assertTrue(DaoNotification.getALL().size()==1);
 		
 		assertTrue(n.getNotificationType()==Constants.notificationType.on_message);
-		assertTrue(n.getNotificationEvent()==Constants.notificationEvent.followed);
+		assertTrue(n.getNotificationEvent()==Constants.NotificationEvent.followed);
 		assertTrue(n.getInitUserId()==1);
 		assertTrue(n.getInitUserName().equals("initUserName"));
 		assertTrue(n.getMessageId()==1);
@@ -84,7 +84,7 @@ public class DaoNotificationTest {
 			assertTrue(false);
 		}
 		n.setNotificationType(Constants.notificationType.on_transaction);
-		n.setNotificationEvent(Constants.notificationEvent.followerNewPost);
+		n.setNotificationEvent(Constants.NotificationEvent.followerNewPost);
 		n.setInitUserId(2);
 		n.setInitUserName("initUserName2");
 		n.setMessageId(2);
@@ -105,7 +105,7 @@ public class DaoNotificationTest {
 		}
 		
 		assertTrue(n.getNotificationType()==Constants.notificationType.on_transaction);
-		assertTrue(n.getNotificationEvent()==Constants.notificationEvent.followerNewPost);
+		assertTrue(n.getNotificationEvent()==Constants.NotificationEvent.followerNewPost);
 		assertTrue(n.getInitUserId()==2);
 		assertTrue(n.getInitUserName().equals("initUserName2"));
 		assertTrue(n.getMessageId()==2);
@@ -127,9 +127,9 @@ public class DaoNotificationTest {
 		} catch (NotificationNotFoundException e) {
 		}
 		
-		Notification n1 = new Notification(1, Constants.notificationType.on_message, Constants.notificationEvent.followed,
+		Notification n1 = new Notification(1, Constants.notificationType.on_message, Constants.NotificationEvent.followed,
 				1, "initUserName", 1, 1, 1, "summary", calender, false, true);
-		Notification n2 = new Notification(1, Constants.notificationType.on_message, Constants.notificationEvent.followed,
+		Notification n2 = new Notification(1, Constants.notificationType.on_message, Constants.NotificationEvent.followed,
 				1, "initUserName", 1, 1, 1, "summary", calender, false, true);
 		ArrayList<Notification> nList = new ArrayList<Notification>();
 		nList.add(n1);

@@ -46,9 +46,9 @@ public class NotificationDaoServiceTest {
 	private Transaction t = new Transaction(0, 2, 1, "initUserImgPath", "initUserName", 10,
 			"targetUserImgPath", "targetUserName", 2,-5,-6, 1, "messageNote", Constants.paymentMethod.offline, 3, "requestInfo",
 			"responseInfo", calender, calender, new LocationRepresentation("a a a a"), false, true, Constants.transactionState.aboutToStart, true, calender);
-	private Notification n = new Notification(1, Constants.notificationType.on_message, Constants.notificationEvent.followed,
+	private Notification n = new Notification(1, Constants.notificationType.on_message, Constants.NotificationEvent.followed,
 			1, "initUserName", 1, 1, 1, "summary", calender, false, false);
-	private Notification n2 = new Notification(1, Constants.notificationType.on_message, Constants.notificationEvent.followed,
+	private Notification n2 = new Notification(1, Constants.notificationType.on_message, Constants.NotificationEvent.followed,
 			1, "initUserName", 1, 1, 1, "summary", calender, false, false);
 	
 	@Test

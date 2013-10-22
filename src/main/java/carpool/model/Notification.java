@@ -7,234 +7,211 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DateUtility;
-import carpool.constants.Constants.notificationEvent;
-import carpool.constants.Constants.notificationType;
+import carpool.common.HelperOperator;
+import carpool.constants.Constants.NotificationEvent;
+import carpool.constants.Constants.NotificationState;
+import carpool.exception.ValidationException;
 import carpool.interfaces.PseudoModel;
+import carpool.interfaces.PseudoValidatable;
 
-
-
-
-public class Notification implements PseudoModel{
+public class Notification implements PseudoModel, PseudoValidatable, Comparable<Notification>{
 		
 	private int notificationId;
-	private notificationType notificationType;
-	private notificationEvent notificationEvent;
+	private NotificationEvent notificationEvent;
+	private int targetUserId;
 	
 	private int initUserId;
-	private String initUserName;
 	private int messageId;
-	private int transcationId;
+	private int transactionId;
 	
-	private int targetUserId;
-	private String summary; 
-
+	private User initUser;
+	private Message message;
+	private Transaction transaction;
+	
+	private NotificationState state;
 	private Calendar creationTime;
-	private boolean checked;
 	private boolean historyDeleted;
 	
+	
+	@SuppressWarnings("unused")
+	private Notification(){}
+	
+	
 	//default constructor, used for serialization
-	public Notification() {
+	public Notification(NotificationEvent event, int targetUserId) {
 		this.notificationId = -1;
-		this.notificationType = notificationType.on_user;
-		this.notificationEvent = notificationEvent.followed;
-		this.initUserId = -1;
-		this.initUserName = "default";
-		this.messageId = -1;
-		this.transcationId = -1;
+		this.notificationEvent = NotificationEvent.transactionInit;
 		this.targetUserId = -1;
-		this.summary = "default";
+		
+		this.initUserId = -1;
+		this.messageId = -1;
+		this.transactionId = -1;
+		
+		this.initUser = null;
+		this.message = null;
+		this.transaction = null;
+		
+		this.state = NotificationState.unread;
 		this.creationTime = Calendar.getInstance();
-		this.checked = false;
-		this.historyDeleted = false;
-	}
-	
-	
-	/**
-	 * notification initialization constructor, it is guaranteed that when the notification is initialized, all necessary parameters will be present
-	 * This constructor for the initialization of the notification, messageId and transactionId are optional parameters whose default value should be -1, passed in depending on notification type
-	 * if type == on_user, only user initUserId (on_user only corresponds to followed in notificationEvents), leave mId and tId as -1
-	 * if type == on_message, pass in both initUserId and messageId, leave tId as -1
-	 * if type == on_transaction, pass in both initUserId and transactionId, leave mId as -1
-	 * @param notificationType
-	 * @param notificationEvent
-	 * @param initUserId
-	 * @param targetUserId
-	 */
-	public Notification(notificationType notificationType, notificationEvent notificationEvent, int initUserId, int messageId, int transactionId, int targetUserId) {
-		//TODO not sure if this is even need here, depends on SQL situations
-		this.notificationId = -1;
-		this.notificationType = notificationType;
-		this.notificationEvent = notificationEvent;
-		this.initUserId = initUserId;
-		this.initUserName = "default";
-		this.messageId = messageId;
-		this.transcationId = transactionId;
-		this.targetUserId = targetUserId;
-		this.summary = "default";
-		this.creationTime = Calendar.getInstance();
-		this.checked = false;
 		this.historyDeleted = false;
 	}
 
-
-	/**	
-	 * full constructor
-	 * This constructor is used for sending notification back to the user, 
-	 * @param notificationId
-	 * @param notificationType
-	 * @param notificationEvent
-	 * @param initUserId
-	 * @param targetUserId
-	 * @param messageId
-	 * @param transcationId
-	 * @param summary     TODO note this is important, summary is not stored in SQL because notifications might be initialized when the operations are all id-based where objects would have to be fetched from sql which is slow, 
-	 * and storing this string parameter will cause problems if user changes his name or what, and it is a waste of space
-	 * instead, I think it is a better idea to dynamically generate it, the formats are as follows:
-	 * if type == on_user, make the summary empty
-	 * if type == on_message, follow the specification of DMMessage::toNotificationSummary
-	 * if type == on_transaction, follow the specification of Transaction::toNotificationSummary
-	 * note those methods are more like examples, retrieving the entire object out and call the toNotificationSummary method would not be efficient
-	 * @param createTime
-	 * @param checked
-	 * @param state
-	 * @param historyDeleted
-	 */
-	public Notification(int notificationId, notificationType notificationType, notificationEvent notificationEvent, int initUserId, String initUserName, int messageId, int transcationId, int targetUserId, String summary, Calendar creationTime, boolean checked, boolean historyDeleted) {
+	public Notification(int notificationId,
+			NotificationEvent notificationEvent, int targetUserId,
+			int initUserId, int messageId, int transactionId,
+			NotificationState state, Calendar creationTime,
+			boolean historyDeleted) {
+		super();
 		this.notificationId = notificationId;
-		this.notificationType = notificationType;
 		this.notificationEvent = notificationEvent;
-		this.initUserId = initUserId;
-		this.initUserName = initUserName;
-		this.messageId = messageId;
-		this.transcationId = transcationId;
 		this.targetUserId = targetUserId;
-		this.summary = summary;
+		
+		this.initUserId = initUserId;
+		this.messageId = messageId;
+		this.transactionId = transactionId;
+		
+		this.initUser = null;
+		this.message = null;
+		this.transaction = null;
+		
+		this.state = state;
 		this.creationTime = creationTime;
-		this.checked = checked;
 		this.historyDeleted = historyDeleted;
 	}
-
 	
 	
-	@Override
-	public String toString() {
-		return "Notification [notificationId=" + notificationId + ", type="
-				+ notificationType + ", event=" + notificationEvent + ", initUserId=" + initUserId
-				+ ", initUserName=" + initUserName + ", messageId=" + messageId
-				+ ", transcationId=" + transcationId + ", targetUserId="
-				+ targetUserId + ", summary=" + summary + ", creationTime="
-				+ creationTime + ", checked=" + checked + ", historyDeleted="
-				+ historyDeleted + "]";
-	}
-
-
 	public int getNotificationId() {
 		return notificationId;
 	}
+
 	public void setNotificationId(int notificationId) {
 		this.notificationId = notificationId;
 	}
-	
-	
-	public int getInitUserId() {
-		return initUserId;
-	}
-	public void setInitUserId(int initUserId) {
-		this.initUserId = initUserId;
-	}
-	
-	public int getTargetUserId() {
-		return targetUserId;
-	}
-	public void setTargetUserId(int targetUserId) {
-		this.targetUserId = targetUserId;
-	}
-	
-	public int getMessageId() {
-		return messageId;
-	}
-	public void setMessageId(int messageId) {
-		this.messageId = messageId;
-	}
-	
-	public int getTranscationId() {
-		return transcationId;
-	}
-	public void setTranscationId(int transcationId) {
-		this.transcationId = transcationId;
-	}
-	
-	public notificationType getNotificationType() {
-		return notificationType;
-	}
 
-
-	public void setNotificationType(notificationType type) {
-		this.notificationType = type;
-	}
-
-
-	public notificationEvent getNotificationEvent() {
+	public NotificationEvent getNotificationEvent() {
 		return notificationEvent;
 	}
 
-
-	public void setNotificationEvent(notificationEvent event) {
-		this.notificationEvent = event;
+	public void setNotificationEvent(NotificationEvent notificationEvent) {
+		this.notificationEvent = notificationEvent;
 	}
 
 
-	public String getInitUserName() {
-		return initUserName;
+	public int getTargetUserId() {
+		return targetUserId;
 	}
 
 
-	public void setInitUserName(String initUserName) {
-		this.initUserName = initUserName;
+	public void setTargetUserId(int targetUserId) {
+		this.targetUserId = targetUserId;
 	}
 
 
-	public String getSummary() {
-		return summary;
+	public int getInitUserId() {
+		return initUserId;
 	}
 
 
-	public void setSummary(String summary) {
-		this.summary = summary;
+	public void setInitUserId(int initUserId) {
+		this.initUserId = initUserId;
+	}
+
+
+	public int getMessageId() {
+		return messageId;
+	}
+
+
+	public void setMessageId(int messageId) {
+		this.messageId = messageId;
+	}
+
+
+	public int getTransactionId() {
+		return transactionId;
+	}
+
+
+	public void setTransactionId(int transactionId) {
+		this.transactionId = transactionId;
+	}
+
+
+	public User getInitUser() {
+		return initUser;
+	}
+
+
+	public void setInitUser(User initUser) {
+		this.initUser = initUser;
+	}
+
+
+	public Message getMessage() {
+		return message;
+	}
+
+
+	public void setMessage(Message message) {
+		this.message = message;
+	}
+
+
+	public Transaction getTransaction() {
+		return transaction;
+	}
+
+
+	public void setTransaction(Transaction transaction) {
+		this.transaction = transaction;
+	}
+
+
+	public NotificationState getState() {
+		return state;
+	}
+
+
+	public void setState(NotificationState state) {
+		this.state = state;
+	}
+
+
+	public boolean isHistoryDeleted() {
+		return historyDeleted;
+	}
+
+
+	public void setHistoryDeleted(boolean historyDeleted) {
+		this.historyDeleted = historyDeleted;
 	}
 
 
 	public Calendar getCreationTime() {
 		return creationTime;
 	}
-	public void setCreationTime(Calendar creationTime) {
-		this.creationTime = creationTime;
-	}
-	
-	public boolean isChecked() {
-		return checked;
-	}
-	public void setChecked(boolean checked) {
-		this.checked = checked;
-	}
-	
-	
-	public boolean isHistoryDeleted() {
-		return historyDeleted;
-	}
-	public void setHistoryDeleted(boolean historyDeleted) {
-		this.historyDeleted = historyDeleted;
-	}
-	
-	
+
 	public JSONObject toJSON(){
-		JSONObject jsonNotification = new JSONObject(this);
+		JSONObject jsonNotification = new JSONObject();
 		
 		try {
-			jsonNotification.put("creationTime", DateUtility.castToAPIFormat(this.getCreationTime()));
 			
-			jsonNotification.put("notificationType", this.getNotificationType());
-			jsonNotification.put("notificationEvent", this.getNotificationEvent());
+			jsonNotification.put("notificationId", this.notificationId);
+			jsonNotification.put("notificationEvent", this.notificationEvent.code);
+			jsonNotification.put("targetUserId", this.targetUserId);
+			
+			jsonNotification.put("initUserId",this.initUserId);
+			jsonNotification.put("messageId", this.messageId);
+			jsonNotification.put("transactionId", this.transactionId);
+			
+			jsonNotification.put("initUser", this.initUser != null ? this.initUser.toJSON() : new JSONObject());
+			jsonNotification.put("message", this.message != null ? this.message.toJSON() : new JSONObject());
+			jsonNotification.put("transaction", this.transaction != null ? this.transaction.toJSON() : new JSONObject());
+			
+			
+			jsonNotification.put("state", this.state.code);
+			jsonNotification.put("creationTime", DateUtility.castToAPIFormat(this.getCreationTime()));
+			jsonNotification.put("historyDeleted", this.historyDeleted);
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -242,7 +219,46 @@ public class Notification implements PseudoModel{
 		
 		return jsonNotification;
 	}
+	
 
+	@Override
+	public String toString() {
+		return "Notification [notificationId=" + notificationId
+				+ ", notificationEvent=" + notificationEvent
+				+ ", targetUserId=" + targetUserId + ", initUserId="
+				+ initUserId + ", messageId=" + messageId + ", transcationId="
+				+ transactionId + ", user=" + initUser + ", message=" + message
+				+ ", transaction=" + transaction + ", state=" + state
+				+ ", creationTime=" + creationTime + ", historyDeleted="
+				+ historyDeleted + "]";
+	}
+	
+	public boolean equals(Notification n){
+		return n != null &&
+				this.notificationId == n.notificationId &&
+				this.notificationEvent == n.notificationEvent &&
+				this.targetUserId == n.targetUserId &&
+				
+				this.initUserId == n.initUserId &&
+				this.messageId == n.messageId &&
+				this.transactionId == n.transactionId &&
+				
+				this.state == n.state &&
+				this.historyDeleted == n.historyDeleted;
+	}
+
+
+	@Override
+	public int compareTo(Notification o) {
+		return this.creationTime.compareTo(o.creationTime);
+	}
+
+	@Override
+	public boolean validate() throws ValidationException {
+		// TODO
+		
+		return false;
+	}
 
 }
 

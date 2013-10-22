@@ -143,7 +143,7 @@ public class DaoNotification {
 	public static Notification createNotificationByResultSet(ResultSet rs) throws SQLException {
 		Notification n;
 		n = new Notification(rs.getInt("notificationId"), Constants.notificationType.fromInt(rs.getInt("notificationType")),
-				Constants.notificationEvent.fromInt(rs.getInt("notificationEvent")), rs.getInt("initUserId"),
+				Constants.NotificationEvent.fromInt(rs.getInt("notificationEvent")), rs.getInt("initUserId"),
 				rs.getString("initUserName"), rs.getInt("messageId"), rs.getInt("transcationId"),
 				rs.getInt("targetUserId"), rs.getString("summary"), DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
 				rs.getBoolean("checked"), rs.getBoolean("historyDeleted"));
