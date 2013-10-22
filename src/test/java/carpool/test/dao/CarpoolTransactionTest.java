@@ -378,18 +378,18 @@ public class CarpoolTransactionTest {
 			CarpoolDaoTransaction.addTransactionToDatabase(transaction10);
 			//Test
 			TransactionCleaner.Clean();
-			ArrayList<Integer> list = new ArrayList<Integer>();
-			list.add(CarpoolDaoTransaction.getTransactionById(transaction.getTransactionId()).getType().code);
-			list.add(CarpoolDaoTransaction.getTransactionById(transaction2.getTransactionId()).getType().code);
-			list.add(CarpoolDaoTransaction.getTransactionById(transaction3.getTransactionId()).getType().code);
-			list.add(CarpoolDaoTransaction.getTransactionById(transaction4.getTransactionId()).getType().code);
-			list.add(CarpoolDaoTransaction.getTransactionById(transaction5.getTransactionId()).getType().code);
-			list.add(CarpoolDaoTransaction.getTransactionById(transaction6.getTransactionId()).getType().code);
-			list.add(CarpoolDaoTransaction.getTransactionById(transaction7.getTransactionId()).getType().code);
-			list.add(CarpoolDaoTransaction.getTransactionById(transaction8.getTransactionId()).getType().code);
-			list.add(CarpoolDaoTransaction.getTransactionById(transaction9.getTransactionId()).getType().code);
-			list.add(CarpoolDaoTransaction.getTransactionById(transaction10.getTransactionId()).getType().code);
-			if(list !=null && list.size()==10 && list.get(0)==2 && list.get(1)==0 &&list.get(2)==3 && list.get(3)==3 && list.get(4)==0 && list.get(5)==2 && list.get(6)==2 && list.get(7)==3 && list.get(8)==0&&list.get(9)==3){
+			ArrayList<transactionState> list = new ArrayList<transactionState>();
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction.getTransactionId()).getState());
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction2.getTransactionId()).getState());
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction3.getTransactionId()).getState());
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction4.getTransactionId()).getState());
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction5.getTransactionId()).getState());
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction6.getTransactionId()).getState());
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction7.getTransactionId()).getState());
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction8.getTransactionId()).getState());
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction9.getTransactionId()).getState());
+			list.add(CarpoolDaoTransaction.getTransactionById(transaction10.getTransactionId()).getState());
+			if(list !=null && list.size()==10 && list.get(0)==transactionState.aboutToStart && list.get(1)==transactionState.init &&list.get(2)==transactionState.finished && list.get(3)==transactionState.finished && list.get(4)==transactionState.init && list.get(5)==transactionState.aboutToStart && list.get(6)==transactionState.aboutToStart && list.get(7)==transactionState.finished && list.get(8)==transactionState.init&&list.get(9)==transactionState.finished){
 				//Passed;
 			}else{
 				fail();
