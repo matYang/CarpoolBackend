@@ -209,10 +209,17 @@ public class CarpoolMessageTest {
 	@Test
 	public void testSearch(){
 		CarpoolDaoBasic.clearBothDatabase();
+User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		
+		try {
+			CarpoolDaoUser.addUserToDatabase(user);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}
 		//Date
 		Calendar dt = Calendar.getInstance();		
 		Calendar at = Calendar.getInstance();
-		at.add(Calendar.DAY_OF_YEAR, 1);	
+		at.add(Calendar.DAY_OF_YEAR, 1);		
 		Calendar dt2 = Calendar.getInstance();	
 		dt2.add(Calendar.DAY_OF_YEAR, -1);	
 		Calendar dt3 = Calendar.getInstance();	
@@ -229,7 +236,7 @@ public class CarpoolMessageTest {
 		messageType type = messageType.fromInt(0);
 		gender genderRequirement = gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);		
-		int userId=-1;
+		int userId=user.getUserId();
 		//These messages should pass the search	
 		//Message	
 		Message message=new Message(userId,false, dl,dt,timeSlot,1 , priceList,al,at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
@@ -342,6 +349,13 @@ public class CarpoolMessageTest {
 	@Test
 	public void getRecentMessages(){
 		CarpoolDaoBasic.clearBothDatabase();
+User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		
+		try {
+			CarpoolDaoUser.addUserToDatabase(user);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}
 		//Date
 		Calendar dt = Calendar.getInstance();		
 		Calendar at = Calendar.getInstance();			
@@ -358,7 +372,7 @@ public class CarpoolMessageTest {
 		messageState state = messageState.fromInt(0);
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
 		int messageId=-1;
-		int userId=-1;
+		int userId=user.getUserId();
 		
 		//Message	
 		Message message=new Message(userId,false, dl,dt,timeSlot,1 , priceList,al,at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);

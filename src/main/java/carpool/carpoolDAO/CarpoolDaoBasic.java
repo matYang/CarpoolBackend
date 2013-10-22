@@ -46,17 +46,14 @@ public class CarpoolDaoBasic {
 
     public static void clearBothDatabase(){
         jedis.flushAll();
-        String query0 = "SET FOREIGN_KEY_CHECKS=0 ";
-        String query1 = "TRUNCATE TABLE User ";
-        String query2 = "TRUNCATE TABLE Message ";
-        String query3 = "TRUNCATE TABLE Transaction ";
-        String query4 = "TRUNCATE TABLE SocialList ";
-        String query5 = "TRUNCATE TABLE WatchList ";
-        String query6 = "TRUNCATE TABLE Notification ";
-        String query7 = "TRUNCATE TABLE carpoolDAOMessage";
-        String query8 = "TRUNCATE TABLE carpoolDAOUser";
-        String query9 = "TRUNCATE TABLE carpoolDAOTransaction";
-        String query10 = "SET FOREIGN_KEY_CHECKS=1;";
+        String query0 = "SET FOREIGN_KEY_CHECKS=0 ";       
+        String query1 = "TRUNCATE TABLE SocialList ";
+        String query2 = "TRUNCATE TABLE WatchList ";
+        String query3 = "TRUNCATE TABLE carpoolDAONotification ";
+        String query4 = "TRUNCATE TABLE carpoolDAOMessage";
+        String query5 = "TRUNCATE TABLE carpoolDAOUser";
+        String query6 = "TRUNCATE TABLE carpoolDAOTransaction";
+        String query7 = "SET FOREIGN_KEY_CHECKS=1;";
         try(Statement stmt = getSQLConnection().createStatement()){
         	stmt.addBatch(query0);
         	stmt.addBatch(query1);
@@ -65,10 +62,7 @@ public class CarpoolDaoBasic {
         	stmt.addBatch(query4);
         	stmt.addBatch(query5);
         	stmt.addBatch(query6);
-        	stmt.addBatch(query7);
-        	stmt.addBatch(query8);
-        	stmt.addBatch(query9);
-        	stmt.addBatch(query10);
+        	stmt.addBatch(query7);        	
         	stmt.executeBatch();
         }catch(SQLException e){
         	DebugLog.d(e.getMessage());

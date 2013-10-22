@@ -23,17 +23,18 @@ public class TransactionCleaner extends CarpoolDaoTransaction {
 	public static void Clean(){
 		Calendar currentDate = Calendar.getInstance();
 	    String ct=DateUtility.toSQLDateTime(currentDate);
-	    
+	    System.out.println("currentTime: "+ct);
 	    Calendar DayLate = Calendar.getInstance();
 	    DayLate.set(Calendar.HOUR_OF_DAY, 23);
 	    DayLate.set(Calendar.MINUTE,59);
 	    DayLate.set(Calendar.SECOND,59);
 	    String late = DateUtility.toSQLDateTime(DayLate);
-	    
+	    System.out.println("lateTime: "+late);
 	    Calendar Yesterday = Calendar.getInstance();
 	    Yesterday.add(Calendar.DAY_OF_YEAR, -1);
 	    String yesterday = DateUtility.toSQLDateTime(Yesterday);
-	    
+	    System.out.println("yesterday: "+yesterday);
+	   
 	    String query = "SELECT * FROM carpoolDAOTransaction where (transactionState = ? AND departure_Time > ? AND departure_Time < ?) OR(transactionState = ? AND departure_Time > ?);";
 	    try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, Constants.transactionState.init.code);			
@@ -44,10 +45,12 @@ public class TransactionCleaner extends CarpoolDaoTransaction {
 			ResultSet rs = stmt.executeQuery();			
 				while(rs.next()){	
 					Transaction transaction = CarpoolDaoTransaction.createTransactionByResultSet(rs);
+					//System.out.println(transaction.getState());
 				    if(transaction.getState() == Constants.transactionState.init){				    	
-				    	transaction.setState(transactionState.aboutToStart);
+				    	transaction.setState(transactionState.aboutToStart);				    	
 				    }else if(transaction.getState() == Constants.transactionState.aboutToStart){
 				    	transaction.setState(transactionState.finished);
+				    	System.out.println(transaction.getState());
 				    }
 				    CarpoolDaoTransaction.updateTransactionInDatabase(transaction);
 					}			

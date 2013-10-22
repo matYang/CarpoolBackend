@@ -30,36 +30,57 @@ public class CarpoolDaoMessage{
 		 boolean isRoundTrip = SR.isRoundTrip();
 		 LocationRepresentation departureLocation = SR.getDepartureLocation();		 
 		 LocationRepresentation arrivalLocation = SR.getArrivalLocation();		 
-		 Calendar departureDate = SR.getDepartureDate();		 
-		 Calendar arrivalDate = SR.getArrivalDate();			 
+		 Calendar departureDate1 = (Calendar) SR.getDepartureDate().clone();
+		 departureDate1.set(Calendar.HOUR_OF_DAY, 0);
+		 departureDate1.set(Calendar.MINUTE,0);
+		 departureDate1.set(Calendar.SECOND,0);
+		 Calendar departureDate2 = (Calendar) SR.getDepartureDate().clone();
+		 departureDate2.set(Calendar.HOUR_OF_DAY, 23);
+		 departureDate2.set(Calendar.MINUTE,59);
+		 departureDate2.set(Calendar.SECOND,59);
+		 Calendar arrivalDate1 = (Calendar) SR.getArrivalDate().clone();
+		 arrivalDate1.set(Calendar.HOUR_OF_DAY, 0);
+		 arrivalDate1.set(Calendar.MINUTE,0);
+		 arrivalDate1.set(Calendar.SECOND,0);
+		 Calendar arrivalDate2 = (Calendar) SR.getArrivalDate().clone();
+		 arrivalDate2.set(Calendar.HOUR_OF_DAY, 23);
+		 arrivalDate2.set(Calendar.MINUTE,59);
+		 arrivalDate2.set(Calendar.SECOND,59);
 		 messageType targetType = SR.getTargetType();
+//		 System.out.println("dt1: "+DateUtility.toSQLDateTime(departureDate1));
+//		 System.out.println("dt2: "+DateUtility.toSQLDateTime(departureDate2));
+//		 System.out.println("at1: "+DateUtility.toSQLDateTime(arrivalDate1));
+//		 System.out.println("at2: "+DateUtility.toSQLDateTime(arrivalDate2));
 //		 DayTimeSlot departureTimeSlot = SR.getDepartureTimeSlot();
 //		 DayTimeSlot arrivalTimeSlot = SR.getArrivalTimeSlot();
 		ArrayList<Message> retVal = new ArrayList<Message>();
 		//SR.isRoundTrip()==false
 		String query = "SELECT * from carpoolDAOMessage WHERE((isRoundTrip NOT LIKE ? AND (((departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ?"+
-		"AND arrival_primaryLocation LIKE ? AND departure_Time LIKE ?) OR ((arrival_seatsNumber > arrival_seatsBooked) AND arrival_primaryLocation LIKE ? AND departure_primaryLocation LIKE ? AND arrival_Time LIKE ?)))"+
-		"OR(isRoundTrip LIKE ? AND (departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ? AND arrival_primaryLocation LIKE ? AND departure_Time LIKE ?)) AND messageType LIKE ?  AND messageState=2;";
+		"AND arrival_primaryLocation LIKE ? AND departure_Time > ? AND departure_Time < ?) OR ((arrival_seatsNumber > arrival_seatsBooked) AND arrival_primaryLocation LIKE ? AND departure_primaryLocation LIKE ? AND arrival_Time > ? AND arrival_Time < ?)))"+
+		"OR(isRoundTrip LIKE ? AND (departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ? AND arrival_primaryLocation LIKE ? AND departure_Time > ?AND departure_Time < ?)) AND messageType LIKE ?  AND messageState=2;";
 		//SR.isRoundTrip()==true		
 		String query2="SELECT * from carpoolDAOMessage WHERE((isRoundTrip LIKE ? AND departure_primaryLocation LIKE ?"+
-				"AND arrival_primaryLocation LIKE ? AND ((departure_Time LIKE ?AND (departure_seatsNumber > departure_seatsBooked)) OR (arrival_Time LIKE ? AND (arrival_seatsNumber > arrival_seatsBooked))))OR(isRoundTrip NOT LIKE ? "+
-				"AND (((departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ? AND arrival_primaryLocation LIKE ? AND departure_Time LIKE ?) OR ((departure_seatsNumber > departure_seatsBooked) AND "+
-				"arrival_primaryLocation LIKE ? AND departure_primaryLocation LIKE ? AND departure_Time LIKE ?)) ))AND messageType LIKE ?  AND messageState=2;";
+				"AND arrival_primaryLocation LIKE ? AND ((departure_Time > ? AND departure_Time < ? AND (departure_seatsNumber > departure_seatsBooked)) OR (arrival_Time > ? AND arrival_Time < ? AND (arrival_seatsNumber > arrival_seatsBooked))))OR(isRoundTrip NOT LIKE ? "+
+				"AND (((departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ? AND arrival_primaryLocation LIKE ? AND departure_Time > ? AND departure_Time < ?) OR ((departure_seatsNumber > departure_seatsBooked) AND "+
+				"arrival_primaryLocation LIKE ? AND departure_primaryLocation LIKE ? AND departure_Time > ? AND departure_Time < ?)) ))AND messageType LIKE ?  AND messageState=2;";
 		
 		if(!isRoundTrip){
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, isRoundTrip ? 1 : 0);			
 			stmt.setString(2, departureLocation.getPrimaryLocationString());							
 			stmt.setString(3, arrivalLocation.getPrimaryLocationString());	
-			stmt.setString(4, DateUtility.toSQLDateTime(departureDate));
-			stmt.setString(5, departureLocation.getPrimaryLocationString());							
-			stmt.setString(6, arrivalLocation.getPrimaryLocationString());	
-			stmt.setString(7, DateUtility.toSQLDateTime(departureDate));			
-			stmt.setInt(8, isRoundTrip ? 1 :0);
-			stmt.setString(9, departureLocation.getPrimaryLocationString());			
-			stmt.setString(10, arrivalLocation.getPrimaryLocationString());		
-			stmt.setString(11, DateUtility.toSQLDateTime(departureDate));			
-			stmt.setInt(12,targetType.code);
+			stmt.setString(4, DateUtility.toSQLDateTime(departureDate1));
+			stmt.setString(5, DateUtility.toSQLDateTime(departureDate2));
+			stmt.setString(6, departureLocation.getPrimaryLocationString());							
+			stmt.setString(7, arrivalLocation.getPrimaryLocationString());	
+			stmt.setString(8, DateUtility.toSQLDateTime(departureDate1));
+			stmt.setString(9, DateUtility.toSQLDateTime(departureDate2));
+			stmt.setInt(10, isRoundTrip ? 1 :0);
+			stmt.setString(11, departureLocation.getPrimaryLocationString());			
+			stmt.setString(12, arrivalLocation.getPrimaryLocationString());		
+			stmt.setString(13, DateUtility.toSQLDateTime(departureDate1));	
+			stmt.setString(14, DateUtility.toSQLDateTime(departureDate2));
+			stmt.setInt(15,targetType.code);
 			ResultSet rs = stmt.executeQuery();			
 				while(rs.next()){									
 					retVal.add(createMessageByResultSet(rs, true));
@@ -74,16 +95,20 @@ public class CarpoolDaoMessage{
 				stmt.setInt(1, isRoundTrip ? 1 : 0);
 				stmt.setString(2, departureLocation.getPrimaryLocationString());		
 				stmt.setString(3, arrivalLocation.getPrimaryLocationString());	
-				stmt.setString(4, DateUtility.toSQLDateTime(departureDate));				
-				stmt.setString(5, DateUtility.toSQLDateTime(arrivalDate));
-				stmt.setInt(6, isRoundTrip ? 1 : 0);
-				stmt.setString(7, departureLocation.getPrimaryLocationString());
-				stmt.setString(8, arrivalLocation.getPrimaryLocationString());			
-				stmt.setString(9, DateUtility.toSQLDateTime(departureDate));
-				stmt.setString(10, departureLocation.getPrimaryLocationString());
-				stmt.setString(11, arrivalLocation.getPrimaryLocationString());
-				stmt.setString(12, DateUtility.toSQLDateTime(arrivalDate));
-				stmt.setInt(13,targetType.code);				
+				stmt.setString(4, DateUtility.toSQLDateTime(departureDate1));
+				stmt.setString(5, DateUtility.toSQLDateTime(departureDate2));
+				stmt.setString(6, DateUtility.toSQLDateTime(arrivalDate1));
+				stmt.setString(7, DateUtility.toSQLDateTime(arrivalDate2));
+				stmt.setInt(8, isRoundTrip ? 1 : 0);
+				stmt.setString(9, departureLocation.getPrimaryLocationString());
+				stmt.setString(10, arrivalLocation.getPrimaryLocationString());			
+				stmt.setString(11, DateUtility.toSQLDateTime(departureDate1));
+				stmt.setString(12, DateUtility.toSQLDateTime(departureDate2));
+				stmt.setString(13, departureLocation.getPrimaryLocationString());
+				stmt.setString(14, arrivalLocation.getPrimaryLocationString());
+				stmt.setString(15, DateUtility.toSQLDateTime(arrivalDate1));
+				stmt.setString(16, DateUtility.toSQLDateTime(arrivalDate2));
+				stmt.setInt(17,targetType.code);				
 				ResultSet rs = stmt.executeQuery();				
 					while(rs.next()){									
 						retVal.add(createMessageByResultSet(rs, false));
