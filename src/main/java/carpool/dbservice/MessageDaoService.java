@@ -3,6 +3,7 @@ package carpool.dbservice;
 import java.util.ArrayList;
 
 import carpool.carpoolDAO.*;
+import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.exception.PseudoException;
 import carpool.exception.ValidationException;
@@ -39,12 +40,12 @@ public class MessageDaoService{
 	
 
 	public static ArrayList<Message> primaryMessageSearch(SearchRepresentation userSearch, boolean isLogin, int userId) throws PseudoException{
-
+		userSearch.setDepartureDate(DateUtility.castFromAPIFormat("2013-10-21 21:47:50"));
 		ArrayList<Message> searchResult = new ArrayList<Message>();
 		searchResult = CarpoolDaoMessage.searchMessage(userSearch);
-		if (isLogin){
-			UserDaoService.updateUserSearch(userSearch, userId);
-		}
+//		if (isLogin){
+//			UserDaoService.updateUserSearch(userSearch, userId);
+//		}
 		return searchResult;
 	}
 	

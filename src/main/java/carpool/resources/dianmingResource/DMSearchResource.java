@@ -15,6 +15,7 @@ import org.restlet.data.Status;
 import org.json.JSONArray;
 
 import carpool.common.DateUtility;
+import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants;
 import carpool.constants.Constants.userSearchState;
@@ -37,8 +38,10 @@ public class DMSearchResource extends PseudoResource{
 		JSONArray response = new JSONArray();
 		
 		try {
-			String srStr = this.getQueryVal("searchRepresentation");
+			String srStr = this.getSearchQueryVal("searchRepresentation");
 			int userId = Integer.parseInt(this.getQueryVal("userId"));
+			
+			DebugLog.d(srStr);
 			
 			boolean login = false;
 			try{
