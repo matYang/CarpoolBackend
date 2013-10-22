@@ -42,9 +42,9 @@ public class MessageDaoService{
 
 		ArrayList<Message> searchResult = new ArrayList<Message>();
 		searchResult = CarpoolDaoMessage.searchMessage(userSearch);
-		if (isLogin){
-			UserDaoService.updateUserSearch(userSearch, userId);
-		}
+//		if (isLogin){
+//			UserDaoService.updateUserSearch(userSearch, userId);
+//		}
 		return searchResult;
 	}
 	
