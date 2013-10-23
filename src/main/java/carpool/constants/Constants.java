@@ -67,45 +67,27 @@ public class Constants {
         }
     }
 
-    //public static enum transactionStateChangeAdminAction{
-    //	investigation_cancel(0), investigation_release(1);
-    //	public int code;
-    //	transactionStateChangeAdminAction(int code){
-    //        this.code = code;
-    //    }
-    //    private final static transactionStateChangeAdminAction[] map = transactionStateChangeAdminAction.values();
-    //    public static transactionStateChangeAdminAction fromInt(int n){
-    //        return map[n];
-    //    }
-    //}
-
-
-    public static enum  notificationType{
-    	on_user(0), on_message(1), on_transaction(2);
-    	public int code;
-    	notificationType(int code){
-    		this.code = code;
-    	}
-    	private final static notificationType[] map = notificationType.values();
-        public static notificationType fromInt(int n){
+    public static enum NotificationEvent{
+        transactionInit(0), transactionCancelled(1), transactionAboutToStart(2),
+        transactionEvaluated(3), tranasctionUnderInvestigation(4), transactionReleased(5), watched(6);
+        public int code;
+        NotificationEvent(int code){
+            this.code = code;
+        }
+        private final static NotificationEvent[] map = NotificationEvent.values();
+        public static NotificationEvent fromInt(int n){
             return map[n];
         }
     }
-
-
-    //below are used in Notification only, not in Transaction
-    //note: followerNewPost should be categorized into on_message, and thus a messageId should be passed into Notificaiton constructor
-    public static enum notificationEvent{
-        messageWatched(0),watchingMessageModified(1),watchingMessageDeleted(2),watchingMessageAboutToExpire(3),
-        followerNewPost(4),followed(5),transactionPending(6), transactionConfrimed(7), transactionRefused(8),
-        transactionAboutToStart(9), transactionCancelled(10), transactionFinishedToEvaluate(11), tranasctionUnderInvestigation(12),
-        transactionEvaluated(13), transactionAboutToAutoMark(14), transactionAutoMarked(15), transactionReleased(16);
+    
+    public static enum NotificationState{
+        unread(0), read(1);
         public int code;
-        notificationEvent(int code){
+        NotificationState(int code){
             this.code = code;
         }
-        private final static notificationEvent[] map = notificationEvent.values();
-        public static notificationEvent fromInt(int n){
+        private final static NotificationState[] map = NotificationState.values();
+        public static NotificationState fromInt(int n){
             return map[n];
         }
     }
