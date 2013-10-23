@@ -297,19 +297,19 @@ public class CarpoolTransactionTest {
 		}
 		
 		Calendar dt = Calendar.getInstance();
-		dt.set(Calendar.HOUR_OF_DAY, 19);
+		dt.set(Calendar.HOUR_OF_DAY, 20);
 		Calendar at = Calendar.getInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);
-		System.out.println("dt: "+DateUtility.toSQLDateTime(dt));
+		
 		Calendar dt2 = Calendar.getInstance();
-		dt.add(Calendar.DAY_OF_YEAR, -1);
+		dt2.add(Calendar.DAY_OF_YEAR, -1);
 		Calendar at2 = Calendar.getInstance();
-		at.add(Calendar.DAY_OF_YEAR, 0);
+		at2.add(Calendar.DAY_OF_YEAR, 0);
 		
 		Calendar dt3 = Calendar.getInstance();
 		dt3.add(Calendar.DAY_OF_YEAR, 1);
 		Calendar at3 = Calendar.getInstance();
-		at.add(Calendar.DAY_OF_YEAR, 3);
+		at3.add(Calendar.DAY_OF_YEAR, 3);
 		
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
@@ -344,25 +344,25 @@ public class CarpoolTransactionTest {
 		
 		
 		TransactionType ttype = TransactionType.departure;
-		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction.setState(transactionState.init);//This should pass the test
-		Transaction transaction2 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+		Transaction transaction2 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction2.setState(transactionState.init);
-		Transaction transaction3 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+		Transaction transaction3 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction3.setState(transactionState.finished);
-		Transaction transaction4 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+		Transaction transaction4 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction4.setState(transactionState.aboutToStart);// This should pass the test
-		Transaction transaction5 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+		Transaction transaction5 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
     	transaction5.setState(transactionState.init);
-    	Transaction transaction6 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+    	Transaction transaction6 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
     	transaction6.setState(transactionState.aboutToStart);
-    	Transaction transaction7 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+    	Transaction transaction7 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction7.setState(transactionState.aboutToStart);
-		Transaction transaction8 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+		Transaction transaction8 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction8.setState(transactionState.finished);
-		Transaction transaction9 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+		Transaction transaction9 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction9.setState(transactionState.init);
-		Transaction transaction10 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
+		Transaction transaction10 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction10.setState(transactionState.finished);
 		
 		try{
@@ -389,11 +389,10 @@ public class CarpoolTransactionTest {
 			list.add(CarpoolDaoTransaction.getTransactionById(transaction8.getTransactionId()).getState());
 			list.add(CarpoolDaoTransaction.getTransactionById(transaction9.getTransactionId()).getState());
 			list.add(CarpoolDaoTransaction.getTransactionById(transaction10.getTransactionId()).getState());
-			//if(list !=null && list.size()==10 && list.get(0)==transactionState.aboutToStart && list.get(1)==transactionState.init &&list.get(2)==transactionState.finished && list.get(3)==transactionState.finished && list.get(4)==transactionState.init && list.get(5)==transactionState.aboutToStart && list.get(6)==transactionState.aboutToStart && list.get(7)==transactionState.finished && list.get(8)==transactionState.init&&list.get(9)==transactionState.finished){
-			if(list.get(3)==transactionState.finished){
-			//Passed;
+			if(list !=null && list.size()==10 && list.get(0)==transactionState.aboutToStart && list.get(1)==transactionState.init &&list.get(2)==transactionState.finished && list.get(3)==transactionState.finished && list.get(4)==transactionState.init && list.get(5)==transactionState.finished && list.get(6)==transactionState.finished&& list.get(7)==transactionState.finished && list.get(8)==transactionState.init&&list.get(9)==transactionState.finished){
+				//Passed;
 			}else{				
-				fail();
+				fail();					
 			}
 		}catch(Exception e){
 			e.printStackTrace();
