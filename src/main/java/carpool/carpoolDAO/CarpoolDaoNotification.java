@@ -44,20 +44,21 @@ public class CarpoolDaoNotification {
 	}
 	public static ArrayList<Notification> addNotificationsToDatabase(ArrayList<Notification> notifications){
 		String query="INSERT INTO carpoolDAONotification(target_UserId,origin_UserId,origin_MessageId,origin_TransactionId,notificationState,historyDeleted,creationTime,notificationEvent)values(?,?,?,?,?,?,?,?)";
+		
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 			for(Notification n:notifications){
-			stmt.setInt(1, n.getTargetUserId());
-			stmt.setInt(2, n.getInitUserId());
-			stmt.setInt(3, n.getMessageId());
-			stmt.setInt(4, n.getTransactionId());
-			stmt.setInt(5, n.getState().code);
-			stmt.setInt(6, n.isHistoryDeleted() ? 1 : 0);
-			stmt.setString(7, DateUtility.toSQLDateTime(n.getCreationTime()));
-			stmt.setInt(8, n.getNotificationEvent().code);
-			stmt.executeUpdate();	 
-			ResultSet rs = stmt.getGeneratedKeys();
-			rs.next();
-			n.setNotificationId(rs.getInt(1));
+				stmt.setInt(1, n.getTargetUserId());
+				stmt.setInt(2, n.getInitUserId());
+				stmt.setInt(3, n.getMessageId());
+				stmt.setInt(4, n.getTransactionId());
+				stmt.setInt(5, n.getState().code);
+				stmt.setInt(6, n.isHistoryDeleted() ? 1 : 0);
+				stmt.setString(7, DateUtility.toSQLDateTime(n.getCreationTime()));
+				stmt.setInt(8, n.getNotificationEvent().code);
+				stmt.executeUpdate();	 
+				ResultSet rs = stmt.getGeneratedKeys();
+				rs.next();
+				n.setNotificationId(rs.getInt(1));
 			}
 		}
 		catch(SQLException e){
@@ -93,10 +94,10 @@ public class CarpoolDaoNotification {
 		
 	}
 	
-	public static void deleteNotification(Notification notification) throws NotificationNotFoundException{
+	public static void deleteNotification(int notificationId) throws NotificationNotFoundException{
 		String query = "UPDATE carpoolDAONotification SET historyDeleted = 1 where notification_Id =?";
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){				
-			stmt.setInt(1, notification.getNotificationId());
+			stmt.setInt(1, notificationId);
 			stmt.executeUpdate();	 			
 			int recordsAffected = stmt.executeUpdate();
 			if(recordsAffected==0){
