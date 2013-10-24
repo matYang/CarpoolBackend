@@ -8,8 +8,10 @@ import carpool.asyncRelayExecutor.ExecutorProvider;
 import carpool.asyncTask.relayTask.NotificationRelayTask;
 import carpool.common.*;
 import carpool.database.DaoNotification;
+import carpool.exception.PseudoException;
 import carpool.exception.notification.NotificationNotFoundException;
 import carpool.exception.notification.NotificationOwnerNotMatchException;
+import carpool.exception.user.UserNotFoundException;
 import carpool.model.*;
 
 
@@ -17,10 +19,25 @@ import carpool.model.*;
 
 public class NotificationDaoService{
 	
+	private static ArrayList<Notification> db_notificationPendingQeue;
+	public static void addToNotificationQueue(Notification n){
+		db_notificationPendingQeue.add(n);
+	}
+	public static void clearNotificationQueue(){
+		db_notificationPendingQeue.clear();
+	}
+	public static void storeNotificationQueue(){
+		createNewNotification(db_notificationPendingQeue);
+		clearNotificationQueue();
+	}
+	
+	//leave this for now
+	public static void sendNotification(Notification n){
+		
+	}
 	
 	/**
 	 * get all the notifications from database
-	 * used for testing only, do not have to generate summary
 	 * @return	
 	 */
 	public static ArrayList<Notification> getAllNotifications() {
@@ -31,91 +48,52 @@ public class NotificationDaoService{
 	
 	/**
 	 * get the full notification by its notificartionId
-	 * note: must qualify the notification full constructor, note the requirements on the summary field
-	 * @param notificationId 
-	 * @param userId
-	 * @return the full notification object constructed by the its full constructor, return null if any error occurs
-	 * @throws NotificationNotFoundException if the specified notification id does not exist
 	 */
-	public static Notification getUserNotificationById(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException{
-		Notification notification =  DaoNotification.getNotificationById(notificationId);
-		if(notification.getTargetUserId() != userId){
-			throw new NotificationOwnerNotMatchException();
-		}
-		return notification;
+	public static ArrayList<Notification> getUserNotification(int userId) throws UserNotFoundException{
+
+		return null;
 	}
 
 	/**
 	 * created a new notification in SQL, constructed using the notification initialization constructor
-	 * remember to set the creation time, use date string format specified by Common.parseDateString
-	 * TODO must call createNewNotification to all the User, DMMessage, Transaction operations specified in Constants.notificationEvents, 
-	 * it can be assumed that when the initialization constructor is called, all necessary parameters will be present
-	 * @param newNotification
-	 * @param userId
-	 * @return	the full Notification that was just created in database, use the complete constructor for this, return null if any errors occurred
+	 * @Return the notification just stored, with the notificationId
 	 */
 	public static Notification createNewNotification(Notification newNotification){
-		ArrayList<Notification> notes = new ArrayList<Notification>();
-		notes.add(newNotification);
-		NotificationRelayTask note = new NotificationRelayTask(notes);
-		ExecutorProvider.executeRelay(note);
-		return DaoNotification.addNotificationToDatabase(newNotification);
+		
+		return null;
 	}
-	
 	
 	/**
-	 * created a bunch of new notification in single SQL query, all constructed using the notification initialization constructor
-	 * remember to set the creation time, use date string format specified by Common.parseDateString
-	 * TODO must call createNewNotification to all the User, DMMessage, Transaction operations specified in Constants.notificationEvents on at a DaoService level!
-	 * some operations might generate only one notification, in this case, use the above method(This is important)
-	 * @param notifications
-	 * @return
+	 * created new notifications in SQL, note all of these notification will be different
+	 * @Return the notifications just stored, with the notificationIds
 	 */
-	public static ArrayList<Notification> createNewNotificationQueue(ArrayList<Notification> notifications){
-		NotificationRelayTask note = new NotificationRelayTask(notifications);
-		ExecutorProvider.executeRelay(note);
-		return DaoNotification.addNotificationToDatabase(notifications);
+	public static ArrayList<Notification> createNewNotification(ArrayList<Notification> newNotifications){
+		
+		return null;
 	}
-	
+
 
 	/**
-	 * deletes the notification from database,(change its historyDeleted to true, same applies to Transaction, DMMessage, User)
+	 * deletes the notification from database,(change its historyDeleted to true)
 	 * must make sure the given userId matches the notification's targetUserId, targetUserId specifies the owner of the notification
 	 * if not found, throw NotificationNotFoundException
 	 * if targetUserId does not match userId parameter, throw NotificationOwnerNotMatchException
-	 * return false if unsuccessful
-	 * @param notificationId
-	 * @param userId
-	 * @return true if notification exists and deleted
+
 	 */
-	public static boolean deleteNotification(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException{
-		Notification n = getUserNotificationById(notificationId, userId);
-		if(n.getTargetUserId()!=userId){
-			throw new NotificationOwnerNotMatchException();
-		}
-		n.setHistoryDeleted(true);
-		DaoNotification.updateNotificationToDatabase(n);
-		return getUserNotificationById(notificationId, userId).isHistoryDeleted();
+	public static void deleteNotification(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException{
+		
+
 	}
 	
 	/**
-	 * mark the notification as read(change its checked to true, no matter if its true or not), this happens when user clicks on the notification and thus opens the link
+	 * mark the notification as read(change its state)
 	 * if not found, throw NotificationNotFoundException
 	 * if targetUserId does not match userId parameter, throw NotificationOwnerNotMatchException
-	 * @param notificationId
-	 * @param userId
-	 * @return
-	 * @throws NotificationNotFoundException
-	 * @throws NotificationOwnerNotMatchException
+	 * if not in unread state, do nothing
 	 */
-	public static boolean checkNotification(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException{
-		Notification n = getUserNotificationById(notificationId, userId);
-		if(n.getTargetUserId()!=userId){
-			throw new NotificationOwnerNotMatchException();
-		}
-		n.setChecked(true);
-		DaoNotification.updateNotificationToDatabase(n);
-		return getUserNotificationById(notificationId, userId).isChecked();
+	public static void checkNotification(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException{
+
+
 	}
 	
 }
