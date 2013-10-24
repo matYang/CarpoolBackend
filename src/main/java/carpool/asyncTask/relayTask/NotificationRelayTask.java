@@ -75,30 +75,30 @@ public class NotificationRelayTask implements PseudoAsyncTask{
 			return false;
 		} 
 
-		
+		DebugLog.d(response.getStatusLine().getStatusCode());
 		//parsing and printing the response
-		StringBuilder sb = new StringBuilder();
-	    InputStream in;
-		try {
-			in = response.getEntity().getContent();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		// StringBuilder sb = new StringBuilder();
+	 //   InputStream in;
+		// try {
+		// 	in = response.getEntity().getContent();
+		// 	BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		    
-			String line = null;
-		    while((line = reader.readLine()) != null){
-		        sb.append(line);
-		    }
-		    //TODO should be deleted later, just printing out the content to see how it's like
-		    DebugLog.d(sb.toString());
+		// 	String line = null;
+		//     while((line = reader.readLine()) != null){
+		//         sb.append(line);
+		//     }
+		//     //TODO should be deleted later, just printing out the content to see how it's like
+		//     DebugLog.d(sb.toString());
 		    
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-			DebugLog.d("NotificationRelayTask::sendNotification::parsing encoutered Exception:" + e.toString());
-			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
-			DebugLog.d("NotificationRelayTask::sendNotification::parsing encoutered Exception:" + e.toString());
-			return false;
-		}
+		// } catch (IllegalStateException e) {
+		// 	e.printStackTrace();
+		// 	DebugLog.d("NotificationRelayTask::sendNotification::parsing encoutered Exception:" + e.toString());
+		// 	return false;
+		// } catch (IOException e) {
+		// 	e.printStackTrace();
+		// 	DebugLog.d("NotificationRelayTask::sendNotification::parsing encoutered Exception:" + e.toString());
+		// 	return false;
+		// }
 	   
 	    return response.getStatusLine().getStatusCode() == 200 ? true : false;
     }
