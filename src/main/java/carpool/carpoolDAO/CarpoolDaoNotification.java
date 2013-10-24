@@ -42,7 +42,31 @@ public class CarpoolDaoNotification {
 		}
 		return notification;
 	}
-	
+	public static ArrayList<Notification> addNotificationsToDatabase(ArrayList<Notification> notifications){
+		String query="INSERT INTO carpoolDAONotification(target_UserId,origin_UserId,origin_MessageId,origin_TransactionId,notificationState,historyDeleted,creationTime,notificationEvent)values(?,?,?,?,?,?,?,?)";
+		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+			for(Notification n:notifications){
+			stmt.setInt(1, n.getTargetUserId());
+			stmt.setInt(2, n.getInitUserId());
+			stmt.setInt(3, n.getMessageId());
+			stmt.setInt(4, n.getTransactionId());
+			stmt.setInt(5, n.getState().code);
+			stmt.setInt(6, n.isHistoryDeleted() ? 1 : 0);
+			stmt.setString(7, DateUtility.toSQLDateTime(n.getCreationTime()));
+			stmt.setInt(8, n.getNotificationEvent().code);
+			stmt.executeUpdate();	 
+			ResultSet rs = stmt.getGeneratedKeys();
+			rs.next();
+			n.setNotificationId(rs.getInt(1));
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+			DebugLog.d(e.getMessage());
+		}
+		return notifications;
+		
+	}
 	public static void updateNotificationInDatabase(Notification notification) throws NotificationNotFoundException{
 		String query = "UPDATE carpoolDAONotification SET target_UserId=?,origin_UserId=?,origin_MessageId=?,origin_TransactionId=?,notificationState = ?,historyDeleted = ?,creationTime = ?,notificationEvent=? where notification_Id =?";
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){	

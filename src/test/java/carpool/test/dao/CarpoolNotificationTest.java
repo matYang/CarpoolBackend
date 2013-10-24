@@ -52,7 +52,47 @@ public class CarpoolNotificationTest {
 	 }
  }
 
- 
+ @Test
+ public void testAddNotifications(){
+	 CarpoolDaoBasic.clearBothDatabase();
+	    User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+			
+			try {
+				CarpoolDaoUser.addUserToDatabase(user);
+			} catch (ValidationException e) {			
+				e.printStackTrace();
+			}
+			
+			 int targetUserId = user.getUserId();
+			 ArrayList<Notification> list = new ArrayList<Notification>();
+			 Notification notification = new Notification(Constants.NotificationEvent.tranasctionUnderInvestigation,targetUserId);			 
+		    list.add(notification);
+		     Notification notification2 = new Notification(Constants.NotificationEvent.transactionAboutToStart,targetUserId);			 
+		    list.add(notification2);
+		     Notification notification3 = new Notification(Constants.NotificationEvent.transactionCancelled,targetUserId);			 
+		    list.add(notification3);
+		     Notification notification4 = new Notification(Constants.NotificationEvent.transactionEvaluated,targetUserId);			 
+		    list.add(notification4);
+		     Notification notification5 = new Notification(Constants.NotificationEvent.transactionInit,targetUserId);			 
+		    list.add(notification5);
+		     Notification notification6 = new Notification(Constants.NotificationEvent.transactionReleased,targetUserId);			 
+		    list.add(notification6);
+		    //Test
+		    try{
+		    	CarpoolDaoNotification.addNotificationsToDatabase(list);
+		    	list = CarpoolDaoNotification.getByUserId(targetUserId);
+		    	if(list.size()==6 && list.get(0).getNotificationEvent().equals(notification.getNotificationEvent()) && list.get(1).getNotificationEvent().equals(notification2.getNotificationEvent()) && list.get(2).getNotificationEvent().equals(notification3.getNotificationEvent()) && list.get(3).getNotificationEvent().equals(notification4.getNotificationEvent())&& list.get(4).getNotificationEvent().equals(notification5.getNotificationEvent())&& list.get(5).getNotificationEvent().equals(notification6.getNotificationEvent())){
+		    		//Passed;
+		    	}else{
+		    		fail();
+		    	}
+		    	
+		    }catch(Exception e){
+		    	e.printStackTrace();
+		    	fail();
+		    }
+	 
+ }
  @Test
  public void testGetByTargetUserId(){
 	 CarpoolDaoBasic.clearBothDatabase();
