@@ -12,6 +12,9 @@ import org.restlet.data.Status;
 import org.json.JSONArray;
 
 import carpool.dbservice.*;
+import carpool.exception.message.MessageNotFoundException;
+import carpool.exception.transaction.TransactionNotFoundException;
+import carpool.exception.user.UserNotFoundException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
@@ -25,7 +28,7 @@ public class NotificationResource extends PseudoResource{
 	 * Retrieve all notifications from server. This API is intended solely for testing purposes
 	 * @return
 	 */
-	public Representation getAllNotifications() {
+	public Representation getAllNotifications() throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException {
 
 		ArrayList<Notification> allNotifications = NotificationDaoService.getAllNotifications();
 		JSONArray jsonArray = new JSONArray();

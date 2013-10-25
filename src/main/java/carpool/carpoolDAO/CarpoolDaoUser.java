@@ -1,6 +1,10 @@
 package carpool.carpoolDAO;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +12,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.ShortBufferException;
 
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
@@ -19,6 +28,7 @@ import carpool.constants.Constants.userSearchState;
 import carpool.constants.Constants.userState;
 import carpool.database.DaoNotification;
 import carpool.database.DaoTransaction;
+import carpool.encryption.SessionCrypto;
 import carpool.exception.ValidationException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
@@ -65,7 +75,7 @@ public class CarpoolDaoUser {
 				"paypalToken,id_docType,id_docNum,id_path,id_vehicleImgPath,accountId,accountPass,accountToken,accountValue)"+
 	            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
-			stmt.setString(1, user.getPassword());
+			stmt.setString(1, SessionCrypto.encrypt(user.getPassword()));
 			stmt.setString(2, user.getName());
 			stmt.setString(3, user.getEmail());
 			stmt.setString(4, user.getPhone());
@@ -111,14 +121,16 @@ public class CarpoolDaoUser {
 			}else{
 				DebugLog.d(e.getMessage());
 			}
-		}		
+		} catch (Exception e) {
+			throw new ValidationException("Bad password format");
+		} 		
 		return user;
 	}
 
 	public static void deleteUserFromDatabase(int id) throws UserNotFoundException{
 		String query = "DELETE from WatchList where User_userId = '" + id +"'";
 		String query2 = "DELETE from carpoolDAOUser where userId = '" + id + "'";
-		String query3 = "DELETE from Message where ownerId = '" + id +"'";
+		String query3 = "DELETE from carpoolDAOMessage where ownerId = '" + id +"'";
 		String query4 = "DELETE from SocialList where mainUser = '" + id +"'";
 		String query5 = "DELETE FROM Transaction WHERE initUserId="+id+" OR targetUserId = "+id;
 		try(Statement stmt = CarpoolDaoBasic.getSQLConnection().createStatement()){
@@ -135,14 +147,14 @@ public class CarpoolDaoUser {
 		}
 	}
 
-	public static void UpdateUserInDatabase(User user) throws UserNotFoundException{
+	public static void UpdateUserInDatabase(User user) throws UserNotFoundException, ValidationException{
 		String query = "UPDATE carpoolDAOUser SET password=?,name=?,email=?,phone=?,qq=?,age=?,gender=?,birthday=?," +
 	            "imgPath=?,user_primaryLocation=?,user_customLocation=?,user_customDepthIndex=?,lastLogin=?,"+
 				"creationTime=?,emailActivated = ?,phoneActivated = ?,emailNotice = ?,phoneNotice = ?,state = ?,searchRepresentation = ?," +
 				"level=?,averageScore=?,totalTranscations=?,verifications=?,googleToken=?,facebookToken=?,twitterToken=?,paypalToken=?,"+
 				"id_docType=?,id_docNum=?,id_path=?,id_vehicleImgPath=?,accountId=?,accountPass=?,accountToken=?,accountValue=? WHERE userId = ?";
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-			stmt.setString(1, user.getPassword());
+			stmt.setString(1, SessionCrypto.encrypt(user.getPassword()));
 			stmt.setString(2, user.getName());
 			stmt.setString(3, user.getEmail());
 			stmt.setString(4, user.getPhone());
@@ -183,9 +195,11 @@ public class CarpoolDaoUser {
 			if(recordsAffected==0){
 				throw new UserNotFoundException();
 			}
-		}catch(SQLException e){
+		} catch(SQLException e){
 			DebugLog.d(e.getMessage());
-		}		
+		} catch (Exception e) {
+			throw new ValidationException("Bad password format");
+		} 	
 	}
 
 	public static ArrayList<User> getAllUsers(){
@@ -258,18 +272,22 @@ public class CarpoolDaoUser {
 	}
 
 	protected static User createUserByResultSet(ResultSet rs) throws SQLException {
-		User user;
-		 user = new User(rs.getInt("userId"),rs.getString("password"), rs.getString("name"),
-				rs.getString("email"),rs.getString("phone"),rs.getString("qq"),rs.getInt("age"),Constants.gender.fromInt(rs.getInt("gender")),
-				DateUtility.DateToCalendar(rs.getTimestamp("birthday")),rs.getString("imgPath"),new LocationRepresentation(rs.getString("user_primaryLocation"),rs.getString("user_customLocation"),rs.getInt("user_customDepthIndex")),
-				DateUtility.DateToCalendar(rs.getTimestamp("lastLogin")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
-				(ArrayList<String>)Parser.stringToList(rs.getString("verifications"),new String("")),
-				rs.getBoolean("emailActivated"),rs.getBoolean("phoneActivated"),rs.getBoolean("emailNotice"),rs.getBoolean("phoneNotice"),
-				Constants.userState.fromInt(rs.getInt("state")),new SearchRepresentation(rs.getString("searchRepresentation")),
-				rs.getInt("level"),rs.getInt("averageScore"),rs.getInt("totalTranscations"),
-				rs.getString("googleToken"),rs.getString("facebookToken"),rs.getString("twitterToken"),rs.getString("paypalToken"),
-				rs.getString("id_docType"),rs.getString("id_docNum"),rs.getString("id_path"),rs.getString("id_vehicleImgPath"),
-				rs.getString("accountId"),rs.getString("accountPass"),rs.getString("accountToken"),new BigDecimal(rs.getString("accountValue")));
+		User user = null;
+		 try {
+			user = new User(rs.getInt("userId"),SessionCrypto.decrypt(rs.getString("password")), rs.getString("name"),
+					rs.getString("email"),rs.getString("phone"),rs.getString("qq"),rs.getInt("age"),Constants.gender.fromInt(rs.getInt("gender")),
+					DateUtility.DateToCalendar(rs.getTimestamp("birthday")),rs.getString("imgPath"),new LocationRepresentation(rs.getString("user_primaryLocation"),rs.getString("user_customLocation"),rs.getInt("user_customDepthIndex")),
+					DateUtility.DateToCalendar(rs.getTimestamp("lastLogin")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
+					(ArrayList<String>)Parser.stringToList(rs.getString("verifications"),new String("")),
+					rs.getBoolean("emailActivated"),rs.getBoolean("phoneActivated"),rs.getBoolean("emailNotice"),rs.getBoolean("phoneNotice"),
+					Constants.userState.fromInt(rs.getInt("state")),new SearchRepresentation(rs.getString("searchRepresentation")),
+					rs.getInt("level"),rs.getInt("averageScore"),rs.getInt("totalTranscations"),
+					rs.getString("googleToken"),rs.getString("facebookToken"),rs.getString("twitterToken"),rs.getString("paypalToken"),
+					rs.getString("id_docType"),rs.getString("id_docNum"),rs.getString("id_path"),rs.getString("id_vehicleImgPath"),
+					rs.getString("accountId"),rs.getString("accountPass"),rs.getString("accountToken"),new BigDecimal(rs.getString("accountValue")));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return user;
 	}
 	

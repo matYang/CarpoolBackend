@@ -309,7 +309,7 @@ public void testUpdate() throws NotificationNotFoundException, MessageNotFoundEx
 			 Notification notification2 = new Notification(nt2,targetUserId2);			 
 		     CarpoolDaoNotification.addNotificationToDatabase(notification2);
 		     try{
-		    	 CarpoolDaoNotification.deleteNotification(notification);
+		    	 CarpoolDaoNotification.deleteNotification(notification.getNotificationId());
 		    	 ArrayList<Notification> list = new ArrayList<Notification>();
 		    	 list = CarpoolDaoNotification.getByUserId(targetUserId);
 		    	 if(list.size()==0){

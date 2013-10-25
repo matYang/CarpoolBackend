@@ -6,11 +6,15 @@ import javax.swing.text.DateFormatter;
 
 import carpool.asyncRelayExecutor.ExecutorProvider;
 import carpool.asyncTask.relayTask.NotificationRelayTask;
+import carpool.carpoolDAO.CarpoolDaoNotification;
 import carpool.common.*;
+import carpool.constants.Constants.NotificationState;
 import carpool.database.DaoNotification;
 import carpool.exception.PseudoException;
+import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.notification.NotificationNotFoundException;
 import carpool.exception.notification.NotificationOwnerNotMatchException;
+import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.*;
 
@@ -54,19 +58,24 @@ public class NotificationDaoService{
 	/**
 	 * get all the notifications from database
 	 * @return	
+	 * @throws TransactionNotFoundException 
+	 * @throws UserNotFoundException 
+	 * @throws MessageNotFoundException 
 	 */
-	public static ArrayList<Notification> getAllNotifications() {
-		return DaoNotification.getALL();
+	public static ArrayList<Notification> getAllNotifications() throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException {
+		return CarpoolDaoNotification.getAllNotifications();
 	}
 	
 	
 	
 	/**
 	 * get the full notification by its notificartionId
+	 * @throws TransactionNotFoundException 
+	 * @throws MessageNotFoundException 
 	 */
-	public static ArrayList<Notification> getUserNotification(int userId) throws UserNotFoundException{
+	public static ArrayList<Notification> getUserNotification(int userId) throws UserNotFoundException, MessageNotFoundException, TransactionNotFoundException{
 
-		return null;
+		return CarpoolDaoNotification.getByUserId(userId);
 	}
 
 	/**
@@ -75,7 +84,7 @@ public class NotificationDaoService{
 	 */
 	public static Notification createNewNotification(Notification newNotification){
 		
-		return null;
+		return CarpoolDaoNotification.addNotificationToDatabase(newNotification);
 	}
 	
 	/**
@@ -84,7 +93,7 @@ public class NotificationDaoService{
 	 */
 	public static ArrayList<Notification> createNewNotification(ArrayList<Notification> newNotifications){
 		
-		return null;
+		return CarpoolDaoNotification.addNotificationsToDatabase(newNotifications);
 	}
 
 
@@ -93,11 +102,20 @@ public class NotificationDaoService{
 	 * must make sure the given userId matches the notification's targetUserId, targetUserId specifies the owner of the notification
 	 * if not found, throw NotificationNotFoundException
 	 * if targetUserId does not match userId parameter, throw NotificationOwnerNotMatchException
+	 * @throws TransactionNotFoundException 
+	 * @throws UserNotFoundException 
+	 * @throws MessageNotFoundException 
 
 	 */
-	public static void deleteNotification(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException{
-		
-
+	public static void deleteNotification(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
+		Notification notification = CarpoolDaoNotification.getNotificationById(notificationId);
+		if(notification==null){
+			throw new NotificationNotFoundException();
+		}
+		else if(notification.getTargetUserId()==userId){
+			CarpoolDaoNotification.deleteNotification(notificationId);
+		}
+       
 	}
 	
 	/**
@@ -105,10 +123,19 @@ public class NotificationDaoService{
 	 * if not found, throw NotificationNotFoundException
 	 * if targetUserId does not match userId parameter, throw NotificationOwnerNotMatchException
 	 * if not in unread state, do nothing
+	 * @throws TransactionNotFoundException 
+	 * @throws UserNotFoundException 
+	 * @throws MessageNotFoundException 
 	 */
-	public static void checkNotification(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException{
-
-
+	public static void checkNotification(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
+		Notification notification = CarpoolDaoNotification.getNotificationById(notificationId);
+		if(notification==null){
+			throw new NotificationNotFoundException();
+		}else if(notification.getTargetUserId()==userId){
+			notification.setState(NotificationState.read);
+			CarpoolDaoNotification.updateNotificationInDatabase(notification);
+		}
+       
 	}
 	
 }
