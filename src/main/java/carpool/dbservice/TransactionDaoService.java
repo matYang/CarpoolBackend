@@ -153,7 +153,7 @@ public class TransactionDaoService{
 	 * initUser or targetUser evaluates the transaction， given the transaction is in finished state
 	 * @return	the changed transaction, constructed by the full constructor
 	 */
-	public static Transaction evaluateTransaction(int transactionId, int userId, int score) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionAccessViolationException, TransactionStateViolationException, MessageNotFoundException, UserNotFoundException{
+	public static Transaction evaluateTransaction(int transactionId, int userId, int score) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionAccessViolationException, TransactionStateViolationException, MessageNotFoundException, UserNotFoundException, ValidationException{
 		Transaction t = CarpoolDaoTransaction.getTransactionById(transactionId);
 		if(t.getState() != Constants.transactionState.finished){
 			throw new TransactionStateViolationException(t.getState(), Constants.transactionState.finished);

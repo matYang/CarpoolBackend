@@ -93,7 +93,19 @@ public class CarpoolDaoNotification {
 		}		
 		
 	}
-	
+	public static Notification getNotificationById(int notificationId) throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
+		String query="select * from carpoolDAONotification where notification_Id=?";
+		Notification notification = null;
+		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			ResultSet rs = stmt.executeQuery();
+			if(rs.next()){
+				notification = createNotificationByResultSet(rs);
+			}
+	  }catch(SQLException e){
+		  e.printStackTrace();
+	  }
+		return notification;
+	}
 	public static void deleteNotification(int notificationId) throws NotificationNotFoundException{
 		String query = "UPDATE carpoolDAONotification SET historyDeleted = 1 where notification_Id =?";
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){				

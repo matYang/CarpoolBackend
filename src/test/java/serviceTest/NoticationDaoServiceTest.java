@@ -16,4 +16,5 @@ public class NoticationDaoServiceTest {
 		NotificationDaoService.sendNotification(n1);
 	}
 
+	
 }

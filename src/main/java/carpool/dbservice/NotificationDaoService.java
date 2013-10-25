@@ -108,14 +108,13 @@ public class NotificationDaoService{
 
 	 */
 	public static void deleteNotification(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
-    		ArrayList<Notification> list = new ArrayList<Notification>();
-    		list = CarpoolDaoNotification.getByUserId(userId);
-    		for(int i=0; i<list.size(); i++){
-    			if(list.get(i).getNotificationId()==notificationId){
-    				list.get(i).setHistoryDeleted(true);
-    				CarpoolDaoNotification.updateNotificationInDatabase(list.get(i));
-    			}
-    		}
+		Notification notification = CarpoolDaoNotification.getNotificationById(notificationId);
+		if(notification==null){
+			throw new NotificationNotFoundException();
+		}
+		else if(notification.getTargetUserId()==userId){
+			CarpoolDaoNotification.deleteNotification(notificationId);
+		}
        
 	}
 	
@@ -129,13 +128,12 @@ public class NotificationDaoService{
 	 * @throws MessageNotFoundException 
 	 */
 	public static void checkNotification(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
-		ArrayList<Notification> list = new ArrayList<Notification>();
-		list = CarpoolDaoNotification.getByUserId(userId);
-		for(int i=0; i<list.size(); i++){
-			if(list.get(i).getNotificationId()==notificationId){
-				list.get(i).setState(NotificationState.read);
-				CarpoolDaoNotification.updateNotificationInDatabase(list.get(i));
-			}
+		Notification notification = CarpoolDaoNotification.getNotificationById(notificationId);
+		if(notification==null){
+			throw new NotificationNotFoundException();
+		}else if(notification.getTargetUserId()==userId){
+			notification.setState(NotificationState.read);
+			CarpoolDaoNotification.updateNotificationInDatabase(notification);
 		}
        
 	}
