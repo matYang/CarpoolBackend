@@ -28,12 +28,7 @@ public class ExecutorProvider {
 		else if(task instanceof StoreSearchHistoryTask){
 			srExecutor.submit(executableTask);
 		}
-		try {
-			Thread.sleep(2000000l);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 
 }
