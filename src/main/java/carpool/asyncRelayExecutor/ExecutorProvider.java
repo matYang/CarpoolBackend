@@ -11,7 +11,7 @@ import carpool.interfaces.PseudoAsyncTask;
 
 public class ExecutorProvider {
 	private static final int threadPool_max_notifiaction = 10;
-	private static final int threadPool_max_email = 2;
+	private static final int threadPool_max_email = 10;
 	private static final int threadPool_max_sr = 2;
 	private static final ExecutorService notificationExecutor = Executors.newFixedThreadPool(threadPool_max_notifiaction);
 	private static final ExecutorService emailExecutor = Executors.newFixedThreadPool(threadPool_max_email);
@@ -27,6 +27,12 @@ public class ExecutorProvider {
 		}
 		else if(task instanceof StoreSearchHistoryTask){
 			srExecutor.submit(executableTask);
+		}
+		try {
+			Thread.sleep(2000000l);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

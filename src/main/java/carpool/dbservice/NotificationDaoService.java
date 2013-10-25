@@ -27,18 +27,33 @@ public class NotificationDaoService{
 	public static void addToNotificationQueue(Notification n){
 		db_notificationPendingQeue.add(n);
 	}
+	public static void addToNotificationQueue(ArrayList<Notification> ns){
+		db_notificationPendingQeue.addAll(ns);
+	}
 	public static void clearNotificationQueue(){
 		db_notificationPendingQeue.clear();
 	}
-	public static void storeNotificationQueue(){
+	public static void dispatchNotificationQueue(){
 		createNewNotification(db_notificationPendingQeue);
+		sendNotification(db_notificationPendingQeue);
 		clearNotificationQueue();
 	}
 	
-	//leave this for now
+	/**
+	 *  submitting to execution 
+	 */
 	public static void sendNotification(Notification n){
-		
+		ArrayList<Notification> ns = new ArrayList<Notification>();
+		ns.add(n);
+		sendNotification(ns);
 	}
+	
+	public static void sendNotification(ArrayList<Notification> ns){
+		NotificationRelayTask nTask = new NotificationRelayTask(ns);
+        ExecutorProvider.executeRelay(nTask);
+	}
+	
+	
 	
 	/**
 	 * get all the notifications from database
