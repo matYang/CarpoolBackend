@@ -91,7 +91,7 @@ public class TransactionResourceId extends PseudoResource{
 			
 			transactionId = Integer.parseInt(this.getReqAttr("id"));
 			userId = Integer.parseInt(this.getQueryVal("userId"));
-			stateIndex = Integer.parseInt(this.getQueryVal("stateIndex"));
+			stateIndex = Integer.parseInt(this.getQueryVal("stateChangeAction"));
 			
 			this.validateAuthentication(userId);
 			
