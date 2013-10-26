@@ -1,11 +1,15 @@
 package carpool.dbservice.admin;
 
+import java.util.ArrayList;
+
 import carpool.carpoolDAO.*;
 import carpool.cleanRoutineTask.MessageCleaner;
 import carpool.cleanRoutineTask.TransactionCleaner;
+import carpool.constants.Constants;
 import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.transactionState;
 import carpool.constants.Constants.userState;
+import carpool.dbservice.NotificationDaoService;
 import carpool.exception.*;
 import carpool.model.*;
 
@@ -27,6 +31,12 @@ public class AdminService {
 		Transaction transaction = CarpoolDaoTransaction.getTransactionById(transactionId);
 		transaction.setState(targetState);
 		CarpoolDaoTransaction.updateTransactionInDatabase(transaction);
+		
+		//send notifications
+		ArrayList<Notification> ns = new ArrayList<Notification>();
+		ns.add(new Notification(Constants.NotificationEvent.transactionReleased, transaction.getProviderId()));
+		ns.add(new Notification(Constants.NotificationEvent.transactionReleased, transaction.getCustomerId()));
+		NotificationDaoService.sendNotification(ns);
 	}
 	
 	public static void clearBothDatabase(){

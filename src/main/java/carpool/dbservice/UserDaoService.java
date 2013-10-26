@@ -5,6 +5,7 @@ import java.util.*;
 
 import carpool.common.*;
 import carpool.constants.Constants;
+import carpool.constants.Constants.NotificationEvent;
 import carpool.constants.Constants.gender;
 import carpool.carpoolDAO.*;
 import carpool.exception.PseudoException;
@@ -98,10 +99,9 @@ public class UserDaoService{
 
 		try {
 			CarpoolDaoUser.addToSocialList(userId, targetUserId);
-//			//send followed Notification
-//			Notification n = new Notification(-1, Constants.notificationType.on_user, Constants.notificationEvent.followed,
-//					id, user.getName(), 0, 0, targetUserId, "You have been followed by XXX", Calendar.getInstance(), false, false);
-//			NotificationDaoService.createNewNotification(n);
+			//send followed Notification
+			Notification n = new Notification(Constants.NotificationEvent.watched, targetUserId);
+			NotificationDaoService.sendNotification(n);
 			
 			return true;
 		} catch (Exception e) {

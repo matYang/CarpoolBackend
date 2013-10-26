@@ -34,8 +34,8 @@ public class NotificationDaoService{
 		db_notificationPendingQeue.clear();
 	}
 	public static void dispatchNotificationQueue(){
-		createNewNotification(db_notificationPendingQeue);
 		sendNotification(db_notificationPendingQeue);
+		createNewNotification(db_notificationPendingQeue);
 		clearNotificationQueue();
 	}
 	
@@ -51,6 +51,7 @@ public class NotificationDaoService{
 	public static void sendNotification(ArrayList<Notification> ns){
 		NotificationRelayTask nTask = new NotificationRelayTask(ns);
         ExecutorProvider.executeRelay(nTask);
+        createNewNotification(ns);
 	}
 	
 	

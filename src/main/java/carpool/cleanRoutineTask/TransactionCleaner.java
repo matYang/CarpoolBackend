@@ -9,10 +9,12 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.Constants;
 import carpool.constants.Constants.transactionState;
+import carpool.dbservice.NotificationDaoService;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
+import carpool.model.Notification;
 import carpool.model.Transaction;
 
 import java.sql.PreparedStatement;
@@ -43,15 +45,19 @@ public class TransactionCleaner extends CarpoolDaoTransaction {
 			stmt.setInt(4, Constants.transactionState.aboutToStart.code);
 			stmt.setString(5, yesterday);			
 			ResultSet rs = stmt.executeQuery();			
-				while(rs.next()){	
-					Transaction transaction = CarpoolDaoTransaction.createTransactionByResultSet(rs);					
-				    if(transaction.getState() == Constants.transactionState.init){				    	
-				    	transaction.setState(transactionState.aboutToStart);				    	
-				    }else if(transaction.getState() == Constants.transactionState.aboutToStart){				    	
-				    	transaction.setState(transactionState.finished);				    	
-				    }
-				    CarpoolDaoTransaction.updateTransactionInDatabase(transaction);
-					}			
+			while(rs.next()){	
+				Transaction transaction = CarpoolDaoTransaction.createTransactionByResultSet(rs);					
+			    if(transaction.getState() == Constants.transactionState.init){				    	
+			    	transaction.setState(transactionState.aboutToStart);				    	
+			    }else if(transaction.getState() == Constants.transactionState.aboutToStart){				    	
+			    	transaction.setState(transactionState.finished);				    	
+			    }
+			    CarpoolDaoTransaction.updateTransactionInDatabase(transaction);
+			    //use the queue from notification service here
+			    NotificationDaoService.addToNotificationQueue(new Notification(Constants.NotificationEvent.transactionAboutToStart, transaction.getProviderId()));
+			    NotificationDaoService.addToNotificationQueue(new Notification(Constants.NotificationEvent.transactionAboutToStart, transaction.getCustomerId()));
+			}
+			NotificationDaoService.dispatchNotificationQueue();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DebugLog.d(e.getMessage());
