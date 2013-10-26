@@ -56,13 +56,13 @@ public class CarpoolDaoMessage{
 		ArrayList<Message> retVal = new ArrayList<Message>();
 		//SR.isRoundTrip()==false
 		String query = "SELECT * from carpoolDAOMessage WHERE((isRoundTrip NOT LIKE ? AND (((departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ?"+
-		"AND arrival_primaryLocation LIKE ? AND departure_Time > ? AND departure_Time < ?) OR ((arrival_seatsNumber > arrival_seatsBooked) AND arrival_primaryLocation LIKE ? AND departure_primaryLocation LIKE ? AND arrival_Time > ? AND arrival_Time < ?)))"+
-		"OR(isRoundTrip LIKE ? AND (departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ? AND arrival_primaryLocation LIKE ? AND departure_Time > ?AND departure_Time < ?)) AND messageState=2";
+		"AND arrival_primaryLocation LIKE ? AND departure_Time >= ? AND departure_Time <= ?) OR ((arrival_seatsNumber > arrival_seatsBooked) AND arrival_primaryLocation LIKE ? AND departure_primaryLocation LIKE ? AND arrival_Time >= ? AND arrival_Time <= ?)))"+
+		"OR(isRoundTrip LIKE ? AND (departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ? AND arrival_primaryLocation LIKE ? AND departure_Time >= ?AND departure_Time <= ?)) AND messageState=2";
 		//SR.isRoundTrip()==true		
 		String query2="SELECT * from carpoolDAOMessage WHERE((isRoundTrip LIKE ? AND departure_primaryLocation LIKE ?"+
-				"AND arrival_primaryLocation LIKE ? AND ((departure_Time > ? AND departure_Time < ? AND (departure_seatsNumber > departure_seatsBooked)) OR (arrival_Time > ? AND arrival_Time < ? AND (arrival_seatsNumber > arrival_seatsBooked))))OR(isRoundTrip NOT LIKE ? "+
-				"AND (((departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ? AND arrival_primaryLocation LIKE ? AND departure_Time > ? AND departure_Time < ?) OR ((departure_seatsNumber > departure_seatsBooked) AND "+
-				"arrival_primaryLocation LIKE ? AND departure_primaryLocation LIKE ? AND departure_Time > ? AND departure_Time < ?)) ))AND messageState=2";
+				"AND arrival_primaryLocation LIKE ? AND ((departure_Time >= ? AND departure_Time <= ? AND (departure_seatsNumber > departure_seatsBooked)) OR (arrival_Time >= ? AND arrival_Time <= ? AND (arrival_seatsNumber > arrival_seatsBooked))))OR(isRoundTrip NOT LIKE ? "+
+				"AND (((departure_seatsNumber > departure_seatsBooked) AND departure_primaryLocation LIKE ? AND arrival_primaryLocation LIKE ? AND departure_Time >= ? AND departure_Time <= ?) OR ((departure_seatsNumber > departure_seatsBooked) AND "+
+				"arrival_primaryLocation LIKE ? AND departure_primaryLocation LIKE ? AND departure_Time >=? AND departure_Time <= ?)) ))AND messageState=2";
 		if(targetType.code==2){
 			query+=" AND (messageType = 0 or messageType =1 or messageType=?)";
 			query2+=" AND (messageType = 0 or messageType =1 or messageType=?)";

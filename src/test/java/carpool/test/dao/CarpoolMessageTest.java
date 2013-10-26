@@ -269,25 +269,6 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 		Message message9=new Message(userId,false, dl,dt,timeSlot,10 , priceList,al,at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
 		message9.setDeparture_seatsBooked(11);
 		CarpoolDaoMessage.addMessageToDatabase(message9);
-		Message message10=new Message(userId,true, dl,dt,timeSlot,1 , priceList,al,at,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
-		message10.setDeparture_seatsBooked(2);
-		message10.setArrival_seatsBooked(2);
-		CarpoolDaoMessage.addMessageToDatabase(message10);
-		Message message11=new Message(userId,true, al,dt2,timeSlot,1 , priceList,dl,dt,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
-		message11.setDeparture_seatsBooked(2);
-		message11.setArrival_seatsBooked(2);
-		CarpoolDaoMessage.addMessageToDatabase(message11);
-		Message message12=new Message(userId,false, al,dt2,timeSlot,10 , priceList,dl,dt,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
-		message12.setDeparture_seatsBooked(11);
-		CarpoolDaoMessage.addMessageToDatabase(message12);	
-		Message message13=new Message(userId,true, al,dt3,timeSlot,1 , priceList,dl,dt,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
-		message13.setDeparture_seatsBooked(2);
-		message13.setArrival_seatsBooked(2);
-		CarpoolDaoMessage.addMessageToDatabase(message13);
-		Message message14=new Message(userId,true, dl,dt3,timeSlot,1 , priceList,al,dt2,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
-		message14.setDeparture_seatsBooked(2);
-		message14.setArrival_seatsBooked(2);
-		CarpoolDaoMessage.addMessageToDatabase(message14);
 		//SRs
 		SearchRepresentation SR = new SearchRepresentation(false,dl,al,dt,at,type,timeSlot,timeSlot);		
 		SearchRepresentation SR2 = new SearchRepresentation(true,al,dl,dt2,dt,type2,timeSlot,timeSlot);
@@ -302,12 +283,37 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 		atime.add(Calendar.DAY_OF_YEAR, 1);
 		atime.set(Calendar.HOUR_OF_DAY, 18);
 		SearchRepresentation SR5 = new SearchRepresentation(false,dl,al,dtime,atime,type,timeSlot1,timeSlot2);
+		Calendar dtime2 = Calendar.getInstance();		
+		dtime2.set(Calendar.HOUR_OF_DAY, 9);
+		dtime2.set(Calendar.MINUTE, 30);
+		dtime2.set(Calendar.SECOND, 0);
+		Calendar atime2 = Calendar.getInstance();		
+		atime2.set(Calendar.HOUR_OF_DAY, 18);
+		dtime2.set(Calendar.MINUTE, 30);
+		dtime2.set(Calendar.SECOND, 0);
+		Calendar dtime3 = Calendar.getInstance();		
+		dtime3.set(Calendar.HOUR_OF_DAY, 21);
+		dtime3.set(Calendar.MINUTE, 30);
+		dtime3.set(Calendar.SECOND, 0);
+		Calendar atime3 = Calendar.getInstance();		
+		atime3.set(Calendar.HOUR_OF_DAY, 23);
+		dtime3.set(Calendar.MINUTE, 59);
+		dtime3.set(Calendar.SECOND, 59);
+		Calendar dtime4 = Calendar.getInstance();
+		dtime4.add(Calendar.DAY_OF_YEAR, -1);
+		Message message10=new Message(userId,true, dl,dtime3,timeSlot,1 , priceList,al,atime3,timeSlot, 1,priceList,paymentMethod,"test",  type1, genderRequirement);
+		CarpoolDaoMessage.addMessageToDatabase(message10);
+		Message message11=new Message(userId,true, dl,dtime3,timeSlot,1 , priceList,al,atime3,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
+		CarpoolDaoMessage.addMessageToDatabase(message11);
+		SearchRepresentation SR6 = new SearchRepresentation(false,dl,al,dtime2,atime2,type2,timeSlot1,timeSlot2);
+		SearchRepresentation SR7 = new SearchRepresentation(true,dl,al,dtime2,atime2,type1,timeSlot1,timeSlot2);
+		SearchRepresentation SR8 = new SearchRepresentation(true,al,dl,dtime4,dtime2,type,timeSlot1,timeSlot2);
 		//New SR Test
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();
 			mlist = CarpoolDaoMessage.searchMessage(SR5);
-			if(mlist.size()==4&&mlist.get(0).equals(message)&&mlist.get(1).equals(message2)&&mlist.get(2).equals(message3)&&mlist.get(3).equals(message6)){
-				
+			if(mlist.size()==5&&mlist.get(0).equals(message)&&mlist.get(1).equals(message2)&&mlist.get(2).equals(message3)&&mlist.get(3).equals(message6)&&mlist.get(4).equals(message11)){
+				//Passed;
 			}else{				
 				fail();
 			}
@@ -315,11 +321,48 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 			e.printStackTrace();
 			fail();
 		}
+		try{
+			ArrayList<Message> mlist = new ArrayList<Message>();
+			mlist = CarpoolDaoMessage.searchMessage(SR6);
+			if(mlist.size()==6&&mlist.get(0).equals(message)&&mlist.get(1).equals(message2)&&mlist.get(2).equals(message3)&&mlist.get(3).equals(message6)&&mlist.get(4).equals(message10)&&mlist.get(5).equals(message11)){
+				//Passed;
+			}else{			
+				fail();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
+		try{
+			ArrayList<Message> mlist = new ArrayList<Message>();
+			mlist = CarpoolDaoMessage.searchMessage(SR7);
+			if(mlist.size()==1&&mlist.get(0).equals(message10)){
+				//Passed;
+			}else{
+				fail();
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+			fail();
+		}
+		try{
+			ArrayList<Message> mlist = new ArrayList<Message>();
+			mlist = CarpoolDaoMessage.searchMessage(SR8);
+			if(mlist.size()==5&&mlist.get(0).equals(message)&&mlist.get(1).equals(message3)&&mlist.get(2).equals(message4)&mlist.get(3).equals(message6)&&mlist.get(4).equals(message11)){
+				//Passed;
+			}else{
+				System.out.println(mlist.size());
+				fail();
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+			fail();
+		}
 		//Test
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();
 			mlist = CarpoolDaoMessage.searchMessage(SR);
-			if(mlist !=null && mlist.size()==4 && mlist.get(0).equals(message)&&mlist.get(1).equals(message2)&&mlist.get(2).equals(message3)&&mlist.get(3).equals(message6)){
+			if(mlist.size()==5 && mlist.get(0).equals(message)&&mlist.get(1).equals(message2)&&mlist.get(2).equals(message3)&&mlist.get(3).equals(message6)&&mlist.get(4).equals(message11)){
 				//Passed;				
 			}else{
 				System.out.println(mlist.size());
@@ -332,7 +375,7 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();
 			mlist = CarpoolDaoMessage.searchMessage(SR2);
-			if(mlist !=null && mlist.size()==4 && mlist.get(0).equals(message)&&mlist.get(1).equals(message3)&&mlist.get(2).equals(message4)&&mlist.get(3).equals(message6)){
+			if(mlist !=null && mlist.size()==6 && mlist.get(0).equals(message)&&mlist.get(1).equals(message3)&&mlist.get(2).equals(message4)&&mlist.get(3).equals(message6)&&mlist.get(4).equals(message10)&&mlist.get(5).equals(message11)){
 				//Passed;
 			}else{
 				System.out.println(mlist.size());
@@ -360,7 +403,7 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();
 			mlist = CarpoolDaoMessage.searchMessage(SR4);
-			if(mlist !=null && mlist.size()==2 && mlist.get(0).equals(message)&&mlist.get(1).equals(message2)){
+			if(mlist.size()==3 && mlist.get(0).equals(message)&&mlist.get(1).equals(message2)&&mlist.get(2).equals(message11)){
 				//Passed;
 			}else{
 				System.out.println(mlist.size());
