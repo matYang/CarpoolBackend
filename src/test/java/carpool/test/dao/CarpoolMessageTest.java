@@ -234,8 +234,14 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 		paymentMethod paymentMethod =null;
 		paymentMethod = paymentMethod.fromInt(0);
 		messageType type = messageType.fromInt(0);
+		messageType type1 = messageType.fromInt(1);
+		messageType type2 = messageType.fromInt(2);
 		gender genderRequirement = gender.fromInt(0);		
-		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);		
+		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
+		DayTimeSlot timeSlot1 = DayTimeSlot.fromInt(1);
+		DayTimeSlot timeSlot2 = DayTimeSlot.fromInt(2);
+		DayTimeSlot timeSlot3 = DayTimeSlot.fromInt(3);
+		DayTimeSlot timeSlot4 = DayTimeSlot.fromInt(4);
 		int userId=user.getUserId();
 		//These messages should pass the search	
 		//Message	
@@ -284,9 +290,31 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 		CarpoolDaoMessage.addMessageToDatabase(message14);
 		//SRs
 		SearchRepresentation SR = new SearchRepresentation(false,dl,al,dt,at,type,timeSlot,timeSlot);		
-		SearchRepresentation SR2 = new SearchRepresentation(true,al,dl,dt2,dt,type,timeSlot,timeSlot);
-		SearchRepresentation SR3 = new SearchRepresentation(false,al,dl,dt2,dt,type,timeSlot,timeSlot);
+		SearchRepresentation SR2 = new SearchRepresentation(true,al,dl,dt2,dt,type2,timeSlot,timeSlot);
+		SearchRepresentation SR3 = new SearchRepresentation(false,al,dl,dt2,dt,type2,timeSlot,timeSlot);
 		SearchRepresentation SR4 = new SearchRepresentation(true,dl,al,dt,at,type,timeSlot,timeSlot);
+	    //New SRs
+		Calendar dtime = Calendar.getInstance();		
+		dtime.set(Calendar.HOUR_OF_DAY, 24);
+		dtime.set(Calendar.MINUTE, 0);
+		dtime.set(Calendar.SECOND, 0);
+		Calendar atime = Calendar.getInstance();
+		atime.add(Calendar.DAY_OF_YEAR, 1);
+		atime.set(Calendar.HOUR_OF_DAY, 18);
+		SearchRepresentation SR5 = new SearchRepresentation(false,dl,al,dtime,atime,type,timeSlot1,timeSlot2);
+		//New SR Test
+		try{
+			ArrayList<Message> mlist = new ArrayList<Message>();
+			mlist = CarpoolDaoMessage.searchMessage(SR5);
+			if(mlist.size()==4&&mlist.get(0).equals(message)&&mlist.get(1).equals(message2)&&mlist.get(2).equals(message3)&&mlist.get(3).equals(message6)){
+				
+			}else{				
+				fail();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
 		//Test
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();
