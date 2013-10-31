@@ -37,7 +37,7 @@ public class Notification implements PseudoModel, PseudoValidatable, Comparable<
 	private Notification(){}
 	
 	
-	//default constructor, used for serialization
+	//default constructor, used for serialization/testing
 	public Notification(NotificationEvent event, int targetUserId) {
 		this.notificationId = -1;
 		this.notificationEvent = NotificationEvent.transactionInit;
@@ -55,7 +55,27 @@ public class Notification implements PseudoModel, PseudoValidatable, Comparable<
 		this.creationTime = Calendar.getInstance();
 		this.historyDeleted = false;
 	}
-
+	
+	//init constructor, used for initiation
+	public Notification(NotificationEvent event, int targetUserId, int initUserId, int messageId, int transactionId) {
+		this.notificationId = -1;
+		this.notificationEvent = NotificationEvent.transactionInit;
+		this.targetUserId = targetUserId;
+		
+		this.initUserId = initUserId;
+		this.messageId = messageId;
+		this.transactionId = transactionId;
+		
+		this.initUser = null;
+		this.message = null;
+		this.transaction = null;
+		
+		this.state = NotificationState.unread;
+		this.creationTime = Calendar.getInstance();
+		this.historyDeleted = false;
+	}
+	
+	//full constructor, used for SQL
 	public Notification(int notificationId,
 			NotificationEvent notificationEvent, int targetUserId,
 			int initUserId, int messageId, int transactionId,

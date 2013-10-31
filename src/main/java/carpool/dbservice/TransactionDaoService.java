@@ -33,7 +33,6 @@ public class TransactionDaoService{
 	}
 	
 	
-	
 	/**
 	 * get the full transaction by id
 	 * @param transactionId
@@ -48,10 +47,10 @@ public class TransactionDaoService{
 	 */
 	public static Transaction getUserTransactionById(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, UserNotFoundException, MessageNotFoundException{
 		Transaction transaction = getTransactionById(transactionId);
-		//TODO add id checking
-//		if (transaction.getInitUserId() != userId && transaction.getTargetUserId() != userId){
-//			throw new TransactionOwnerNotMatchException();
-//		}
+
+		if (transaction.getProviderId() != userId && transaction.getCustomerId() != userId){
+			throw new TransactionOwnerNotMatchException();
+		}
 		return transaction;
 	}
 
@@ -78,7 +77,7 @@ public class TransactionDaoService{
 		CarpoolDaoMessage.UpdateMessageInDatabase(base);
 		
 		//currently transactions are customer -> provider only
-		Notification n = new Notification(Constants.NotificationEvent.transactionInit, newTransaction.getProviderId());
+		Notification n = new Notification(Constants.NotificationEvent.transactionInit, newTransaction.getProviderId(), t.getCustomerId(), t.getMessageId(), t.getTransactionId());
 		NotificationDaoService.sendNotification(n);
 		return t;
 	}
@@ -112,8 +111,8 @@ public class TransactionDaoService{
 			CarpoolDaoMessage.UpdateMessageInDatabase(base);
 			//send notifications
 			ArrayList<Notification> ns = new ArrayList<Notification>();
-			ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, t.getProviderId()));
-			ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, t.getCustomerId()));
+			ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, t.getProviderId(), t.getCustomerId(), t.getMessageId(), t.getTransactionId()));
+			ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, t.getCustomerId(), t.getProviderId(), t.getMessageId(), t.getTransactionId()));
 			NotificationDaoService.sendNotification(ns);
 			
 		}else{
@@ -141,8 +140,8 @@ public class TransactionDaoService{
 				CarpoolDaoTransaction.updateTransactionInDatabase(t);
 				//send notifications
 				ArrayList<Notification> ns = new ArrayList<Notification>();
-				ns.add(new Notification(Constants.NotificationEvent.tranasctionUnderInvestigation, t.getProviderId()));
-				ns.add(new Notification(Constants.NotificationEvent.tranasctionUnderInvestigation, t.getCustomerId()));
+				ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, t.getProviderId(), t.getCustomerId(), t.getMessageId(), t.getTransactionId()));
+				ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, t.getCustomerId(), t.getProviderId(), t.getMessageId(), t.getTransactionId()));
 				NotificationDaoService.sendNotification(ns);
 			}
 		}else{
@@ -193,8 +192,8 @@ public class TransactionDaoService{
 					throw new TransactionOwnerNotMatchException();
 				}
 				ArrayList<Notification> ns = new ArrayList<Notification>();
-				ns.add(new Notification(Constants.NotificationEvent.transactionEvaluated, t.getProviderId()));
-				ns.add(new Notification(Constants.NotificationEvent.transactionEvaluated, t.getCustomerId()));
+				ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, t.getProviderId(), t.getCustomerId(), t.getMessageId(), t.getTransactionId()));
+				ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, t.getCustomerId(), t.getProviderId(), t.getMessageId(), t.getTransactionId()));
 				NotificationDaoService.sendNotification(ns);
 			} catch (UserNotFoundException e) {
 				e.printStackTrace();

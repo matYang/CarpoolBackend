@@ -35,7 +35,7 @@ public class NotificationResourceId extends PseudoResource{
 			
 			this.validateAuthentication(id);
 			
-        	ArrayList<Notification> notifications = NotificationDaoService.getUserNotification(id);
+        	ArrayList<Notification> notifications = UserDaoService.getNotificationByUserId(id);
         	if (notifications != null){
         		response = JSONFactory.toJSON(notifications);
                 setStatus(Status.SUCCESS_OK);
