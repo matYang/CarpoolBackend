@@ -41,7 +41,18 @@ public class CarpoolConfig {
 	public static final String pathToSearchHistoryFolder = "srHistory/";
 	public static final String searchHistoryFileSufix = "_sr.txt";
     
-
+    public static final String profileImgPrefix = "userprofile-";
+    public static final String imgSize_xs = "xs-8-";
+    public static final String imgSize_s = "s-16-";
+    
+    public static final String imgSize_m = "m-32-";
+    public static final String imgSize_l = "l-64-";
+    public static final String imgSize_xl = "xl-128-";
+    
+    public static final String imgSize_raw = "raw-0-";
+    
+    public static final String redisSearchHistoryPrefix = "redis/userSearchHistory-";;
+    public static final int redisSearchHistoryUpbound = 6;
 	
 	public static final LocationRepresentation getDefaultLocationRepresentation(){
 		return new LocationRepresentation("Canada_Ontario_Waterloo_undetermined_3");
