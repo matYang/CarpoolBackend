@@ -2,6 +2,8 @@ package serviceTest;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 
 import carpool.constants.Constants;
@@ -21,6 +23,23 @@ public class NoticationDaoServiceTest {
 			e.printStackTrace();
 			fail();
 		}
+	}
+	
+	@Test
+	public void addNotificationTest(){
+		Notification n1 = new Notification(Constants.NotificationEvent.watched, 1);
+		Notification n2 = new Notification(Constants.NotificationEvent.transactionCancelled, 1);
+		Notification n3 = new Notification(Constants.NotificationEvent.transactionInit, 1);
+		Notification n4 = new Notification(Constants.NotificationEvent.transactionEvaluated, 1);
+		Notification n5 = new Notification(Constants.NotificationEvent.transactionAboutToStart, 1);
+		
+		ArrayList<Notification> ns = new ArrayList<Notification>();
+		ns.add(n1);
+		ns.add(n2);
+		ns.add(n3);
+		ns.add(n4);
+		ns.add(n5);
+		NotificationDaoService.sendNotification(ns);
 	}
 
 	

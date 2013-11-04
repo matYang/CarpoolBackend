@@ -34,8 +34,8 @@ public class AdminService {
 		
 		//send notifications
 		ArrayList<Notification> ns = new ArrayList<Notification>();
-		ns.add(new Notification(Constants.NotificationEvent.transactionReleased, transaction.getProviderId()));
-		ns.add(new Notification(Constants.NotificationEvent.transactionReleased, transaction.getCustomerId()));
+		ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, transaction.getProviderId(), transaction.getCustomerId(), transaction.getMessageId(), transaction.getTransactionId()));
+		ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, transaction.getCustomerId(), transaction.getProviderId(), transaction.getMessageId(), transaction.getTransactionId()));
 		NotificationDaoService.sendNotification(ns);
 	}
 	

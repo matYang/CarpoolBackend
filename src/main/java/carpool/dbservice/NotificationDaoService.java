@@ -68,16 +68,6 @@ public class NotificationDaoService{
 	}
 	
 	
-	
-	/**
-	 * get the full notification by its notificartionId
-	 * @throws TransactionNotFoundException 
-	 * @throws MessageNotFoundException 
-	 */
-	public static ArrayList<Notification> getUserNotification(int userId) throws UserNotFoundException, MessageNotFoundException, TransactionNotFoundException{
-
-		return CarpoolDaoNotification.getByUserId(userId);
-	}
 
 	/**
 	 * created a new notification in SQL, constructed using the notification initialization constructor

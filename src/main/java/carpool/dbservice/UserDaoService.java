@@ -11,6 +11,7 @@ import carpool.carpoolDAO.*;
 import carpool.exception.PseudoException;
 import carpool.exception.ValidationException;
 import carpool.exception.message.MessageNotFoundException;
+import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.*;
 import carpool.model.representation.SearchRepresentation;
@@ -101,6 +102,7 @@ public class UserDaoService{
 			CarpoolDaoUser.addToSocialList(userId, targetUserId);
 			//send followed Notification
 			Notification n = new Notification(Constants.NotificationEvent.watched, targetUserId);
+			n.setInitUserId(userId);
 			NotificationDaoService.sendNotification(n);
 			
 			return true;
@@ -144,18 +146,12 @@ public class UserDaoService{
 	}
 	
 	
-	
-	
-	
-	//TODO
 	public static ArrayList<Transaction> getTransactionByUserId(int id) throws UserNotFoundException, MessageNotFoundException{
 		return CarpoolDaoTransaction.getAllTransactionByUserId(id);
 	}
 	
-
-	public static ArrayList<Notification> getNotificationByUserId(int id) throws UserNotFoundException{
-		User user = getUserById(id);
-		return user.getNotificationList();
+	public static ArrayList<Notification> getNotificationByUserId(int userId) throws UserNotFoundException, MessageNotFoundException, TransactionNotFoundException{
+		return CarpoolDaoNotification.getByUserId(userId);
 	}
 
 	public static void updateUserSearch(SearchRepresentation userSearch, int id) throws PseudoException {
