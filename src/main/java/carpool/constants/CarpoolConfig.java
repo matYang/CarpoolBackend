@@ -52,7 +52,7 @@ public class CarpoolConfig {
     public static final String imgSize_raw = "raw-0-";
     
     public static final String redisSearchHistoryPrefix = "redis/userSearchHistory-";;
-    public static final int redisSearchHistoryUpbound = 6;
+    public static final int redisSearchHistoryUpbound = 50;
 	
 	public static final LocationRepresentation getDefaultLocationRepresentation(){
 		return new LocationRepresentation("Canada_Ontario_Waterloo_undetermined_3");
