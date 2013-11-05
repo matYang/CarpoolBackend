@@ -90,8 +90,9 @@ public class TransactionResourceId extends PseudoResource{
 		try {
 			
 			transactionId = Integer.parseInt(this.getReqAttr("id"));
-			userId = Integer.parseInt(this.getQueryVal("userId"));
-			stateIndex = Integer.parseInt(this.getQueryVal("stateChangeAction"));
+			JSONObject hashHolder = (new JsonRepresentation(entity)).getJsonObject();
+			userId = hashHolder.getInt("userId");
+			stateIndex = hashHolder.getInt("stateChangeAction");
 			
 			this.validateAuthentication(userId);
 			
@@ -108,7 +109,7 @@ public class TransactionResourceId extends PseudoResource{
 	        		 	break;
 	        			
 	        		case evaluate:
-	        			int score = Integer.parseInt(this.getQueryVal("score"));
+	        			int score = hashHolder.getInt("score");
 	        			transaction = TransactionDaoService.evaluateTransaction(transactionId, userId, score);
 	        			break;
 	        			

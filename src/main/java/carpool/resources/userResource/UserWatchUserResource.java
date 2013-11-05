@@ -18,6 +18,7 @@ import carpool.common.DebugLog;
 import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
+import carpool.exception.ValidationException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
@@ -69,20 +70,35 @@ public class UserWatchUserResource extends PseudoResource{
 		int targetUserId = -1;
 		JSONObject response = new JSONObject();
 		boolean watched = false;
+		boolean deWatched = false;
 
 		try {
 			//this.checkEntity(entity);
 
 			id = Integer.parseInt(this.getReqAttr("id"));
-			targetUserId = Integer.parseInt(this.getQueryVal("targetUserId"));
+			targetUserId = (new JsonRepresentation(entity)).getJsonObject().getInt("targetUserId");
+			String action = (new JsonRepresentation(entity)).getJsonObject().getString("action");
 
 			this.validateAuthentication(id);
-
-			watched = UserDaoService.watchUser(id, targetUserId);
-			if (watched) {
-				setStatus(Status.SUCCESS_OK);
-			} else {
-				setStatus(Status.CLIENT_ERROR_FORBIDDEN);
+			if (action.equals("watch")){
+				watched = UserDaoService.watchUser(id, targetUserId);
+				if (watched) {
+					setStatus(Status.SUCCESS_OK);
+				} else {
+					setStatus(Status.CLIENT_ERROR_FORBIDDEN);
+				}
+			}
+			else if(action.equals("dewatch")){
+				deWatched = UserDaoService.deWatchUser(id, targetUserId);
+				
+				if (deWatched) {
+					setStatus(Status.SUCCESS_OK);
+				} else {
+					setStatus(Status.CLIENT_ERROR_FORBIDDEN);
+				}
+			}
+			else{
+				throw new ValidationException("Invalid action");
 			}
 
 		} catch (PseudoException e) {
@@ -96,36 +112,6 @@ public class UserWatchUserResource extends PseudoResource{
 		this.addCORSHeader();
         return result;
     }
-    
-    @Delete
-    public Representation deWatchUser() {
-    	boolean deWatched = false;
-    	int userId = -1;
-    	int targetUserId = -1;
-    	
-		try {
-			userId = Integer.parseInt(this.getReqAttr("id"));
-			targetUserId = Integer.parseInt(this.getQueryVal("targetUserId"));
 
-			this.validateAuthentication(userId);
-
-			deWatched = UserDaoService.deWatchUser(userId, targetUserId);
-			
-			if (deWatched) {
-				setStatus(Status.SUCCESS_OK);
-			} else {
-				setStatus(Status.CLIENT_ERROR_FORBIDDEN);
-			}
-
-		} catch (PseudoException e) {
-			this.addCORSHeader();
-			return new StringRepresentation(this.doPseudoException(e));
-		} catch(Exception e){
-			this.doException(e);
-		}
-	      
-		this.addCORSHeader();
-        return null;
-    }
 
 }

@@ -97,6 +97,7 @@ public class CarpoolDaoNotification {
 		String query="select * from carpoolDAONotification where notification_Id=?";
 		Notification notification = null;
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			stmt.setInt(1, notificationId);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
 				notification = createNotificationByResultSet(rs);

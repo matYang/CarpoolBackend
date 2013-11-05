@@ -98,14 +98,13 @@ public class NotificationDaoService{
 	 * @throws MessageNotFoundException 
 
 	 */
-	public static void deleteNotification(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
+	public static void deleteNotification(int notificationId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
 		Notification notification = CarpoolDaoNotification.getNotificationById(notificationId);
 		if(notification==null){
 			throw new NotificationNotFoundException();
 		}
-		else if(notification.getTargetUserId()==userId){
-			CarpoolDaoNotification.deleteNotification(notificationId);
-		}
+		
+		CarpoolDaoNotification.deleteNotification(notificationId);
        
 	}
 	

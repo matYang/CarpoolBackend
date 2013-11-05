@@ -103,7 +103,7 @@ public class TransactionResource extends PseudoResource{
 		try {
 			this.checkEntity(entity);
 			
-			id = Integer.parseInt(this.getQueryVal("userId"));
+			id = (new JsonRepresentation(entity)).getJsonObject().getInt("userId");
 			this.validateAuthentication(id);
 			
 	        Transaction transaction = parseJSON(entity);

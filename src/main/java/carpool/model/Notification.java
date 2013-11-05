@@ -59,7 +59,7 @@ public class Notification implements PseudoModel, PseudoValidatable, Comparable<
 	//init constructor, used for initiation
 	public Notification(NotificationEvent event, int targetUserId, int initUserId, int messageId, int transactionId) {
 		this.notificationId = -1;
-		this.notificationEvent = NotificationEvent.transactionInit;
+		this.notificationEvent = event;
 		this.targetUserId = targetUserId;
 		
 		this.initUserId = initUserId;

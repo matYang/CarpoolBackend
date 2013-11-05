@@ -66,7 +66,7 @@ public class NotificationResourceId extends PseudoResource{
 			this.checkEntity(entity);
 			
 			notificationId = Integer.parseInt(this.getReqAttr("id"));
-			userId = Integer.parseInt(this.getQueryVal("userId"));
+			userId = (new JsonRepresentation(entity)).getJsonObject().getInt("userId");
 			
 			this.validateAuthentication(userId);
 				
@@ -88,16 +88,12 @@ public class NotificationResourceId extends PseudoResource{
     
     @Delete
     public Representation deleteNotification() {
-    	
-    	int id = -1;
+    	//TODO authentication
     	int notificationId = -1;
 		try {
 			notificationId = Integer.parseInt(this.getReqAttr("id"));
-			id = Integer.parseInt(this.getQueryVal("userId"));
-			
-			this.validateAuthentication(id);
 
-			NotificationDaoService.deleteNotification(notificationId, id);
+			NotificationDaoService.deleteNotification(notificationId);
 			setStatus(Status.SUCCESS_OK);
 			DebugLog.d("@Delete with id: " + notificationId);
 			

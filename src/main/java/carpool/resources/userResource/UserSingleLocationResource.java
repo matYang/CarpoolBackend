@@ -57,7 +57,7 @@ public class UserSingleLocationResource extends PseudoResource{
 			userId = Integer.parseInt(this.getReqAttr("id"));
 			this.validateAuthentication(userId);
 			
-			location = parseJSON(this.getQueryVal("location"));
+			location = parseJSON((new JsonRepresentation(entity)).getJsonObject().getString("location"));
 			if (location != null){
 				
 				User user = UserDaoService.getUserById(userId);

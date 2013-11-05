@@ -19,7 +19,7 @@ import carpool.resources.PseudoResource;
 public class UserToggleNoticesResource extends PseudoResource{
 
 
-	@Put
+	@Get
 	/**
 	 * used for user to toggle email notification state
 	 * @param entity
