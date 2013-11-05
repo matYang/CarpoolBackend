@@ -122,7 +122,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	    this.age = 0;
 	    this.gender = Constants.gender.both;
 	    this.birthday = Calendar.getInstance();
-	    this.imgPath = "";
+	    this.imgPath = "res/personal/default-avatar.jpg";
 	    this.lastLogin = Calendar.getInstance();
 	    this.creationTime = Calendar.getInstance();
 	    

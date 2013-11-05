@@ -30,7 +30,7 @@ public class NotificationDaoService{
 	public static void addToNotificationQueue(ArrayList<Notification> ns){
 		db_notificationPendingQeue.addAll(ns);
 	}
-	public static void clearNotificationQueue(){
+	private static void clearNotificationQueue(){
 		db_notificationPendingQeue.clear();
 	}
 	public static void dispatchNotificationQueue(){
