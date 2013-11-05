@@ -1,4 +1,4 @@
-package carpool.aws;
+package AwsS3Service;
 
 import static org.junit.Assert.fail;
 
@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import redis.clients.jedis.Jedis;
 
+import carpool.aws.awsMain;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoUser;
@@ -29,12 +30,17 @@ import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
 
-public class awsTest {
+public class AwsTest {
+
+	//Note: All the tests have been commented out since some of them may influence the test results of others
 
 	//@Test
 	public void testGetFile(){
+		CarpoolDaoBasic.clearBothDatabase();
+		int userId=1;
 		try{
-			awsMain.getFileObject();
+			org.apache.log4j.BasicConfigurator.configure(new NullAppender());
+			awsMain.getFileObject(userId);
 		} 
 		catch(IOException e){
 			e.getMessage();
@@ -44,8 +50,11 @@ public class awsTest {
 
 	//@Test
 	public void testGetImg(){
+		CarpoolDaoBasic.clearBothDatabase();
+		int userId=1;
 		try{
-			awsMain.getImgObject();
+			org.apache.log4j.BasicConfigurator.configure(new NullAppender());
+			awsMain.getImgObject(userId);
 		}
 		catch(IOException e){
 			e.getMessage();
@@ -54,8 +63,10 @@ public class awsTest {
 	}
 	//@Test
 	public void testUploadImg(){
+		CarpoolDaoBasic.clearBothDatabase();
+		int userId = 1;
 		org.apache.log4j.BasicConfigurator.configure(new NullAppender());
-		awsMain.uploadImg(1);
+		System.out.println(awsMain.uploadProfileImg(userId));
 	}
 
 	//@Test
@@ -176,7 +187,7 @@ public class awsTest {
 
 	}
 
-	@Test
+	//@Test
 	public void testGetSearchHistory() throws IOException{
 
 		CarpoolDaoBasic.clearBothDatabase();
@@ -252,15 +263,6 @@ public class awsTest {
 			//				}
 			fail();
 		}
-
-
-
-
-
-
-
-
-
 
 	}
 }
