@@ -96,6 +96,7 @@ public class RoutingService extends Application {
 		String SessionRedirectPrefix = "/findSession";
 		//	API for session redirection upon non-session pages: /api/v1.0/users/findSession
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + SessionRedirectPrefix, SessionRedirect.class);
+		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + SessionRedirectPrefix + "/{id}", SessionRedirect.class);
 		
 		String UserResourcePrefix = "/user";
 		//  API for Get/Post user:  /api/v1.0/users/user

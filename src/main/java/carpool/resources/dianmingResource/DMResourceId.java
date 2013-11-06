@@ -143,25 +143,15 @@ public class DMResourceId extends PseudoResource{
     
     //now front end sending delete must expose authCode as a parameter, must not equal to initial authCode -1
     @Delete
-    public Representation deleteMessage() {
-    	boolean deleted = false;
-    	int id = -1;
+    public Representation deactivateMessage() {
+    	//TODO authentication
     	int messageId = -1;
 		try {
 			messageId = Integer.parseInt(this.getReqAttr("id"));
-			id = Integer.parseInt(this.getQueryVal("userId"));
 			
-			this.validateAuthentication(id);
+			MessageDaoService.deleteMessage(messageId);
+			setStatus(Status.SUCCESS_OK);
 
-			deleted = MessageDaoService.deleteMessage(messageId, id);
-			if (deleted){
-			  	setStatus(Status.SUCCESS_OK);
-			   	DebugLog.d("@Delete with id: " + messageId);
-			}
-			else{
-			   	setStatus(Status.CLIENT_ERROR_CONFLICT);
-			}
-			
         } catch (PseudoException e){
         	this.addCORSHeader();
 			return new StringRepresentation(this.doPseudoException(e));

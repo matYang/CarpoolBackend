@@ -98,13 +98,11 @@ public class PseudoResource extends ServerResource{
 	}
 	
 	public String getQueryVal(String fieldName) throws UnsupportedEncodingException{
-		System.out.println(getQuery());
 		String val = getQuery().getValues(fieldName);
 		return val != null ? java.net.URLDecoder.decode(val, "utf-8") : null;
 	}
 	
 	public String getSearchQueryVal(String fieldName){
-		System.out.println(getQuery());
 		String val = getQuery().getValues(fieldName);
 		return val;
 	}

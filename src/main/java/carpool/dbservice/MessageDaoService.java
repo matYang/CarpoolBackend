@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import carpool.carpoolDAO.*;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
+import carpool.constants.Constants.messageState;
 import carpool.exception.PseudoException;
 import carpool.exception.ValidationException;
 import carpool.exception.message.MessageNotFoundException;
@@ -72,23 +73,15 @@ public class MessageDaoService{
 	/**
 	 * can not delete if this message has active transactions
 	 */
-	public static boolean deleteMessage(int messageId, int ownerId) throws MessageNotFoundException, MessageOwnerNotMatchException, ValidationException, UserNotFoundException{
+	public static boolean deleteMessage(int messageId) throws MessageNotFoundException, MessageOwnerNotMatchException, ValidationException, UserNotFoundException{
 		Message oldMessage = CarpoolDaoMessage.getMessageById(messageId);
-		if(oldMessage.getOwnerId()!=ownerId){
-			throw new MessageOwnerNotMatchException();
-		}
-		return true;
-//		ArrayList<Transaction> tList = getRelatedTransactions(messageId);
-//		for(Transaction t : tList){
-//			if(t.getState().code < 5 || t.getState().code == 6){
-//				throw new ValidationException("Message Has Active Transactions");
-//			}
+//		if(oldMessage.getOwnerId()!=ownerId){
+//			throw new MessageOwnerNotMatchException();
 //		}
-//		DaoMessage.deleteMessageFromDatabase(oldMessage.getMessageId());
-//		sendMessageDeleteNotification(oldMessage);
-//		return true;
+		oldMessage.setState(messageState.deleted);
+		CarpoolDaoMessage.UpdateMessageInDatabase(oldMessage);
+		return true;
 	}
-	
 
 	
 	/**

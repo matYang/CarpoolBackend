@@ -116,10 +116,10 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.location = location;
 		
 		//dummy fills
-		this.name = "";
+		this.name = "无名氏";
 		this.phone = "";
 		this.qq = "";
-	    this.age = 0;
+	    this.age = 20;
 	    this.gender = Constants.gender.both;
 	    this.birthday = Calendar.getInstance();
 	    this.imgPath = "res/personal/default-avatar.jpg";
@@ -646,6 +646,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 			jsonUser.put("age", this.getAge());
 			jsonUser.put("gender", this.getGender().code);
 			jsonUser.put("birthday", DateUtility.castToAPIFormat(this.getBirthday()));
+			jsonUser.put("imgPath", this.getImgPath());
 			jsonUser.put("location", this.location.toJSON());
 			jsonUser.put("lastLogin", DateUtility.castToAPIFormat(this.getLastLogin()));
 			jsonUser.put("creationTime", DateUtility.castToAPIFormat(this.getCreationTime()));
