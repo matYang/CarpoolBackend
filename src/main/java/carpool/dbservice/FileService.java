@@ -16,7 +16,7 @@ public class FileService {
 		return awsMain.getUserSearchHistory(userId);
 	}
 
-	public static String uploadUserProfileImg(int userId){
+	public static String uploadUserProfileImg(int userId) throws IOException{
 		return awsMain.uploadProfileImg(userId);
 	}
 }

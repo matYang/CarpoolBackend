@@ -155,8 +155,9 @@ public class RoutingService extends Application {
 		String UserNotificationResourcePrefix = "/notification";
 		//	API for user getting history messages: /api/v1.0/users/notification/:id
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserNotificationResourcePrefix + "/{id}", UserNotificationResource.class);
-		
-		
+		String UserSearchHistoryResourcePrefix = "/searchHistory";
+		// API for user getting history messages: /api/v1.0/users/searchHistory/:id
+		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserSearchHistoryResourcePrefix + "/{id}", UserSearchHistoryResource.class);
 		
 		
 		/** --------------------- APIs for general module (legacy from v0.9) ------------------ **/

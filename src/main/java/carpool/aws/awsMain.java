@@ -4,10 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -15,42 +12,34 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-
+import org.apache.log4j.Appender;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.RollingFileAppender;
+import org.apache.log4j.varia.NullAppender;
+import org.apache.log4j.Layout;
 import redis.clients.jedis.Jedis;
-
 import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
 import carpool.model.representation.SearchRepresentation;
-
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.PropertiesCredentials;
-import com.amazonaws.http.AmazonHttpClient;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.CreateBucketRequest;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.RestoreObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
+
 
 public class awsMain {
 
@@ -68,11 +57,13 @@ public class awsMain {
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
 		try{
+			BasicConfigurator.configure();
+
 			S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, imgkey));
 			InputStream objectData = object.getObjectContent();	
 			IOUtils.copy(objectData, new FileOutputStream(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png"));
-
 			objectData.close();
+
 		}catch(AmazonClientException e){
 			e.printStackTrace();
 			DebugLog.d(e.getMessage());
@@ -85,6 +76,8 @@ public class awsMain {
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
 		filekey = userId+"/"+userId+"_sr.txt";
 		try{
+			BasicConfigurator.configure();
+
 			S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, filekey));
 			InputStream objectData = object.getObjectContent(); 
 
@@ -106,7 +99,7 @@ public class awsMain {
 			writer.close();
 			reader.close();
 
-			objectData.close();
+			objectData.close();			
 		}catch(AmazonClientException e){
 			e.printStackTrace();
 			DebugLog.d(e.getMessage());
@@ -120,12 +113,15 @@ public class awsMain {
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
 		String fileName = userId+"/"+userId+"_sr.txt";
 		String localfileName = CarpoolConfig.pathToSearchHistoryFolder + userId + CarpoolConfig.searchHistoryFileSufix;
+		File file = new File(localfileName);  
+
 		try{
+			BasicConfigurator.configure();
+
 			S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, fileName));
 			InputStream objectData = object.getObjectContent(); 
 
 			InputStream reader = new BufferedInputStream(objectData);
-			File file = new File(localfileName);  
 
 			//Make sure the file is "empty" before we write to it;
 			PrintWriter pwriter = new PrintWriter(localfileName);
@@ -152,24 +148,42 @@ public class awsMain {
 				line = bfreader.readLine();
 			}
 			bfreader.close();
+
+			String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
+			int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
+			Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+			List<String> appendString = redis.lrange(rediskey, 0, upper-1);
+
+			for(int i=0; i<appendString.size(); i++){
+				list.add(new SearchRepresentation(appendString.get(i)));
+			}
+
 		}catch(AmazonClientException e){
-			//There is no such object, just return the list
+
+			String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
+			int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
+			Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+			List<String> appendString = redis.lrange(rediskey, 0, upper-1);
+
+			for(int i=0; i<appendString.size(); i++){
+				list.add(new SearchRepresentation(appendString.get(i)));
+			}
 			return list;
 		}
-
 		return list;
 	}
 
-	public static String uploadProfileImg(int userId){
+	public static String uploadProfileImg(int userId) throws IOException{
 		String userProfile = carpool.constants.CarpoolConfig.profileImgPrefix;
 		String imgSize = carpool.constants.CarpoolConfig.imgSize_m;
 		String imgName = userProfile+imgSize+userId;
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
+
+		BasicConfigurator.configure();
+
 		s3Client.putObject(bucketName,userId+"/"+imgName+".png",new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png"));
-
-		imgkey = userId+"/"+imgName +".png";
-
+		imgkey = userId+"/"+imgName +".png";	
 		java.util.Date expiration = new java.util.Date();
 		long msec = expiration.getTime();
 		msec += 1000 * 60 * 60; // 1 hour.
@@ -181,6 +195,7 @@ public class awsMain {
 		generatePresignedUrlRequest.setExpiration(expiration);
 
 		URL s = s3Client.generatePresignedUrl(generatePresignedUrlRequest); 
+
 		return s.toString();
 
 	}
@@ -206,7 +221,9 @@ public class awsMain {
 			pwriter.write("");
 			pwriter.close();
 
+			BasicConfigurator.configure();
 			try{
+
 				S3Object object = s3Client.getObject(new GetObjectRequest(bucketName,fileName));    
 				InputStream objectData = object.getObjectContent(); 
 				InputStream reader = new BufferedInputStream(objectData);      

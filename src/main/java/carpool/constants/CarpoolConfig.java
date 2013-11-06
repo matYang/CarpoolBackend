@@ -54,6 +54,11 @@ public class CarpoolConfig {
     public static final String redisSearchHistoryPrefix = "redis/userSearchHistory-";;
     public static final int redisSearchHistoryUpbound = 50;
 	
+    public static final String log4jBasicPatternLayout = "%d [%t] %-5p %c - %m%n";
+    public static final String log4LogFileFolder = "log4j/";
+    public static final String log4jLogFileSuffix = ".log";
+    public static final String debugLogPrefix="d";
+    public static final String debugLogChinesePrefix = "d_chinese";
 	public static final LocationRepresentation getDefaultLocationRepresentation(){
 		return new LocationRepresentation("Canada_Ontario_Waterloo_undetermined_3");
 	}
