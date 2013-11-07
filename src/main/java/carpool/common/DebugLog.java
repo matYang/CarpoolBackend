@@ -16,6 +16,23 @@ import carpool.constants.CarpoolConfig;
 public class DebugLog {
 	private static Logger log =	Logger.getLogger(DebugLog.class);
 	private static boolean configure =false;
+	
+	public static void d(Exception e){
+		try{
+			if(!configure){
+				log.setLevel(Level.INFO);
+				PatternLayout layout = new PatternLayout(CarpoolConfig.log4jBasicPatternLayout);
+				log.addAppender(new ConsoleAppender(layout));
+				RollingFileAppender fileAppender = new RollingFileAppender(layout, CarpoolConfig.log4LogFileFolder+CarpoolConfig.debugLogChinesePrefix+CarpoolConfig.log4jLogFileSuffix);
+				log.addAppender(fileAppender);
+				configure = true;
+			}
+			log.warn(e);
+		}catch(IOException e1){
+			e1.printStackTrace();
+		}
+	}
+	
 	public static void d(String message){
 		System.out.println("DEBUG MESSAGE BY BAD STUDENT " + message);
 		log(message);
