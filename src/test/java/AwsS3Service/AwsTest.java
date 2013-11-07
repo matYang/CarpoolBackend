@@ -38,8 +38,7 @@ public class AwsTest {
 	public void testGetFile(){
 		CarpoolDaoBasic.clearBothDatabase();
 		int userId=1;
-		try{
-			org.apache.log4j.BasicConfigurator.configure(new NullAppender());
+		try{			
 			awsMain.getFileObject(userId);
 		} 
 		catch(IOException e){
@@ -52,8 +51,7 @@ public class AwsTest {
 	public void testGetImg(){
 		CarpoolDaoBasic.clearBothDatabase();
 		int userId=1;
-		try{
-			org.apache.log4j.BasicConfigurator.configure(new NullAppender());
+		try{			
 			awsMain.getImgObject(userId);
 		}
 		catch(IOException e){
@@ -62,11 +60,10 @@ public class AwsTest {
 		}
 	}
 	//@Test
-	public void testUploadImg(){
+	public void testUploadImg() throws IOException{
 		CarpoolDaoBasic.clearBothDatabase();
-		int userId = 1;
-		org.apache.log4j.BasicConfigurator.configure(new NullAppender());
-		System.out.println(awsMain.uploadProfileImg(userId));
+		int userId = 1;		
+		awsMain.uploadProfileImg(userId);
 	}
 
 	//@Test
@@ -115,7 +112,6 @@ public class AwsTest {
 		SearchRepresentation SR5 = new SearchRepresentation(false,dl2,al2,dt2,at2,type,timeSlot3,timeSlot3);
 		SearchRepresentation SR6 = new SearchRepresentation(false,dl2,al2,dt2,at2,type,timeSlot3,timeSlot3);
 
-		org.apache.log4j.BasicConfigurator.configure(new NullAppender());
 		Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
 		String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
 		int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
@@ -234,7 +230,6 @@ public class AwsTest {
 		SearchRepresentation SR5 = new SearchRepresentation(false,dl2,al2,dt2,at2,type,timeSlot3,timeSlot3);
 		SearchRepresentation SR6 = new SearchRepresentation(false,dl2,al2,dt2,at2,type,timeSlot3,timeSlot3);
 		// In this case, we use 6 to be the upper bound
-		org.apache.log4j.BasicConfigurator.configure(new NullAppender());
 		ArrayList<SearchRepresentation> list = new ArrayList<SearchRepresentation>();
 		int pre = awsMain.getUserSearchHistory(userId).size();
 
@@ -244,15 +239,19 @@ public class AwsTest {
 		awsMain.storeSearchHistory(SR4, userId);
 		awsMain.storeSearchHistory(SR5, userId);
 
+		String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
+		int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
+		int storage = carpool.carpoolDAO.CarpoolDaoBasic.getJedis().lrange(rediskey, 0, upper-1).size();
+
 		list = awsMain.getUserSearchHistory(userId);
-		if(list.size()==pre){
+		if(list.size()==(pre+storage)){
 			//Passed;
 		}else{
 			fail();
 		}
 		awsMain.storeSearchHistory(SR6, userId);
 		list = awsMain.getUserSearchHistory(userId);
-		if(list.size()==pre+6){
+		if(list.size()==(pre+storage+1)){
 			//Passed;
 			//				for(int i=0; i<list.size(); i++){
 			//	                 System.out.println(list.get(i).toSerializedString());					
@@ -264,5 +263,18 @@ public class AwsTest {
 			fail();
 		}
 
+		awsMain.storeSearchHistory(SR6, userId);
+		list = awsMain.getUserSearchHistory(userId);
+		if(list.size()==(pre+storage+2)){
+			//Passed;
+			//				for(int i=0; i<list.size(); i++){
+			//	                 System.out.println(list.get(i).toSerializedString());					
+			//					}
+		}else{
+			//				for(int i=0; i<list.size(); i++){
+			//                 System.out.println(list.get(i).toSerializedString());					
+			//				}
+			fail();
+		}
 	}
 }
