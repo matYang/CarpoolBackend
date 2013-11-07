@@ -15,78 +15,57 @@ import carpool.constants.CarpoolConfig;
 
 public class DebugLog {
 	private static Logger log =	Logger.getLogger(DebugLog.class);
-    private static boolean configure = false;
-    
-	public static void d(Exception e){
-		try {
-			e.printStackTrace();
-			rootLogger.setLevel(Level.INFO);
-			PatternLayout layout = new PatternLayout(CarpoolConfig.log4jBasicPatternLayout);
-			rootLogger.addAppender(new ConsoleAppender(layout));
-			RollingFileAppender fileAppender;
-			fileAppender = new RollingFileAppender(layout, CarpoolConfig.log4LogFileFolder+CarpoolConfig.debugLogPrefix+CarpoolConfig.log4jLogFileSuffix);
-			rootLogger.addAppender(fileAppender);
-			log.warn(null);
-			log.warn(e);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-	}
-	
+	private static boolean configure =false;
 	public static void d(String message){
 		System.out.println("DEBUG MESSAGE BY BAD STUDENT " + message);
-		try {
-			log(message);
-		} catch (IOException e) {			
-			e.printStackTrace();
-		}
+		log(message);
 	}
 
 	public static void d(int number){
 		System.out.println("DEBUG MESSAGE BY BAD STUDENT " + number);
-		try {
-			log(number+"");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		log(number+"");
 	}
 
 	public static void d_Chinese(String message){
 		try {
 			PrintStream ps = new PrintStream(System.out, true, "UTF-8");
 			ps.println(message);
-			try {
-				logChinese(message);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			logChinese(message);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private static void log(String message) throws IOException{
-		if(!configure){
-		log.setLevel(Level.INFO);
-		PatternLayout layout = new PatternLayout(CarpoolConfig.log4jBasicPatternLayout);
-		log.addAppender(new ConsoleAppender(layout));
-		RollingFileAppender fileAppender = new RollingFileAppender(layout, CarpoolConfig.log4LogFileFolder+CarpoolConfig.debugLogPrefix+CarpoolConfig.log4jLogFileSuffix);
-		log.addAppender(fileAppender);
-		configure = true;
-		}		
-		log.info(message);
+	private static void log(String message){
+		try{
+			if(!configure){
+				log.setLevel(Level.INFO);
+				PatternLayout layout = new PatternLayout(CarpoolConfig.log4jBasicPatternLayout);
+				log.addAppender(new ConsoleAppender(layout));
+				RollingFileAppender fileAppender = new RollingFileAppender(layout, CarpoolConfig.log4LogFileFolder+CarpoolConfig.debugLogPrefix+CarpoolConfig.log4jLogFileSuffix);
+				log.addAppender(fileAppender);
+				configure = true;
+			}		
+			log.info(message);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
 	}
 
-	private static void logChinese(String message) throws IOException{
-		if(!configure){
-		log.setLevel(Level.INFO);
-		PatternLayout layout = new PatternLayout(CarpoolConfig.log4jBasicPatternLayout);
-		log.addAppender(new ConsoleAppender(layout));
-		RollingFileAppender fileAppender = new RollingFileAppender(layout, CarpoolConfig.log4LogFileFolder+CarpoolConfig.debugLogChinesePrefix+CarpoolConfig.log4jLogFileSuffix);
-		log.addAppender(fileAppender);
-		configure = true;
+	private static void logChinese(String message){
+		try{
+			if(!configure){
+				log.setLevel(Level.INFO);
+				PatternLayout layout = new PatternLayout(CarpoolConfig.log4jBasicPatternLayout);
+				log.addAppender(new ConsoleAppender(layout));
+				RollingFileAppender fileAppender = new RollingFileAppender(layout, CarpoolConfig.log4LogFileFolder+CarpoolConfig.debugLogChinesePrefix+CarpoolConfig.log4jLogFileSuffix);
+				log.addAppender(fileAppender);
+				configure = true;
+			}
+			log.info(message);
+		}catch(IOException e){
+			e.printStackTrace();
 		}
-		log.info(message);
 	}
 
 }
