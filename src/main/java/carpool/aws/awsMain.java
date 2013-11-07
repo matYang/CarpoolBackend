@@ -108,7 +108,7 @@ public class awsMain {
 
 	}
 
-	public static  ArrayList<SearchRepresentation> getUserSearchHistory(int userId) throws IOException{
+	public static  ArrayList<SearchRepresentation> getUserSearchHistory(int userId){
 		ArrayList<SearchRepresentation> list = new ArrayList<SearchRepresentation>();
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
@@ -159,7 +159,7 @@ public class awsMain {
 				list.add(new SearchRepresentation(appendString.get(i)));
 			}
 
-		}catch(AmazonServiceException e){
+		} catch(AmazonServiceException e){
 			if(e.getErrorCode()=="NoSuchKey"){
 				String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
 				int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
@@ -170,6 +170,8 @@ public class awsMain {
 					list.add(new SearchRepresentation(appendString.get(i)));
 				}
 			}
+		} catch(IOException e){
+			DebugLog.d(e);
 		}
 		return list;
 	}
@@ -224,7 +226,7 @@ public class awsMain {
 
 	}
 
-	public static void storeSearchHistory(SearchRepresentation sr,int userId) throws IOException{
+	public static void storeSearchHistory(SearchRepresentation sr,int userId){
 
 		String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
 		int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
@@ -240,14 +242,14 @@ public class awsMain {
 			String localfileName = CarpoolConfig.pathToSearchHistoryFolder + userId + CarpoolConfig.searchHistoryFileSufix;
 			File file = new File(localfileName);
 
-			//Make sure the file is "empty" before we write to it;
-			PrintWriter pwriter = new PrintWriter(localfileName);
-			pwriter.write("");
-			pwriter.close();
-
-			BasicConfigurator.configure();
+			
 			try{
-
+				//Make sure the file is "empty" before we write to it;
+				PrintWriter pwriter = new PrintWriter(localfileName);
+				pwriter.write("");
+				pwriter.close();
+				BasicConfigurator.configure();
+				
 				S3Object object = s3Client.getObject(new GetObjectRequest(bucketName,fileName));    
 				InputStream objectData = object.getObjectContent(); 
 				InputStream reader = new BufferedInputStream(objectData);      
@@ -274,21 +276,28 @@ public class awsMain {
 				s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
 				//clean redis
 				redis.del(rediskey);
-			}catch(AmazonServiceException e){	
+			} catch(AmazonServiceException e){	
 				if(e.getErrorCode()=="NoSuchKey"){
 					//Write to file
-					BufferedWriter	bw = new BufferedWriter(new FileWriter(file, true));
-					for(int i=upper-1; i>=0; i--){
-						bw.write(appendString.get(i));   
-						bw.newLine();
-					}    
-					bw.flush();
-					bw.close();
+					try{
+						BufferedWriter	bw = new BufferedWriter(new FileWriter(file, true));
+						for(int i = upper-1; i >= 0; i--){
+							bw.write(appendString.get(i));   
+							bw.newLine();
+						}    
+						bw.flush();
+						bw.close();
 
-					s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
-					//clean redis
-					redis.del(rediskey);
+						s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
+						//clean redis
+						redis.del(rediskey);
+					} catch (IOException e1){
+						DebugLog.d(e);
+					}
+					
 				}
+			} catch (IOException e){
+				DebugLog.d(e);
 			}
 		}
 	}		
