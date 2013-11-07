@@ -1,5 +1,6 @@
 package carpool.dbservice;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import carpool.model.representation.SearchRepresentation;
@@ -16,7 +17,7 @@ public class FileService {
 		return awsMain.getUserSearchHistory(userId);
 	}
 
-	public static String uploadUserProfileImg(int userId){
-		return awsMain.uploadProfileImg(userId);
+	public static String uploadUserProfileImg(int userId, File file, String baseFileName){
+		return awsMain.uploadProfileImg(userId, file, baseFileName);
 	}
 }
