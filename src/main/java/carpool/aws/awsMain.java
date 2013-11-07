@@ -30,6 +30,7 @@ import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
 import carpool.model.representation.SearchRepresentation;
 import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -64,7 +65,7 @@ public class awsMain {
 			IOUtils.copy(objectData, new FileOutputStream(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png"));
 			objectData.close();
 
-		}catch(AmazonClientException e){
+		}catch(AmazonServiceException e){
 			e.printStackTrace();
 			DebugLog.d(e.getMessage());
 		}
@@ -100,7 +101,7 @@ public class awsMain {
 			reader.close();
 
 			objectData.close();			
-		}catch(AmazonClientException e){
+		}catch(AmazonServiceException e){
 			e.printStackTrace();
 			DebugLog.d(e.getMessage());
 		}
@@ -158,8 +159,8 @@ public class awsMain {
 				list.add(new SearchRepresentation(appendString.get(i)));
 			}
 
-		}catch(AmazonClientException e){
-
+		}catch(AmazonServiceException e){
+            if(e.getErrorCode()=="NoSuchKey"){
 			String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
 			int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
 			Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
@@ -167,7 +168,8 @@ public class awsMain {
 
 			for(int i=0; i<appendString.size(); i++){
 				list.add(new SearchRepresentation(appendString.get(i)));
-			}
+			 }
+            }
 			return list;
 		}
 		return list;
@@ -273,7 +275,8 @@ public class awsMain {
 				s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
 				//clean redis
 				redis.del(rediskey);
-			}catch(AmazonClientException e){	   
+			}catch(AmazonServiceException e){	
+				if(e.getErrorCode()=="NoSuchKey"){
 				//Write to file
 				BufferedWriter	bw = new BufferedWriter(new FileWriter(file, true));
 				for(int i=upper-1; i>=0; i--){
@@ -287,7 +290,7 @@ public class awsMain {
 				//clean redis
 				redis.del(rediskey);
 			}
-
+		  }
 		}
 	}		
 

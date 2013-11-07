@@ -34,7 +34,7 @@ public class AwsTest {
 
 	//Note: All the tests have been commented out since some of them may influence the test results of others
 
-	//@Test
+	@Test
 	public void testGetFile(){
 		CarpoolDaoBasic.clearBothDatabase();
 		int userId=1;

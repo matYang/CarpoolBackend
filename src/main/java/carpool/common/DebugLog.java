@@ -15,24 +15,7 @@ import carpool.constants.CarpoolConfig;
 
 public class DebugLog {
 	private static Logger log =	Logger.getLogger(DebugLog.class);
-	private static Logger rootLogger = Logger.getRootLogger();
-	
-	public static void d(Exception e){
-		try {
-			e.printStackTrace();
-			rootLogger.setLevel(Level.INFO);
-			PatternLayout layout = new PatternLayout(CarpoolConfig.log4jBasicPatternLayout);
-			rootLogger.addAppender(new ConsoleAppender(layout));
-			RollingFileAppender fileAppender;
-			fileAppender = new RollingFileAppender(layout, CarpoolConfig.log4LogFileFolder+CarpoolConfig.debugLogPrefix+CarpoolConfig.log4jLogFileSuffix);
-			rootLogger.addAppender(fileAppender);
-			log.warn(null);
-			log.warn(e);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-	}
-	
+    private static boolean configure =false;
 	public static void d(String message){
 		System.out.println("DEBUG MESSAGE BY BAD STUDENT " + message);
 		try {
@@ -66,20 +49,26 @@ public class DebugLog {
 	}
 
 	private static void log(String message) throws IOException{
-		rootLogger.setLevel(Level.INFO);
+		if(!configure){
+		log.setLevel(Level.INFO);
 		PatternLayout layout = new PatternLayout(CarpoolConfig.log4jBasicPatternLayout);
-		rootLogger.addAppender(new ConsoleAppender(layout));
+		log.addAppender(new ConsoleAppender(layout));
 		RollingFileAppender fileAppender = new RollingFileAppender(layout, CarpoolConfig.log4LogFileFolder+CarpoolConfig.debugLogPrefix+CarpoolConfig.log4jLogFileSuffix);
-		rootLogger.addAppender(fileAppender);
+		log.addAppender(fileAppender);
+		configure = true;
+		}		
 		log.info(message);
 	}
 
 	private static void logChinese(String message) throws IOException{
-		rootLogger.setLevel(Level.INFO);
+		if(!configure){
+		log.setLevel(Level.INFO);
 		PatternLayout layout = new PatternLayout(CarpoolConfig.log4jBasicPatternLayout);
-		rootLogger.addAppender(new ConsoleAppender(layout));
+		log.addAppender(new ConsoleAppender(layout));
 		RollingFileAppender fileAppender = new RollingFileAppender(layout, CarpoolConfig.log4LogFileFolder+CarpoolConfig.debugLogChinesePrefix+CarpoolConfig.log4jLogFileSuffix);
-		rootLogger.addAppender(fileAppender);
+		log.addAppender(fileAppender);
+		configure = true;
+		}
 		log.info(message);
 	}
 
