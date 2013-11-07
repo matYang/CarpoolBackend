@@ -196,7 +196,7 @@ public class awsMain {
 
 	}
 
-	public static String uploadProfileImg(int userId) throws IOException{
+	public static String uploadProfileImg(int userId){
 		String userProfile = carpool.constants.CarpoolConfig.profileImgPrefix;
 		String imgSize = carpool.constants.CarpoolConfig.imgSize_m;
 		String imgName = userProfile+imgSize+userId;
@@ -290,7 +290,6 @@ public class awsMain {
 
 		}
 	}		
-
 
 
 }
