@@ -26,6 +26,7 @@ public class DebugLog {
 			RollingFileAppender fileAppender;
 			fileAppender = new RollingFileAppender(layout, CarpoolConfig.log4LogFileFolder+CarpoolConfig.debugLogPrefix+CarpoolConfig.log4jLogFileSuffix);
 			rootLogger.addAppender(fileAppender);
+			log.warn(null);
 			log.warn(e);
 		} catch (IOException e1) {
 			e1.printStackTrace();
