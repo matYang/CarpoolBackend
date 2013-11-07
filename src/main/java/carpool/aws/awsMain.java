@@ -160,26 +160,25 @@ public class awsMain {
 			}
 
 		}catch(AmazonServiceException e){
-            if(e.getErrorCode()=="NoSuchKey"){
-			String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
-			int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
-			Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
-			List<String> appendString = redis.lrange(rediskey, 0, upper-1);
+			if(e.getErrorCode()=="NoSuchKey"){
+				String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
+				int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
+				Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+				List<String> appendString = redis.lrange(rediskey, 0, upper-1);
 
-			for(int i=0; i<appendString.size(); i++){
-				list.add(new SearchRepresentation(appendString.get(i)));
-			 }
-            }
-			return list;
+				for(int i=0; i<appendString.size(); i++){
+					list.add(new SearchRepresentation(appendString.get(i)));
+				}
+			}
 		}
 		return list;
 	}
-	
+
 	public static String uploadProfileImg(int userId, File file, String imgName){
-		
+
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
-		
+
 		s3Client.putObject(bucketName,userId+"/"+imgName+".png",new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png"));
 
 		imgkey = userId+"/"+imgName +".png";
@@ -277,20 +276,20 @@ public class awsMain {
 				redis.del(rediskey);
 			}catch(AmazonServiceException e){	
 				if(e.getErrorCode()=="NoSuchKey"){
-				//Write to file
-				BufferedWriter	bw = new BufferedWriter(new FileWriter(file, true));
-				for(int i=upper-1; i>=0; i--){
-					bw.write(appendString.get(i));   
-					bw.newLine();
-				}    
-				bw.flush();
-				bw.close();
+					//Write to file
+					BufferedWriter	bw = new BufferedWriter(new FileWriter(file, true));
+					for(int i=upper-1; i>=0; i--){
+						bw.write(appendString.get(i));   
+						bw.newLine();
+					}    
+					bw.flush();
+					bw.close();
 
-				s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
-				//clean redis
-				redis.del(rediskey);
+					s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
+					//clean redis
+					redis.del(rediskey);
+				}
 			}
-		  }
 		}
 	}		
 
