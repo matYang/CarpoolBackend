@@ -19,6 +19,7 @@ public class DebugLog {
 	
 	public static void d(Exception e){
 		try {
+			e.printStackTrace();
 			rootLogger.setLevel(Level.INFO);
 			PatternLayout layout = new PatternLayout(CarpoolConfig.log4jBasicPatternLayout);
 			rootLogger.addAppender(new ConsoleAppender(layout));
