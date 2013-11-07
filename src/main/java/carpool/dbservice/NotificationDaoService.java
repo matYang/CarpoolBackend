@@ -23,7 +23,7 @@ import carpool.model.*;
 
 public class NotificationDaoService{
 	
-	private static ArrayList<Notification> db_notificationPendingQeue;
+	private static ArrayList<Notification> db_notificationPendingQeue = new ArrayList<Notification>();
 	public static void addToNotificationQueue(Notification n){
 		db_notificationPendingQeue.add(n);
 	}

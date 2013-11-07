@@ -174,8 +174,31 @@ public class awsMain {
 		}
 		return list;
 	}
+	
+	public static String uploadProfileImg(int userId, File file, String imgName){
+		
+		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
+		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
+		
+		s3Client.putObject(bucketName,userId+"/"+imgName+".png",new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png"));
 
-	public static String uploadProfileImg(int userId) throws IOException{
+		imgkey = userId+"/"+imgName +".png";
+
+		java.util.Date expiration = new java.util.Date();
+		long msec = expiration.getTime();
+		msec += 1000 * 60 * 60; // 1 hour.
+		expiration.setTime(msec);
+
+		GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, imgkey);
+		generatePresignedUrlRequest.setMethod(HttpMethod.GET); 
+		generatePresignedUrlRequest.setExpiration(expiration);
+
+		URL s = s3Client.generatePresignedUrl(generatePresignedUrlRequest); 
+		return s.toString();
+
+	}
+
+	public static String uploadProfileImg(int userId){
 		String userProfile = carpool.constants.CarpoolConfig.profileImgPrefix;
 		String imgSize = carpool.constants.CarpoolConfig.imgSize_m;
 		String imgName = userProfile+imgSize+userId;
@@ -270,7 +293,6 @@ public class awsMain {
 		  }
 		}
 	}		
-
 
 
 }
