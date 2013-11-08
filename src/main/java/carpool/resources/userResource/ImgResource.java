@@ -89,7 +89,7 @@ public class ImgResource extends PseudoResource{
 }
 		
 	@Post
-	//check for FileRepresentation
+	//TODO check for FileRepresentation
 	public Representation postImage(Representation entity){
 		JSONObject jsonObject = new JSONObject();
 		int id = -1;
