@@ -289,16 +289,16 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 		dtime2.set(Calendar.SECOND, 0);
 		Calendar atime2 = Calendar.getInstance();		
 		atime2.set(Calendar.HOUR_OF_DAY, 18);
-		dtime2.set(Calendar.MINUTE, 30);
-		dtime2.set(Calendar.SECOND, 0);
+		atime2.set(Calendar.MINUTE, 30);
+		atime2.set(Calendar.SECOND, 0);
 		Calendar dtime3 = Calendar.getInstance();		
 		dtime3.set(Calendar.HOUR_OF_DAY, 21);
 		dtime3.set(Calendar.MINUTE, 30);
 		dtime3.set(Calendar.SECOND, 0);
 		Calendar atime3 = Calendar.getInstance();		
 		atime3.set(Calendar.HOUR_OF_DAY, 23);
-		dtime3.set(Calendar.MINUTE, 59);
-		dtime3.set(Calendar.SECOND, 59);
+		atime3.set(Calendar.MINUTE, 59);
+		atime3.set(Calendar.SECOND, 59);
 		Calendar dtime4 = Calendar.getInstance();
 		dtime4.add(Calendar.DAY_OF_YEAR, -1);
 		Message message10=new Message(userId,true, dl,dtime3,timeSlot,1 , priceList,al,atime3,timeSlot, 1,priceList,paymentMethod,"test",  type1, genderRequirement);
@@ -348,7 +348,7 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();
 			mlist = CarpoolDaoMessage.searchMessage(SR8);
-			if(mlist.size()==5&&mlist.get(0).equals(message)&&mlist.get(1).equals(message3)&&mlist.get(2).equals(message4)&mlist.get(3).equals(message6)&&mlist.get(4).equals(message11)){
+			if(mlist.size()==7&&mlist.get(0).equals(message)&&mlist.get(1).equals(message2)&&mlist.get(2).equals(message3)&&mlist.get(3).equals(message4)&mlist.get(4).equals(message6)&&mlist.get(5).equals(message8)&&mlist.get(6).equals(message11)){
 				//Passed;
 			}else{
 				System.out.println(mlist.size());
@@ -375,7 +375,7 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();
 			mlist = CarpoolDaoMessage.searchMessage(SR2);
-			if(mlist !=null && mlist.size()==6 && mlist.get(0).equals(message)&&mlist.get(1).equals(message3)&&mlist.get(2).equals(message4)&&mlist.get(3).equals(message6)&&mlist.get(4).equals(message10)&&mlist.get(5).equals(message11)){
+			if(mlist !=null && mlist.size()==8 && mlist.get(0).equals(message)&&mlist.get(1).equals(message2)&&mlist.get(2).equals(message3)&&mlist.get(3).equals(message4)&&mlist.get(4).equals(message6)&&mlist.get(5).equals(message8)&&mlist.get(6).equals(message10)&&mlist.get(7).equals(message11)){
 				//Passed;
 			}else{
 				System.out.println(mlist.size());
@@ -403,7 +403,7 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();
 			mlist = CarpoolDaoMessage.searchMessage(SR4);
-			if(mlist.size()==3 && mlist.get(0).equals(message)&&mlist.get(1).equals(message2)&&mlist.get(2).equals(message11)){
+			if(mlist.size()==5 && mlist.get(0).equals(message)&&mlist.get(1).equals(message2)&&mlist.get(2).equals(message3)&&mlist.get(3).equals(message6)&&mlist.get(4).equals(message11)){
 				//Passed;
 			}else{
 				System.out.println(mlist.size());
