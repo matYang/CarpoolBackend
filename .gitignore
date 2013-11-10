@@ -5,3 +5,4 @@ dump.rdb
 .prefs
 .pref
 target/Carpool/*.class
+log4j/*
