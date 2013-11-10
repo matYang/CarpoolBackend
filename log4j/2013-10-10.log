@@ -39,3 +39,11 @@
 2013-11-10 12:16:26,046 [main] INFO  carpool.common.DebugLog - No value specified for parameter 36
 2013-11-10 12:16:26,048 [main] INFO  carpool.common.DebugLog - No value specified for parameter 36
 2013-11-10 12:17:54,904 [main] INFO  carpool.common.DebugLog - Unknown column 'initUserId' in 'where clause'
+2013-11-10 12:56:10,013 [main] INFO  carpool.common.DebugLog - Excuting
+2013-11-10 12:56:10,030 [main] INFO  carpool.common.DebugLog - Starting to load location data from file: LocationData.txt
+2013-11-10 12:56:10,054 [main] INFO  carpool.common.DebugLog - Location loaded,
+2013-11-10 12:56:10,054 [main] INFO  carpool.common.DebugLog - Location loaded succesfully, ending depth: -1
+2013-11-10 12:56:10,415 [main] INFO  carpool.common.DebugLog - ready to start
+2013-11-10 12:56:10,542 [main] INFO  carpool.common.DebugLog - initiaing router::RoutingService
+2013-11-10 12:56:10,647 [Thread-3] INFO  carpool.common.DebugLog - ScheduledClean:: clean scheduled at 4:0:0
+2013-11-10 12:56:10,647 [Thread-3] INFO  carpool.common.DebugLog - ScheduledClean thread starting, cleaning at 4:30AM every day
