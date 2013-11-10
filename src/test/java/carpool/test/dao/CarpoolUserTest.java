@@ -43,14 +43,14 @@ public class CarpoolUserTest {
 	@Test
 	public void testCreate() throws ValidationException{
 		CarpoolDaoBasic.clearBothDatabase();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		//Test
 		CarpoolDaoUser.addUserToDatabase(user);		
 	}
 	@Test
 	public void testRead(){
 		CarpoolDaoBasic.clearBothDatabase();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {
@@ -86,7 +86,7 @@ public class CarpoolUserTest {
 	@Test
 	public void testUpdate(){
 		CarpoolDaoBasic.clearBothDatabase();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {
@@ -102,7 +102,6 @@ public class CarpoolUserTest {
 		user.setLocation(new LocationRepresentation ("primary_secondary","customnew",2));
 		user.setAccountPass("test1");
 		user.setGoogleToken("google");
-		user.setAge(100);
 		user.setEmailActivated(true);
 		try {
 			CarpoolDaoUser.UpdateUserInDatabase(user);
@@ -137,7 +136,7 @@ public class CarpoolUserTest {
    @Test
     public void testDelete(){
 	   CarpoolDaoBasic.clearBothDatabase();
-	   User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+	   User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {
@@ -159,20 +158,20 @@ public class CarpoolUserTest {
     @Test
     public void testUpdateSocialList() throws ValidationException{
     	CarpoolDaoBasic.clearBothDatabase();
-		User user =  new User("password1", "email1", new LocationRepresentation ("primary","custom",1));
+		User user =  new User("password1", "email1", new LocationRepresentation ("primary","custom",1), gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);	
 		
-		User user2 =  new User("password2", "email2", new LocationRepresentation ("primary2","custom2",1));
+		User user2 =  new User("password2", "email2", new LocationRepresentation ("primary2","custom2",1), gender.both);
 		CarpoolDaoUser.addUserToDatabase(user2);
 		CarpoolDaoUser.addToSocialList(user.getUserId(),user2.getUserId());
 		
 		
-		User user3 =  new User("password3", "email3", new LocationRepresentation ("primary3","custom3",1));
+		User user3 =  new User("password3", "email3", new LocationRepresentation ("primary3","custom3",1), gender.both);
 		CarpoolDaoUser.addUserToDatabase(user3);
 		CarpoolDaoUser.addToSocialList(user.getUserId(),user3.getUserId());
 
 		
-		User user4 =  new User("password4", "email4", new LocationRepresentation ("primary4","custom4",1));
+		User user4 =  new User("password4", "email4", new LocationRepresentation ("primary4","custom4",1), gender.both);
 		CarpoolDaoUser.addUserToDatabase(user4);
 		CarpoolDaoUser.addToSocialList(user.getUserId(),user4.getUserId());
 
@@ -275,7 +274,7 @@ public class CarpoolUserTest {
     @Test
     public void testgetUserMessageHistory(){
     	CarpoolDaoBasic.clearBothDatabase();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -329,7 +328,7 @@ public class CarpoolUserTest {
     	
     	CarpoolDaoBasic.clearBothDatabase();
     	//Users
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		user.setName("Harry Xiong");
 		user.setGender(Constants.gender.fromInt(0));
 		try {
@@ -337,7 +336,7 @@ public class CarpoolUserTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-       User user2 =  new User("yuanFang91", "yuanyuanyuan", new LocationRepresentation ("primary2","custom",1));
+       User user2 =  new User("yuanFang91", "yuanyuanyuan", new LocationRepresentation ("primary2","custom",1), gender.both);
         user2.setName("Yuan Fang");
 		user2.setGender(Constants.gender.fromInt(1));
 		try {
@@ -345,7 +344,7 @@ public class CarpoolUserTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}
-       User user3 =  new User("xchxchxch", "xiongchuhan@hotmail.com", new LocationRepresentation ("primary","custom",1));
+       User user3 =  new User("xchxchxch", "xiongchuhan@hotmail.com", new LocationRepresentation ("primary","custom",1), gender.both);
         user3.setName("Harry Xiong");
 		user3.setGender(Constants.gender.fromInt(0));
 		try {
@@ -353,7 +352,7 @@ public class CarpoolUserTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-       User user4 =  new User("Yuan", "FangFangFang", new LocationRepresentation ("primary2","custom",1));
+       User user4 =  new User("Yuan", "FangFangFang", new LocationRepresentation ("primary2","custom",1), gender.both);
         user4.setName("Yuan Fang");
 		user4.setGender(Constants.gender.fromInt(1));
 		try {
@@ -361,7 +360,7 @@ public class CarpoolUserTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}
-		User user5 =  new User("Matthew", "YangYangYang", new LocationRepresentation ("primary","custom",1));
+		User user5 =  new User("Matthew", "YangYangYang", new LocationRepresentation ("primary","custom",1), gender.both);
         user5.setName("Yuan Fang");
 		user5.setGender(Constants.gender.fromInt(0));
 		try {
@@ -369,7 +368,7 @@ public class CarpoolUserTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}
-		User user6 =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		User user6 =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		user6.setName("Chuhan Xiong");
 		user6.setGender(Constants.gender.fromInt(0));
 		try {
@@ -377,7 +376,7 @@ public class CarpoolUserTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}
-		User user7 =  new User("Matthew", "YangYangYang", new LocationRepresentation ("primary2","custom",1));
+		User user7 =  new User("Matthew", "YangYangYang", new LocationRepresentation ("primary2","custom",1), gender.both);
         user7.setName("Cristina Fang");
 		user7.setGender(Constants.gender.fromInt(1));
 		try {
@@ -385,7 +384,7 @@ public class CarpoolUserTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}
-		User user8 =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		User user8 =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		user8.setName("han");
 		user8.setGender(Constants.gender.fromInt(0));
 		try {
@@ -393,7 +392,7 @@ public class CarpoolUserTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}
-		User user9 =  new User("Matthew", "YangYangYang", new LocationRepresentation ("primary2","custom",1));
+		User user9 =  new User("Matthew", "YangYangYang", new LocationRepresentation ("primary2","custom",1), gender.both);
         user9.setName("ang");
 		user9.setGender(Constants.gender.fromInt(1));
 		try {
@@ -401,7 +400,7 @@ public class CarpoolUserTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}
-		User user10 =  new User("Matthew", "YangYangYang", new LocationRepresentation ("primary2","custom",1));
+		User user10 =  new User("Matthew", "YangYangYang", new LocationRepresentation ("primary2","custom",1), gender.both);
         user10.setName("g");
 		user10.setGender(Constants.gender.fromInt(1));
 		try {

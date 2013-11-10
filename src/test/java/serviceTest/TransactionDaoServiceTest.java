@@ -34,14 +34,14 @@ public class TransactionDaoServiceTest {
 	public void test() {
 		CarpoolDaoBasic.clearBothDatabase();
 		//Users
-        User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+        User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(provider);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1));
+		User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);

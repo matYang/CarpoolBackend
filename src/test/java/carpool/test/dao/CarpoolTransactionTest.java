@@ -30,14 +30,14 @@ public class CarpoolTransactionTest {
 	public void testAddTransaction(){
 		CarpoolDaoBasic.clearBothDatabase();
 		//Users
-        User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+        User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(provider);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-       User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1));
+       User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);
@@ -76,14 +76,14 @@ public class CarpoolTransactionTest {
     public void testReadTransaction(){
     	CarpoolDaoBasic.clearBothDatabase();
 		//Users
-        User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+        User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(provider);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-       User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1));
+       User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);
@@ -207,14 +207,14 @@ public class CarpoolTransactionTest {
     public void testUpdateTransaction(){
     	CarpoolDaoBasic.clearBothDatabase();
 		//Users
-        User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+        User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(provider);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-       User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1));
+       User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);
@@ -281,14 +281,14 @@ public class CarpoolTransactionTest {
     public void testTransactionCleaner(){    	
     	CarpoolDaoBasic.clearBothDatabase();
 		//Users
-        User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+        User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(provider);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-       User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1));
+       User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);

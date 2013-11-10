@@ -69,7 +69,7 @@ public class AwsTest {
 	//@Test
 	public void testUploadSearchFile() throws IOException{
 		CarpoolDaoBasic.clearBothDatabase();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -187,7 +187,7 @@ public class AwsTest {
 	public void testGetSearchHistory() throws IOException{
 
 		CarpoolDaoBasic.clearBothDatabase();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);

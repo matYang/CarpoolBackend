@@ -25,16 +25,7 @@ public class HelperOperator {
 		}
 	}
 
-	/**
-	 * removes the image at the image path
-	 * @param imgPath
-	 * @return	true if removed, false if not
-	 */
-	public static boolean removePreviousImg(String imgPath) {
-		// TODO
-		return false;
-	}
-	
+
 	public static boolean isArrayListEqual(ArrayList<?> o1, ArrayList<?> o2){
 		return o1.equals(o2);
 	}

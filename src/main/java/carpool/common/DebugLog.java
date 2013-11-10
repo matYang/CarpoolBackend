@@ -39,12 +39,12 @@ public class DebugLog {
 	}
 
 	public static void d(String message){
-		System.out.println("DEBUG MESSAGE BY BAD STUDENT " + message);
+		//System.out.println("DEBUG MESSAGE BY BAD STUDENT " + message);
 		log(message);
 	}
 
 	public static void d(int number){
-		System.out.println("DEBUG MESSAGE BY BAD STUDENT " + number);
+		//System.out.println("DEBUG MESSAGE BY BAD STUDENT " + number);
 		log(number+"");
 	}
 

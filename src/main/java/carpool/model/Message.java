@@ -421,7 +421,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 			jsonMessage.put("departure_timeSlot", this.departure_timeSlot.code);
 			jsonMessage.put("departure_seatsNumber", this.getDeparture_seatsNumber());
 			jsonMessage.put("departure_seatsBooked", this.getDeparture_seatsBooked());
-			jsonMessage.put("daparture_priceList", new JSONArray(this.getDeparture_priceList()));
+			jsonMessage.put("departure_priceList", new JSONArray(this.getDeparture_priceList()));
 			jsonMessage.put("arrival_location", this.getArrival_location().toJSON());
 			jsonMessage.put("arrival_time", DateUtility.castToAPIFormat(this.getArrival_time()));
 			jsonMessage.put("arrival_timeSlot", this.arrival_timeSlot.code);

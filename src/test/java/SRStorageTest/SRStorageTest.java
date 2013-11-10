@@ -25,14 +25,14 @@ public class SRStorageTest {
 public void testSRStorage(){
 	CarpoolDaoBasic.clearBothDatabase();
 	//Users
-	User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+	User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 	
 	try {
 		CarpoolDaoUser.addUserToDatabase(user);
 	} catch (ValidationException e) {			
 		e.printStackTrace();
 	}	
-   User user2 =  new User("fangyuan&lucyWang", "xiongchuhan@hotmail.com", new LocationRepresentation ("primary","custom",1));
+   User user2 =  new User("fangyuan&lucyWang", "xiongchuhan@hotmail.com", new LocationRepresentation ("primary","custom",1), gender.both);
 	
 	try {
 		CarpoolDaoUser.addUserToDatabase(user2);
