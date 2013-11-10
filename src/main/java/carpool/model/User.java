@@ -37,7 +37,6 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     private String email;
     private String phone;
     private String qq;
-    private int age;
     private gender gender;
     private Calendar birthday;
     private String imgPath;
@@ -108,7 +107,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     /*****
      * Constructor for user registration
 	 *****/
-	public User(String password, String email, LocationRepresentation location) {
+	public User(String password, String email, LocationRepresentation location, gender g) {
 		super();
 		this.userId = -1;
 		this.password = password;
@@ -119,8 +118,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.name = "无名氏";
 		this.phone = "";
 		this.qq = "";
-	    this.age = 20;
-	    this.gender = Constants.gender.both;
+	    this.gender = g;
 	    this.birthday = Calendar.getInstance();
 	    this.imgPath = "res/personal/default-avatar.jpg";
 	    this.lastLogin = Calendar.getInstance();
@@ -166,8 +164,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	 * full constructor used for SQL retrieval
 	 *****/
 	public User(int userId, String password, String name, String email,
-			String phone, String qq, int age,
-			carpool.constants.Constants.gender gender, Calendar birthday,
+			String phone, String qq, carpool.constants.Constants.gender gender, Calendar birthday,
 			String imgPath, LocationRepresentation location, Calendar lastLogin,
 			Calendar creationTime, ArrayList<String> verifications, boolean emailActivated,
 			boolean phoneActivated, boolean emailNotice, boolean phoneNotice,
@@ -184,7 +181,6 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.email = email;
 		this.phone = phone;
 		this.qq = qq;
-		this.age = age;
 		this.gender = gender;
 		this.birthday = birthday;
 		this.imgPath = imgPath;
@@ -276,12 +272,8 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 
 
 	public int getAge() {
-		return age;
-	}
-
-
-	public void setAge(int age) {
-		this.age = age;
+		Calendar c_age = Calendar.getInstance();
+		return c_age.get(Calendar.YEAR) - this.birthday.get(Calendar.YEAR);
 	}
 
 
@@ -695,7 +687,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	public String toString() {
 		return "User [userId=" + userId + ", password=" + password + ", name="
 				+ name + ", email=" + email + ", phone=" + phone + ", qq=" + qq
-				+ ", age=" + age + ", gender=" + gender + ", birthday="
+				+ ", age=" + this.getAge() + ", gender=" + gender + ", birthday="
 				+ birthday + ", imgPath=" + imgPath + ", location=" + location
 				+ ", lastLogin=" + lastLogin + ", creationTime=" + creationTime
 				+ ", historyList=" + historyList + ", watchList=" + watchList
@@ -738,7 +730,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     			              && this.validate()==newUser.validate()
     			              && this.accountToken.equals(newUser.getAccountToken())
     			              && this.accountValue.toString().equals(newUser.getAccountValue().toString())
-    			              && this.age==newUser.getAge()
+    			              && this.getAge()==newUser.getAge()
     			              && this.averageScore==newUser.getAverageScore()
     			              && this.birthday.getTime().toString().equals(newUser.getBirthday().getTime().toString())
     			              && this.creationTime.getTime().toString().equals(newUser.getCreationTime().getTime().toString())

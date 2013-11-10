@@ -29,7 +29,7 @@ public class CarpoolSearchTest {
 	public void test() {
 		CarpoolDaoBasic.clearBothDatabase();
 		
-		User user = new User("lol@me.com", "32121", CarpoolConfig.getDefaultLocationRepresentation());
+		User user = new User("lol@me.com", "32121", CarpoolConfig.getDefaultLocationRepresentation(), gender.both);
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e1) {

@@ -12,6 +12,7 @@ import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.constants.Constants;
 import carpool.constants.Constants.NotificationEvent;
 import carpool.constants.Constants.NotificationState;
+import carpool.constants.Constants.gender;
 import carpool.exception.ValidationException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.notification.NotificationNotFoundException;
@@ -26,7 +27,7 @@ public class CarpoolNotificationTest {
  @Test
  public void testAdd(){
 	 CarpoolDaoBasic.clearBothDatabase();
-     User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+     User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -55,7 +56,7 @@ public class CarpoolNotificationTest {
  @Test
  public void testAddNotifications(){
 	 CarpoolDaoBasic.clearBothDatabase();
-	    User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+	    User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 			
 			try {
 				CarpoolDaoUser.addUserToDatabase(user);
@@ -96,14 +97,14 @@ public class CarpoolNotificationTest {
  @Test
  public void testGetByTargetUserId(){
 	 CarpoolDaoBasic.clearBothDatabase();
-	    User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+	    User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 			
 			try {
 				CarpoolDaoUser.addUserToDatabase(user);
 			} catch (ValidationException e) {			
 				e.printStackTrace();
 			}
-User user2 =  new User("chenmoling", "chenmolingjb", new LocationRepresentation ("primary1","custom1",1));
+User user2 =  new User("chenmoling", "chenmolingjb", new LocationRepresentation ("primary1","custom1",1), gender.both);
 			
 			try {
 				CarpoolDaoUser.addUserToDatabase(user2);
@@ -166,14 +167,14 @@ User user2 =  new User("chenmoling", "chenmolingjb", new LocationRepresentation 
 @Test
 public void testGetAll(){
 	CarpoolDaoBasic.clearBothDatabase();
-    User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+    User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}
-User user2 =  new User("chenmoling", "chenmolingjb", new LocationRepresentation ("primary1","custom1",1));
+User user2 =  new User("chenmoling", "chenmolingjb", new LocationRepresentation ("primary1","custom1",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(user2);
@@ -223,14 +224,14 @@ User user2 =  new User("chenmoling", "chenmolingjb", new LocationRepresentation 
 @Test
 public void testUpdate() throws NotificationNotFoundException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
 	CarpoolDaoBasic.clearBothDatabase();
-    User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+    User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}
-    User user2 =  new User("chenmoling", "chenmolingjb", new LocationRepresentation ("primary1","custom1",1));
+    User user2 =  new User("chenmoling", "chenmolingjb", new LocationRepresentation ("primary1","custom1",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(user2);
@@ -286,14 +287,14 @@ public void testUpdate() throws NotificationNotFoundException, MessageNotFoundEx
  @Test
  public void testDelete(){
 	 CarpoolDaoBasic.clearBothDatabase();
-	    User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+	    User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 			
 			try {
 				CarpoolDaoUser.addUserToDatabase(user);
 			} catch (ValidationException e) {			
 				e.printStackTrace();
 			}
-	    User user2 =  new User("chenmoling", "chenmolingjb", new LocationRepresentation ("primary1","custom1",1));
+	    User user2 =  new User("chenmoling", "chenmolingjb", new LocationRepresentation ("primary1","custom1",1), gender.both);
 			
 			try {
 				CarpoolDaoUser.addUserToDatabase(user2);

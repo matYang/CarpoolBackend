@@ -40,13 +40,12 @@ public class UserContactResource extends PseudoResource{
 			jsonContact = (new JsonRepresentation(entity)).getJsonObject();
 			
 			String name = jsonContact.getString("name");
-			int age = jsonContact.getInt("age");
 			int gender = jsonContact.getInt("gender");
 			String phone = jsonContact.getString("phone");
 			String qq = jsonContact.getString("qq");
 			String birthday = jsonContact.getString("birthday");
 			//no DB interaction here
-			if (!(Validator.isNameFormatValid(name) && Validator.isAgeValid(age) && Constants.gender.values()[gender] != null && Validator.isPhoneFormatValid(phone) && Validator.isQqFormatValid(qq))){
+			if (!(Validator.isNameFormatValid(name) && Constants.gender.values()[gender] != null && Validator.isPhoneFormatValid(phone) && Validator.isQqFormatValid(qq))){
 				return null;
 			}
 			else{
@@ -83,7 +82,6 @@ public class UserContactResource extends PseudoResource{
 			if (contact != null){
 				User user = UserDaoService.getUserById(userId);
 				user.setName(contact.getString("name"));
-				user.setAge(contact.getInt("age"));
 				user.setGender(Constants.gender.values()[contact.getInt("gender")]);
 				user.setPhone(contact.getString("phone"));
 				user.setQq(contact.getString("qq"));

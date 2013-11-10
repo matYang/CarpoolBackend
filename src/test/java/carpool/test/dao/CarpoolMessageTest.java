@@ -65,7 +65,7 @@ public class CarpoolMessageTest {
 				state, time, time,false);
 		CarpoolDaoMessage.addMessageToDatabase(message);
 		//Has user
-		User user = new User("HarryXiong","c2xiong@uwaterloo.ca",new LocationRepresentation("p_c_d_2"));
+		User user = new User("HarryXiong","c2xiong@uwaterloo.ca",new LocationRepresentation("p_c_d_2"), gender.both);
 		Message message2=new Message(1, 2, user,false
 				, new LocationRepresentation("p_c_d_2"),time,timeSlot,3,4 , priceList,new LocationRepresentation("p_c_d_2"),
 				time,timeSlot,5, 6,priceList,paymentMethod,
@@ -77,7 +77,7 @@ public class CarpoolMessageTest {
 	@Test
 	public void testRead(){
 		CarpoolDaoBasic.clearBothDatabase();
-        User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+        User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -120,7 +120,7 @@ public class CarpoolMessageTest {
 	@Test
 	public void testUpdate() throws MessageNotFoundException, UserNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
-        User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+        User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -209,7 +209,7 @@ public class CarpoolMessageTest {
 	@Test
 	public void testSearch(){
 		CarpoolDaoBasic.clearBothDatabase();
-User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -420,7 +420,7 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 	@Test
 	public void getRecentMessages(){
 		CarpoolDaoBasic.clearBothDatabase();
-User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -493,7 +493,7 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 	@Test
 	public void testMessageCleaner(){
 		CarpoolDaoBasic.clearBothDatabase();
-        User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1));
+        User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);

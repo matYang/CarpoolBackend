@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import carpool.common.DebugLog;
 import carpool.common.Validator;
 import carpool.constants.Constants;
+import carpool.constants.Constants.gender;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.ValidationException;
@@ -41,6 +42,7 @@ public class UserResource extends PseudoResource{
 			String password = jsonUser.getString("password");
 			String email = jsonUser.getString("email");
 			LocationRepresentation location = new LocationRepresentation(jsonUser.getJSONObject("location"));
+			gender g = Constants.gender.fromInt(jsonUser.getInt("gender"));
 			
 			DebugLog.d(jsonUser.toString());
 			
@@ -50,7 +52,7 @@ public class UserResource extends PseudoResource{
 			}
 			
 			if (Validator.isPasswordFormatValid(password) && Validator.isEmailFormatValid(email) && LocationService.isLocationRepresentationValid(location)){
-				user = new User(password, email, location);
+				user = new User(password, email, location, g);
 			}
 		} catch (JSONException|IOException e) {
 			throw new ValidationException("Invalid data formats");

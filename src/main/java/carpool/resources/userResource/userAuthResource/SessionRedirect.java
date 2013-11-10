@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import carpool.common.DebugLog;
 import carpool.constants.Constants;
+import carpool.constants.Constants.gender;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
@@ -55,7 +56,7 @@ public class SessionRedirect extends PseudoResource{
 			}
 			//if not, retun defeault user, front end will detect invalid id==-1 and will use non-session
 			else{
-				jsonObject = JSONFactory.toJSON(new User("","",new LocationRepresentation("Canada_Ontario_Waterloo_Matthew's Sweet Little Home_3")));
+				jsonObject = JSONFactory.toJSON(new User("","",new LocationRepresentation("Canada_Ontario_Waterloo_Matthew's Sweet Little Home_3"), gender.both));
 			}
 		
 		}  catch (PseudoException e){
