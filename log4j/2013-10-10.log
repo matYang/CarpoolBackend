@@ -47,3 +47,11 @@
 2013-11-10 12:56:10,542 [main] INFO  carpool.common.DebugLog - initiaing router::RoutingService
 2013-11-10 12:56:10,647 [Thread-3] INFO  carpool.common.DebugLog - ScheduledClean:: clean scheduled at 4:0:0
 2013-11-10 12:56:10,647 [Thread-3] INFO  carpool.common.DebugLog - ScheduledClean thread starting, cleaning at 4:30AM every day
+2013-11-10 15:08:11,647 [main] INFO  carpool.common.DebugLog - Excuting
+2013-11-10 15:08:11,652 [main] INFO  carpool.common.DebugLog - Starting to load location data from file: LocationData.txt
+2013-11-10 15:08:11,672 [main] INFO  carpool.common.DebugLog - Location loaded,
+2013-11-10 15:08:11,672 [main] INFO  carpool.common.DebugLog - Location loaded succesfully, ending depth: -1
+2013-11-10 15:08:11,799 [main] INFO  carpool.common.DebugLog - ready to start
+2013-11-10 15:08:11,841 [main] INFO  carpool.common.DebugLog - initiaing router::RoutingService
+2013-11-10 15:08:11,930 [Thread-3] INFO  carpool.common.DebugLog - ScheduledClean:: clean scheduled at 4:0:0
+2013-11-10 15:08:11,930 [Thread-3] INFO  carpool.common.DebugLog - ScheduledClean thread starting, cleaning at 4:30AM every day
