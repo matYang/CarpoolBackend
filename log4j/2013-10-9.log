@@ -1,0 +1,4 @@
+2013-11-09 20:55:36,061 [main] INFO  carpool.common.DebugLog - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND（（departure_primaryLocation LIKE 'Canada_Ontario'AND arrival_primaryLocat' at line 1
+2013-11-09 21:24:42,643 [main] INFO  carpool.common.DebugLog - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'arrival_seatsNumber >= arrival_seatsBooked)))))OR(isRoundTrip NOT LIKE 1 AND (((' at line 1
+2013-11-09 21:29:27,134 [main] INFO  carpool.common.DebugLog - Unknown column 'depature_primaryLocation' in 'where clause'
+2013-11-09 21:30:17,021 [main] INFO  carpool.common.DebugLog - Unknown column 'depature_primaryLocation' in 'where clause'

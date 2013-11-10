@@ -68,49 +68,48 @@ public class CarpoolDaoUser {
     }
     
 	public static User addUserToDatabase(User user) throws ValidationException{
-		String query = "INSERT INTO carpoolDAOUser (password,name,email,phone,qq,age,gender,birthday,"+
+		String query = "INSERT INTO carpoolDAOUser (password,name,email,phone,qq,gender,birthday,"+
 	            "imgPath,user_primaryLocation,user_customLocation,user_customDepthIndex,lastLogin,creationTime,"+
 				"emailActivated,phoneActivated,emailNotice,phoneNotice,state,searchRepresentation,"+
 	            "level,averageScore,totalTranscations,verifications,googleToken,facebookToken,twitterToken,"+
 				"paypalToken,id_docType,id_docNum,id_path,id_vehicleImgPath,accountId,accountPass,accountToken,accountValue)"+
-	            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+	            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 			stmt.setString(1, SessionCrypto.encrypt(user.getPassword()));
 			stmt.setString(2, user.getName());
 			stmt.setString(3, user.getEmail());
 			stmt.setString(4, user.getPhone());
-			stmt.setString(5, user.getQq());
-			stmt.setInt(6, user.getAge());
-			stmt.setInt(7, user.getGender().code);
-			stmt.setString(8,  DateUtility.toSQLDateTime(user.getBirthday()));
-			stmt.setString(9, user.getImgPath());
-			stmt.setString(10, user.getLocation().getPrimaryLocationString());
-			stmt.setString(11, user.getLocation().getCustomLocationString());
-			stmt.setInt(12, user.getLocation().getCustomDepthIndex());
-			stmt.setString(13,  DateUtility.toSQLDateTime(user.getLastLogin()));
-			stmt.setString(14, DateUtility.toSQLDateTime(user.getCreationTime()));
-			stmt.setInt(15, user.isEmailActivated() ? 1:0);
-			stmt.setInt(16, user.isPhoneActivated() ? 1:0);
-			stmt.setInt(17, user.isEmailNotice() ? 1:0);
-			stmt.setInt(18, user.isPhoneNotice() ? 1:0);
-			stmt.setInt(19, user.getState().code);
-			stmt.setString(20, user.getSearchRepresentation().toSerializedString());
-			stmt.setInt(21, user.getLevel());
-			stmt.setInt(22, user.getAverageScore());
-			stmt.setInt(23, user.getTotalTranscations());
-			stmt.setString(24, Parser.listToString(user.getVerifications()));
-			stmt.setString(25,user.getGoogleToken());
-			stmt.setString(26, user.getFacebookToken());
-			stmt.setString(27, user.getTwitterToken());
-			stmt.setString(28,user.getPaypalToken());
-			stmt.setString(29, user.getId_docType());
-			stmt.setString(30,user.getId_docNum());
-			stmt.setString(31, user.getId_path());
-			stmt.setString(32, user.getId_vehicleImgPath());
-			stmt.setString(33, user.getAccountId());
-			stmt.setString(34, user.getAccountPass());
-			stmt.setString(35, user.getAccountToken());		
-			stmt.setString(36, user.getAccountValue().toString());
+			stmt.setString(5, user.getQq());			
+			stmt.setInt(6, user.getGender().code);
+			stmt.setString(7,  DateUtility.toSQLDateTime(user.getBirthday()));
+			stmt.setString(8, user.getImgPath());
+			stmt.setString(9, user.getLocation().getPrimaryLocationString());
+			stmt.setString(10, user.getLocation().getCustomLocationString());
+			stmt.setInt(11, user.getLocation().getCustomDepthIndex());
+			stmt.setString(12,  DateUtility.toSQLDateTime(user.getLastLogin()));
+			stmt.setString(13, DateUtility.toSQLDateTime(user.getCreationTime()));
+			stmt.setInt(14, user.isEmailActivated() ? 1:0);
+			stmt.setInt(15, user.isPhoneActivated() ? 1:0);
+			stmt.setInt(16, user.isEmailNotice() ? 1:0);
+			stmt.setInt(17, user.isPhoneNotice() ? 1:0);
+			stmt.setInt(18, user.getState().code);
+			stmt.setString(19, user.getSearchRepresentation().toSerializedString());
+			stmt.setInt(20, user.getLevel());
+			stmt.setInt(21, user.getAverageScore());
+			stmt.setInt(22, user.getTotalTranscations());
+			stmt.setString(23, Parser.listToString(user.getVerifications()));
+			stmt.setString(24,user.getGoogleToken());
+			stmt.setString(25, user.getFacebookToken());
+			stmt.setString(26, user.getTwitterToken());
+			stmt.setString(27,user.getPaypalToken());
+			stmt.setString(28, user.getId_docType());
+			stmt.setString(29,user.getId_docNum());
+			stmt.setString(30, user.getId_path());
+			stmt.setString(31, user.getId_vehicleImgPath());
+			stmt.setString(32, user.getAccountId());
+			stmt.setString(33, user.getAccountPass());
+			stmt.setString(34, user.getAccountToken());		
+			stmt.setString(35, user.getAccountValue().toString());
 			stmt.executeUpdate();
 			ResultSet rs = stmt.getGeneratedKeys();
 			rs.next();
@@ -132,7 +131,7 @@ public class CarpoolDaoUser {
 		String query2 = "DELETE from carpoolDAOUser where userId = '" + id + "'";
 		String query3 = "DELETE from carpoolDAOMessage where ownerId = '" + id +"'";
 		String query4 = "DELETE from SocialList where mainUser = '" + id +"'";
-		String query5 = "DELETE FROM Transaction WHERE initUserId="+id+" OR targetUserId = "+id;
+		String query5 = "DELETE FROM carpoolDAOTransaction WHERE provider_Id="+id+" OR customer_Id = "+id;
 		try(Statement stmt = CarpoolDaoBasic.getSQLConnection().createStatement()){
 			stmt.addBatch(query);
 			stmt.addBatch(query2);
@@ -148,7 +147,7 @@ public class CarpoolDaoUser {
 	}
 
 	public static void UpdateUserInDatabase(User user) throws UserNotFoundException, ValidationException{
-		String query = "UPDATE carpoolDAOUser SET password=?,name=?,email=?,phone=?,qq=?,age=?,gender=?,birthday=?," +
+		String query = "UPDATE carpoolDAOUser SET password=?,name=?,email=?,phone=?,qq=?,gender=?,birthday=?," +
 	            "imgPath=?,user_primaryLocation=?,user_customLocation=?,user_customDepthIndex=?,lastLogin=?,"+
 				"creationTime=?,emailActivated = ?,phoneActivated = ?,emailNotice = ?,phoneNotice = ?,state = ?,searchRepresentation = ?," +
 				"level=?,averageScore=?,totalTranscations=?,verifications=?,googleToken=?,facebookToken=?,twitterToken=?,paypalToken=?,"+
@@ -158,39 +157,38 @@ public class CarpoolDaoUser {
 			stmt.setString(2, user.getName());
 			stmt.setString(3, user.getEmail());
 			stmt.setString(4, user.getPhone());
-			stmt.setString(5, user.getQq());
-			stmt.setInt(6, user.getAge());
-			stmt.setInt(7, user.getGender().code);
-			stmt.setString(8,  DateUtility.toSQLDateTime(user.getBirthday()));
-			stmt.setString(9, user.getImgPath());
-			stmt.setString(10, user.getLocation().getPrimaryLocationString());
-			stmt.setString(11, user.getLocation().getCustomLocationString());
-			stmt.setInt(12, user.getLocation().getCustomDepthIndex());
-			stmt.setString(13,  DateUtility.toSQLDateTime(user.getLastLogin()));
-			stmt.setString(14, DateUtility.toSQLDateTime(user.getCreationTime()));
-			stmt.setInt(15, user.isEmailActivated() ? 1:0);
-			stmt.setInt(16, user.isPhoneActivated() ? 1:0);
-			stmt.setInt(17, user.isEmailNotice() ? 1:0);
-			stmt.setInt(18, user.isPhoneNotice() ? 1:0);
-			stmt.setInt(19, user.getState().code);
-			stmt.setString(20, user.getSearchRepresentation().toSerializedString());
-			stmt.setInt(21, user.getLevel());
-			stmt.setInt(22, user.getAverageScore());
-			stmt.setInt(23, user.getTotalTranscations());
-			stmt.setString(24, Parser.listToString(user.getVerifications()));
-			stmt.setString(25,user.getGoogleToken());
-			stmt.setString(26, user.getFacebookToken());
-			stmt.setString(27, user.getTwitterToken());
-			stmt.setString(28,user.getPaypalToken());
-			stmt.setString(29, user.getId_docType());
-			stmt.setString(30,user.getId_docNum());
-			stmt.setString(31, user.getId_path());
-			stmt.setString(32, user.getId_vehicleImgPath());
-			stmt.setString(33, user.getAccountId());
-			stmt.setString(34, user.getAccountPass());
-			stmt.setString(35, user.getAccountToken());	
-			stmt.setString(36, user.getAccountValue().toString());
-			stmt.setInt(37,user.getUserId());
+			stmt.setString(5, user.getQq());			
+			stmt.setInt(6, user.getGender().code);
+			stmt.setString(7,  DateUtility.toSQLDateTime(user.getBirthday()));
+			stmt.setString(8, user.getImgPath());
+			stmt.setString(9, user.getLocation().getPrimaryLocationString());
+			stmt.setString(10, user.getLocation().getCustomLocationString());
+			stmt.setInt(11, user.getLocation().getCustomDepthIndex());
+			stmt.setString(12,  DateUtility.toSQLDateTime(user.getLastLogin()));
+			stmt.setString(13, DateUtility.toSQLDateTime(user.getCreationTime()));
+			stmt.setInt(14, user.isEmailActivated() ? 1:0);
+			stmt.setInt(15, user.isPhoneActivated() ? 1:0);
+			stmt.setInt(16, user.isEmailNotice() ? 1:0);
+			stmt.setInt(17, user.isPhoneNotice() ? 1:0);
+			stmt.setInt(18, user.getState().code);
+			stmt.setString(19, user.getSearchRepresentation().toSerializedString());
+			stmt.setInt(20, user.getLevel());
+			stmt.setInt(21, user.getAverageScore());
+			stmt.setInt(22, user.getTotalTranscations());
+			stmt.setString(23, Parser.listToString(user.getVerifications()));
+			stmt.setString(24,user.getGoogleToken());
+			stmt.setString(25, user.getFacebookToken());
+			stmt.setString(26, user.getTwitterToken());
+			stmt.setString(27,user.getPaypalToken());
+			stmt.setString(28, user.getId_docType());
+			stmt.setString(29,user.getId_docNum());
+			stmt.setString(30, user.getId_path());
+			stmt.setString(31, user.getId_vehicleImgPath());
+			stmt.setString(32, user.getAccountId());
+			stmt.setString(33, user.getAccountPass());
+			stmt.setString(34, user.getAccountToken());	
+			stmt.setString(35, user.getAccountValue().toString());
+			stmt.setInt(36,user.getUserId());
 			int recordsAffected = stmt.executeUpdate();
 			if(recordsAffected==0){
 				throw new UserNotFoundException();
@@ -275,7 +273,7 @@ public class CarpoolDaoUser {
 		User user = null;
 		 try {
 			user = new User(rs.getInt("userId"),SessionCrypto.decrypt(rs.getString("password")), rs.getString("name"),
-					rs.getString("email"),rs.getString("phone"),rs.getString("qq"),rs.getInt("age"),Constants.gender.fromInt(rs.getInt("gender")),
+					rs.getString("email"),rs.getString("phone"),rs.getString("qq"),Constants.gender.fromInt(rs.getInt("gender")),
 					DateUtility.DateToCalendar(rs.getTimestamp("birthday")),rs.getString("imgPath"),new LocationRepresentation(rs.getString("user_primaryLocation"),rs.getString("user_customLocation"),rs.getInt("user_customDepthIndex")),
 					DateUtility.DateToCalendar(rs.getTimestamp("lastLogin")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
 					(ArrayList<String>)Parser.stringToList(rs.getString("verifications"),new String("")),
