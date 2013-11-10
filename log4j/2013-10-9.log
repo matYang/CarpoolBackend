@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 2013-11-09 15:26:49,834 [main] INFO  carpool.common.DebugLog - Excuting
 2013-11-09 15:26:49,846 [main] INFO  carpool.common.DebugLog - Starting to load location data from file: LocationData.txt
 2013-11-09 15:26:49,875 [main] INFO  carpool.common.DebugLog - Location loaded,
@@ -69,3 +70,9 @@
 The last packet successfully received from the server was 63,943,141 milliseconds ago.  The last packet sent successfully to the server was 68 milliseconds ago.
 2013-11-10 11:53:33,262 [Restlet-1873446390] INFO  carpool.common.DebugLog - []
 2013-11-10 11:53:33,262 [Restlet-1873446390] INFO  carpool.common.DebugLog - []
+=======
+2013-11-09 20:55:36,061 [main] INFO  carpool.common.DebugLog - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND（（departure_primaryLocation LIKE 'Canada_Ontario'AND arrival_primaryLocat' at line 1
+2013-11-09 21:24:42,643 [main] INFO  carpool.common.DebugLog - You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'arrival_seatsNumber >= arrival_seatsBooked)))))OR(isRoundTrip NOT LIKE 1 AND (((' at line 1
+2013-11-09 21:29:27,134 [main] INFO  carpool.common.DebugLog - Unknown column 'depature_primaryLocation' in 'where clause'
+2013-11-09 21:30:17,021 [main] INFO  carpool.common.DebugLog - Unknown column 'depature_primaryLocation' in 'where clause'
+>>>>>>> 0f8c412a6983bfdc5a728e07087807ae2d248d9f
