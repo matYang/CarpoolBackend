@@ -76,8 +76,9 @@ public class UserWatchUserResource extends PseudoResource{
 			//this.checkEntity(entity);
 
 			id = Integer.parseInt(this.getReqAttr("id"));
-			targetUserId = (new JsonRepresentation(entity)).getJsonObject().getInt("targetUserId");
-			String action = (new JsonRepresentation(entity)).getJsonObject().getString("action");
+			JSONObject temp = (new JsonRepresentation(entity)).getJsonObject();
+			targetUserId = temp.getInt("targetUserId");
+			String action = temp.getString("action");
 
 			this.validateAuthentication(id);
 			if (action.equals("watch")){
