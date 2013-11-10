@@ -108,7 +108,7 @@ public class PseudoResource extends ServerResource{
 	}
 	
 	public String doPseudoException(PseudoException e){
-		e.printStackTrace();
+		DebugLog.d(e);
 		switch(e.getCode()){
 			case 1: case 2: case 4: case 8:
 				//Not Found
@@ -167,7 +167,7 @@ public class PseudoResource extends ServerResource{
 	}
 	
 	public void doException(Exception e){
-		e.printStackTrace();
+		DebugLog.d(e);
 		setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 	}
 	

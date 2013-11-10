@@ -41,12 +41,12 @@ public class MessageDaoService{
 	
 
 	public static ArrayList<Message> primaryMessageSearch(SearchRepresentation userSearch, boolean isLogin, int userId) throws PseudoException{
-		userSearch.setDepartureDate(DateUtility.castFromAPIFormat("2013-10-21 21:47:50"));
+//		userSearch.setDepartureDate(DateUtility.castFromAPIFormat("2013-10-21 21:47:50"));
 		ArrayList<Message> searchResult = new ArrayList<Message>();
 		searchResult = CarpoolDaoMessage.searchMessage(userSearch);
-//		if (isLogin){
-//			UserDaoService.updateUserSearch(userSearch, userId);
-//		}
+		if (isLogin){
+			UserDaoService.updateUserSearch(userSearch, userId);
+		}
 		return searchResult;
 	}
 	
