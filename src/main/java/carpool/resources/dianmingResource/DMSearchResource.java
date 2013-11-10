@@ -47,6 +47,10 @@ public class DMSearchResource extends PseudoResource{
 			try{
 				this.validateAuthentication(userId);
 				login = true;
+				
+				if (userId <= 0){
+					login = false;
+				}
 			}
 			catch (AccountAuthenticationException e){
 				login = false;
