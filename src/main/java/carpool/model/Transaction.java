@@ -334,7 +334,7 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 			jsonTransaction.put("departure_time", DateUtility.castToAPIFormat(this.departure_time));
 			jsonTransaction.put("departure_timeSlot", this.departure_timeSlot.code);
 			jsonTransaction.put("departure_seatsBooked", this.departure_seatsBooked);
-			jsonTransaction.put("daparture_priceList", new JSONArray(this.departure_priceList));
+			jsonTransaction.put("departure_priceList", new JSONArray(this.departure_priceList));
 
 			jsonTransaction.put("type", this.type.code);
 			jsonTransaction.put("totalPrice", this.totalPrice);
