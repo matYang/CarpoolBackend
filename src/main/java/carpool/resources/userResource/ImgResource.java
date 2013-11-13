@@ -95,15 +95,21 @@ public class ImgResource extends PseudoResource{
 		int id = -1;
 			
 		try {
-			this.checkFileEntity(entity);
+			
+			//this.checkFileEntity(entity);
+			System.out.println("");
 			id = Integer.parseInt(this.getReqAttr("id"));
 			this.validateAuthentication(id);
 			
+			System.out.println("initial validation passed");
 			DiskFileItemFactory factory = new DiskFileItemFactory(); 
+			System.out.println("creating img factoru");
 	        factory.setSizeThreshold(1024000); 
+	        System.out.println("setting file threadshold");
 	        RestletFileUpload upload = new RestletFileUpload(factory); 
+	        System.out.println("Waning: creating file items");
 	        List<FileItem> items = upload.parseRepresentation(entity); 
-	        
+	        System.out.println("Temp files created, fildItem list generated");
 	        /*
 	        for(FileItem fi : items){ 
 	                File file = new File(fi.getName()); 
@@ -112,36 +118,46 @@ public class ImgResource extends PseudoResource{
 	        } 
 			*/
 //			InputStream inputStream = entity.getStream();
+	        System.out.println("starting to read img input stream");
             BufferedImage bufferedImage = ImageIO.read(items.get(0).getInputStream());
+            System.out.println("stream connected, starting to rescale");
             bufferedImage = Scalr.resize(bufferedImage, Scalr.Method.SPEED, Scalr.Mode.FIT_TO_WIDTH, 128, 128, Scalr.OP_ANTIALIAS);
-
+            System.out.println("img rescale completed into buffer");
             
     		String userProfile = carpool.constants.CarpoolConfig.profileImgPrefix;
     		String imgSize = carpool.constants.CarpoolConfig.imgSize_m;
     		String imgName = userProfile+imgSize+id;
+    		System.out.println("creating new file on EC2");
             File imgFile = new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png");
+            System.out.println("dumping img into buffer");
             
             ImageIO.write(bufferedImage, "png", imgFile);
-            
+            System.out.println("img file write completed, starting to upload to EC2");
             
             String path = FileService.uploadUserProfileImg(id, imgFile, imgName);
-            
+            System.out.println("img uploaded, retriving user");
             User user = UserDaoService.getUserById(id);
             user.setImgPath(path);
+            System.out.println("updating user");
             UserDaoService.updateUser(user);
-
+            
+            System.out.println("return usering in success");
             jsonObject = JSONFactory.toJSON(user);
 			setStatus(Status.SUCCESS_OK);
-
+			System.out.println("success response ready");
 
         } catch (PseudoException e){
+        	System.out.println("Handled by PseudoException handler, exception is:");
+        	System.out.println(e.getCode());
         	this.addCORSHeader();
 			return new StringRepresentation(this.doPseudoException(e));
         } catch (Exception e) {
+        	System.out.println("Handled by general exception, excetion is:");
+        	System.out.println(e);
             this.doException(e);
         }
 
-		
+		System.out.println("return");
 		Representation result = new JsonRepresentation(jsonObject);
 
 		this.addCORSHeader();

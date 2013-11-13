@@ -32,7 +32,7 @@ public class DebugLog {
 			}
 			fileAppender = new RollingFileAppender(layout, CarpoolConfig.log4LogFileFolder+today+CarpoolConfig.debugLogChinesePrefix+CarpoolConfig.log4jLogFileSuffix);
 			log.addAppender(fileAppender);
-			log.warn(e);
+			log.info(e.getStackTrace());
 			e.printStackTrace();
 		}catch(IOException e1){
 			e1.printStackTrace();

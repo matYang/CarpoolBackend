@@ -25,34 +25,34 @@ import carpool.resources.PseudoResource;
 public class DMTransactionResource extends PseudoResource{        
 
     @Get
-    /**
-* @return the full transactions of the message
-*/
+	/**
+	* @return the full transactions of the message
+	*/
     public Representation getTransactionByMessageId() {
-            int curMsgId = -1;
-            int curUserId = -1;
+        int curMsgId = -1;
+        int curUserId = -1;
         JSONArray response = new JSONArray();
         
         try {
-                curMsgId = Integer.parseInt(this.getReqAttr("id"));
-                curUserId = Integer.parseInt(this.getQueryVal("userId"));
-                
-                this.validateAuthentication(curUserId);
-                        
-                ArrayList<Transaction> historyTransactions = MessageDaoService.getTransactionByMessageId(curMsgId);
-                if (historyTransactions != null){
-                response = JSONFactory.toJSON(historyTransactions);
-                }
-                else{
-                        setStatus(Status.CLIENT_ERROR_CONFLICT);
-                }
-                        
-                } catch (PseudoException e){
-                        this.addCORSHeader();
-                        return new StringRepresentation(this.doPseudoException(e));
-                } catch (Exception e) {
-                        this.doException(e);
-                }
+            curMsgId = Integer.parseInt(this.getReqAttr("id"));
+            curUserId = Integer.parseInt(this.getQueryVal("userId"));
+            
+            this.validateAuthentication(curUserId);
+                    
+            ArrayList<Transaction> historyTransactions = MessageDaoService.getTransactionByMessageId(curMsgId);
+            if (historyTransactions != null){
+            response = JSONFactory.toJSON(historyTransactions);
+            }
+            else{
+                    setStatus(Status.CLIENT_ERROR_CONFLICT);
+            }
+                    
+        } catch (PseudoException e){
+                this.addCORSHeader();
+                return new StringRepresentation(this.doPseudoException(e));
+        } catch (Exception e) {
+                this.doException(e);
+        }
         
         
         Representation result = new JsonRepresentation(response);

@@ -55,14 +55,14 @@ public class RoutingService extends Application {
 		//	API for Get/Put/Delete dianming messages: /api/v1.0/dianming/dianming/:id
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMResourcePrefix + "/{id}", DMResourceId.class);
 		String DMRecentResourcePrefix = "/recent";
-		//	API for DM message change gender: /api/v1.0/dianming/recent
+		//	API for DM message getting recent messages: /api/v1.0/dianming/recent
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMRecentResourcePrefix, RecentMessageResource.class);
 		String DMSearchResourcePrefix = "/search";
-		//	API for DM message change gender: /api/v1.0/dianming/search
+		//	API for DM message search: /api/v1.0/dianming/search
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMSearchResourcePrefix, DMSearchResource.class);
 		String DMTransactionResourcePrefix = "/transaction";
-		//	API for DM message change gender: /api/v1.0/dianming/transacion/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMTransactionResourcePrefix, DMTransactionResource.class);
+		//	API for DM message fetchTransactionList : /api/v1.0/dianming/transaction/:id
+		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMTransactionResourcePrefix + "/{id}", DMTransactionResource.class);
 		
 		
 		/** -------------------- APIs for transaction module -------------- **/
