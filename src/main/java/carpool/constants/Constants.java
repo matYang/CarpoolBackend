@@ -168,10 +168,7 @@ public class Constants {
 
     public static final String goofyPasswordTrickHackers = "o god you are so gay";
 
-    //TODO
     public static long max_imageSize = 83886080l;
-	public static String imagePathPrefix = "../../var/www/userImages/profile-";
-	public static String imagePathSufix = ".png";
 	
 	
 	
