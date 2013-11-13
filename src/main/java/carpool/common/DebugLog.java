@@ -32,10 +32,9 @@ public class DebugLog {
 			}
 			fileAppender = new RollingFileAppender(layout, CarpoolConfig.log4LogFileFolder+today+CarpoolConfig.debugLogChinesePrefix+CarpoolConfig.log4jLogFileSuffix);
 			log.addAppender(fileAppender);
-			log.warn(e);
-			e.printStackTrace();
+			log.info(e);			
 		}catch(IOException e1){
-			e1.printStackTrace();
+			log.info(e1);
 		}
 	}
 
@@ -53,9 +52,9 @@ public class DebugLog {
 		try {
 			PrintStream ps = new PrintStream(System.out, true, "UTF-8");
 			ps.println(message);
-			logChinese(message);
+			log(message);
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			log.info(e);
 		}
 	}
 
@@ -72,30 +71,13 @@ public class DebugLog {
 			}		
 			log.info(message);
 		}catch(IOException e){
-			e.printStackTrace();
-		}
-	}
-
-	private static void logChinese(String message){
-		try{
-			String today = getTime();
-			if(!configure){
-				log.setLevel(Level.INFO);
-				layout = new PatternLayout(CarpoolConfig.log4jBasicPatternLayout);
-				log.addAppender(new ConsoleAppender(layout));
-				fileAppender = new RollingFileAppender(layout, CarpoolConfig.log4LogFileFolder+today+CarpoolConfig.debugLogChinesePrefix+CarpoolConfig.log4jLogFileSuffix);
-				log.addAppender(fileAppender);
-				configure = true;
-			}
-			log.info(message);
-		}catch(IOException e){
-			e.printStackTrace();
+			log.info(e);
 		}
 	}
 
 	private static String getTime(){
 		Calendar today = Calendar.getInstance();
-		
+
 		int day = today.get(Calendar.DAY_OF_MONTH);
 		int month = today.get(Calendar.MONTH);
 		int year = today.get(Calendar.YEAR);

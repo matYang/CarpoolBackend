@@ -56,7 +56,7 @@ public class CarpoolConfig {
 	
     public static final String log4jBasicPatternLayout = "%d [%t] %-5p %c - %m%n";
     public static final String log4LogFileFolder = "log4j/";
-    public static final String log4jLogFileSuffix = ".log";    
+    public static final String log4jLogFileSuffix = ".info.log";    
     public static final String debugLogChinesePrefix = "_chinese";
 	public static final LocationRepresentation getDefaultLocationRepresentation(){
 		return new LocationRepresentation("Canada_Ontario_Waterloo_undetermined_3");
