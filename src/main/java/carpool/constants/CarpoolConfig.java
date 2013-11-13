@@ -17,8 +17,8 @@ public class CarpoolConfig {
 	public static final String key_forgetPasswordAuth = "fp";
 	
 	
-	//public static final String domainName = "www.huaixuesheng.com";
-	public static final String domainName = "localhost:8015";
+	public static final String domainName = "www.huaixuesheng.com";
+//	public static final String domainName = "localhost:8015";
 	public static final boolean cookieEnabled = false;
 	//time stamp on the session will be updated if it is 3 days old
 	public static final long session_updateThreshould = 259200000l;
