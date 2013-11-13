@@ -36,6 +36,7 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -179,23 +180,17 @@ public class awsMain {
 	public static String uploadProfileImg(int userId, File file, String imgName){
 
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
-		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
+		AmazonS3Client s3Client = new AmazonS3Client(myCredentials);
         
 		BasicConfigurator.configure();
-		s3Client.putObject(bucketName,userId+"/"+imgName+".png",new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png"));
-
-		imgkey = userId+"/"+imgName +".png";
-
+		
 		java.util.Date expiration = new java.util.Date();
 		long msec = expiration.getTime();
-		msec += 1000 * 60 * 60 * 24 * 30 * 365; // 1 hour.
-		expiration.setTime(msec);
+		
+		s3Client.putObject(new PutObjectRequest(bucketName,userId+"/"+imgName+"-"+msec+".png",new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png")).withCannedAcl(CannedAccessControlList.PublicRead));
+		imgkey = userId+"/"+imgName+"-"+msec+".png";	
 
-		GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, imgkey);
-		generatePresignedUrlRequest.setMethod(HttpMethod.GET); 
-		generatePresignedUrlRequest.setExpiration(expiration);
-
-		URL s = s3Client.generatePresignedUrl(generatePresignedUrlRequest); 
+		URL s = s3Client.getUrl(bucketName, imgkey);
 		
 		return s.toString();
 
@@ -206,25 +201,18 @@ public class awsMain {
 		String imgSize = carpool.constants.CarpoolConfig.imgSize_m;
 		String imgName = userProfile+imgSize+userId;
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
-		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
+		AmazonS3Client s3Client = new AmazonS3Client(myCredentials);
 
 		BasicConfigurator.configure();
-
-		s3Client.putObject(bucketName,userId+"/"+imgName+".png",new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png"));
-		imgkey = userId+"/"+imgName +".png";	
+		
 		java.util.Date expiration = new java.util.Date();
 		long msec = expiration.getTime();
 		
-		msec += 1000 * 60 * 60 * 24 * 30 * 365; // 1 hour.
-		expiration.setTime(msec);
-		
-		GeneratePresignedUrlRequest generatePresignedUrlRequest = 
-				new GeneratePresignedUrlRequest(bucketName, imgkey);
-		generatePresignedUrlRequest.setMethod(HttpMethod.GET); 
-		generatePresignedUrlRequest.setExpiration(expiration);
-
-		URL s = s3Client.generatePresignedUrl(generatePresignedUrlRequest); 
-		
+		s3Client.putObject(new PutObjectRequest(bucketName,userId+"/"+imgName+"-"+msec+".png",new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png")).withCannedAcl(CannedAccessControlList.PublicRead));
+		imgkey = userId+"/"+imgName+"-"+msec+".png";	
+				 
+		URL s = s3Client.getUrl(bucketName, imgkey);
+		//System.out.println(s.toString());
 		return s.toString();
 
 	}
