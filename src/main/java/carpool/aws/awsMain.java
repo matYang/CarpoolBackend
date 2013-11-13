@@ -224,7 +224,7 @@ public class awsMain {
 		generatePresignedUrlRequest.setExpiration(expiration);
 
 		URL s = s3Client.generatePresignedUrl(generatePresignedUrlRequest); 
-		System.out.println(s.toString());
+		
 		return s.toString();
 
 	}
