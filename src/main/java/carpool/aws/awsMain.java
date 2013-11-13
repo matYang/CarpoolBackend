@@ -181,17 +181,17 @@ public class awsMain {
 
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 		AmazonS3Client s3Client = new AmazonS3Client(myCredentials);
-        
+
 		BasicConfigurator.configure();
-		
+
 		java.util.Date expiration = new java.util.Date();
 		long msec = expiration.getTime();
-		
+
 		s3Client.putObject(new PutObjectRequest(bucketName,userId+"/"+imgName+"-"+msec+".png",new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png")).withCannedAcl(CannedAccessControlList.PublicRead));
 		imgkey = userId+"/"+imgName+"-"+msec+".png";	
 
 		URL s = s3Client.getUrl(bucketName, imgkey);
-		
+
 		return s.toString();
 
 	}
@@ -204,13 +204,13 @@ public class awsMain {
 		AmazonS3Client s3Client = new AmazonS3Client(myCredentials);
 
 		BasicConfigurator.configure();
-		
+
 		java.util.Date expiration = new java.util.Date();
 		long msec = expiration.getTime();
-		
+
 		s3Client.putObject(new PutObjectRequest(bucketName,userId+"/"+imgName+"-"+msec+".png",new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png")).withCannedAcl(CannedAccessControlList.PublicRead));
 		imgkey = userId+"/"+imgName+"-"+msec+".png";	
-				 
+
 		URL s = s3Client.getUrl(bucketName, imgkey);
 		//System.out.println(s.toString());
 		return s.toString();
@@ -233,14 +233,14 @@ public class awsMain {
 			String localfileName = CarpoolConfig.pathToSearchHistoryFolder + userId + CarpoolConfig.searchHistoryFileSufix;
 			File file = new File(localfileName);
 
-			
+
 			try{
 				//Make sure the file is "empty" before we write to it;
 				PrintWriter pwriter = new PrintWriter(localfileName);
 				pwriter.write("");
 				pwriter.close();
 				BasicConfigurator.configure();
-				
+
 				S3Object object = s3Client.getObject(new GetObjectRequest(bucketName,fileName));    
 				InputStream objectData = object.getObjectContent(); 
 				InputStream reader = new BufferedInputStream(objectData);      
@@ -285,7 +285,7 @@ public class awsMain {
 					} catch (IOException e1){
 						DebugLog.d(e);
 					}
-					
+
 				}
 			} catch (IOException e){
 				DebugLog.d(e);
