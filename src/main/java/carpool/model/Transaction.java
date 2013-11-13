@@ -64,7 +64,7 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 	private Transaction(){}
 	
 	//this constructor is used for transaction initialization
-	public Transaction(int providerId, int customerId, int messageId, paymentMethod p, String cNote, String pNote, 
+	public Transaction(int providerId, int customerId, int messageId, paymentMethod p, String cNote, String pNote, LocationRepresentation departure_location, LocationRepresentation arrival_location, 
 			 Calendar d_t, DayTimeSlot d_ts, int d_seats, TransactionType type){
 		super();
 		this.providerId = providerId;
@@ -81,8 +81,8 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		this.customerEvaluation = 0;
 		this.providerEvaluation = 0;
 		
-		this.departure_location = null;
-		this.arrival_location = null;
+		this.departure_location = departure_location;
+		this.arrival_location = arrival_location;
 		this.departure_time = d_t;
 		this.departure_timeSlot = d_ts;
 		this.departure_seatsBooked = d_seats;
@@ -334,7 +334,7 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 			jsonTransaction.put("departure_time", DateUtility.castToAPIFormat(this.departure_time));
 			jsonTransaction.put("departure_timeSlot", this.departure_timeSlot.code);
 			jsonTransaction.put("departure_seatsBooked", this.departure_seatsBooked);
-			jsonTransaction.put("daparture_priceList", new JSONArray(this.departure_priceList));
+			jsonTransaction.put("departure_priceList", new JSONArray(this.departure_priceList));
 
 			jsonTransaction.put("type", this.type.code);
 			jsonTransaction.put("totalPrice", this.totalPrice);

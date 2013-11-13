@@ -14,7 +14,7 @@ public class Validator {
 
 	//check if the phone is in a valid format
 	public static boolean isPhoneFormatValid(String phone){
-		if (phone == null || phone.length() != Constants.fixedPhoneLength){
+		if (phone == null){
 			return false;
 		}
 		//check if every digit is a number
@@ -100,7 +100,7 @@ public class Validator {
 	        return false;
 	    }
 	
-	    return false;
+	    return true;
 	}
 
 	/**

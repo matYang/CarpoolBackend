@@ -10,6 +10,7 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.Parser;
 import carpool.constants.Constants;
+import carpool.constants.Constants.TransactionType;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -33,15 +34,15 @@ public class CarpoolDaoTransaction {
 	transaction.setProvider(provider);
 	transaction.setMessage(msg);		
 	int totalPrice = 0;
-	int direction = transaction.getType().code;
+	TransactionType direction = transaction.getType();
 	ArrayList<Integer> dplist = new ArrayList<Integer>();
 	ArrayList<Integer> aplist = new ArrayList<Integer>();
-	if(direction == 0){
+	if(direction == TransactionType.departure){
 		dplist = msg.getDeparture_priceList();
 	for(int i=0; i<dplist.size();i++){
 		totalPrice += dplist.get(i);
 	 }
-	}else if(direction == 1){
+	}else if(direction == TransactionType.arrival){
 		aplist = msg.getArrival_priceList();
 		for(int i=0; i<aplist.size();i++){
 			totalPrice += aplist.get(i);
@@ -52,7 +53,7 @@ public class CarpoolDaoTransaction {
 			stmt.setInt(1,transaction.getProviderId());			
 			stmt.setInt(2, transaction.getCustomerId());
 			stmt.setInt(3, transaction.getMessageId());
-			if(direction==0){
+			if(direction == TransactionType.departure){
 				stmt.setString(4, Parser.listToString(dplist));		
 				stmt.setString(5, DateUtility.toSQLDateTime(msg.getDeparture_time()));
 				stmt.setString(6, msg.getDeparture_location().getPrimaryLocationString());
@@ -85,7 +86,7 @@ public class CarpoolDaoTransaction {
 			stmt.setString(20, transaction.getProviderNote());
 			stmt.setInt(21,transaction.getCustomerEvaluation());
 			stmt.setInt(22,transaction.getProviderEvaluation());
-			stmt.setInt(23, direction);
+			stmt.setInt(23, direction.code);
 			stmt.executeUpdate();	 
 			ResultSet rs = stmt.getGeneratedKeys();
 			rs.next();

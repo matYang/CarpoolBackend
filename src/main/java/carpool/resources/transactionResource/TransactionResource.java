@@ -42,16 +42,14 @@ public class TransactionResource extends PseudoResource{
 
 	//passes received json into message
 	//note that this parseJSON
-	protected Transaction parseJSON(Representation entity){
-		JSONObject jsonTransaction = null;
+	protected Transaction parseJSON(JSONObject jsonTransaction){
 
 		Transaction transaction = null;
 		try {
-			jsonTransaction = (new JsonRepresentation(entity)).getJsonObject();
 			DebugLog.d("@Post::receive jsonTransaction: " +  jsonTransaction.toString());
 			
 			transaction = new Transaction(jsonTransaction.getInt("providerId"), jsonTransaction.getInt("customerId"), jsonTransaction.getInt("messageId"), Constants.paymentMethod.values()[jsonTransaction.getInt("paymentMethod")], 
-					jsonTransaction.getString("customerNote"), jsonTransaction.getString("providerNote"),
+					jsonTransaction.getString("customerNote"), jsonTransaction.getString("providerNote"), new LocationRepresentation(jsonTransaction.getJSONObject("departure_location")), new LocationRepresentation(jsonTransaction.getJSONObject("arrival_location")),
 					DateUtility.castFromAPIFormat(jsonTransaction.getString("departure_time")), Constants.DayTimeSlot.values()[jsonTransaction.getInt("departure_timeSlot")], jsonTransaction.getInt("departure_seatsBooked"),
 					Constants.TransactionType.values()[jsonTransaction.getInt("transactionType")]);
 		} catch (Exception e) {
@@ -102,11 +100,11 @@ public class TransactionResource extends PseudoResource{
         
 		try {
 			this.checkEntity(entity);
-			
-			id = (new JsonRepresentation(entity)).getJsonObject().getInt("userId");
+			JSONObject jsonTransaction = (new JsonRepresentation(entity)).getJsonObject();
+			id = jsonTransaction.getInt("userId");
 			this.validateAuthentication(id);
 			
-	        Transaction transaction = parseJSON(entity);
+	        Transaction transaction = parseJSON(jsonTransaction);
 	        if (transaction != null){
 	        	if (transaction.getProviderId() == id || transaction.getCustomerId() == id){
 		        	//check the state of the message, and if the transaction matches the message

@@ -65,9 +65,9 @@ public class TransactionDaoServiceTest {
 				"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message);
 		TransactionType tD = Constants.TransactionType.fromInt(1);
-		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",time,timeSlot,1,tD);
-		Transaction transaction2 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",time,timeSlot,1,tD);
-		Transaction transaction3 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",time,timeSlot,1,tD);
+		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",new LocationRepresentation("p_c_d_2"), new LocationRepresentation("p_c_d_2"),time,timeSlot,1,tD);
+		Transaction transaction2 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",new LocationRepresentation("p_c_d_2"), new LocationRepresentation("p_c_d_2"),time,timeSlot,1,tD);
+		Transaction transaction3 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",new LocationRepresentation("p_c_d_2"), new LocationRepresentation("p_c_d_2"),time,timeSlot,1,tD);
 		//Test
 		try{
 			transaction = TransactionDaoService.createNewTransaction(transaction);
