@@ -180,14 +180,15 @@ public class awsMain {
 
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
-
+        
+		BasicConfigurator.configure();
 		s3Client.putObject(bucketName,userId+"/"+imgName+".png",new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png"));
 
 		imgkey = userId+"/"+imgName +".png";
 
 		java.util.Date expiration = new java.util.Date();
 		long msec = expiration.getTime();
-		msec += 1000 * 60 * 60; // 1 hour.
+		msec += 1000 * 60 * 60 * 24 * 30 * 365; // 1 hour.
 		expiration.setTime(msec);
 
 		GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucketName, imgkey);
@@ -213,11 +214,10 @@ public class awsMain {
 		imgkey = userId+"/"+imgName +".png";	
 		java.util.Date expiration = new java.util.Date();
 		long msec = expiration.getTime();
-		System.out.println(msec);
+		
 		msec += 1000 * 60 * 60 * 24 * 30 * 365; // 1 hour.
 		expiration.setTime(msec);
-		System.out.println(msec);
-
+		
 		GeneratePresignedUrlRequest generatePresignedUrlRequest = 
 				new GeneratePresignedUrlRequest(bucketName, imgkey);
 		generatePresignedUrlRequest.setMethod(HttpMethod.GET); 
