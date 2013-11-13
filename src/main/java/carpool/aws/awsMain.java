@@ -195,6 +195,7 @@ public class awsMain {
 		generatePresignedUrlRequest.setExpiration(expiration);
 
 		URL s = s3Client.generatePresignedUrl(generatePresignedUrlRequest); 
+		
 		return s.toString();
 
 	}
@@ -212,8 +213,10 @@ public class awsMain {
 		imgkey = userId+"/"+imgName +".png";	
 		java.util.Date expiration = new java.util.Date();
 		long msec = expiration.getTime();
-		msec += 1000 * 60 * 60; // 1 hour.
+		System.out.println(msec);
+		msec += 1000 * 60 * 60 * 24 * 30 * 365; // 1 hour.
 		expiration.setTime(msec);
+		System.out.println(msec);
 
 		GeneratePresignedUrlRequest generatePresignedUrlRequest = 
 				new GeneratePresignedUrlRequest(bucketName, imgkey);
@@ -221,7 +224,7 @@ public class awsMain {
 		generatePresignedUrlRequest.setExpiration(expiration);
 
 		URL s = s3Client.generatePresignedUrl(generatePresignedUrlRequest); 
-
+		
 		return s.toString();
 
 	}
