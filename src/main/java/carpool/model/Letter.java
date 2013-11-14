@@ -23,6 +23,16 @@ import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
 
 
+
+/**
+ *  Letter specifictions
+ * 1. Create, user send another a letter
+ * 2. get a letter detail by its letter Id;
+ * 3. get all letter history by userId
+ * 4. get all letter history given current user and another user
+ * 5. check the letter
+ * */
+
 public class Letter implements PseudoModel, PseudoValidatable, Comparable<User>{
         
     private int letterId;
@@ -33,7 +43,6 @@ public class Letter implements PseudoModel, PseudoValidatable, Comparable<User>{
     private User from_user;
     private User to_user;
     
-    private String title;
     private String content;
     private Calendar send_time;
     private Calendar check_time;
@@ -51,64 +60,42 @@ public class Letter implements PseudoModel, PseudoValidatable, Comparable<User>{
     /*****
      * Constructor for letter sending
          *****/
-        public Letter(int from_userId, int to_userId, LetterType type, String title, String content) {
+        public Letter(int from_userId, int to_userId, LetterType type, String content) {
                 super();
+                this.letterId = -1;
+                this.from_userId = from_userId;
+                this.to_userId = to_userId;
+                this.type = type;
+                
+                this.from_user = null;
+                this.to_user = null;
+                
+                this.content = content;
+                this.send_time = Calendar.getInstance();
+                this.check_time = Calendar.getInstance();
+                
+                this.state = LetterState.unread;
+                this.historyDeleted = false;
 
         }
 
 
 
- 
-
     @Override
         public JSONObject toJSON(){
                 JSONObject jsonUser = new JSONObject();
                 try {
-                        
-                        jsonUser.put("userId", this.getUserId());
-                        jsonUser.put("name", this.getName());
-                        jsonUser.put("email", this.getEmail());
-                        jsonUser.put("phone", this.getPhone());
-                        jsonUser.put("qq", this.getQq());
-                        jsonUser.put("age", this.getAge());
-                        jsonUser.put("gender", this.getGender().code);
-                        jsonUser.put("birthday", DateUtility.castToAPIFormat(this.getBirthday()));
-                        jsonUser.put("imgPath", this.getImgPath());
-                        jsonUser.put("location", this.location.toJSON());
-                        jsonUser.put("lastLogin", DateUtility.castToAPIFormat(this.getLastLogin()));
-                        jsonUser.put("creationTime", DateUtility.castToAPIFormat(this.getCreationTime()));
-
-                        jsonUser.put("historyList", JSONFactory.toJSON(this.getHistoryList()));
-                        jsonUser.put("watchList", JSONFactory.toJSON(this.getWatchList()));
-                        jsonUser.put("socialList", JSONFactory.toJSON(this.getSocialList()));
-                        jsonUser.put("transactionList", JSONFactory.toJSON(this.getTransactionList()));
-                        jsonUser.put("notificationList", JSONFactory.toJSON(this.getNotificationList()));
-                        
-                        jsonUser.put("verifications", new JSONArray(this.verifications));
-                        jsonUser.put("emailActivated", this.isEmailActivated());
-                        jsonUser.put("phoneActivated", this.isPhoneActivated());
-                        jsonUser.put("emailNotice", this.isEmailNotice());
-                        jsonUser.put("phoneNotice", this.isPhoneNotice());
-                        
+                        jsonUser.put("letterId", this.getLetterId());
+                        jsonUser.put("from_userId", this.getFrom_userId());
+                        jsonUser.put("to_userId", this.getTo_userId());
+                        jsonUser.put("type", this.getType().code);
+                        jsonUser.put("from_user", this.getFrom_user() == null ? new JSONObject() : this.getFrom_user().toJSON());
+                        jsonUser.put("to_user", this.getTo_user() == null ? new JSONObject() : this.getTo_user().toJSON());
+                        jsonUser.put("content", this.getContent());
+                        jsonUser.put("send_time", DateUtility.castToAPIFormat(this.getSend_time()));
+                        jsonUser.put("check_time", DateUtility.castToAPIFormat(this.getCheck_time()));
                         jsonUser.put("state", this.getState().code);
-                        jsonUser.put("searchRepresentation", this.getSearchRepresentation().toJSON());
-                        jsonUser.put("level", this.getLevel());
-                        jsonUser.put("averageScore", this.getAverageScore());
-                        jsonUser.put("totalTranscations", this.getTotalTranscations());
-                        
-                        jsonUser.put("googleToken", this.getGoogleToken());
-                        jsonUser.put("facebookToken", this.getFacebookToken());
-                        jsonUser.put("twitterToken", this.getTwitterToken());
-                        jsonUser.put("paypalToken", this.getPaypalToken());
-                        jsonUser.put("id_docType", this.getId_docType());
-                        jsonUser.put("id_docNum", this.getId_docNum());
-                        jsonUser.put("id_path", this.getId_path());
-                        jsonUser.put("id_vehicleImgPath", this.getId_vehicleImgPath());
-                        
-                        jsonUser.put("accountId", this.getAccountId());
-                        jsonUser.put("accountPass", this.getAccountPass());
-                        jsonUser.put("accountToken", this.getAccountToken());
-                        jsonUser.put("accountValue", this.getAccountValue());
+                        jsonUser.put("historyDeleted", this.isHistoryDeleted());
 
                 } catch (JSONException e) {
                         e.printStackTrace();
@@ -116,9 +103,16 @@ public class Letter implements PseudoModel, PseudoValidatable, Comparable<User>{
                 
                 return jsonUser;
         }
-
-
-
+        
+        
+        @Override
+        public int equals(Letter anotherLetter) {
+                return this.letterId == anotherLetter.letterId && this.from_userId == anotherLetter.from_userId && this.to_userId == anotherLetter.to_userId &&
+                this.type == anotherLetter.type && this.from_user.equals(anotherLetter.from_user) && this.to_user.equals(anotherLetter.to_user) && 
+                this.content.equals(anotherLetter.content) && this.state == anotherLetter.state && this.historyDeleted == anotherLetter.historyDeleted &&
+                this.send_time.getTime().toString().equals(anotherLetter.send_time.getTime().toString()) &&
+                this.check_time.getTime().toString().equals(anotherLetter.check_time.getTime().toString());
+        } 
 
 
         @Override
