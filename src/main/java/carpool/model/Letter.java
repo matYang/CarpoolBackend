@@ -31,6 +31,7 @@ import carpool.model.representation.SearchRepresentation;
  * 3. get all letter history by userId
  * 4. get all letter history given current user and another user
  * 5. check the letter
+ * 6. delete the letter from history (optional for Alpha-Trinity)
  * */
 
 public class Letter implements PseudoModel, PseudoValidatable, Comparable<User>{
