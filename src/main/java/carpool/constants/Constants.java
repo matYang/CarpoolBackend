@@ -153,6 +153,30 @@ public class Constants {
             return map[n];
         }
     }
+    
+    public static enum LetterType{
+    	user(0), admin(1), system(2);
+    	public int code;
+    	LetterType(int code){
+            this.code = code;
+        }
+        private final static LetterType[] map = LetterType.values();
+        public static LetterType fromInt(int n){
+            return map[n];
+        }
+    }
+    
+    public static enum LetterState{
+    	unread(0), read(1), invalid(2);
+    	public int code;
+    	LetterState(int code){
+    		this.code = code;
+    	}
+    	private final static LetterState[] map = LetterState.values();
+    	public static LetterState fromInt(int n){
+    		return map[n];
+    	}
+    }
 
 
     /*API level constants*/
