@@ -29,9 +29,11 @@ import carpool.model.representation.SearchRepresentation;
 /**
  *  Letter specifictions
  * 1. Create, user send another a letter
- * 2. get a letter detail by its letter Id;
- * 3. get all letter history by userId
- * 4. get all letter history given current user and another user
+ * 2. get all letters(not in frontend api) (get All)
+ * 
+ * 3. get all letter history given current user and another user, if another user not specified, get all from currentUser , optionally direction(get by userId, optionally intersect targetUserId, optionally interset with direction)
+ * 
+ * 4. get a single letter detail by its letter Id;  (get by letterId)
  * 5. check the letter
  * 6. delete the letter from history (optional for Alpha-Trinity)
  * */
@@ -246,7 +248,8 @@ public class Letter implements PseudoModel, PseudoValidatable, Comparable<Letter
 				return false;
 			}
     } 
-
+    
+    
 
     @Override
     public int compareTo(Letter anotherLetter) {

@@ -155,7 +155,7 @@ public class Constants {
     }
     
     public static enum LetterType{
-    	user(0), admin(1), system(2);
+    	user(0), system(1);
     	public int code;
     	LetterType(int code){
             this.code = code;
