@@ -26,8 +26,6 @@ import carpool.constants.Constants;
 import carpool.constants.Constants.gender;
 import carpool.constants.Constants.userSearchState;
 import carpool.constants.Constants.userState;
-import carpool.database.DaoNotification;
-import carpool.database.DaoTransaction;
 import carpool.encryption.SessionCrypto;
 import carpool.exception.ValidationException;
 import carpool.exception.message.MessageNotFoundException;
@@ -397,24 +395,6 @@ public class CarpoolDaoUser {
 		}
 		return mlist;
 	}
-	
 
-	
-	
-	private static User addNotificationListToUser(User user){
-		ArrayList<Notification> notificationList = new ArrayList<Notification>();
-		String query = "SELECT * FROM Notification WHERE targetUserId = ?;";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-			stmt.setInt(1, user.getUserId());
-			ResultSet rs = stmt.executeQuery();
-			while(rs.next()){
-				notificationList.add(DaoNotification.createNotificationByResultSet(rs));
-			}
-		}catch(SQLException e){
-			DebugLog.d(e.getMessage());
-		}
-		user.setNotificationList(notificationList);
-		return user;		
-	}
 
 }

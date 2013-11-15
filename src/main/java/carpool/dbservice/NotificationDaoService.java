@@ -9,7 +9,6 @@ import carpool.asyncTask.relayTask.NotificationRelayTask;
 import carpool.carpoolDAO.CarpoolDaoNotification;
 import carpool.common.*;
 import carpool.constants.Constants.NotificationState;
-import carpool.database.DaoNotification;
 import carpool.exception.PseudoException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.notification.NotificationNotFoundException;
