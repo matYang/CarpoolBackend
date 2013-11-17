@@ -12,6 +12,7 @@ import carpool.constants.Constants.gender;
 import carpool.constants.Constants.paymentMethod;
 import carpool.constants.Constants.userState;
 import carpool.interfaces.*;
+import carpool.model.Letter;
 import carpool.model.Message;
 import carpool.model.Notification;
 import carpool.model.Transaction;
@@ -42,6 +43,9 @@ public class JSONFactory {
 		}
 		else if (obj instanceof Notification){
 			return ((Notification)obj).toJSON();
+		}
+		else if (obj instanceof Letter){
+			return ((Letter)obj).toJSON();
 		}
 		else if (obj instanceof LocationRepresentation){
 			return ((LocationRepresentation)obj).toJSON();

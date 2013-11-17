@@ -69,7 +69,7 @@ public class Constants {
 
     public static enum NotificationEvent{
         transactionInit(0), transactionCancelled(1), transactionAboutToStart(2),
-        transactionEvaluated(3), tranasctionUnderInvestigation(4), transactionReleased(5), watched(6);
+        transactionEvaluated(3), tranasctionUnderInvestigation(4), transactionReleased(5), watched(6), newLetter(7);
         public int code;
         NotificationEvent(int code){
             this.code = code;
@@ -177,6 +177,18 @@ public class Constants {
     		return map[n];
     	}
     }
+    
+    public static enum LetterDirection{
+    	inbound(0), outbound(1), both(2);
+    	public int code;
+    	LetterDirection(int code){
+    		this.code = code;
+    	}
+    	private final static LetterDirection[] map = LetterDirection.values();
+    	public static LetterDirection fromInt(int n){
+    		return map[n];
+    	}
+    }
 
 
     /*API level constants*/
@@ -194,7 +206,8 @@ public class Constants {
 
     public static long max_imageSize = 83886080l;
 	
-	
+    
+    public static final String log_errKeyword = "ERROR!:";
 	
 	/** -------------------Administrator-------------------**/
     //the temporary admin access code, admin access will be checked against this code instead of user cookies
