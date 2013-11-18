@@ -32,7 +32,6 @@ public class NotificationResourceId extends PseudoResource{
         try {
         	//notificationId = Integer.parseInt(this.getReqAttr("id"));
 			id = Integer.parseInt(this.getQueryVal("userId"));
-			
 			this.validateAuthentication(id);
 			
         	ArrayList<Notification> notifications = UserDaoService.getNotificationByUserId(id);

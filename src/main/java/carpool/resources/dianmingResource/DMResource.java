@@ -95,10 +95,10 @@ public class DMResource extends PseudoResource{
 			this.checkEntity(entity);
 			
 	        Message message = parseJSON(entity);
-	        id = message.getOwnerId();
-	        this.validateAuthentication(id);
-	        
 	        if (message != null){
+	        	id = message.getOwnerId();
+		        this.validateAuthentication(id);
+		        
 	        	if (message.validate() && message.getOwnerId() == id){
 		        	//if create the message
 		            Message creationFeedBack = MessageDaoService.createNewMessage(message);

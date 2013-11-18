@@ -12,6 +12,8 @@ import carpool.resources.adminResource.AdminRoutineResource;
 import carpool.resources.adminResource.AdminStateChangeResource;
 import carpool.resources.dianmingResource.*;
 import carpool.resources.generalResource.*;
+import carpool.resources.letterResource.LetterResource;
+import carpool.resources.letterResource.LetterResourceId;
 import carpool.resources.locationResource.*;
 import carpool.resources.notificationResource.*;
 import carpool.resources.transactionResource.*;
@@ -82,10 +84,20 @@ public class RoutingService extends Application {
 		//  API for transaction:  /api/v1.0/notification/*
 		
 		String NotificationResourcePrefix = "/notification";
-		//	API for Get transactions: /api/v1.0/notification/notification
+		//	API for Get notifications: /api/v1.0/notification/notification
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + notificationServicePrefix + NotificationResourcePrefix, NotificationResource.class);
 		//	API for Get/Put/Delete notification: /api/v1.0/notification/notification/:id
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + notificationServicePrefix + NotificationResourcePrefix + "/{id}", NotificationResourceId.class);
+		
+		/** -------------------- APIs for letter module -------------- **/
+		String letterServicePrefix = "/letter";
+		//  API for transaction:  /api/v1.0/letter/*
+		
+		String LetterResourcePrefix = "/letter";
+		//	API for Get letters: /api/v1.0/letter/letter
+		router.attach(Constants.applicationPrefix + Constants.versionPrefix + letterServicePrefix + LetterResourcePrefix, LetterResource.class);
+		//	API for Get/Put/Delete letters: /api/v1.0/letter/letter/:id
+		router.attach(Constants.applicationPrefix + Constants.versionPrefix + letterServicePrefix + LetterResourcePrefix + "/{id}", LetterResourceId.class);
 		
 		
 		
@@ -159,6 +171,7 @@ public class RoutingService extends Application {
 		String UserSearchHistoryResourcePrefix = "/searchHistory";
 		// API for user getting history messages: /api/v1.0/users/searchHistory/:id
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserSearchHistoryResourcePrefix + "/{id}", UserSearchHistoryResource.class);
+		
 		
 		
 		/** --------------------- APIs for general module (legacy from v0.9) ------------------ **/

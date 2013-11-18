@@ -16,25 +16,25 @@ import carpool.model.Letter;
 public class LetterDaoService{
 
 	
-	public ArrayList<Letter> getAllLetters(){
+	public static ArrayList<Letter> getAllLetters(){
 		
 		return null;
 	}
 	
 	
-	public ArrayList<Letter> getUserLetter(int curUserId, int targetUserId, LetterType type, LetterDirection direction){
+	public static ArrayList<Letter> getUserLetter(int curUserId, int targetUserId, LetterType type, LetterDirection direction){
 		
 		return null;
 	}
 	
 	
-	public Letter getLetterById(int letterId) throws LetterNotFoundException{
+	public static Letter getLetterById(int letterId) throws LetterNotFoundException{
 		
 		return null;
 	}
 	
 	
-	public Letter sendLetter(Letter letter){
+	public static Letter sendLetter(Letter letter){
 		LetterRelayTask lTask = new LetterRelayTask(letter);
         ExecutorProvider.executeRelay(lTask);
         
@@ -44,14 +44,14 @@ public class LetterDaoService{
 	}
 	
 	
-	public Letter checkLetter(int userId, int originLetterId) throws LetterNotFoundException, LetterOwnerNotMatchException{
+	public static Letter checkLetter(int userId, int originLetterId) throws LetterNotFoundException, LetterOwnerNotMatchException{
 		
 		return null;
 	};
 	
 	
 	
-	public void deleteLetter(int letterId) throws LetterNotFoundException, LetterOwnerNotMatchException{
+	public static void deleteLetter(int letterId) throws LetterNotFoundException, LetterOwnerNotMatchException{
 		
 	}
 	
