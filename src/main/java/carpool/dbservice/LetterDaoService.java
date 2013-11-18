@@ -27,6 +27,11 @@ public class LetterDaoService{
 		return null;
 	}
 	
+	public static ArrayList<User> getLetterUsers(int userId) throws UserNotFoundException{
+		
+		return null;
+	}
+	
 	
 	public static Letter getLetterById(int letterId) throws LetterNotFoundException{
 		
