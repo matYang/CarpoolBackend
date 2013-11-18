@@ -98,7 +98,9 @@ public class RoutingService extends Application {
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + letterServicePrefix + LetterResourcePrefix, LetterResource.class);
 		//	API for Get/Put/Delete letters: /api/v1.0/letter/letter/:id
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + letterServicePrefix + LetterResourcePrefix + "/{id}", LetterResourceId.class);
-		
+		String LetterUserResourcePrefix = "/user";
+		//	API for Get users in chat history: /api/v1.0/letter/user/:id
+		router.attach(Constants.applicationPrefix + Constants.versionPrefix + letterServicePrefix + LetterUserResourcePrefix + "/{id}", LetterUserResource.class);
 		
 		
 		/** -------------------- APIs for user module ------------------ **/
