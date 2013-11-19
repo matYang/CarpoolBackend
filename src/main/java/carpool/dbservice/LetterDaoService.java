@@ -9,7 +9,9 @@ import carpool.constants.Constants.LetterDirection;
 import carpool.constants.Constants.LetterType;
 import carpool.exception.letter.LetterNotFoundException;
 import carpool.exception.letter.LetterOwnerNotMatchException;
+import carpool.exception.user.UserNotFoundException;
 import carpool.model.Letter;
+import carpool.model.User;
 
 
 
