@@ -14,6 +14,7 @@ import carpool.resources.dianmingResource.*;
 import carpool.resources.generalResource.*;
 import carpool.resources.letterResource.LetterResource;
 import carpool.resources.letterResource.LetterResourceId;
+import carpool.resources.letterResource.LetterUserResource;
 import carpool.resources.locationResource.*;
 import carpool.resources.notificationResource.*;
 import carpool.resources.transactionResource.*;

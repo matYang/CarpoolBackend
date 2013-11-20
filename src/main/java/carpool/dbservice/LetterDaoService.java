@@ -51,9 +51,9 @@ public class LetterDaoService{
 	}
 	
 	
-	public static Letter checkLetter(int userId, int originLetterId) throws LetterNotFoundException, LetterOwnerNotMatchException{
+	public static void checkLetter(int userId, int targetUserId){
 		
-		return null;
+		return;
 	};
 	
 	

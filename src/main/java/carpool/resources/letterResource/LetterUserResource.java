@@ -20,6 +20,7 @@ import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.factory.JSONFactory;
 import carpool.model.Letter;
+import carpool.model.User;
 import carpool.resources.PseudoResource;
 
 public class LetterUserResource extends PseudoResource{

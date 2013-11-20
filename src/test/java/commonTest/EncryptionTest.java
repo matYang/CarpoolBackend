@@ -1,4 +1,4 @@
-package badstudent.dao.test;
+package commonTest;
 
 import static org.junit.Assert.*;
 

@@ -69,23 +69,18 @@ public class LetterResourceId extends PseudoResource{
     public Representation CheckLetter(Representation entity) {
         int userId = -1;
         int letterId = -1;
+        int targetUserId = -1;
         JSONObject jsonLetter = new JSONObject();
         
 		try {
-			letterId = Integer.parseInt(this.getReqAttr("id"));
+			//letterId = Integer.parseInt(this.getReqAttr("id"));
 			JSONObject hashHolder = (new JsonRepresentation(entity)).getJsonObject();
 			userId = hashHolder.getInt("userId");
+			targetUserId = hashHolder.getInt("targetUserId");
 			
 			this.validateAuthentication(userId);
 			
-			Letter letter = LetterDaoService.checkLetter(userId, letterId);
-			if (letter != null){
-				jsonLetter = JSONFactory.toJSON(letter);
-                setStatus(Status.SUCCESS_OK);
-			}
-			else{
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			}
+			LetterDaoService.checkLetter(userId, targetUserId);
 
 		} catch (PseudoException e){
 			this.addCORSHeader();
@@ -93,7 +88,6 @@ public class LetterResourceId extends PseudoResource{
         } catch(Exception e){
 			this.doException(e);
 		}
-
         
         Representation result =  new JsonRepresentation(jsonLetter);
         this.addCORSHeader(); 
