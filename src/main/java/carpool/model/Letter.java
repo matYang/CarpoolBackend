@@ -239,11 +239,22 @@ public class Letter implements PseudoModel, PseudoValidatable, Comparable<Letter
     
     public boolean equals(Letter anotherLetter) {
             try {
-				return this.letterId == anotherLetter.letterId && this.from_userId == anotherLetter.from_userId && this.to_userId == anotherLetter.to_userId &&
-				this.type == anotherLetter.type && this.from_user.equals(anotherLetter.from_user) && this.to_user.equals(anotherLetter.to_user) && 
-				this.content.equals(anotherLetter.content) && this.state == anotherLetter.state && this.historyDeleted == anotherLetter.historyDeleted &&
-				this.send_time.getTime().toString().equals(anotherLetter.send_time.getTime().toString()) &&
-				this.check_time.getTime().toString().equals(anotherLetter.check_time.getTime().toString());
+            	if(this.from_user==null&&this.to_user!=null){
+            		return this.letterId == anotherLetter.letterId && this.from_userId == anotherLetter.from_userId && this.to_userId == anotherLetter.to_userId &&
+            				this.type == anotherLetter.type && this.from_user==null &&this.to_user.equals(anotherLetter.to_user) && 
+            				this.content.equals(anotherLetter.content) && this.state == anotherLetter.state && this.historyDeleted == anotherLetter.historyDeleted &&
+            				this.send_time.getTime().toString().equals(anotherLetter.send_time.getTime().toString()) &&
+                 			this.check_time.getTime().toString().equals(anotherLetter.check_time.getTime().toString()); 
+            	}else if(this.from_user!=null&&this.to_user!=null){
+            		return this.letterId == anotherLetter.letterId && this.from_userId == anotherLetter.from_userId && this.to_userId == anotherLetter.to_userId &&
+            				this.type == anotherLetter.type && this.from_user.equals(anotherLetter.from_user) && this.to_user.equals(anotherLetter.to_user) && 
+            				this.content.equals(anotherLetter.content) && this.state == anotherLetter.state && this.historyDeleted == anotherLetter.historyDeleted &&
+            				this.send_time.getTime().toString().equals(anotherLetter.send_time.getTime().toString()) &&
+                 			this.check_time.getTime().toString().equals(anotherLetter.check_time.getTime().toString());
+            	}else{
+            		return false;
+            	}
+				
 			} catch (ValidationException e) {
 				return false;
 			}
