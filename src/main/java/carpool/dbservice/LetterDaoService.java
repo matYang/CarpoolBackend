@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import carpool.asyncRelayExecutor.ExecutorProvider;
 import carpool.asyncTask.relayTask.LetterRelayTask;
 import carpool.asyncTask.relayTask.NotificationRelayTask;
+import carpool.carpoolDAO.CarpoolDaoLetter;
 import carpool.constants.Constants.LetterDirection;
 import carpool.constants.Constants.LetterType;
 import carpool.exception.letter.LetterNotFoundException;
@@ -17,51 +18,47 @@ import carpool.model.User;
 
 public class LetterDaoService{
 
-	
-	public static ArrayList<Letter> getAllLetters(){
-		
-		return null;
+
+	public static ArrayList<Letter> getAllLetters() throws UserNotFoundException{
+
+		return CarpoolDaoLetter.getAllLetters();
 	}
-	
-	
-	public static ArrayList<Letter> getUserLetter(int curUserId, int targetUserId, LetterType type, LetterDirection direction){
-		
-		return null;
+
+
+	public static ArrayList<Letter> getUserLetters(int curUserId, int targetUserId, LetterType type, LetterDirection direction) throws UserNotFoundException{
+
+		return CarpoolDaoLetter.getUserLetters(curUserId, targetUserId, type, direction);
 	}
-	
+
 	public static ArrayList<User> getLetterUsers(int userId) throws UserNotFoundException{
-		
-		return null;
+
+		return CarpoolDaoLetter.getLetterUsers(userId);
 	}
-	
-	
-	public static Letter getLetterById(int letterId) throws LetterNotFoundException{
-		
-		return null;
+
+
+	public static Letter getLetterById(int letterId) throws LetterNotFoundException, UserNotFoundException{
+
+		return CarpoolDaoLetter.getLetterById(letterId);
 	}
-	
-	
-	public static Letter sendLetter(Letter letter){
+
+
+	public static Letter sendLetter(Letter letter) throws UserNotFoundException{
 		LetterRelayTask lTask = new LetterRelayTask(letter);
-        ExecutorProvider.executeRelay(lTask);
-        
-        
-        //TODO dao
-		return null;
+		ExecutorProvider.executeRelay(lTask);
+		return CarpoolDaoLetter.addLetterToDatabases(letter);
 	}
-	
-	
-	public static void checkLetter(int userId, int targetUserId){
-		
-		return;
-	};
-	
-	
-	
+
+
+	public static void checkLetter(int userId, int targetUserId) throws LetterNotFoundException{
+		CarpoolDaoLetter.checkLetter(userId, targetUserId);
+	}
+
+
+
 	public static void deleteLetter(int letterId) throws LetterNotFoundException, LetterOwnerNotMatchException{
-		
+		CarpoolDaoLetter.deleteLetter(letterId);
 	}
-	
-	
+
+
 }
 

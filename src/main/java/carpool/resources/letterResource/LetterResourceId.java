@@ -42,7 +42,7 @@ public class LetterResourceId extends PseudoResource{
 			LetterType targetType = LetterType.fromInt(Integer.parseInt(this.getQueryVal("targetType")));
 			LetterDirection direction = LetterDirection.fromInt(Integer.parseInt(this.getQueryVal("direction")));
 			
-        	ArrayList<Letter> letters = LetterDaoService.getUserLetter(userId, targetUserId, targetType, direction);
+        	ArrayList<Letter> letters = LetterDaoService.getUserLetters(userId, targetUserId, targetType, direction);
         	
         	if (letters != null){
         		jsonLetters  = JSONFactory.toJSON(letters);

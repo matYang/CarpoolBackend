@@ -39,51 +39,51 @@ import carpool.model.representation.SearchRepresentation;
  * */
 
 public class Letter implements PseudoModel, PseudoValidatable, Comparable<Letter>{
-        
-    private int letterId;
-    private int from_userId;
-    private int to_userId;
-    private LetterType type;
-    
-    private User from_user;
-    private User to_user;
-    
-    private String content;
-    private Calendar send_time;
-    private Calendar check_time;
-    
-    private LetterState state;
-    private boolean historyDeleted;
-  
-   
-    /*****
-     * protected constructor to disallow raw initialization and serialization, but allow easier testing
-     *****/
-    protected Letter(){}
- 
 
-    /*****
-     * Constructor for letter sending
-    *****/
-    public Letter(int from_userId, int to_userId, LetterType type, String content) {
-        super();
-        this.letterId = -1;
-        this.from_userId = from_userId;
-        this.to_userId = to_userId;
-        this.type = type;
-        
-        this.from_user = null;
-        this.to_user = null;
-        
-        this.content = content;
-        this.send_time = Calendar.getInstance();
-        this.check_time = Calendar.getInstance();
-        
-        this.state = LetterState.unread;
-        this.historyDeleted = false;
+	private int letterId;
+	private int from_userId;
+	private int to_userId;
+	private LetterType type;
 
-    }
-    
+	private User from_user;
+	private User to_user;
+
+	private String content;
+	private Calendar send_time;
+	private Calendar check_time;
+
+	private LetterState state;
+	private boolean historyDeleted;
+
+
+	/*****
+	 * protected constructor to disallow raw initialization and serialization, but allow easier testing
+	 *****/
+	protected Letter(){}
+
+
+	/*****
+	 * Constructor for letter sending
+	 *****/
+	public Letter(int from_userId, int to_userId, LetterType type, String content) {
+		super();
+		this.letterId = -1;
+		this.from_userId = from_userId;
+		this.to_userId = to_userId;
+		this.type = type;
+
+		this.from_user = null;
+		this.to_user = null;
+
+		this.content = content;
+		this.send_time = Calendar.getInstance();
+		this.check_time = Calendar.getInstance();
+
+		this.state = LetterState.unread;
+		this.historyDeleted = false;
+
+	}
+
 	public Letter(int letterId, int from_userId, int to_userId,
 			LetterType type, User from_user, User to_user, String content,
 			Calendar send_time, Calendar check_time, LetterState state,
@@ -214,66 +214,66 @@ public class Letter implements PseudoModel, PseudoValidatable, Comparable<Letter
 
 
 	@Override
-    public JSONObject toJSON(){
-            JSONObject jsonUser = new JSONObject();
-            try {
-                    jsonUser.put("letterId", this.getLetterId());
-                    jsonUser.put("from_userId", this.getFrom_userId());
-                    jsonUser.put("to_userId", this.getTo_userId());
-                    jsonUser.put("type", this.getType().code);
-                    jsonUser.put("from_user", this.getFrom_user() == null ? new JSONObject() : this.getFrom_user().toJSON());
-                    jsonUser.put("to_user", this.getTo_user() == null ? new JSONObject() : this.getTo_user().toJSON());
-                    jsonUser.put("content", this.getContent());
-                    jsonUser.put("send_time", DateUtility.castToAPIFormat(this.getSend_time()));
-                    jsonUser.put("check_time", DateUtility.castToAPIFormat(this.getCheck_time()));
-                    jsonUser.put("state", this.getState().code);
-                    jsonUser.put("historyDeleted", this.isHistoryDeleted());
+	public JSONObject toJSON(){
+		JSONObject jsonUser = new JSONObject();
+		try {
+			jsonUser.put("letterId", this.getLetterId());
+			jsonUser.put("from_userId", this.getFrom_userId());
+			jsonUser.put("to_userId", this.getTo_userId());
+			jsonUser.put("type", this.getType().code);
+			jsonUser.put("from_user", this.getFrom_user() == null ? new JSONObject() : this.getFrom_user().toJSON());
+			jsonUser.put("to_user", this.getTo_user() == null ? new JSONObject() : this.getTo_user().toJSON());
+			jsonUser.put("content", this.getContent());
+			jsonUser.put("send_time", DateUtility.castToAPIFormat(this.getSend_time()));
+			jsonUser.put("check_time", DateUtility.castToAPIFormat(this.getCheck_time()));
+			jsonUser.put("state", this.getState().code);
+			jsonUser.put("historyDeleted", this.isHistoryDeleted());
 
-            } catch (JSONException e) {
-                    e.printStackTrace();
-            }
-            
-            return jsonUser;
-    }
-    
-    
-    public boolean equals(Letter anotherLetter) {
-            try {
-            	if(this.from_user==null&&this.to_user!=null){
-            		return this.letterId == anotherLetter.letterId && this.from_userId == anotherLetter.from_userId && this.to_userId == anotherLetter.to_userId &&
-            				this.type == anotherLetter.type && this.from_user==null &&this.to_user.equals(anotherLetter.to_user) && 
-            				this.content.equals(anotherLetter.content) && this.state == anotherLetter.state && this.historyDeleted == anotherLetter.historyDeleted &&
-            				this.send_time.getTime().toString().equals(anotherLetter.send_time.getTime().toString()) &&
-                 			this.check_time.getTime().toString().equals(anotherLetter.check_time.getTime().toString()); 
-            	}else if(this.from_user!=null&&this.to_user!=null){
-            		return this.letterId == anotherLetter.letterId && this.from_userId == anotherLetter.from_userId && this.to_userId == anotherLetter.to_userId &&
-            				this.type == anotherLetter.type && this.from_user.equals(anotherLetter.from_user) && this.to_user.equals(anotherLetter.to_user) && 
-            				this.content.equals(anotherLetter.content) && this.state == anotherLetter.state && this.historyDeleted == anotherLetter.historyDeleted &&
-            				this.send_time.getTime().toString().equals(anotherLetter.send_time.getTime().toString()) &&
-                 			this.check_time.getTime().toString().equals(anotherLetter.check_time.getTime().toString());
-            	}else{
-            		return false;
-            	}
-				
-			} catch (ValidationException e) {
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return jsonUser;
+	}
+
+
+	public boolean equals(Letter anotherLetter) {
+		try {
+			if(this.from_user==null&&this.to_user!=null){
+				return this.letterId == anotherLetter.letterId && this.from_userId == anotherLetter.from_userId && this.to_userId == anotherLetter.to_userId &&
+						this.type == anotherLetter.type && this.from_user==null &&this.to_user.equals(anotherLetter.to_user) && 
+						this.content.equals(anotherLetter.content) && this.state == anotherLetter.state && this.historyDeleted == anotherLetter.historyDeleted &&
+						this.send_time.getTime().toString().equals(anotherLetter.send_time.getTime().toString()) &&
+						this.check_time.getTime().toString().equals(anotherLetter.check_time.getTime().toString()); 
+			}else if(this.from_user!=null&&this.to_user!=null){
+				return this.letterId == anotherLetter.letterId && this.from_userId == anotherLetter.from_userId && this.to_userId == anotherLetter.to_userId &&
+						this.type == anotherLetter.type && this.from_user.equals(anotherLetter.from_user) && this.to_user.equals(anotherLetter.to_user) && 
+						this.content.equals(anotherLetter.content) && this.state == anotherLetter.state && this.historyDeleted == anotherLetter.historyDeleted &&
+						this.send_time.getTime().toString().equals(anotherLetter.send_time.getTime().toString()) &&
+						this.check_time.getTime().toString().equals(anotherLetter.check_time.getTime().toString());
+			}else{
 				return false;
 			}
-    } 
-    
-    
 
-    @Override
-    public int compareTo(Letter anotherLetter) {
-            return this.getSend_time().compareTo(anotherLetter.getSend_time());
-    }
+		} catch (ValidationException e) {
+			return false;
+		}
+	} 
 
 
-    @Override
-    public boolean validate() throws ValidationException{
-            // TODO 
-            
-            
-            return true;
-    }
-        
+
+	@Override
+	public int compareTo(Letter anotherLetter) {
+		return this.getSend_time().compareTo(anotherLetter.getSend_time());
+	}
+
+
+	@Override
+	public boolean validate() throws ValidationException{
+		// TODO 
+
+
+		return true;
+	}
+
 }

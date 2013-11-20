@@ -10,6 +10,7 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.Constants;
 import carpool.constants.Constants.LetterDirection;
+import carpool.constants.Constants.LetterState;
 import carpool.constants.Constants.LetterType;
 import carpool.exception.letter.LetterNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -105,10 +106,9 @@ public class CarpoolDaoLetter {
 		return list;
 	}
 
-	public static  ArrayList<Letter> getUserLetter(int curUserId, int targetUserId, LetterType type, LetterDirection direction) throws UserNotFoundException{
+	public static  ArrayList<Letter> getUserLetters(int curUserId, int targetUserId, LetterType type, LetterDirection direction) throws UserNotFoundException{
 		ArrayList<Letter> list = new ArrayList<Letter>();
 		String query =  "SELECT * from carpoolDAOLetter where to_UserId = ? and letterType = ?";		
-		String query1 = "SELECT * from carpoolDAOLetter where (to_UserId = ? or from_UserId = ?)and letterType = ?";
 		String query2 = "SELECT * from carpoolDAOLetter where from_UserId=? and to_UserId=? and letterType = ?";		
 		String query3 = "SELECT * from carpoolDAOLetter where (from_UserId=? and to_UserId=?)OR(from_UserId=? and to_UserId=?) and letterType = ?";
 
@@ -200,10 +200,64 @@ public class CarpoolDaoLetter {
 			toUser =  CarpoolDaoUser.getUserById(rs.getInt("to_UserId"));
 		}
 
-		Letter letter = new Letter(rs.getInt("letter_Id"),rs.getInt("from_UserId"),rs.getInt("to_UserId"),Constants.LetterType.fromInt(rs.getInt("letterType")),fromUser,toUser,
+		Letter letter = new Letter(rs.getInt("letter_Id"),rs.getInt("from_UserId"),rs.getInt("to_UserId"),LetterType.fromInt(rs.getInt("letterType")),fromUser,toUser,
 				rs.getString("content"),DateUtility.DateToCalendar(rs.getTimestamp("send_Time")),DateUtility.DateToCalendar(rs.getTimestamp("check_Time")),
 				Constants.LetterState.fromInt(rs.getInt("letterState")),rs.getBoolean("historyDeleted"));
 		return letter;
 	}
 
+	public static ArrayList<User> getLetterUsers(int userId) throws UserNotFoundException{
+		ArrayList<User> list = new ArrayList<User>();
+		ArrayList<Integer> ilist = new ArrayList<Integer>();
+		String query = "SELECT * from carpoolDAOLetter where (from_UserId = ? or to_UserId = ?) and letterType = ?";
+		User user = null;
+
+		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			stmt.setInt(1, userId);
+			stmt.setInt(2, userId);
+			stmt.setInt(3, LetterType.user.code);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()){
+				user = createUserByResultSet(rs,userId);
+				if(!ilist.contains(user.getUserId())){
+					list.add(user);
+					ilist.add(user.getUserId());
+				}
+			}
+		}catch(SQLException e){
+			DebugLog.d(e.getMessage());
+		}
+
+		return list;
+	}
+
+	private static User createUserByResultSet(ResultSet rs,int userId) throws SQLException, UserNotFoundException {
+		int fromUserId = rs.getInt("from_UserId");
+		int toUserId = rs.getInt("to_UserId");
+
+		if(fromUserId==userId&&toUserId==userId){
+			//send letter to self
+			return CarpoolDaoUser.getUserById(userId);
+		}else if(fromUserId!=userId&&toUserId==userId){
+			return CarpoolDaoUser.getUserById(fromUserId);
+		}else if(fromUserId==userId&&toUserId!=userId){
+			return CarpoolDaoUser.getUserById(toUserId);
+		}
+		return null;
+	}
+
+	public static void checkLetter(int userId, int targetUserId) throws LetterNotFoundException{
+		String query = "UPDATE carpoolDAOLetter set letterState = ? where ((from_UserId = ? and to_UserId=?)or(from_UserId = ? and to_UserId=?)) and letterState = ?";
+		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			stmt.setInt(1, LetterState.read.code);
+			stmt.setInt(2, userId);
+			stmt.setInt(3, targetUserId);
+			stmt.setInt(4, targetUserId);
+			stmt.setInt(5, userId);
+			stmt.setInt(6, LetterState.unread.code);
+			stmt.executeUpdate();			
+		}catch(SQLException e){
+			DebugLog.d(e.getMessage());			
+		}
+	}
 }
