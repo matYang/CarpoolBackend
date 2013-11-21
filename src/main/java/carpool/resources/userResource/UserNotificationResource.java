@@ -43,7 +43,7 @@ public class UserNotificationResource extends PseudoResource{
         
         try {
         	id = Integer.parseInt(this.getReqAttr("id"));
-			intendedUserId = Integer.parseInt(this.getQueryVal("intendedUserId"));
+			intendedUserId = Integer.parseInt(this.getQueryVal("userId"));
 			
 			this.validateAuthentication(id);
 			

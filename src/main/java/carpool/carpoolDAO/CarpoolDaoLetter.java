@@ -373,7 +373,7 @@ public class CarpoolDaoLetter {
 		return null;
 	}
 
-	public static void checkLetter(int userId, int targetUserId) throws LetterNotFoundException{
+	public static void checkLetter(int userId, int targetUserId){
 		String query = "UPDATE carpoolDAOLetter set letterState = ? where ((from_UserId = ? and to_UserId=?)or(from_UserId = ? and to_UserId=?)) and letterState = ?";
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, LetterState.read.code);

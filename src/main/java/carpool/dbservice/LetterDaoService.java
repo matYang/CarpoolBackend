@@ -26,8 +26,9 @@ public class LetterDaoService{
 
 
 	public static ArrayList<Letter> getUserLetters(int curUserId, int targetUserId, LetterType type, LetterDirection direction) throws UserNotFoundException{
-
-		return CarpoolDaoLetter.getUserLetters(curUserId, targetUserId, type, direction);
+		ArrayList<Letter> letters = CarpoolDaoLetter.getUserLetters(curUserId, targetUserId, type, direction);
+		checkLetter(curUserId, targetUserId);
+		return letters;
 	}
 
 	public static ArrayList<User> getLetterUsers(int userId) throws UserNotFoundException{
@@ -49,7 +50,7 @@ public class LetterDaoService{
 	}
 
 
-	public static void checkLetter(int userId, int targetUserId) throws LetterNotFoundException{
+	public static void checkLetter(int userId, int targetUserId){
 		CarpoolDaoLetter.checkLetter(userId, targetUserId);
 	}
 
