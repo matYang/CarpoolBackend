@@ -107,18 +107,77 @@ public class CarpoolDaoLetter {
 	}
 
 	public static  ArrayList<Letter> getUserLetters(int curUserId, int targetUserId, LetterType type, LetterDirection direction) throws UserNotFoundException{
+
 		ArrayList<Letter> list = new ArrayList<Letter>();
-		String query =  "SELECT * from carpoolDAOLetter where to_UserId = ? and letterType = ?";		
+		if(curUserId<=0 && targetUserId<=0){
+			return list;
+		}
+		String query0 = "SELECT * from carpoolDAOLetter where (to_UserId = ? or from_UserId = ?) and letterType = ? ";
+		String query =  "SELECT * from carpoolDAOLetter where to_UserId = ? and letterType = ?";
+		String query1 = "SELECT * from carpoolDAOLetter where from_UserId = ? and letterType = ?";
 		String query2 = "SELECT * from carpoolDAOLetter where from_UserId=? and to_UserId=? and letterType = ?";		
 		String query3 = "SELECT * from carpoolDAOLetter where (from_UserId=? and to_UserId=?)OR(from_UserId=? and to_UserId=?) and letterType = ?";
 
 		//System
-		if(type.equals(Constants.LetterType.system)){
-			//Out
-			if(direction.equals(Constants.LetterDirection.outbound)){
-				try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-					stmt.setInt(1, targetUserId);
-					stmt.setInt(2, type.code);
+		if(type.equals(Constants.LetterType.system)){	
+			if(direction.equals(LetterDirection.inbound)){
+				if(curUserId>0){
+					//User send to System
+					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query1)){		
+						stmt.setInt(1, curUserId);
+						stmt.setInt(2, type.code);
+						ResultSet rs = stmt.executeQuery();
+						while(rs.next()){
+							list.add(createLetterByResultSet(rs));
+						}
+					}catch(SQLException e){
+						DebugLog.d(e.getMessage());
+					}
+				}else{//System send to User
+					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){		
+						stmt.setInt(1, targetUserId);
+						stmt.setInt(2, type.code);
+						ResultSet rs = stmt.executeQuery();
+						while(rs.next()){
+							list.add(createLetterByResultSet(rs));
+						}
+					}catch(SQLException e){
+						DebugLog.d(e.getMessage());
+					}
+				}
+			}else if(direction.equals(LetterDirection.outbound)){
+				if(curUserId>0){
+					//System to User
+					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){		
+						stmt.setInt(1, curUserId);
+						stmt.setInt(2, type.code);
+						ResultSet rs = stmt.executeQuery();
+						while(rs.next()){
+							list.add(createLetterByResultSet(rs));
+						}
+					}catch(SQLException e){
+						DebugLog.d(e.getMessage());
+					}
+				}
+				else{//User to System
+					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query1)){		
+						stmt.setInt(1, targetUserId);
+						stmt.setInt(2, type.code);
+						ResultSet rs = stmt.executeQuery();
+						while(rs.next()){
+							list.add(createLetterByResultSet(rs));
+						}
+					}catch(SQLException e){
+						DebugLog.d(e.getMessage());
+					}
+				}
+
+			}else{
+				//Both
+				try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query0)){		
+					stmt.setInt(1, curUserId > 0 ? curUserId : targetUserId);
+					stmt.setInt(2, curUserId > 0 ? curUserId : targetUserId);
+					stmt.setInt(3, type.code);
 					ResultSet rs = stmt.executeQuery();
 					while(rs.next()){
 						list.add(createLetterByResultSet(rs));
@@ -127,50 +186,118 @@ public class CarpoolDaoLetter {
 					DebugLog.d(e.getMessage());
 				}
 			}
-		}else{
+		}
+		else{
 			//User
 			if(direction.equals(Constants.LetterDirection.inbound)){
-				//In
-				try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query2)){
-					stmt.setInt(1, curUserId);
-					stmt.setInt(2, targetUserId);
-					stmt.setInt(3, type.code);
-					ResultSet rs = stmt.executeQuery();
-					while(rs.next()){
-						list.add(createLetterByResultSet(rs));
+				if(curUserId>0 && targetUserId>0){
+					//User to User
+					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query2)){
+						stmt.setInt(1, curUserId);
+						stmt.setInt(2, targetUserId);
+						stmt.setInt(3, type.code);
+						ResultSet rs = stmt.executeQuery();
+						while(rs.next()){
+							list.add(createLetterByResultSet(rs));
+						}
+					}catch(SQLException e){
+						DebugLog.d(e.getMessage());
 					}
-				}catch(SQLException e){
-					DebugLog.d(e.getMessage());
+				}else if(curUserId<=0){
+					//Users to User
+					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){						
+						stmt.setInt(1, targetUserId);
+						stmt.setInt(2, type.code);
+						ResultSet rs = stmt.executeQuery();
+						while(rs.next()){
+							list.add(createLetterByResultSet(rs));
+						}
+					}catch(SQLException e){
+						DebugLog.d(e.getMessage());
+					}
+				}else{
+					//User to Users
+					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query1)){						
+						stmt.setInt(1, curUserId);
+						stmt.setInt(2, type.code);
+						ResultSet rs = stmt.executeQuery();
+						while(rs.next()){
+							list.add(createLetterByResultSet(rs));
+						}
+					}catch(SQLException e){
+						DebugLog.d(e.getMessage());
+					}
 				}
 
 			}else if(direction.equals(Constants.LetterDirection.outbound)){
-				//Out
-				try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query2)){
-					stmt.setInt(1, targetUserId);
-					stmt.setInt(2, curUserId);
-					stmt.setInt(3, type.code);
-					ResultSet rs = stmt.executeQuery();
-					while(rs.next()){
-						list.add(createLetterByResultSet(rs));
+				if(curUserId>0 && targetUserId>0){
+					//User to User
+					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query2)){
+						stmt.setInt(1, targetUserId);
+						stmt.setInt(2, curUserId);
+						stmt.setInt(3, type.code);
+						ResultSet rs = stmt.executeQuery();
+						while(rs.next()){
+							list.add(createLetterByResultSet(rs));
+						}
+					}catch(SQLException e){
+						DebugLog.d(e.getMessage());
 					}
-				}catch(SQLException e){
-					DebugLog.d(e.getMessage());
+				}else if(curUserId>0){
+					//Users to User
+					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){						
+						stmt.setInt(1, curUserId);
+						stmt.setInt(2, type.code);
+						ResultSet rs = stmt.executeQuery();
+						while(rs.next()){
+							list.add(createLetterByResultSet(rs));
+						}
+					}catch(SQLException e){
+						DebugLog.d(e.getMessage());
+					}
+				}else{
+					//User to Users
+					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query1)){						
+						stmt.setInt(1, targetUserId);
+						stmt.setInt(2, type.code);
+						ResultSet rs = stmt.executeQuery();
+						while(rs.next()){
+							list.add(createLetterByResultSet(rs));
+						}
+					}catch(SQLException e){
+						DebugLog.d(e.getMessage());
+					}
 				}
-
 			}else{
 				//Both
-				try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query3)){
-					stmt.setInt(1, curUserId);
-					stmt.setInt(2, targetUserId);
-					stmt.setInt(3, targetUserId);
-					stmt.setInt(4, curUserId);
-					stmt.setInt(5, type.code);
-					ResultSet rs = stmt.executeQuery();
-					while(rs.next()){
-						list.add(createLetterByResultSet(rs));
+				if(curUserId>0&&targetUserId>0){
+					//User to User
+					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query3)){
+						stmt.setInt(1, curUserId);
+						stmt.setInt(2, targetUserId);
+						stmt.setInt(3, targetUserId);
+						stmt.setInt(4, curUserId);
+						stmt.setInt(5, type.code);
+						ResultSet rs = stmt.executeQuery();
+						while(rs.next()){
+							list.add(createLetterByResultSet(rs));
+						}
+					}catch(SQLException e){
+						DebugLog.d(e.getMessage());
 					}
-				}catch(SQLException e){
-					DebugLog.d(e.getMessage());
+				}else{
+					//Users to User or User to Users
+					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query0)){
+						stmt.setInt(1, curUserId > 0 ? curUserId : targetUserId);
+						stmt.setInt(2, curUserId > 0 ? curUserId : targetUserId);						
+						stmt.setInt(3, type.code);
+						ResultSet rs = stmt.executeQuery();
+						while(rs.next()){
+							list.add(createLetterByResultSet(rs));
+						}
+					}catch(SQLException e){
+						DebugLog.d(e.getMessage());
+					}
 				}
 			}
 		}

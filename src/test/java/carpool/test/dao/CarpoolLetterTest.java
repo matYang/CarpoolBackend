@@ -215,6 +215,7 @@ public class CarpoolLetterTest {
 		Letter letter7 =  new Letter(user3.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test7");
 		Letter letter8 =  new Letter(-1,user3.getUserId(),Constants.LetterType.system,"Test8");
 		Letter letter9 =  new Letter(-1,user2.getUserId(),Constants.LetterType.system,"Test9");
+		Letter letter0 =  new Letter(user.getUserId(),-1,Constants.LetterType.system,"Test0");
 		try{
 			letter = CarpoolDaoLetter.addLetterToDatabases(letter);
 			letter2 = CarpoolDaoLetter.addLetterToDatabases(letter2);
@@ -225,6 +226,7 @@ public class CarpoolLetterTest {
 			letter7 = CarpoolDaoLetter.addLetterToDatabases(letter7);
 			letter8 = CarpoolDaoLetter.addLetterToDatabases(letter8);
 			letter9 = CarpoolDaoLetter.addLetterToDatabases(letter9);
+			letter0 = CarpoolDaoLetter.addLetterToDatabases(letter0);
 		}catch(UserNotFoundException e){
 			e.printStackTrace();
 		}
@@ -288,7 +290,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.system, Constants.LetterDirection.both);
-			if(list.size()==0){
+			if(list.size()==2 && list.get(0).equals(letter4)&&list.get(1).equals(letter0)){
 				//Passed;
 			}else{
 				fail();
@@ -299,6 +301,17 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.system, Constants.LetterDirection.outbound);
+			if(list.size()==1 && list.get(0).equals(letter0)){
+				//Passed;
+			}else{
+				fail();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		try{
+			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.system, Constants.LetterDirection.inbound);
 			if(list.size()==1 && list.get(0).equals(letter4)){
 				//Passed;
 			}else{
@@ -310,7 +323,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(-1, user2.getUserId(), Constants.LetterType.system, Constants.LetterDirection.outbound);
-			if(list.size()==1 && list.get(0).equals(letter9)){
+			if(list.size()==0){
 				//Passed;
 			}else{
 				fail();
@@ -321,7 +334,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(-1, user3.getUserId(), Constants.LetterType.system, Constants.LetterDirection.both);
-			if(list.size()==0){
+			if(list.size()==1 && list.get(0).equals(letter8)){
 				//Passed;
 			}else{
 				fail();
@@ -367,6 +380,39 @@ public class CarpoolLetterTest {
 		try{
 			list = CarpoolDaoLetter.getUserLetters(user2.getUserId(), user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
 			if(list.size()==2 && list.get(0).equals(letter2)&&list.get(1).equals(letter12)){
+				//Passed;
+			}else{
+				fail();
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+		}
+						
+		try{
+			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
+			if(list.size()==5 && list.get(0).equals(letter2)&&list.get(1).equals(letter3)&&list.get(2).equals(letter5)&&list.get(3).equals(letter11)&&list.get(4).equals(letter12)){
+				//Passed;
+			}else{
+				fail();
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+		}
+		
+		try{
+			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.outbound);
+			if(list.size()==3 && list.get(0).equals(letter)&&list.get(1).equals(letter5)&&list.get(2).equals(letter10)){
+				//Passed;
+			}else{
+				fail();
+			}
+		}catch(Exception e){			
+			e.printStackTrace();
+		}
+		
+		try{
+			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.both);
+			if(list.size()==7 && list.get(0).equals(letter)&&list.get(1).equals(letter2)&&list.get(2).equals(letter3)&&list.get(3).equals(letter5)&&list.get(4).equals(letter10)&&list.get(5).equals(letter11)&&list.get(6).equals(letter12)){
 				//Passed;
 			}else{
 				fail();

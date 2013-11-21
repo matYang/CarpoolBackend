@@ -10,6 +10,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
+import org.apache.log4j.BasicConfigurator;
 import org.json.JSONObject;
 
 import carpool.common.DebugLog;
@@ -40,6 +41,8 @@ public class LetterRelayTask implements PseudoAsyncTask{
 	    StringEntity entity;
 	    HttpResponse response = null;
 		try {
+			BasicConfigurator.configure();
+			
 			entity = new StringEntity(json.toString());
 			
 			entity.setContentType("application/json;charset=UTF-8");

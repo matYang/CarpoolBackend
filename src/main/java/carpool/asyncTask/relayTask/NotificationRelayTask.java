@@ -15,6 +15,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
+import org.apache.log4j.BasicConfigurator;
 import org.json.JSONArray;
 
 import carpool.common.DebugLog;
@@ -46,6 +47,8 @@ public class NotificationRelayTask implements PseudoAsyncTask{
 	    StringEntity entity;
 	    HttpResponse response = null;
 		try {
+			BasicConfigurator.configure();
+			
 			entity = new StringEntity(json.toString());
 			
 			entity.setContentType("application/json;charset=UTF-8");
