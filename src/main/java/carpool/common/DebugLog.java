@@ -27,14 +27,14 @@ public class DebugLog {
 				log.setLevel(Level.INFO);
 				layout = new PatternLayout(CarpoolConfig.log4jBasicPatternLayout);
 				log.addAppender(new ConsoleAppender(layout));
-
+				fileAppender = new RollingFileAppender(layout, CarpoolConfig.log4LogFileFolder+today+CarpoolConfig.debugLogChinesePrefix+CarpoolConfig.log4jLogFileSuffix);
+				log.addAppender(fileAppender);
 				configure = true;
 			}
-			fileAppender = new RollingFileAppender(layout, CarpoolConfig.log4LogFileFolder+today+CarpoolConfig.debugLogChinesePrefix+CarpoolConfig.log4jLogFileSuffix);
-			log.addAppender(fileAppender);
-			log.info(e);			
+			
+			log.info("Exception! ",e);			
 		}catch(IOException e1){
-			log.info(e1);
+			log.info("Exception! ", e1);
 		}
 	}
 
@@ -54,7 +54,7 @@ public class DebugLog {
 			ps.println(message);
 			log(message);
 		} catch (UnsupportedEncodingException e) {
-			log.info(e);
+			log.info("Exception! ",e);
 		}
 	}
 
@@ -71,7 +71,7 @@ public class DebugLog {
 			}		
 			log.info(message);
 		}catch(IOException e){
-			log.info(e);
+			log.info("Exception! ",e);
 		}
 	}
 
