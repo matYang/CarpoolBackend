@@ -19,6 +19,7 @@ public class CarpoolConfig {
 	
 	
 	public static final String domainName = isOnLocal ? "localhost:8015" : "www.huaixuesheng.com";
+	public static final String sqlPass = isOnLocal ? null : "badstudent";
 	public static final boolean cookieEnabled = false;
 	//time stamp on the session will be updated if it is 3 days old
 	public static final long session_updateThreshould = 259200000l;

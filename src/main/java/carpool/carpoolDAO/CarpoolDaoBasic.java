@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Set;
 
+import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants;
 import carpool.common.DebugLog;
 
@@ -20,7 +21,7 @@ public class CarpoolDaoBasic {
         String uri ="jdbc:mysql://localhost:3306/test?allowMultiQueries=true&&characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes";
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection(uri, "root", null);
+            connection = DriverManager.getConnection(uri, "root", CarpoolConfig.sqlPass);
         } catch (ClassNotFoundException e) {
             DebugLog.d(e.getMessage());
         } catch (SQLException e) {
