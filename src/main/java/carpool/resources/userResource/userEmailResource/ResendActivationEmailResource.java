@@ -36,11 +36,11 @@ public class ResendActivationEmailResource extends PseudoResource{
 	public Representation reSendUserEmail(){
 		int userId = -1;
         boolean isActivated = false;
-        JSONObject response = null; 
+        JSONObject response = new JSONObject(); 
         boolean isSent = false;;
         
         try {
-        	userId = Integer.parseInt(this.getReqAttr("userId"));
+        	userId = Integer.parseInt(this.getReqAttr("id"));
         	
         	isActivated = EmailDaoService.isUserEmailActivated(userId);
         	

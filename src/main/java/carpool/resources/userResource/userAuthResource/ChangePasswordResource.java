@@ -53,7 +53,7 @@ public class ChangePasswordResource extends PseudoResource{
 	public Representation changePassword(Representation entity) {
 		int userId = -1;
 		String[] passwords = new String[2];
-		String quickResponseText = null;
+		String quickResponseText = "";
 		
 		try {
 			this.checkEntity(entity);

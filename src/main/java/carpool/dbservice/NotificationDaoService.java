@@ -106,7 +106,7 @@ public class NotificationDaoService{
 	 * if targetUserId does not match userId parameter, throw NotificationOwnerNotMatchException
 	 * if not in unread state, do nothing
 	 */
-	public static void checkNotification(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
+	public static Notification checkNotification(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
 		Notification notification = CarpoolDaoNotification.getNotificationById(notificationId);
 		if(notification==null){
 			throw new NotificationNotFoundException();
@@ -114,6 +114,7 @@ public class NotificationDaoService{
 			notification.setState(NotificationState.read);
 			CarpoolDaoNotification.updateNotificationInDatabase(notification);
 		}
+		return notification;
        
 	}
 	

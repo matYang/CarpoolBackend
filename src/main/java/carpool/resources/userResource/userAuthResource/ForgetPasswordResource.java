@@ -40,7 +40,7 @@ public class ForgetPasswordResource extends PseudoResource{
 
 	@Get
 	public Representation forgetPassword(){
-        JSONObject response = null; 
+        JSONObject response = new JSONObject(); 
         boolean isSent = false;
         String email = "";
         

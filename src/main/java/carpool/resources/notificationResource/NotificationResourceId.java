@@ -9,6 +9,7 @@ import org.restlet.resource.*;
 import org.restlet.data.*;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import carpool.common.DebugLog;
 import carpool.dbservice.*;
@@ -60,6 +61,7 @@ public class NotificationResourceId extends PseudoResource{
     public Representation checkNotification(Representation entity) {
         int userId = -1;
         int notificationId = -1;
+        JSONObject response = new JSONObject();
         
 		try {
 			this.checkEntity(entity);
@@ -69,7 +71,8 @@ public class NotificationResourceId extends PseudoResource{
 			
 			this.validateAuthentication(userId);
 				
-			NotificationDaoService.checkNotification(notificationId, userId);
+			Notification n = NotificationDaoService.checkNotification(notificationId, userId);
+			response = JSONFactory.toJSON(n);
 			setStatus(Status.SUCCESS_OK);
 			DebugLog.d("Check notification with id: " + notificationId);
 
@@ -81,7 +84,7 @@ public class NotificationResourceId extends PseudoResource{
 		}
 
 		this.addCORSHeader();
-        return null;
+        return new JsonRepresentation(response);
     }
     
     

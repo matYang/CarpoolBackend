@@ -359,6 +359,7 @@ public class CarpoolDaoLetter {
 	}
 
 	private static User createUserByResultSet(ResultSet rs,int userId) throws SQLException, UserNotFoundException {
+		
 		int fromUserId = rs.getInt("from_UserId");
 		int toUserId = rs.getInt("to_UserId");
 
