@@ -74,7 +74,7 @@ public class ServerMain {
 
 
 	public static void main(String... args) throws Exception {
-
+		DebugLog.initializeLogger();
 		DebugLog.d("Excuting");
 		// Load server logic
 		try {
@@ -83,7 +83,6 @@ public class ServerMain {
 		} catch (Exception e) {
 			//log.error("Failed to start server", e);
 		}
-		
 		Thread thread = new CleanThreadService();
 		thread.start();
 	}
