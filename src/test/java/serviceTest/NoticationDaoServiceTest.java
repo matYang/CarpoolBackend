@@ -42,7 +42,7 @@ public class NoticationDaoServiceTest {
        	
         	stmt.executeBatch();
         }catch(SQLException e){
-        	DebugLog.d(e.getMessage());
+        	DebugLog.d(e);
         }
 		Notification n1 = new Notification(Constants.NotificationEvent.watched, 1, 2, -1, -1);
 		Notification n2 = new Notification(Constants.NotificationEvent.transactionCancelled, 1, 2, -1, -1);

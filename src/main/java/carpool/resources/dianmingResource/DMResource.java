@@ -42,7 +42,6 @@ public class DMResource extends PseudoResource{
 		Message message = null;
 		try {
 			jsonMessage = (new JsonRepresentation(entity)).getJsonObject();
-			DebugLog.d("@Post::receive jsonMessage: " +  jsonMessage.toString());
 			
 			message = new Message(jsonMessage.getInt("ownerId"), jsonMessage.getBoolean("isRoundTrip"),
 					new LocationRepresentation(jsonMessage.getJSONObject("departure_location")), DateUtility.castFromAPIFormat(jsonMessage.getString("departure_time")), Constants.DayTimeSlot.values()[jsonMessage.getInt("departure_timeSlot")],

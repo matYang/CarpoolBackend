@@ -45,7 +45,7 @@ public class CarpoolDaoLetter {
 			rs.next();
 			letter.setLetterId(rs.getInt(1));
 		}catch(SQLException e){
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 
 		return letter;
@@ -69,7 +69,7 @@ public class CarpoolDaoLetter {
 				throw new LetterNotFoundException();
 			}
 		}catch(SQLException e){
-			DebugLog.d(e.getMessage());			
+			DebugLog.d(e);			
 		}
 	}
 
@@ -85,7 +85,7 @@ public class CarpoolDaoLetter {
 				throw new LetterNotFoundException();
 			}
 		}catch(SQLException e){
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 
 		return letter;
@@ -100,7 +100,7 @@ public class CarpoolDaoLetter {
 				list.add(createLetterByResultSet(rs));
 			}
 		}catch(SQLException e){
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 
 		return list;
@@ -131,7 +131,7 @@ public class CarpoolDaoLetter {
 							list.add(createLetterByResultSet(rs));
 						}
 					}catch(SQLException e){
-						DebugLog.d(e.getMessage());
+						DebugLog.d(e);
 					}
 				}else{//System send to User
 					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){		
@@ -142,7 +142,7 @@ public class CarpoolDaoLetter {
 							list.add(createLetterByResultSet(rs));
 						}
 					}catch(SQLException e){
-						DebugLog.d(e.getMessage());
+						DebugLog.d(e);
 					}
 				}
 			}else if(direction.equals(LetterDirection.outbound)){
@@ -156,7 +156,7 @@ public class CarpoolDaoLetter {
 							list.add(createLetterByResultSet(rs));
 						}
 					}catch(SQLException e){
-						DebugLog.d(e.getMessage());
+						DebugLog.d(e);
 					}
 				}
 				else{//User to System
@@ -168,7 +168,7 @@ public class CarpoolDaoLetter {
 							list.add(createLetterByResultSet(rs));
 						}
 					}catch(SQLException e){
-						DebugLog.d(e.getMessage());
+						DebugLog.d(e);
 					}
 				}
 
@@ -183,7 +183,7 @@ public class CarpoolDaoLetter {
 						list.add(createLetterByResultSet(rs));
 					}
 				}catch(SQLException e){
-					DebugLog.d(e.getMessage());
+					DebugLog.d(e);
 				}
 			}
 		}
@@ -201,7 +201,7 @@ public class CarpoolDaoLetter {
 							list.add(createLetterByResultSet(rs));
 						}
 					}catch(SQLException e){
-						DebugLog.d(e.getMessage());
+						DebugLog.d(e);
 					}
 				}else if(curUserId<=0){
 					//Users to User
@@ -213,7 +213,7 @@ public class CarpoolDaoLetter {
 							list.add(createLetterByResultSet(rs));
 						}
 					}catch(SQLException e){
-						DebugLog.d(e.getMessage());
+						DebugLog.d(e);
 					}
 				}else{
 					//User to Users
@@ -225,7 +225,7 @@ public class CarpoolDaoLetter {
 							list.add(createLetterByResultSet(rs));
 						}
 					}catch(SQLException e){
-						DebugLog.d(e.getMessage());
+						DebugLog.d(e);
 					}
 				}
 
@@ -241,7 +241,7 @@ public class CarpoolDaoLetter {
 							list.add(createLetterByResultSet(rs));
 						}
 					}catch(SQLException e){
-						DebugLog.d(e.getMessage());
+						DebugLog.d(e);
 					}
 				}else if(curUserId>0){
 					//Users to User
@@ -253,7 +253,7 @@ public class CarpoolDaoLetter {
 							list.add(createLetterByResultSet(rs));
 						}
 					}catch(SQLException e){
-						DebugLog.d(e.getMessage());
+						DebugLog.d(e);
 					}
 				}else{
 					//User to Users
@@ -265,7 +265,7 @@ public class CarpoolDaoLetter {
 							list.add(createLetterByResultSet(rs));
 						}
 					}catch(SQLException e){
-						DebugLog.d(e.getMessage());
+						DebugLog.d(e);
 					}
 				}
 			}else{
@@ -283,7 +283,7 @@ public class CarpoolDaoLetter {
 							list.add(createLetterByResultSet(rs));
 						}
 					}catch(SQLException e){
-						DebugLog.d(e.getMessage());
+						DebugLog.d(e);
 					}
 				}else{
 					//Users to User or User to Users
@@ -296,7 +296,7 @@ public class CarpoolDaoLetter {
 							list.add(createLetterByResultSet(rs));
 						}
 					}catch(SQLException e){
-						DebugLog.d(e.getMessage());
+						DebugLog.d(e);
 					}
 				}
 			}
@@ -311,7 +311,7 @@ public class CarpoolDaoLetter {
 			stmt.setInt(1, letterId);
 			stmt.executeUpdate();	
 		}catch (SQLException e) {
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 	}
 
@@ -352,7 +352,7 @@ public class CarpoolDaoLetter {
 				}
 			}
 		}catch(SQLException e){
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 
 		return list;
@@ -384,7 +384,7 @@ public class CarpoolDaoLetter {
 			stmt.setInt(6, LetterState.unread.code);
 			stmt.executeUpdate();			
 		}catch(SQLException e){
-			DebugLog.d(e.getMessage());			
+			DebugLog.d(e);			
 		}
 	}
 }

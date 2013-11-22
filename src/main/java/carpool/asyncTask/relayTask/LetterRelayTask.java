@@ -56,19 +56,18 @@ public class LetterRelayTask implements PseudoAsyncTask{
 			
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-			DebugLog.d("LetterRelayTask::sendLetter::sending encoutered Exception:" + e.toString());
+			DebugLog.d(e);
 			return false;
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
-			DebugLog.d("LetterRelayTask::sendLetter::sending encoutered Exception:" + e.toString());
+			DebugLog.d(e);
 			return false;
 		} catch (IOException e) {
 			e.printStackTrace();
-			DebugLog.d("LetterRelayTask::sendLetter::sending encoutered Exception:" + e.toString());
+			DebugLog.d(e);
 			return false;
 		} 
 
-		DebugLog.d(response.getStatusLine().getStatusCode());
 		if (response.getStatusLine().getStatusCode() != 200){
 			DebugLog.d(Constants.log_errKeyword + " sending letter failed with status: " + response.getStatusLine().getStatusCode());
 		}

@@ -36,7 +36,6 @@ public class UserResourceId extends PseudoResource{
 			
 			String ss = this.getSessionString();
 			this.validateAuthentication(id);
-			DebugLog.d("API::GetUserById:: " + id);
 			
 			//used for personal page, able to retrieve any user's information
 	    	User user = UserDaoService.getUserById(intendedUserId);

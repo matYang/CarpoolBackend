@@ -153,7 +153,6 @@ public class ForgetPasswordResource extends PseudoResource{
 		
 
 		Representation result = new JsonRepresentation(jsonResponse);
-        this.printResult(result);
         this.addCORSHeader();
         return result;
 	}

@@ -23,9 +23,9 @@ public class CarpoolDaoBasic {
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection(uri, "root", CarpoolConfig.sqlPass);
         } catch (ClassNotFoundException e) {
-            DebugLog.d(e.getMessage());
+            DebugLog.d(e);
         } catch (SQLException e) {
-        	DebugLog.d(e.getMessage()); 
+        	DebugLog.d(e); 
         }
     }
     
@@ -68,7 +68,7 @@ public class CarpoolDaoBasic {
         	stmt.addBatch(query8);
         	stmt.executeBatch();
         }catch(SQLException e){
-        	DebugLog.d(e.getMessage());
+        	DebugLog.d(e);
         }
     }
 }

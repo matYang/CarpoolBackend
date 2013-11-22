@@ -57,7 +57,7 @@ public class LogInResource extends PseudoResource{
 			email = jsonString.getString("email");
 			password = jsonString.getString("password");
 			
-			DebugLog.d("log in, receving paramters: " + email + " " + password);
+			DebugLog.d("Log in, receving paramters: " + email + " " + password);
 			user = AuthDaoService.authenticateUserLogin(email, password);
 			
 			if (user != null && user.isAbleToLogin()){

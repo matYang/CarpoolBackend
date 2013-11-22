@@ -10,9 +10,12 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
+import org.json.JSONObject;
 
 import carpool.aws.awsMain;
 import carpool.constants.CarpoolConfig;
+import carpool.factory.JSONFactory;
+import carpool.interfaces.PseudoModel;
 
 public class DebugLog {
 	private static Logger log =	Logger.getLogger(DebugLog.class);
@@ -39,23 +42,14 @@ public class DebugLog {
 	}
 
 	public static void d(String message){
-		//System.out.println("DEBUG MESSAGE BY BAD STUDENT " + message);
 		log(message);
 	}
-
-	public static void d(int number){
-		//System.out.println("DEBUG MESSAGE BY BAD STUDENT " + number);
-		log(number+"");
-	}
-
-	public static void d_Chinese(String message){
-		try {
-			PrintStream ps = new PrintStream(System.out, true, "UTF-8");
-			ps.println(message);
-			log(message);
-		} catch (UnsupportedEncodingException e) {
-			log.info("Exception! ",e);
-		}
+	
+	//TODO prints out entire obj, is huge, use with caution
+	public static void d(PseudoModel p){
+		JSONObject json = JSONFactory.toJSON(p);
+		log(json.toString());
+		
 	}
 
 	private static void log(String message){

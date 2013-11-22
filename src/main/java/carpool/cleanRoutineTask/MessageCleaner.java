@@ -38,7 +38,7 @@ public class MessageCleaner extends CarpoolDaoMessage {
 				}			
 	} catch (SQLException e) {
 		e.printStackTrace();
-		DebugLog.d(e.getMessage());
+		DebugLog.d(e);
 	} catch (UserNotFoundException e) {
 		e.printStackTrace();
 	} catch (MessageNotFoundException e) {		

@@ -26,10 +26,6 @@ public class EncryptionTest {
 		String encryptedString = EmailCrypto.encrypt(id, authCode);
 		String[] decryptedStrings = EmailCrypto.decrypt(encryptedString);
 		
-		DebugLog.d(encryptedString);
-		DebugLog.d(decryptedStrings[0]);
-		DebugLog.d(decryptedStrings[1]);
-		
 		assertTrue( Integer.valueOf(decryptedStrings[0]) == id );
 		assertTrue( decryptedStrings[1].equals(authCode));
 	}
@@ -67,10 +63,7 @@ public class EncryptionTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		DebugLog.d("Test_SessionCrypto::" + testSessionKey);
-		DebugLog.d("Test_SessionCrypto::" + encryptedString);
-		DebugLog.d("Test_SessionCrypto::" + decryptedString);
+
 		assertTrue(!encryptedString.equals(""));
 		assertTrue(!decryptedString.equals(""));
 		assertTrue(testSessionKey.equals(decryptedString));

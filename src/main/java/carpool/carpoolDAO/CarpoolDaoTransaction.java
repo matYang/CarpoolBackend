@@ -93,7 +93,7 @@ public class CarpoolDaoTransaction {
 			transaction.setTransactionId(rs.getInt(1));
 		}catch(SQLException e){
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 	 return transaction;
 		
@@ -160,7 +160,7 @@ public class CarpoolDaoTransaction {
 			} 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 	}	
 	
@@ -177,7 +177,7 @@ public class CarpoolDaoTransaction {
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 		return transaction;
 	}
@@ -192,7 +192,7 @@ public class CarpoolDaoTransaction {
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 		return tlist;
 	}
@@ -233,7 +233,7 @@ public class CarpoolDaoTransaction {
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 		return tlist;	  
   }
@@ -249,7 +249,7 @@ public class CarpoolDaoTransaction {
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 		return tlist;
   }

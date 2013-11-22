@@ -171,14 +171,6 @@ public class PseudoResource extends ServerResource{
 		setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 	}
 	
-	public void printResult(Representation result){
-		try {
-            DebugLog.d(result.getText());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-	}
-	
 	public Representation buildQuickResponse(String responseText){
 		JSONObject response = new JSONObject();	
 		response = JSONFactory.toJSON(responseText);

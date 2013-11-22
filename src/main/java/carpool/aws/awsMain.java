@@ -68,7 +68,7 @@ public class awsMain {
 
 		}catch(AmazonServiceException e){
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 	}
 
@@ -104,7 +104,7 @@ public class awsMain {
 			objectData.close();			
 		}catch(AmazonServiceException e){
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 
 	}

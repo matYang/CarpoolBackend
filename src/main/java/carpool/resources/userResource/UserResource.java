@@ -44,8 +44,6 @@ public class UserResource extends PseudoResource{
 			LocationRepresentation location = new LocationRepresentation(jsonUser.getJSONObject("location"));
 			gender g = Constants.gender.fromInt(jsonUser.getInt("gender"));
 			
-			DebugLog.d(jsonUser.toString());
-			
 			//if email is used, do not register
 			if (!EmailDaoService.isEmailAvailable(email)){
 				throw new ValidationException("Email already in use");
@@ -90,7 +88,7 @@ public class UserResource extends PseudoResource{
 			if (newUser.validate()){
 				creationFeedBack = UserDaoService.createNewUser(newUser);
 
-				DebugLog.d("@Post::resources::createUser: available: " + creationFeedBack.getName() + " id: " +  creationFeedBack.getUserId() + " createUser: " + creationFeedBack.toString());
+				DebugLog.d("@Post::resources::createUser: available: " + creationFeedBack.getEmail() + " id: " +  creationFeedBack.getUserId());
 				
 				EmailDaoService.sendActivationEmail(creationFeedBack.getUserId(), creationFeedBack.getEmail());
 				newJsonUser = JSONFactory.toJSON(creationFeedBack);

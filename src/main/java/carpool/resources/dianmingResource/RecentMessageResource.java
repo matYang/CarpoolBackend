@@ -27,8 +27,6 @@ public class RecentMessageResource extends PseudoResource{
 		
 		ArrayList<Message> recentMessages = MessageDaoService.getRecentMessages();
 		JSONArray jsonArray = new JSONArray();
-		
-		DebugLog.d(recentMessages.toString());
 
 		jsonArray = JSONFactory.toJSON(recentMessages);
 		DebugLog.d(jsonArray.toString());

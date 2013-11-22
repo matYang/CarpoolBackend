@@ -34,7 +34,6 @@ public class UserIsWatchedResource extends PseudoResource{
 			
 			//make sure the current user has logged in
 			this.validateAuthentication(id);
-			DebugLog.d("API::getWatchedUsers:: " + id);
 			
         	isUserWatched = UserDaoService.isUserWatched(id, intendedUserId);
         	response = JSONFactory.toJSON(isUserWatched);

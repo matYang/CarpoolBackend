@@ -34,7 +34,7 @@ public class EmailDaoService {
 			EmailDaoService.sendActivationEmail(userId, newEmail);
 			return true;
 		} catch (Exception e) {
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 		return false;
 	}
@@ -56,7 +56,7 @@ public class EmailDaoService {
 			EmailRelayTask emailTask = new EmailRelayTask(newEmail, "Activate your email address", "http://"+CarpoolConfig.domainName+"/#emailActivation/"+encryptedEmailKey);
 			ExecutorProvider.executeRelay(emailTask);
 		} catch (Exception e) {
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 			return false;
 		}
 		return true;
@@ -75,7 +75,7 @@ public class EmailDaoService {
 	public static User activateUserEmail(int userId, String authCode) throws UserNotFoundException{
 		try{
 			if(!CarpoolDaoBasic.getJedis().get(CarpoolConfig.key_emailActivationAuth + userId).equals(authCode)){
-				DebugLog.d("anthCode does not match");
+				DebugLog.d("ActiveUserEmail:: AuthCode does not match");
 				return null;
 			}
 		}
@@ -90,7 +90,7 @@ public class EmailDaoService {
 			CarpoolDaoBasic.getJedis().del(CarpoolConfig.key_emailActivationAuth +  userId);
 			return user;
 		} catch (Exception e) {
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 		return null;
 	}
@@ -123,7 +123,7 @@ public class EmailDaoService {
 		try {
 			user = CarpoolDaoUser.getUserById(userId);
 		} catch (UserNotFoundException e) {
-			DebugLog.d("User does not exsit");
+			DebugLog.d("ReSendActivationEMail:: User does not exsit");
 			return false;
 		}
 		//make sure you have the prefix...don't want to debug this

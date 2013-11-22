@@ -71,7 +71,7 @@ public class NotificationResourceId extends PseudoResource{
 				
 			NotificationDaoService.checkNotification(notificationId, userId);
 			setStatus(Status.SUCCESS_OK);
-			DebugLog.d("@Checked notification with id: " + notificationId);
+			DebugLog.d("Check notification with id: " + notificationId);
 
 		} catch (PseudoException e){
 			this.addCORSHeader();
@@ -94,7 +94,7 @@ public class NotificationResourceId extends PseudoResource{
 
 			NotificationDaoService.deleteNotification(notificationId);
 			setStatus(Status.SUCCESS_OK);
-			DebugLog.d("@Delete with id: " + notificationId);
+			DebugLog.d("DeleteNotification with id: " + notificationId);
 			
         } catch (PseudoException e){
         	this.addCORSHeader();

@@ -35,7 +35,7 @@ public class SessionRedirect extends PseudoResource{
 		
 	@Get
 	public Representation sessionRedirect(Representation entity){
-		DebugLog.d("enter session redirect");
+		DebugLog.d("SessionDirect:: Enter session redirect");
 		
 		User user = null;
 		JSONObject jsonObject = new JSONObject();
@@ -69,7 +69,6 @@ public class SessionRedirect extends PseudoResource{
 		Representation result = new JsonRepresentation(jsonObject);
         
         this.addCORSHeader();
-		this.printResult(result);
         return result;
 	}
 

@@ -26,7 +26,7 @@ public class ScheduledClean {
                 cleanOldSchedules();
             }
             private void cleanOldSchedules() {
-                DebugLog.d("cleaning old schedules at time: " + dateFormat.format(new Date()));
+                DebugLog.d("ScheduledClean:: cleaning old schedules at time: " + dateFormat.format(new Date()));
                 Clean clean = new Clean();
                 clean.cleanSchedules();
             }

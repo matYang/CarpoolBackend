@@ -94,7 +94,7 @@ public class CarpoolDaoMessage{
 					}			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 		}
 		else{
@@ -128,7 +128,7 @@ public class CarpoolDaoMessage{
 					}				
 			} catch (SQLException e) {
 				e.printStackTrace();
-				DebugLog.d(e.getMessage());
+				DebugLog.d(e);
 			}
 		}
 		return retVal;
@@ -173,7 +173,7 @@ public class CarpoolDaoMessage{
 			
 		}catch(SQLException e){
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 		return msg;
 	}
@@ -190,7 +190,7 @@ public class CarpoolDaoMessage{
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 	}
 	
@@ -231,7 +231,7 @@ public class CarpoolDaoMessage{
 			} 
 		}catch(SQLException e){
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 	}
 	
@@ -246,10 +246,10 @@ public class CarpoolDaoMessage{
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		} catch (UserNotFoundException e) {
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 		return mlist;
 	}
@@ -267,7 +267,7 @@ public class CarpoolDaoMessage{
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 		return message;
 	}
@@ -298,7 +298,7 @@ public class CarpoolDaoMessage{
 			}
 		} catch (SQLException | UserNotFoundException e) {
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 		//TODO
 		for(int i = retVal.size()-1; i>= 0; i--){

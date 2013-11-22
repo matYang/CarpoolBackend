@@ -59,7 +59,7 @@ public class CarpoolDaoUser {
 					}			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
     	return ulist;
     	
@@ -116,7 +116,7 @@ public class CarpoolDaoUser {
 			if(e.getMessage().contains("Duplicate")){
 				throw new ValidationException("Some user field already exists");
 			}else{
-				DebugLog.d(e.getMessage());
+				DebugLog.d(e);
 			}
 		} catch (Exception e) {
 			throw new ValidationException("Bad password format");
@@ -140,7 +140,7 @@ public class CarpoolDaoUser {
 				throw new UserNotFoundException();
 			}
 		}catch(SQLException e){
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 	}
 
@@ -192,7 +192,7 @@ public class CarpoolDaoUser {
 				throw new UserNotFoundException();
 			}
 		} catch(SQLException e){
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		} catch (Exception e) {
 			throw new ValidationException("Bad password format");
 		} 	
@@ -207,7 +207,7 @@ public class CarpoolDaoUser {
 				users.add(createUserByResultSet(rs));
 			}
 		}catch(SQLException e){
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 		return users;
 	}
@@ -225,7 +225,7 @@ public class CarpoolDaoUser {
 				throw new UserNotFoundException();
 			}
 		}catch(SQLException e){
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 
 		return user;
@@ -244,7 +244,7 @@ public class CarpoolDaoUser {
 				throw new UserNotFoundException();
 			}
 		}catch(SQLException e){
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 
 		return user;
@@ -262,7 +262,7 @@ public class CarpoolDaoUser {
 				users.add(createUserByResultSet(rs));
 			}
 		}catch(SQLException e){
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 		return users;
 	}
@@ -298,7 +298,7 @@ public class CarpoolDaoUser {
 //				historyList.add(CarpoolDaoMessage.createMessageByResultSet(rs, ));
 //			}
 //		}catch(SQLException e){
-//			DebugLog.d(e.getMessage());
+//			DebugLog.d(e);
 //		}
 //		query = "SELECT * FROM carpoolDAOMessage JOIN Transaction ON ( Transaction.messageId = carpoolDAOMessage.messageId AND Transaction.initUserId = ?)";
 //		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
@@ -308,7 +308,7 @@ public class CarpoolDaoUser {
 //				historyList.add(CarpoolDaoMessage.createMessageByResultSet(rs));
 //			}
 //		}catch(SQLException e){
-//			DebugLog.d(e.getMessage());
+//			DebugLog.d(e);
 //		}
 //		user.setHistoryList(historyList);
 //		return user;
@@ -341,7 +341,7 @@ public class CarpoolDaoUser {
 				stmt.setInt(2, subUser);
 				stmt.executeUpdate();		
 			}catch(SQLException e){
-				DebugLog.d(e.getMessage());
+				DebugLog.d(e);
 			}
  		}
    }	
@@ -355,7 +355,7 @@ public class CarpoolDaoUser {
 				stmt.executeUpdate();	
 				
 			}catch(SQLException e){
-				DebugLog.d(e.getMessage());
+				DebugLog.d(e);
 			}
 
 	   }
@@ -374,7 +374,7 @@ public class CarpoolDaoUser {
 				slist.add(CarpoolDaoUser.createUserByResultSet(rs));
 			}
 		} catch (SQLException e) {
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 	   return slist;
    }
@@ -391,7 +391,7 @@ public class CarpoolDaoUser {
 				mlist.add(CarpoolDaoMessage.createMessageByResultSet(rs, true));
 			}
 		} catch (SQLException e) {
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 		return mlist;
 	}

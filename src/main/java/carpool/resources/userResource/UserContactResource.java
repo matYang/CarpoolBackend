@@ -92,7 +92,7 @@ public class UserContactResource extends PseudoResource{
 				setStatus(Status.SUCCESS_OK);
 			}
 			else{
-				DebugLog.d("parsed contact is null");
+				DebugLog.d("ChangeContactInfo:: parsed contact is null");
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			}
 

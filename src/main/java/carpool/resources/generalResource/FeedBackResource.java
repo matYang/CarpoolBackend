@@ -53,7 +53,7 @@ public class FeedBackResource extends PseudoResource{
 				e.printStackTrace();
 			}
 			writeFile(jsonMessage);
-			DebugLog.d(jsonMessage);
+			DebugLog.d("Feedback received: " + jsonMessage);
 		}
 		else{
 			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);

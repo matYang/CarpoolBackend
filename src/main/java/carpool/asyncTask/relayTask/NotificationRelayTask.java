@@ -66,19 +66,19 @@ public class NotificationRelayTask implements PseudoAsyncTask{
 			
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-			DebugLog.d("NotificationRelayTask::sendNotification::sending encoutered Exception:" + e.toString());
+			DebugLog.d(e);
 			return false;
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
-			DebugLog.d("NotificationRelayTask::sendNotification::sending encoutered Exception:" + e.toString());
+			DebugLog.d(e);
 			return false;
 		} catch (IOException e) {
 			e.printStackTrace();
-			DebugLog.d("NotificationRelayTask::sendNotification::sending encoutered Exception:" + e.toString());
+			DebugLog.d(e);
 			return false;
 		} 
 
-		DebugLog.d(response.getStatusLine().getStatusCode());
+		DebugLog.d("Notification sents with status code: " + response.getStatusLine().getStatusCode());
 		//parsing and printing the response
 		// StringBuilder sb = new StringBuilder();
 	 //   InputStream in;

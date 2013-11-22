@@ -49,8 +49,7 @@ public class LocationResource extends PseudoResource{
 		JSONArray jsonArray = searchResult != null ? new JSONArray(searchResult) : new JSONArray (new ArrayList<String>());
 		
 		Representation result = new JsonRepresentation(jsonArray);
-		
-		this.printResult(result);		
+				
 		this.addCORSHeader(); 
 		return result;
 	}

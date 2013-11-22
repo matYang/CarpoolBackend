@@ -73,15 +73,15 @@ public class EmailRelayTask implements PseudoAsyncTask{
 				transport.close();
 			} catch (AddressException e) {
 				e.printStackTrace();
-				DebugLog.d("EmailRelayTask::send encoutered Exception:" + e.toString());
+				DebugLog.d(e);
 				return false;
 			} catch (NoSuchProviderException e) {
 				e.printStackTrace();
-				DebugLog.d("EmailRelayTask::send encoutered Exception:" + e.toString());
+				DebugLog.d(e);
 				return false;
 			} catch (MessagingException e) {
 				e.printStackTrace();
-				DebugLog.d("EmailRelayTask::send encoutered Exception:" + e.toString());
+				DebugLog.d(e);
 				return false;
 			} 
 			

@@ -60,7 +60,7 @@ public class TransactionCleaner extends CarpoolDaoTransaction {
 			NotificationDaoService.dispatchNotificationQueue();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		} catch (UserNotFoundException e) {			
 			e.printStackTrace();
 		} catch (MessageNotFoundException e) {		

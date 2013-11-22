@@ -579,7 +579,7 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 					}			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 		
 		if(list !=null && list.size()==8 && list.get(0)==2&&list.get(1)==1&& list.get(2)==2&&list.get(3)==2&& list.get(4)==1&&list.get(5)==2&& list.get(6)==1&&list.get(7)==0){

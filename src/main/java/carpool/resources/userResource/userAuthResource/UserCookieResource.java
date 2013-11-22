@@ -108,8 +108,8 @@ public class UserCookieResource extends ServerResource{
 		}
         
         DebugLog.d("UserCookie Resource, newCookieSetting brief:");
-        DebugLog.d(newCookieSetting.getValue());
-        DebugLog.d(newCookieSetting.getMaxAge());
+        DebugLog.d(""+newCookieSetting.getValue());
+        DebugLog.d(""+newCookieSetting.getMaxAge());
         
        return newCookieSetting;
 	}

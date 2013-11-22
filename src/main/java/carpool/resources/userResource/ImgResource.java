@@ -161,7 +161,6 @@ public class ImgResource extends PseudoResource{
 		Representation result = new JsonRepresentation(jsonObject);
 
 		this.addCORSHeader();
-		this.printResult(result);
         return result;
 	}
 

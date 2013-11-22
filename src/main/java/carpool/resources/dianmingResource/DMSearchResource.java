@@ -33,7 +33,7 @@ import carpool.resources.PseudoResource;
 public class DMSearchResource extends PseudoResource{
 
 	@Get
-	public Representation getAllMessages() {
+	public Representation searchMessages() {
 		
 		JSONArray response = new JSONArray();
 		
@@ -41,7 +41,7 @@ public class DMSearchResource extends PseudoResource{
 			String srStr = this.getSearchQueryVal("searchRepresentation");
 			int userId = Integer.parseInt(this.getQueryVal("userId"));
 			
-			DebugLog.d(srStr);
+			DebugLog.d("SearchMessage received searchRepresentation: " + srStr);
 			
 			boolean login = false;
 			try{

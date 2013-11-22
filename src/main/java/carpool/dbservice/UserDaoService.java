@@ -46,7 +46,7 @@ public class UserDaoService{
 			return user;
 			
 		}catch(Exception e){
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 			throw new PseudoException(e.getMessage());
 		}
 	}
@@ -86,7 +86,7 @@ public class UserDaoService{
 				return true;
 			}
 		} catch (Exception e) {
-			DebugLog.d(e.getMessage());
+			DebugLog.d(e);
 		}
 		return false;
 	}
