@@ -34,9 +34,15 @@ public class CarpoolDaoBasic {
     }
     
     public static Connection getSQLConnection(){
-        if(connection==null){
-            connect();
-        }
+        try {
+			if(connection==null || connection.isClosed()){
+				connect();
+			}
+		} catch (SQLException e) {
+			DebugLog.d(e);
+			DebugLog.d("getSQLConnection:: SQL Connection error, trying to re-establish connection to sql");
+			connect();
+		}
         return connection;
     }
     
