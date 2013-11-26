@@ -16,7 +16,7 @@ import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
 import carpool.model.representation.SearchRepresentation;
-
+import carpool.constants.*;
 
 
 public class MessageDaoService{
