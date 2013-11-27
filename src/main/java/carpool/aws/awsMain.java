@@ -50,6 +50,15 @@ public class awsMain {
 	private static String bucketName="BadStudentTest";
 	private static String filekey ="";
 	private static String imgkey="";
+	
+	private static boolean logfed = false;
+	
+	private static void logconfig(){
+		if (!logfed){
+			BasicConfigurator.configure();
+			logfed = true;
+		}
+	}
 
 	public static void getImgObject(int userId) throws IOException{
 		String userProfile = carpool.constants.CarpoolConfig.profileImgPrefix;
@@ -59,7 +68,7 @@ public class awsMain {
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
 		try{
-			BasicConfigurator.configure();
+			logconfig();
 
 			S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, imgkey));
 			InputStream objectData = object.getObjectContent();	
@@ -78,7 +87,7 @@ public class awsMain {
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
 		filekey = userId+"/"+userId+"_sr.txt";
 		try{
-			BasicConfigurator.configure();
+			logconfig();
 
 			S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, filekey));
 			InputStream objectData = object.getObjectContent(); 
@@ -115,14 +124,18 @@ public class awsMain {
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
 		String fileName = userId+"/"+userId+"_sr.txt";
 		String localfileName = CarpoolConfig.pathToSearchHistoryFolder + userId + CarpoolConfig.searchHistoryFileSufix;
-		File file = new File(localfileName);  
+		File file = new File(localfileName);
+		S3Object object = null;
+		GetObjectRequest req = new GetObjectRequest(bucketName, fileName);
 
 		try{
-			BasicConfigurator.configure();
-
-			S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, fileName));
+			logconfig();
+			
+			object = s3Client.getObject(req);
+				
+			
 			InputStream objectData = object.getObjectContent(); 
-
+			
 			InputStream reader = new BufferedInputStream(objectData);
 
 			//Make sure the file is "empty" before we write to it;
@@ -159,9 +172,9 @@ public class awsMain {
 			for(int i=0; i<appendString.size(); i++){
 				list.add(new SearchRepresentation(appendString.get(i)));
 			}
-
+			object.close();
 		} catch(AmazonServiceException e){
-			if(e.getErrorCode()=="NoSuchKey"){
+			if(e.getErrorCode().equals("NoSuchKey")){
 				String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
 				int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
 				Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
@@ -170,6 +183,16 @@ public class awsMain {
 				for(int i=0; i<appendString.size(); i++){
 					list.add(new SearchRepresentation(appendString.get(i)));
 				}
+				if (object != null){
+					try {
+						object.close();
+					} catch (IOException e1) {
+						DebugLog.d(e1);
+					}
+				}
+			}
+			else{
+				DebugLog.d(e);
 			}
 		} catch(IOException e){
 			DebugLog.d(e);
@@ -203,7 +226,7 @@ public class awsMain {
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 		AmazonS3Client s3Client = new AmazonS3Client(myCredentials);
 
-		BasicConfigurator.configure();
+		logconfig();
 
 		java.util.Date expiration = new java.util.Date();
 		long msec = expiration.getTime();
@@ -239,7 +262,7 @@ public class awsMain {
 				PrintWriter pwriter = new PrintWriter(localfileName);
 				pwriter.write("");
 				pwriter.close();
-				BasicConfigurator.configure();
+				logconfig();
 
 				S3Object object = s3Client.getObject(new GetObjectRequest(bucketName,fileName));    
 				InputStream objectData = object.getObjectContent(); 
@@ -268,7 +291,7 @@ public class awsMain {
 				//clean redis
 				redis.del(rediskey);
 			} catch(AmazonServiceException e){	
-				if(e.getErrorCode()=="NoSuchKey"){
+				if(e.getErrorCode().equals("NoSuchKey")){
 					//Write to file
 					try{
 						BufferedWriter	bw = new BufferedWriter(new FileWriter(file, true));
@@ -285,7 +308,9 @@ public class awsMain {
 					} catch (IOException e1){
 						DebugLog.d(e);
 					}
-
+				}
+				else{
+					DebugLog.d(e);
 				}
 			} catch (IOException e){
 				DebugLog.d(e);

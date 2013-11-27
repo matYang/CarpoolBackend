@@ -16,7 +16,7 @@ import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
 import carpool.model.representation.SearchRepresentation;
-
+import carpool.constants.*;
 
 
 public class MessageDaoService{
@@ -86,13 +86,25 @@ public class MessageDaoService{
 	
 	/**
 	 * retrives a list of transactions associated with the target message ID
-	 * @param messageId
-	 * @return	an arrayList of transactions based on the target message, null if any errors occurred
-	 * @throws MessageNotFoundException
-	 * @throws UserNotFoundException 
 	 */
 	public static ArrayList<Transaction> getTransactionByMessageId(int messageId) throws MessageNotFoundException, UserNotFoundException {
 		return CarpoolDaoTransaction.getAllTransactionByMessageId(messageId);
+	}
+	
+	
+	
+	/*
+	* get the auto-matching messages, make upper limit 10 messaeges
+	*/
+	public static ArrayList<Message> autoMatching(int curMsgId, int curUserId) throws MessageNotFoundException, PseudoException{
+		Message targetMessage = CarpoolDaoMessage.getMessageById(curMsgId);
+		SearchRepresentation sr = new SearchRepresentation(targetMessage.isRoundTrip(), targetMessage.getDeparture_location(),
+                       targetMessage.getArrival_location(), targetMessage.getDeparture_time(), targetMessage.getArrival_time(),
+			targetMessage.getType() == Constants.messageType.ask ? Constants.messageType.help : Constants.messageType.ask,
+                        targetMessage.getDeparture_timeSlot(), targetMessage.getArrival_timeSlot());
+                
+                //use unlogged in state to avoid automatching being recorded in search history   
+               	return primaryMessageSearch(sr, false, -1);
 	}
 	
 	

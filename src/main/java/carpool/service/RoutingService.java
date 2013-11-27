@@ -66,6 +66,9 @@ public class RoutingService extends Application {
 		String DMTransactionResourcePrefix = "/transaction";
 		//	API for DM message fetchTransactionList : /api/v1.0/dianming/transaction/:id
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMTransactionResourcePrefix + "/{id}", DMTransactionResource.class);
+		String DMAutoMatchResourcePrefix = "/autoMatch";
+		//	API for DM message auto-matching : /api/v1.0/dianming/autoMatch/:id
+		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMAutoMatchResourcePrefix + "/{id}", DMAutoMatchResource.class);
 		
 		
 		/** -------------------- APIs for transaction module -------------- **/
