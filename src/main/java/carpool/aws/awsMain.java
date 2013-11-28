@@ -73,7 +73,7 @@ public class awsMain {
 			e2.printStackTrace();
 			DebugLog.d(e2);
 		}
-
+		file.delete();
 
 	}
 
@@ -97,18 +97,17 @@ public class awsMain {
 		}
 	}
 
-	public static void getFileObject(int userId) throws IOException{
+	public static void getFileObject(int userId){
 		String localfileName = CarpoolConfig.pathToSearchHistoryFolder + userId + CarpoolConfig.searchHistoryFileSufix;
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
+		File file = new File(localfileName);
 		filekey = userId+"/"+userId+"_sr.txt";
 		try{
 
 			S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, filekey));
 			InputStream objectData = object.getObjectContent(); 
-
-			InputStream reader = new BufferedInputStream(objectData);
-			File file = new File(localfileName); 
+			InputStream reader = new BufferedInputStream(objectData);			 
 
 			//Make sure the file is "empty" before we write to it;
 			PrintWriter pwriter = new PrintWriter(localfileName);
@@ -129,8 +128,11 @@ public class awsMain {
 		}catch(AmazonServiceException e){
 			e.printStackTrace();
 			DebugLog.d(e);
+		}catch(IOException e2){
+			e2.printStackTrace();
+			DebugLog.d(e2);
 		}
-
+		file.delete();
 	}
 
 	public static  ArrayList<SearchRepresentation> getUserSearchHistory(int userId){
@@ -218,9 +220,7 @@ public class awsMain {
 	public static String uploadProfileImg(int userId, File file, String imgName){
 
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
-		AmazonS3Client s3Client = new AmazonS3Client(myCredentials);
-
-		BasicConfigurator.configure();
+		AmazonS3Client s3Client = new AmazonS3Client(myCredentials);		
 
 		java.util.Date expiration = new java.util.Date();
 		long msec = expiration.getTime();
@@ -318,28 +318,28 @@ public class awsMain {
 				s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
 				//clean redis
 				redis.del(rediskey);
-			} catch(AmazonServiceException e){	
-				if(e.getErrorCode().equals("NoSuchKey")){
-					//Write to file
-					try{
-						BufferedWriter	bw = new BufferedWriter(new FileWriter(file, true));
-						for(int i = upper-1; i >= 0; i--){
-							bw.write(appendString.get(i));   
-							bw.newLine();
-						}    
-						bw.flush();
-						bw.close();
-
-						s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
-						//clean redis
-						redis.del(rediskey);
-					} catch (IOException e1){
-						DebugLog.d(e);
-					}
-				}
-				else{
-					DebugLog.d(e);
-				}
+//			} catch(AmazonServiceException e){	
+//				if(e.getErrorCode().equals("NoSuchKey")){
+//					//Write to file
+//					try{
+//						BufferedWriter	bw = new BufferedWriter(new FileWriter(file, true));
+//						for(int i = upper-1; i >= 0; i--){
+//							bw.write(appendString.get(i));   
+//							bw.newLine();
+//						}    
+//						bw.flush();
+//						bw.close();
+//
+//						s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
+//						//clean redis
+//						redis.del(rediskey);
+//					} catch (IOException e1){
+//						DebugLog.d(e);
+//					}
+//				}
+//				else{
+//					DebugLog.d(e);
+//				}
 			} catch (IOException e){
 				DebugLog.d(e);
 			}
