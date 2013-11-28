@@ -1,6 +1,157 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>badstudent</groupId>
-  <artifactId>badstudent</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <artifactId>httpServer</artifactId>
+  <version>1.0.0</version>
+  <name>mainHttpServer</name>
+  
+  <description>Main HttpServer for the Backend</description>
+  
+  <properties>
+  	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+  
+  <repositories>
+  	 <repository>
+	    <id>opencast-public</id>
+	    <url>http://repository.opencastproject.org/nexus/content/repositories/public/</url>
+	 </repository>
+	 
+	 <repository>
+	    <id>restlet-releases</id>
+	    <url>http://maven.restlet.org/</url>
+	  </repository>
+  </repositories>
+  
+  <build>
+	<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-compiler-plugin</artifactId>
+	        <version>2.3.2</version>
+	        <configuration>
+	        	<source>1.7</source>
+	        	<target>1.7</target>
+	        </configuration>
+    	</plugin>
+    	
+    	<plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-shade-plugin</artifactId>
+	        <version>2.2</version>
+	        <configuration>
+	          <!-- put your configurations here -->
+	        </configuration>
+	        <executions>
+	          <execution>
+	            <phase>package</phase>
+	            <goals>
+	              <goal>shade</goal>
+	            </goals>
+	          </execution>
+	        </executions>
+	      </plugin>
+	      
+	      <plugin>
+	        <artifactId>maven-jar-plugin</artifactId>
+	        <configuration>
+	          <finalName>${artifactId}-${version}-tmp</finalName>
+	        </configuration>
+	      </plugin>
+	</plugins>
+  </build>
+  
+  <dependencies>
+  	<dependency>
+  		<groupId>net.sf.flexjson</groupId>
+  		<artifactId>flexjson</artifactId>
+  		<version>2.1</version>
+  	</dependency>
+  	
+  	<dependency>
+		<groupId>redis.clients</groupId>
+		<artifactId>jedis</artifactId>
+		<version>2.2.1</version>
+	</dependency>
+  	
+  	<!-- java-json -->
+  	<dependency>
+		<groupId>org.json</groupId>
+		<artifactId>json</artifactId>
+		<version>20131018</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>log4j</groupId>
+		<artifactId>log4j</artifactId>
+		<version>1.2.16</version>
+	</dependency>
+	
+	<!-- org.apache.commons.logging.jar -->
+	<dependency>
+		<groupId>commons-logging</groupId>
+		<artifactId>commons-logging</artifactId>
+		<version>1.1.1</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>5.1.23</version>
+	</dependency>
+	
+	<!-- the followings are Restlet dependencies -->
+	<dependency>
+	  	<groupId>org.restlet.jse</groupId>
+	  	<artifactId>org.restlet</artifactId>
+	  	<version>2.1.2</version>
+	</dependency>
+	<dependency>
+	  	<groupId>org.restlet.jse</groupId>
+	  	<artifactId>org.restlet.ext.json</artifactId>
+	  	<version>2.1.2</version>
+	</dependency>
+	<dependency>
+	  	<groupId>org.restlet.jse</groupId>
+	  	<artifactId>org.restlet.ext.xml</artifactId>
+	  	<version>2.1.2</version>
+	</dependency>
+	<dependency>
+	  	<groupId>org.restlet.jse</groupId>
+	  	<artifactId>org.restlet.ext.fileupload</artifactId>
+	  	<version>2.1.2</version>
+	</dependency>
+	
+	<!-- TODO: Local Dependencies -->
+	<dependency>
+	    <groupId>bcprov</groupId>
+	    <artifactId>bcprov-ext-jdk15on-148</artifactId>
+	    <version>0.9.2</version>
+	    <scope>system</scope>
+	    <systemPath>${project.basedir}/lib/bcprov-ext-jdk15on-148.jar</systemPath>
+	</dependency>
+	<dependency>
+	    <groupId>common-fileupload</groupId>
+	    <artifactId>fileupload</artifactId>
+	    <version>1.2.2</version>
+	    <scope>system</scope>
+	    <systemPath>${project.basedir}/lib/commons-fileupload-1.2.2.jar</systemPath>
+	</dependency>
+	<dependency>
+	    <groupId>imgscalr</groupId>
+	    <artifactId>imgscalr</artifactId>
+	    <version>4.2</version>
+	    <scope>system</scope>
+	    <systemPath>${project.basedir}/lib/imgscalr-lib-4.2.jar</systemPath>
+	</dependency>
+	<dependency>
+	    <groupId>jasypt</groupId>
+	    <artifactId>jasypt</artifactId>
+	    <version>1.9.0</version>
+	    <scope>system</scope>
+	    <systemPath>${project.basedir}/lib/jasypt-1.9.0.jar</systemPath>
+	</dependency>
+	
+  </dependencies>
 </project>

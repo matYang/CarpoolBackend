@@ -19,7 +19,6 @@
 	<classpathentry kind="lib" path="lib/httpcore-4.2.4.jar"/>
 	<classpathentry kind="lib" path="lib/imgscalr-lib-4.2.jar"/>
 	<classpathentry kind="lib" path="lib/jasypt-1.9.0.jar"/>
-	<classpathentry kind="lib" path="lib/java-json.jar"/>
 	<classpathentry kind="lib" path="lib/jedis.jar"/>
 	<classpathentry kind="lib" path="lib/aws/httpclient-4.2.3.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.23-bin.jar"/>
@@ -56,6 +55,7 @@
 	<classpathentry kind="lib" path="lib/aws/commons-io-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-fileupload-1.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/org.restlet.ext.fileupload-2.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/java-json.jar"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
