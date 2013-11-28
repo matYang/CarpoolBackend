@@ -29,6 +29,7 @@ public class UserMessageHistoryResource extends PseudoResource{
     public Representation getMessageByUserId() {
     	int id = -1;
     	int intendedUserId = -1;
+    	
         JSONArray response = new JSONArray();
         
         try {
