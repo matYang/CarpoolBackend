@@ -18,6 +18,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
 
+import carpool.aws.awsMain;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.Parser;
@@ -65,7 +66,8 @@ public class CarpoolDaoUser {
     	
     }
     
-	public static User addUserToDatabase(User user) throws ValidationException{
+	public static User addUserToDatabase(User user) throws ValidationException{	
+		
 		String query = "INSERT INTO carpoolDAOUser (password,name,email,phone,qq,gender,birthday,"+
 	            "imgPath,user_primaryLocation,user_customLocation,user_customDepthIndex,lastLogin,creationTime,"+
 				"emailActivated,phoneActivated,emailNotice,phoneNotice,state,searchRepresentation,"+
@@ -120,7 +122,7 @@ public class CarpoolDaoUser {
 			}
 		} catch (Exception e) {
 			throw new ValidationException("Bad password format");
-		} 		
+		} 
 		return user;
 	}
 

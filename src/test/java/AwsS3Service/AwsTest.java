@@ -37,27 +37,19 @@ public class AwsTest {
 	//@Test
 	public void testGetFile(){
 		CarpoolDaoBasic.clearBothDatabase();
-		int userId=1;
-		try{			
-			awsMain.getFileObject(userId);
-		} 
-		catch(IOException e){
-			e.getMessage();
-			fail();
-		}
+		int userId=1;					
+		awsMain.getFileObject(userId);
+		 
+		
 	}
 
 	//@Test
 	public void testGetImg(){
 		CarpoolDaoBasic.clearBothDatabase();
-		int userId=1;
-		try{			
-			awsMain.getImgObject(userId);
-		}
-		catch(IOException e){
-			e.getMessage();
-			fail();
-		}
+		int userId=1;			
+		awsMain.getImgObject(userId);
+		
+		
 	}
 	//@Test
 	public void testUploadImg() throws IOException{
@@ -276,5 +268,12 @@ public class AwsTest {
 			//				}
 			fail();
 		}
+	}
+	
+	//@Test
+	public void testCreateUserFile(){
+		int userId = 1;
+		awsMain.createUserFile(userId);
+		//Check amw management console
 	}
 }
