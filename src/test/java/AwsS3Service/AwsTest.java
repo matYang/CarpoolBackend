@@ -277,4 +277,11 @@ public class AwsTest {
 			fail();
 		}
 	}
+	
+	//@Test
+	public void testCreateUserFile(){
+		int userId = 1;
+		awsMain.createUserFile(userId);
+		//Check amw management console
+	}
 }

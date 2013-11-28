@@ -20,6 +20,7 @@ import org.apache.log4j.Appender;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
@@ -36,6 +37,7 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
@@ -50,14 +52,29 @@ public class awsMain {
 	private static String bucketName="BadStudentTest";
 	private static String filekey ="";
 	private static String imgkey="";
-	
-	private static boolean logfed = false;
-	
-	private static void logconfig(){
-		if (!logfed){
-			BasicConfigurator.configure();
-			logfed = true;
+
+	static Logger logger = Logger.getLogger(awsMain.class);
+
+	public static void createUserFile(int userId){
+
+		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);		
+		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
+		String fileName = userId+"/"+userId+"_sr.txt";
+		String localfileName = CarpoolConfig.pathToSearchHistoryFolder + userId + CarpoolConfig.searchHistoryFileSufix;
+		File file = new File(localfileName);
+		try{
+			s3Client.putObject(new PutObjectRequest(bucketName,fileName,file));
+		}//catch no file exception
+		catch(AmazonS3Exception e1){
+			e1.printStackTrace();
+			DebugLog.d(e1);
 		}
+		catch(AmazonClientException e2){
+			e2.printStackTrace();
+			DebugLog.d(e2);
+		}
+
+
 	}
 
 	public static void getImgObject(int userId) throws IOException{
@@ -68,7 +85,6 @@ public class awsMain {
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
 		try{
-			logconfig();
 
 			S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, imgkey));
 			InputStream objectData = object.getObjectContent();	
@@ -87,7 +103,6 @@ public class awsMain {
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
 		filekey = userId+"/"+userId+"_sr.txt";
 		try{
-			logconfig();
 
 			S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, filekey));
 			InputStream objectData = object.getObjectContent(); 
@@ -127,15 +142,13 @@ public class awsMain {
 		File file = new File(localfileName);
 		S3Object object = null;
 		GetObjectRequest req = new GetObjectRequest(bucketName, fileName);
-
+		
 		try{
-			logconfig();
-			
+
 			object = s3Client.getObject(req);
-				
 			
 			InputStream objectData = object.getObjectContent(); 
-			
+
 			InputStream reader = new BufferedInputStream(objectData);
 
 			//Make sure the file is "empty" before we write to it;
@@ -173,30 +186,32 @@ public class awsMain {
 				list.add(new SearchRepresentation(appendString.get(i)));
 			}
 			object.close();
-		} catch(AmazonServiceException e){
-			if(e.getErrorCode().equals("NoSuchKey")){
-				String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
-				int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
-				Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
-				List<String> appendString = redis.lrange(rediskey, 0, upper-1);
-
-				for(int i=0; i<appendString.size(); i++){
-					list.add(new SearchRepresentation(appendString.get(i)));
-				}
-				if (object != null){
-					try {
-						object.close();
-					} catch (IOException e1) {
-						DebugLog.d(e1);
-					}
-				}
-			}
-			else{
-				DebugLog.d(e);
-			}
+//		} catch(AmazonServiceException e){			
+//			if(e.getErrorCode().equals("NoSuchKey")){
+//				String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
+//				int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
+//				Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+//				List<String> appendString = redis.lrange(rediskey, 0, upper-1);
+//
+//				for(int i=0; i<appendString.size(); i++){
+//					list.add(new SearchRepresentation(appendString.get(i)));
+//				}
+//				if (object != null){
+//					try {
+//						object.close();
+//					} catch (IOException e1) {
+//						DebugLog.d(e1);
+//					}
+//				}
+//			}
+//			else{
+//				DebugLog.d(e);
+//			}
 		} catch(IOException e){
 			DebugLog.d(e);
 		}
+		//Make sure deleting the temp file
+		file.delete();
 		return list;
 	}
 
@@ -209,13 +224,21 @@ public class awsMain {
 
 		java.util.Date expiration = new java.util.Date();
 		long msec = expiration.getTime();
+		imgkey = userId+"/"+imgName+"-"+msec+".png";
+		try{
+			s3Client.putObject(new PutObjectRequest(bucketName,imgkey,new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png")).withCannedAcl(CannedAccessControlList.PublicRead));
+			URL s = s3Client.getUrl(bucketName, imgkey);
+			return s.toString();
+		}catch(AmazonS3Exception e1){
+			e1.printStackTrace();
+			DebugLog.d(e1);
+		}
+		catch(AmazonClientException e2){
+			e2.printStackTrace();
+			DebugLog.d(e2);
+		}
 
-		s3Client.putObject(new PutObjectRequest(bucketName,userId+"/"+imgName+"-"+msec+".png",new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png")).withCannedAcl(CannedAccessControlList.PublicRead));
-		imgkey = userId+"/"+imgName+"-"+msec+".png";	
-
-		URL s = s3Client.getUrl(bucketName, imgkey);
-
-		return s.toString();
+		return null;	
 
 	}
 
@@ -226,18 +249,24 @@ public class awsMain {
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 		AmazonS3Client s3Client = new AmazonS3Client(myCredentials);
 
-		logconfig();
-
 		java.util.Date expiration = new java.util.Date();
 		long msec = expiration.getTime();
+		imgkey = userId+"/"+imgName+"-"+msec+".png";
 
-		s3Client.putObject(new PutObjectRequest(bucketName,userId+"/"+imgName+"-"+msec+".png",new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png")).withCannedAcl(CannedAccessControlList.PublicRead));
-		imgkey = userId+"/"+imgName+"-"+msec+".png";	
-
-		URL s = s3Client.getUrl(bucketName, imgkey);
-		//System.out.println(s.toString());
-		return s.toString();
-
+		try{
+			s3Client.putObject(new PutObjectRequest(bucketName,imgkey,new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png")).withCannedAcl(CannedAccessControlList.PublicRead));
+			URL s = s3Client.getUrl(bucketName, imgkey);
+			//System.out.println(s.toString());
+			return s.toString();
+		}catch(AmazonS3Exception e1){
+			e1.printStackTrace();
+			DebugLog.d(e1);
+		}
+		catch(AmazonClientException e2){
+			e2.printStackTrace();
+			DebugLog.d(e2);
+		}
+		return null;
 	}
 
 	public static void storeSearchHistory(SearchRepresentation sr,int userId){
@@ -262,7 +291,6 @@ public class awsMain {
 				PrintWriter pwriter = new PrintWriter(localfileName);
 				pwriter.write("");
 				pwriter.close();
-				logconfig();
 
 				S3Object object = s3Client.getObject(new GetObjectRequest(bucketName,fileName));    
 				InputStream objectData = object.getObjectContent(); 
@@ -315,7 +343,10 @@ public class awsMain {
 			} catch (IOException e){
 				DebugLog.d(e);
 			}
+			//Make sure deleting the temp file
+			file.delete();
 		}
+
 	}		
 
 

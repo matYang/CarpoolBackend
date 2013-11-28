@@ -21,10 +21,7 @@
 	<classpathentry kind="lib" path="lib/jasypt-1.9.0.jar"/>
 	<classpathentry kind="lib" path="lib/java-json.jar"/>
 	<classpathentry kind="lib" path="lib/jedis.jar"/>
-	<classpathentry kind="lib" path="lib/aws/httpcore-4.2.jar"/>
 	<classpathentry kind="lib" path="lib/aws/httpclient-4.2.3.jar"/>
-	<classpathentry kind="lib" path="lib/org.apache.httpclient.jar"/>
-	<classpathentry kind="lib" path="lib/aws/org.apache.httpclient.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.23-bin.jar"/>
 	<classpathentry kind="lib" path="lib/org.apache.commons.logging.jar"/>
 	<classpathentry kind="lib" path="lib/log4j.jar"/>

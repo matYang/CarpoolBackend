@@ -366,9 +366,9 @@ public class CarpoolDaoLetter {
 		if(fromUserId==userId&&toUserId==userId){
 			//send letter to self
 			return CarpoolDaoUser.getUserById(userId);
-		}else if(fromUserId!=userId&&toUserId==userId){
+		}else if(fromUserId!=userId&&toUserId==userId&&fromUserId!=-1){
 			return CarpoolDaoUser.getUserById(fromUserId);
-		}else if(fromUserId==userId&&toUserId!=userId){
+		}else if(fromUserId==userId&&toUserId!=userId&&toUserId!=-1){
 			return CarpoolDaoUser.getUserById(toUserId);
 		}
 		return null;
