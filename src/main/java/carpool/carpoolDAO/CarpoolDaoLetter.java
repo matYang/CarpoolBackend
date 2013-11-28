@@ -362,7 +362,8 @@ public class CarpoolDaoLetter {
 		
 		int fromUserId = rs.getInt("from_UserId");
 		int toUserId = rs.getInt("to_UserId");
-
+		
+		
 		if(fromUserId==userId&&toUserId==userId){
 			//send letter to self
 			return CarpoolDaoUser.getUserById(userId);
