@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -35,6 +36,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.http.IdleConnectionReaper;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
@@ -64,6 +66,7 @@ public class awsMain {
 		File file = new File(localfileName);
 		try{
 			s3Client.putObject(new PutObjectRequest(bucketName,fileName,file));
+			IdleConnectionReaper.shutdown();
 		}//catch no file exception
 		catch(AmazonS3Exception e1){
 			e1.printStackTrace();
@@ -77,24 +80,36 @@ public class awsMain {
 
 	}
 
-	public static void getImgObject(int userId) throws IOException{
+	public static void getImgObject(int userId){
 		String userProfile = carpool.constants.CarpoolConfig.profileImgPrefix;
 		String imgSize = carpool.constants.CarpoolConfig.imgSize_m;
 		String imgName = userProfile+imgSize+userId;
-		imgkey = userId+"/"+imgName +".png";
+
+		java.util.Date expiration = new java.util.Date();
+		long msec = expiration.getTime();
+		imgkey = userId+"/"+imgName+"-"+msec+".png";
+
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
+
 		try{
 
 			S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, imgkey));
 			InputStream objectData = object.getObjectContent();	
 			IOUtils.copy(objectData, new FileOutputStream(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png"));
 			objectData.close();
-
+			IdleConnectionReaper.shutdown();
+		}catch(AmazonS3Exception e){
+			e.printStackTrace();
+			DebugLog.d(e);
 		}catch(AmazonServiceException e){
 			e.printStackTrace();
 			DebugLog.d(e);
+		}catch (IOException e) {			
+			e.printStackTrace();
+			DebugLog.d(e);
 		}
+
 	}
 
 	public static void getFileObject(int userId){
@@ -124,7 +139,8 @@ public class awsMain {
 			writer.close();
 			reader.close();
 
-			objectData.close();			
+			objectData.close();	
+			IdleConnectionReaper.shutdown();
 		}catch(AmazonServiceException e){
 			e.printStackTrace();
 			DebugLog.d(e);
@@ -132,7 +148,7 @@ public class awsMain {
 			e2.printStackTrace();
 			DebugLog.d(e2);
 		}
-		file.delete();
+		file.delete();		
 	}
 
 	public static  ArrayList<SearchRepresentation> getUserSearchHistory(int userId){
@@ -144,11 +160,11 @@ public class awsMain {
 		File file = new File(localfileName);
 		S3Object object = null;
 		GetObjectRequest req = new GetObjectRequest(bucketName, fileName);
-		
+
 		try{
 
 			object = s3Client.getObject(req);
-			
+
 			InputStream objectData = object.getObjectContent(); 
 
 			InputStream reader = new BufferedInputStream(objectData);
@@ -187,33 +203,35 @@ public class awsMain {
 			for(int i=0; i<appendString.size(); i++){
 				list.add(new SearchRepresentation(appendString.get(i)));
 			}
+
 			object.close();
-//		} catch(AmazonServiceException e){			
-//			if(e.getErrorCode().equals("NoSuchKey")){
-//				String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
-//				int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
-//				Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
-//				List<String> appendString = redis.lrange(rediskey, 0, upper-1);
-//
-//				for(int i=0; i<appendString.size(); i++){
-//					list.add(new SearchRepresentation(appendString.get(i)));
-//				}
-//				if (object != null){
-//					try {
-//						object.close();
-//					} catch (IOException e1) {
-//						DebugLog.d(e1);
-//					}
-//				}
-//			}
-//			else{
-//				DebugLog.d(e);
-//			}
+			IdleConnectionReaper.shutdown();
+			//		} catch(AmazonServiceException e){			
+			//			if(e.getErrorCode().equals("NoSuchKey")){
+			//				String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
+			//				int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
+			//				Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+			//				List<String> appendString = redis.lrange(rediskey, 0, upper-1);
+			//
+			//				for(int i=0; i<appendString.size(); i++){
+			//					list.add(new SearchRepresentation(appendString.get(i)));
+			//				}
+			//				if (object != null){
+			//					try {
+			//						object.close();
+			//					} catch (IOException e1) {
+			//						DebugLog.d(e1);
+			//					}
+			//				}
+			//			}
+			//			else{
+			//				DebugLog.d(e);
+			//			}
 		} catch(IOException e){
 			DebugLog.d(e);
 		}
 		//Make sure deleting the temp file
-		file.delete();
+		file.delete();		
 		return list;
 	}
 
@@ -225,10 +243,10 @@ public class awsMain {
 		java.util.Date expiration = new java.util.Date();
 		long msec = expiration.getTime();
 		imgkey = userId+"/"+imgName+"-"+msec+".png";
+		URL s = null;
 		try{
 			s3Client.putObject(new PutObjectRequest(bucketName,imgkey,new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png")).withCannedAcl(CannedAccessControlList.PublicRead));
-			URL s = s3Client.getUrl(bucketName, imgkey);
-			return s.toString();
+			s = s3Client.getUrl(bucketName, imgkey);			
 		}catch(AmazonS3Exception e1){
 			e1.printStackTrace();
 			DebugLog.d(e1);
@@ -237,8 +255,8 @@ public class awsMain {
 			e2.printStackTrace();
 			DebugLog.d(e2);
 		}
-
-		return null;	
+		IdleConnectionReaper.shutdown();
+		return  (String) (s.equals(null)? s : s.toString());	
 
 	}
 
@@ -253,9 +271,11 @@ public class awsMain {
 		long msec = expiration.getTime();
 		imgkey = userId+"/"+imgName+"-"+msec+".png";
 
+		URL s = null;
+
 		try{
 			s3Client.putObject(new PutObjectRequest(bucketName,imgkey,new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png")).withCannedAcl(CannedAccessControlList.PublicRead));
-			URL s = s3Client.getUrl(bucketName, imgkey);
+			s = s3Client.getUrl(bucketName, imgkey);
 			//System.out.println(s.toString());
 			return s.toString();
 		}catch(AmazonS3Exception e1){
@@ -266,7 +286,8 @@ public class awsMain {
 			e2.printStackTrace();
 			DebugLog.d(e2);
 		}
-		return null;
+		IdleConnectionReaper.shutdown();
+		return  (String) (s.equals(null)? s : s.toString());
 	}
 
 	public static void storeSearchHistory(SearchRepresentation sr,int userId){
@@ -318,33 +339,34 @@ public class awsMain {
 				s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
 				//clean redis
 				redis.del(rediskey);
-//			} catch(AmazonServiceException e){	
-//				if(e.getErrorCode().equals("NoSuchKey")){
-//					//Write to file
-//					try{
-//						BufferedWriter	bw = new BufferedWriter(new FileWriter(file, true));
-//						for(int i = upper-1; i >= 0; i--){
-//							bw.write(appendString.get(i));   
-//							bw.newLine();
-//						}    
-//						bw.flush();
-//						bw.close();
-//
-//						s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
-//						//clean redis
-//						redis.del(rediskey);
-//					} catch (IOException e1){
-//						DebugLog.d(e);
-//					}
-//				}
-//				else{
-//					DebugLog.d(e);
-//				}
+				//			} catch(AmazonServiceException e){	
+				//				if(e.getErrorCode().equals("NoSuchKey")){
+				//					//Write to file
+				//					try{
+				//						BufferedWriter	bw = new BufferedWriter(new FileWriter(file, true));
+				//						for(int i = upper-1; i >= 0; i--){
+				//							bw.write(appendString.get(i));   
+				//							bw.newLine();
+				//						}    
+				//						bw.flush();
+				//						bw.close();
+				//
+				//						s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
+				//						//clean redis
+				//						redis.del(rediskey);
+				//					} catch (IOException e1){
+				//						DebugLog.d(e);
+				//					}
+				//				}
+				//				else{
+				//					DebugLog.d(e);
+				//				}
 			} catch (IOException e){
 				DebugLog.d(e);
 			}
 			//Make sure deleting the temp file
 			file.delete();
+			IdleConnectionReaper.shutdown();			
 		}
 
 	}		
