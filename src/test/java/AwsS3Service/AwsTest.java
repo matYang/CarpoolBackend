@@ -37,14 +37,10 @@ public class AwsTest {
 	//@Test
 	public void testGetFile(){
 		CarpoolDaoBasic.clearBothDatabase();
-		int userId=1;
-		try{			
-			awsMain.getFileObject(userId);
-		} 
-		catch(IOException e){
-			e.getMessage();
-			fail();
-		}
+		int userId=1;					
+		awsMain.getFileObject(userId);
+		 
+		
 	}
 
 	//@Test
