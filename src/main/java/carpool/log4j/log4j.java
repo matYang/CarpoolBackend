@@ -10,6 +10,4 @@ public class log4j {
 		PropertyConfigurator.configure("src/log4j.properties");
 	}
 	
-	
-	
 }
