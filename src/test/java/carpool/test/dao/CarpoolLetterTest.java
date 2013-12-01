@@ -431,6 +431,8 @@ public class CarpoolLetterTest {
 		CarpoolDaoUser.addUserToDatabase(user2);
 		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", new LocationRepresentation ("primary2","custom2",1), gender.female);
 		CarpoolDaoUser.addUserToDatabase(user3);
+		User user4 =  new User("sdfsdfdsfhgfg", "sdfojods@hotmail.com", new LocationRepresentation ("primary3","custom3",1), gender.both);
+		CarpoolDaoUser.addUserToDatabase(user4);
 
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
 		Letter letter2 =  new Letter(user2.getUserId(),user.getUserId(),Constants.LetterType.user,"Test2");
@@ -444,6 +446,7 @@ public class CarpoolLetterTest {
 		Letter letter10 = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test10");
 		Letter letter11 =  new Letter(user3.getUserId(),user.getUserId(),Constants.LetterType.user,"Test11");
 		Letter letter12 =  new Letter(user2.getUserId(),user.getUserId(),Constants.LetterType.user,"Test12");
+		Letter letter13 =  new Letter(user4.getUserId(),user4.getUserId(),Constants.LetterType.user,"Test13");		
 		try{
 			letter = CarpoolDaoLetter.addLetterToDatabases(letter);
 			letter2 = CarpoolDaoLetter.addLetterToDatabases(letter2);
@@ -457,6 +460,7 @@ public class CarpoolLetterTest {
 			letter10 = CarpoolDaoLetter.addLetterToDatabases(letter10);
 			letter11 = CarpoolDaoLetter.addLetterToDatabases(letter11);
 			letter12 = CarpoolDaoLetter.addLetterToDatabases(letter12);
+			letter13 = CarpoolDaoLetter.addLetterToDatabases(letter13);			
 		}catch(UserNotFoundException e){
 			e.printStackTrace();
 		}
@@ -465,7 +469,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getLetterUsers(user.getUserId());
-			if(list.size()==3&&list.get(0).equals(user2)&&list.get(1).equals(user3)&&list.get(2).equals(user)){
+			if(list.size()==3&&list.get(0).equals(user)&&list.get(1).equals(user2)&&list.get(2).equals(user3)){
 				//Passed;
 			}else{
 				fail();
