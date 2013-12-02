@@ -385,13 +385,16 @@ public class CarpoolDaoUser {
 	
 	public static ArrayList<Message> getUserMessageHistory(int user) throws UserNotFoundException{
 		ArrayList<Message> mlist = new ArrayList<Message>();
+		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		String query ="SELECT * FROM carpoolDAOMessage WHERE ownerId = ?";
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, user);
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
-				mlist.add(CarpoolDaoMessage.createMessageByResultSet(rs, true));
+				ilist = CarpoolDaoMessage.addIds(ilist,rs.getInt("ownerId"));
+				mlist.add(CarpoolDaoMessage.createMessagesByResultSetList(rs));
 			}
+			mlist = CarpoolDaoMessage.getUsersForMessages(ilist, mlist);
 		} catch (SQLException e) {
 			DebugLog.d(e);
 		}

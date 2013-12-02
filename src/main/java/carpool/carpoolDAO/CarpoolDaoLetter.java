@@ -102,7 +102,7 @@ public class CarpoolDaoLetter {
 				ilist = addIds(ilist,rs.getInt("from_UserId"),rs.getInt("to_UserId"));
 				list.add(createLettersByResultSetList(rs));
 			}
-			list =  getUsersFromLetters(ilist, list);
+			list =  getUsersForLetters(ilist, list);
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}
@@ -139,7 +139,7 @@ public class CarpoolDaoLetter {
 							ilist = addIds(ilist,fromUserId,toUserId);													
 							list.add(createLettersByResultSetList(rs));
 						}
-						list =  getUsersFromLetters(ilist, list);
+						list =  getUsersForLetters(ilist, list);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}
@@ -154,7 +154,7 @@ public class CarpoolDaoLetter {
 							ilist = addIds(ilist,fromUserId,toUserId);													
 							list.add(createLettersByResultSetList(rs));
 						}
-						list = getUsersFromLetters(ilist, list);
+						list = getUsersForLetters(ilist, list);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}
@@ -172,7 +172,7 @@ public class CarpoolDaoLetter {
 							ilist = addIds(ilist,fromUserId,toUserId);													
 							list.add(createLettersByResultSetList(rs));
 						}
-						list = getUsersFromLetters(ilist, list);
+						list = getUsersForLetters(ilist, list);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}
@@ -188,7 +188,7 @@ public class CarpoolDaoLetter {
 							ilist = addIds(ilist,fromUserId,toUserId);												
 							list.add(createLettersByResultSetList(rs));
 						}
-						list = getUsersFromLetters(ilist, list);
+						list = getUsersForLetters(ilist, list);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}
@@ -207,7 +207,7 @@ public class CarpoolDaoLetter {
 						ilist = addIds(ilist,fromUserId,toUserId);												
 						list.add(createLettersByResultSetList(rs));
 					}
-					list = getUsersFromLetters(ilist, list);
+					list = getUsersForLetters(ilist, list);
 				}catch(SQLException e){
 					DebugLog.d(e);
 				}
@@ -229,7 +229,7 @@ public class CarpoolDaoLetter {
 							ilist = addIds(ilist,fromUserId,toUserId);									
 							list.add(createLettersByResultSetList(rs));
 						}
-						list = getUsersFromLetters(ilist, list);
+						list = getUsersForLetters(ilist, list);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}
@@ -245,7 +245,7 @@ public class CarpoolDaoLetter {
 							ilist = addIds(ilist,fromUserId,toUserId);												
 							list.add(createLettersByResultSetList(rs));
 						}
-						list = getUsersFromLetters(ilist, list);
+						list = getUsersForLetters(ilist, list);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}
@@ -261,7 +261,7 @@ public class CarpoolDaoLetter {
 							ilist = addIds(ilist,fromUserId,toUserId);												
 							list.add(createLettersByResultSetList(rs));
 						}
-						list = getUsersFromLetters(ilist, list);
+						list = getUsersForLetters(ilist, list);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}
@@ -281,7 +281,7 @@ public class CarpoolDaoLetter {
 							ilist = addIds(ilist,fromUserId,toUserId);												
 							list.add(createLettersByResultSetList(rs));
 						}
-						list = getUsersFromLetters(ilist, list);
+						list = getUsersForLetters(ilist, list);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}
@@ -297,7 +297,7 @@ public class CarpoolDaoLetter {
 							ilist = addIds(ilist,fromUserId,toUserId);										
 							list.add(createLettersByResultSetList(rs));
 						}
-						list = getUsersFromLetters(ilist, list);
+						list = getUsersForLetters(ilist, list);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}
@@ -313,7 +313,7 @@ public class CarpoolDaoLetter {
 							ilist = addIds(ilist,fromUserId,toUserId);									
 							list.add(createLettersByResultSetList(rs));
 						}
-						list = getUsersFromLetters(ilist, list);
+						list = getUsersForLetters(ilist, list);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}
@@ -335,7 +335,7 @@ public class CarpoolDaoLetter {
 							ilist = addIds(ilist,fromUserId,toUserId);											
 							list.add(createLettersByResultSetList(rs));
 						}
-						list = getUsersFromLetters(ilist, list);
+						list = getUsersForLetters(ilist, list);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}
@@ -352,7 +352,7 @@ public class CarpoolDaoLetter {
 							ilist = addIds(ilist,fromUserId,toUserId);
 							list.add(createLettersByResultSetList(rs));
 						}
-						list = getUsersFromLetters(ilist, list);
+						list = getUsersForLetters(ilist, list);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}
@@ -372,7 +372,7 @@ public class CarpoolDaoLetter {
 		}
 		return ilist;
 	}
-	private static ArrayList<Letter> getUsersFromLetters(ArrayList<Integer> ilist,ArrayList<Letter> letters) {
+	private static ArrayList<Letter> getUsersForLetters(ArrayList<Integer> ilist,ArrayList<Letter> letters) {
 		HashMap<Integer,User> map = new HashMap<Integer,User>();
 		map = getHashMap(ilist);		
 		for(int i=0;i<letters.size();i++){
@@ -467,31 +467,7 @@ public class CarpoolDaoLetter {
 			DebugLog.d(e);
 		}
 		return ulist;
-	}
-
-	private static HashMap<Integer,User> getHashMap(ArrayList<Integer> list){
-		HashMap<Integer,User> map = new HashMap<Integer,User>();
-		String query = "SELECT * FROM carpoolDAOUser where ";
-		for(int i=0;i<list.size()-1;i++){
-			query += "userId = ? OR ";
-		}
-		query += "userId = ?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-			for(int i=0;i<list.size();i++){
-				stmt.setInt(i+1, list.get(i));
-			}
-			ResultSet rs = stmt.executeQuery();
-			int ind = 0;
-			while(rs.next() && ind<list.size()){
-				map.put(rs.getInt("userId"), CarpoolDaoUser.createUserByResultSet(rs));
-				ind++;
-			}
-		}catch(SQLException e){
-			DebugLog.d(e);
-		}
-
-		return map;
-	}
+	}	
 
 	private static int checkUser(ResultSet rs,int userId) throws SQLException{
 		int fromUserId = rs.getInt("from_UserId");
@@ -525,4 +501,28 @@ public class CarpoolDaoLetter {
 			DebugLog.d(e);			
 		}
 	}
+	
+	private static HashMap<Integer,User> getHashMap(ArrayList<Integer> list){
+		HashMap<Integer,User> map = new HashMap<Integer,User>();
+		String query = "SELECT * FROM carpoolDAOUser where ";
+		for(int i=0;i<list.size()-1;i++){
+			query += "userId = ? OR ";
+		}
+		query += "userId = ?";
+		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			for(int i=0;i<list.size();i++){
+				stmt.setInt(i+1, list.get(i));
+			}
+			ResultSet rs = stmt.executeQuery();
+			int ind = 0;
+			while(rs.next() && ind<list.size()){
+				map.put(rs.getInt("userId"), CarpoolDaoUser.createUserByResultSet(rs));
+				ind++;
+			}
+		}catch(SQLException e){
+			DebugLog.d(e);
+		}
+
+		return map;
+	}	
 }
