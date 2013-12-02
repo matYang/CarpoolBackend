@@ -75,8 +75,9 @@ public class ServerMain {
 
 
 	public static void main(String... args) throws Exception {
-		CarpoolConfig.initConfig();
+		
 		DebugLog.initializeLogger();
+		CarpoolConfig.initConfig();
 		
 		DebugLog.d("Excuting");
 		// Load server logic

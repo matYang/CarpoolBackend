@@ -19,6 +19,7 @@ public class CarpoolConfig {
 		} else{
 			isOnLocal = true;
 		}
+		DebugLog.d("ENV type: " + isOnLocal);
 	}
 	
 	public static final int max_recents = 10;
