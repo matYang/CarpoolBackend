@@ -8,6 +8,7 @@ import org.restlet.Server;
 import org.restlet.data.Protocol;
 
 import carpool.common.DebugLog;
+import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants.gender;
 import carpool.factory.JSONFactory;
 import carpool.locationService.LocationService;
@@ -74,7 +75,9 @@ public class ServerMain {
 
 
 	public static void main(String... args) throws Exception {
+		CarpoolConfig.initConfig();
 		DebugLog.initializeLogger();
+		
 		DebugLog.d("Excuting");
 		// Load server logic
 		try {

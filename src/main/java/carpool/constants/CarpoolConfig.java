@@ -3,11 +3,23 @@ package carpool.constants;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import carpool.common.DebugLog;
 import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
 
 public class CarpoolConfig {
-	private static final boolean isOnLocal = true;
+	private static final String ENV_VAR_KEY = "C_MAINSERVER_ENV";
+	private static final String ENV_REMOTE = "REMOTE";
+	private static final boolean isOnLocal;
+	
+	static{
+		String value = System.getenv(ENV_VAR_KEY);
+		if (value != null && value.equals(ENV_REMOTE)){
+			isOnLocal = false;
+		} else{
+			isOnLocal = true;
+		}
+	}
 	
 	public static final int max_recents = 10;
 	public static final long max_feedBackLength = 200000l;
@@ -69,5 +81,7 @@ public class CarpoolConfig {
 		return new SearchRepresentation("false" + CarpoolConfig.urlSeperator + getDefaultLocationRepresentation().toSerializedString() + CarpoolConfig.urlSeperator + getDefaultLocationRepresentation().toSerializedString() + CarpoolConfig.urlSeperator + dateStr + CarpoolConfig.urlSeperator + dateStr + CarpoolConfig.urlSeperator  + "0" + CarpoolConfig.urlSeperator + "0" + CarpoolConfig.urlSeperator + "0");
 	}
 
-	
+	public static final void initConfig(){
+		//do nothing, force static block initialization at start of server
+	}
 }
