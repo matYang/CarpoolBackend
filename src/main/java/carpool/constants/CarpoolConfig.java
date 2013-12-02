@@ -14,6 +14,7 @@ public class CarpoolConfig {
 	
 	static{
 		String value = System.getenv(ENV_VAR_KEY);
+		DebugLog.d("ENV String: " + value);
 		if (value != null && value.equals(ENV_REMOTE)){
 			isOnLocal = false;
 		} else{
