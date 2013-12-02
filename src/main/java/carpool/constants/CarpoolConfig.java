@@ -14,13 +14,11 @@ public class CarpoolConfig {
 	
 	static{
 		String value = System.getenv(ENV_VAR_KEY);
-		DebugLog.d("ENV String: " + value);
 		if (value != null && value.equals(ENV_REMOTE)){
 			isOnLocal = false;
 		} else{
 			isOnLocal = true;
 		}
-		DebugLog.d("ENV type: " + isOnLocal);
 	}
 	
 	public static final int max_recents = 10;
