@@ -157,9 +157,19 @@ public class CarpoolDaoNotification {
 		HashMap<Integer,User> userMap = new HashMap<Integer,User>();
 		HashMap<Integer,Message> msgMap = new HashMap<Integer,Message>();
 		HashMap<Integer,Transaction> tranMap = new HashMap<Integer,Transaction>();
-		userMap = CarpoolDaoTransaction.getUsersHashMap(ilist);
-		msgMap = CarpoolDaoTransaction.getMsgHashMap(milist);
-		tranMap = getTranMap(tlist);
+		
+		if(ilist.size()>0){
+			userMap = CarpoolDaoTransaction.getUsersHashMap(ilist);
+		}
+		
+		if(milist.size()>0){
+			msgMap = CarpoolDaoTransaction.getMsgHashMap(milist);
+		}		
+		
+		if(tlist.size()>0){
+			tranMap = getTranMap(tlist);
+		}
+		
 		for(int i=0;i<list.size();i++){
 			list.get(i).setInitUser(userMap.get(list.get(i).getInitUserId()));
 			list.get(i).setMessage(msgMap.get(list.get(i).getMessageId()));
@@ -223,16 +233,16 @@ public class CarpoolDaoNotification {
 				tlist = addIds(tlist,rs.getInt("origin_TransactionId"));
 				list.add(createNotificationByResultSet(rs));
 			}
-			
+
 			list = FillNotification(ilist,milist,tlist,list);
-			
+
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
 		return list;
 
 	}
-	
+
 	private static Notification createNotificationByResultSet(ResultSet rs,String str) throws SQLException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException {
 		User origin = rs.getInt("origin_UserId")==-1 ? null : CarpoolDaoUser.getUserById(rs.getInt("origin_UserId"));
 		Message msg = rs.getInt("origin_MessageId")==-1 ? null : CarpoolDaoMessage.getMessageById(rs.getInt("origin_MessageId"));
@@ -245,7 +255,7 @@ public class CarpoolDaoNotification {
 		notification.setTransaction(transaction);
 		return notification;
 	}
-	
+
 	private static Notification createNotificationByResultSet(ResultSet rs) throws SQLException{
 		return new Notification(rs.getInt("notification_Id"), Constants.NotificationEvent.fromInt(rs.getInt("notificationEvent")),rs.getInt("target_UserId"),
 				rs.getInt("origin_UserId"),rs.getInt("origin_MessageId"),rs.getInt("origin_TransactionId"),Constants.NotificationState.fromInt(rs.getInt("notificationState")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),rs.getBoolean("historyDeleted"));

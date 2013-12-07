@@ -76,8 +76,7 @@ public class awsMain {
 			e2.printStackTrace();
 			DebugLog.d(e2);
 		}
-		file.delete();
-
+		
 	}
 
 	public static void getImgObject(int userId){

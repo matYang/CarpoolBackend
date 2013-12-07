@@ -290,10 +290,19 @@ public class CarpoolDaoTransaction {
 	}
 
 	public static ArrayList<Transaction> fillTransactions(ArrayList<Integer> ilist, ArrayList<Integer> milist,	ArrayList<Transaction> tlist) {
+		
 		HashMap<Integer,User> usersMap = new HashMap<Integer,User>();
-		usersMap = getUsersHashMap(ilist);
+		
+		if(ilist.size()>0){
+			usersMap = getUsersHashMap(ilist);
+		}
+		
 		HashMap<Integer,Message> msgMap = new HashMap<Integer,Message>();
-		msgMap = getMsgHashMap(milist);
+		
+		if(milist.size()>0){
+			msgMap = getMsgHashMap(milist);
+		}
+		
 		for(int i=0;i<tlist.size();i++){
 			tlist.get(i).setProvider(usersMap.get(tlist.get(i).getProviderId()));
 			tlist.get(i).setCustomer(usersMap.get(tlist.get(i).getCustomerId()));

@@ -102,7 +102,10 @@ public class CarpoolDaoLetter {
 				ilist = addIds(ilist,rs.getInt("from_UserId"),rs.getInt("to_UserId"));
 				list.add(createLettersByResultSetList(rs));
 			}
-			list =  getUsersForLetters(ilist, list);
+			if(list.size()>0){
+				list =  getUsersForLetters(ilist, list);
+			}
+			
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}
@@ -440,7 +443,9 @@ public class CarpoolDaoLetter {
 					ilist.add(tempId);
 				}
 			}
-			return getLetterUsersByIdList(ilist);
+			if(ilist.size()>0){
+				list = getLetterUsersByIdList(ilist);
+			}			
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}

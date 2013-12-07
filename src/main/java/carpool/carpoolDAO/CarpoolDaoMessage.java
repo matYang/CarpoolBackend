@@ -331,7 +331,10 @@ public class CarpoolDaoMessage{
 				ilist = addIds(ilist,rs.getInt("ownerId"));
 				retVal.add(createMessagesByResultSetList(rs));
 			}
-			retVal = getUsersForMessages(ilist,retVal);
+			if(retVal.size()>0){
+				retVal = getUsersForMessages(ilist,retVal);
+			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DebugLog.d(e);
