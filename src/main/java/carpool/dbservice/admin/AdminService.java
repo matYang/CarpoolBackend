@@ -11,6 +11,7 @@ import carpool.constants.Constants.transactionState;
 import carpool.constants.Constants.userState;
 import carpool.dbservice.NotificationDaoService;
 import carpool.exception.*;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.model.*;
 
 public class AdminService {
@@ -43,11 +44,11 @@ public class AdminService {
 		CarpoolDaoBasic.clearBothDatabase();
 	}
 	
-	public static void forceMessageClean(){
+	public static void forceMessageClean() throws LocationNotFoundException{
 		MessageCleaner.Clean();
 	}
 	
-	public static void forceTransactionMonitoring(){
+	public static void forceTransactionMonitoring() throws LocationNotFoundException{
 		TransactionCleaner.Clean();
 	}
 

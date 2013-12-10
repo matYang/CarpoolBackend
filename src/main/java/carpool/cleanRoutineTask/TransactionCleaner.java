@@ -11,6 +11,7 @@ import carpool.common.DebugLog;
 import carpool.constants.Constants;
 import carpool.constants.Constants.transactionState;
 import carpool.dbservice.NotificationDaoService;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -23,7 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 public class TransactionCleaner extends CarpoolDaoTransaction {
 
-	public static void Clean(){
+	public static void Clean() throws LocationNotFoundException{
 		Calendar currentDate = Calendar.getInstance();
 		String ct=DateUtility.toSQLDateTime(currentDate);
 		//System.out.println("currentTime: "+ct);

@@ -13,13 +13,14 @@ import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.messageType;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoRepresentation;
+import carpool.model.Location;
 import carpool.model.representation.LocationRepresentation;
 
 public class SearchRepresentation implements PseudoRepresentation{
 	
 	private boolean isRoundTrip;
-	private LocationRepresentation departureLocation;
-	private LocationRepresentation arrivalLocation;
+	private long departureMatch_Id;
+	private long arrivalMatch_Id;
 	private Calendar departureDate;
 	private Calendar arrivalDate;
 	private messageType targetType;
@@ -31,14 +32,13 @@ public class SearchRepresentation implements PseudoRepresentation{
 	private SearchRepresentation(){}
 	
 	public SearchRepresentation(boolean isRoundTrip,
-			LocationRepresentation departureLocation,
-			LocationRepresentation arrivalLocation, Calendar departureDate,
-			Calendar arrivalDate, messageType targetType,
+			long departureMatch_Id,long arrivalMatch_Id,
+			Calendar departureDate,	Calendar arrivalDate, messageType targetType,
 			DayTimeSlot departureTimeSlot, DayTimeSlot arrivalTimeSlot) {
 		super();
 		this.isRoundTrip = isRoundTrip;
-		this.departureLocation = departureLocation;
-		this.arrivalLocation = arrivalLocation;
+		this.departureMatch_Id = departureMatch_Id;
+		this.arrivalMatch_Id = arrivalMatch_Id;
 		this.departureDate = departureDate;
 		this.arrivalDate = arrivalDate;
 		this.targetType = targetType;
@@ -50,8 +50,8 @@ public class SearchRepresentation implements PseudoRepresentation{
 	public SearchRepresentation(String serializedSearchString){
 		String[] representationArray = serializedSearchString.split(CarpoolConfig.urlSeperatorRegx);
 		this.isRoundTrip = Boolean.parseBoolean(representationArray[0]);
-		this.departureLocation = new LocationRepresentation(representationArray[1]);
-		this.arrivalLocation = new LocationRepresentation(representationArray[2]);
+		this.departureMatch_Id = Long.parseLong(representationArray[1]);
+		this.arrivalMatch_Id = Long.parseLong(representationArray[2]);
 		this.departureDate = DateUtility.castFromAPIFormat(representationArray[3]);
 		this.arrivalDate = DateUtility.castFromAPIFormat(representationArray[4]);
 		this.targetType = Constants.messageType.values()[Integer.parseInt(representationArray[5])];
@@ -61,8 +61,8 @@ public class SearchRepresentation implements PseudoRepresentation{
 	
 	public SearchRepresentation(JSONObject jsonSearchRepresentation) throws JSONException{
 		this.isRoundTrip = jsonSearchRepresentation.getBoolean("isRoundTrip");
-		this.departureLocation = new LocationRepresentation(jsonSearchRepresentation.getJSONObject("departureLocation"));
-		this.arrivalLocation = new LocationRepresentation(jsonSearchRepresentation.getJSONObject("arrivalLocation"));
+		this.departureMatch_Id = jsonSearchRepresentation.getLong("departureMatch_Id");
+		this.departureMatch_Id = jsonSearchRepresentation.getLong("arrivalMatch_Id");
 		this.departureDate = DateUtility.castFromAPIFormat(jsonSearchRepresentation.getString("departureDate"));
 		this.arrivalDate = DateUtility.castFromAPIFormat(jsonSearchRepresentation.getString("arrivalDate"));
 		this.targetType = Constants.messageType.values()[jsonSearchRepresentation.getInt("targetType")];
@@ -81,20 +81,20 @@ public class SearchRepresentation implements PseudoRepresentation{
 		this.isRoundTrip = isRoundTrip;
 	}
 
-	public LocationRepresentation getDepartureLocation() {
-		return departureLocation;
+	public long getDepartureMatch_Id() {
+		return departureMatch_Id;
 	}
 
-	public void setDepartureLocation(LocationRepresentation departureLocation) {
-		this.departureLocation = departureLocation;
+	public void setDepartureMatch_Id(long id) {
+		this.departureMatch_Id = id;
 	}
 
-	public LocationRepresentation getArrivalLocation() {
-		return arrivalLocation;
+	public long getArrivalMatch_Id() {
+		return arrivalMatch_Id;
 	}
 
-	public void setArrivalLocation(LocationRepresentation arrivalLocation) {
-		this.arrivalLocation = arrivalLocation;
+	public void setArrivalMatch_Id(long id) {
+		this.arrivalMatch_Id = id;
 	}
 
 	public Calendar getDepartureDate() {
@@ -140,7 +140,7 @@ public class SearchRepresentation implements PseudoRepresentation{
 
 	@Override
 	public String toSerializedString(){
-		return this.isRoundTrip + CarpoolConfig.urlSeperator + this.departureLocation.toSerializedString()  + CarpoolConfig.urlSeperator + this.arrivalLocation.toSerializedString() + CarpoolConfig.urlSeperator + 
+		return this.isRoundTrip + CarpoolConfig.urlSeperator + this.departureMatch_Id  + CarpoolConfig.urlSeperator + this.arrivalMatch_Id + CarpoolConfig.urlSeperator + 
 				DateUtility.castToAPIFormat(this.departureDate)  + CarpoolConfig.urlSeperator + DateUtility.castToAPIFormat(this.arrivalDate)  + CarpoolConfig.urlSeperator + this.targetType.code + CarpoolConfig.urlSeperator + this.departureTimeSlot.code + CarpoolConfig.urlSeperator + this.arrivalTimeSlot.code;
 	}
 	
@@ -149,8 +149,8 @@ public class SearchRepresentation implements PseudoRepresentation{
 		JSONObject jsonSearchRepresentation = new JSONObject();
 		try{
 			jsonSearchRepresentation.put("isRoundTrip", this.isRoundTrip);
-			jsonSearchRepresentation.put("departureLocation", this.departureLocation.toJSON());
-			jsonSearchRepresentation.put("arrivalLocation", this.arrivalLocation.toJSON());
+			jsonSearchRepresentation.put("departureMatch_Id", this.departureMatch_Id);
+			jsonSearchRepresentation.put("arrivalMatch_Id", this.arrivalMatch_Id);
 			jsonSearchRepresentation.put("departureDate", DateUtility.castToAPIFormat(this.departureDate));
 			jsonSearchRepresentation.put("arrivalDate", DateUtility.castToAPIFormat(this.arrivalDate));
 			jsonSearchRepresentation.put("targetType", this.targetType.code);
@@ -164,7 +164,7 @@ public class SearchRepresentation implements PseudoRepresentation{
 	}
 	
 	public boolean equals(SearchRepresentation s){
-		return this.isRoundTrip == s.isRoundTrip() && this.departureLocation.equals(s.getDepartureLocation()) && this.arrivalLocation.equals(s.getArrivalLocation()) &&
+		return this.isRoundTrip == s.isRoundTrip() && this.departureMatch_Id==s.getDepartureMatch_Id() && this.arrivalMatch_Id==s.getArrivalMatch_Id() &&
 				//this.departureDate.equals(s.getDepartureDate()) && this.arrivalDate.equals(s.getArrivalDate()) && 
 				this.targetType == s.getTargetType() &&
 				this.departureTimeSlot == s.getDepartureTimeSlot() && this.arrivalTimeSlot == s.getArrivalTimeSlot();

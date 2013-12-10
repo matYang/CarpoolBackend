@@ -54,6 +54,7 @@ public class Location implements PseudoModel, PseudoValidatable, Comparable<Loca
 		this.match = match;
 	}
 
+	
 	/**
 	 * @return the id
 	 */
@@ -212,23 +213,36 @@ public class Location implements PseudoModel, PseudoValidatable, Comparable<Loca
 
 	@Override
 	public JSONObject toJSON() {
-		JSONObject jsonUser = new JSONObject();
+		JSONObject jsonLocation = new JSONObject();
 		try {
-			jsonUser.put("id", this.getId());
-			jsonUser.put("province", this.getProvince());
-			jsonUser.put("city", this.getCity());
-			jsonUser.put("region", this.getRegion());
-			jsonUser.put("pointName",this.getPointName() );
-			jsonUser.put("pointAddress", this.getPointAddress());
-			jsonUser.put("lat", this.getLat());
-			jsonUser.put("lng", this.getLng());			
-			jsonUser.put("match_Id", this.getMatch());
+			jsonLocation.put("id", this.getId());
+			jsonLocation.put("province", this.getProvince());
+			jsonLocation.put("city", this.getCity());
+			jsonLocation.put("region", this.getRegion());
+			jsonLocation.put("pointName",this.getPointName()==null?new JSONObject(""):this.getPointName() );
+			jsonLocation.put("pointAddress", this.getPointAddress()==null?new JSONObject(""):this.getPointAddress());
+			jsonLocation.put("lat", this.getLat());
+			jsonLocation.put("lng", this.getLng());			
+			jsonLocation.put("match_Id", this.getMatch());
 
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
-		return jsonUser;
+		return jsonLocation;
+	}
+	
+	public Location(JSONObject jsonObject) {
+		super();
+		this.id = jsonObject.getInt("id");
+		this.province = jsonObject.getString("province");
+		this.city = jsonObject.getString("city");
+		this.region = jsonObject.getString("region");
+		this.pointName = jsonObject.getString("pointName");
+		this.pointAddress = jsonObject.getString("pointAddress");
+		this.lat = jsonObject.getDouble("lat");
+		this.lng = jsonObject.getDouble("lng");
+		this.match = jsonObject.getLong("match_Id");
 	}
 
 }

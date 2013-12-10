@@ -28,6 +28,10 @@ import carpool.constants.Constants.gender;
 import carpool.constants.Constants.userSearchState;
 import carpool.constants.Constants.userState;
 import carpool.encryption.SessionCrypto;
+
+import carpool.exception.validation.ValidationException;
+import carpool.exception.location.LocationNotFoundException;
+
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -383,7 +387,7 @@ public class CarpoolDaoUser {
    
 
 	
-	public static ArrayList<Message> getUserMessageHistory(int user) throws UserNotFoundException{
+	public static ArrayList<Message> getUserMessageHistory(int user) throws UserNotFoundException, LocationNotFoundException{
 		ArrayList<Message> mlist = new ArrayList<Message>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		String query ="SELECT * FROM carpoolDAOMessage WHERE ownerId = ?";

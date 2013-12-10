@@ -10,6 +10,8 @@ import carpool.constants.Constants.NotificationEvent;
 import carpool.constants.Constants.gender;
 import carpool.carpoolDAO.*;
 import carpool.exception.PseudoException;
+import carpool.exception.validation.ValidationException;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -140,16 +142,16 @@ public class UserDaoService{
 		return searchResult;
 	}
 
-	public static ArrayList<Message> getHistoryMessageByUserId(int id) throws UserNotFoundException{
+	public static ArrayList<Message> getHistoryMessageByUserId(int id) throws UserNotFoundException, LocationNotFoundException{
 		return CarpoolDaoUser.getUserMessageHistory(id);
 	}
 	
 	
-	public static ArrayList<Transaction> getTransactionByUserId(int id) throws UserNotFoundException, MessageNotFoundException{
+	public static ArrayList<Transaction> getTransactionByUserId(int id) throws UserNotFoundException, MessageNotFoundException, LocationNotFoundException{
 		return CarpoolDaoTransaction.getAllTransactionByUserId(id);
 	}
 	
-	public static ArrayList<Notification> getNotificationByUserId(int userId) throws UserNotFoundException, MessageNotFoundException, TransactionNotFoundException{
+	public static ArrayList<Notification> getNotificationByUserId(int userId) throws UserNotFoundException, MessageNotFoundException, TransactionNotFoundException, LocationNotFoundException{
 		return CarpoolDaoNotification.getByUserId(userId);
 	}
 

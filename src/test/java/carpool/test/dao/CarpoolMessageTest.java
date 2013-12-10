@@ -31,11 +31,14 @@ import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.paymentMethod;
 import carpool.dbservice.*;
+import carpool.exception.validation.ValidationException;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.exception.validation.ValidationException;
 import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
+import carpool.model.Location;
 import carpool.model.Message;
 import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
@@ -46,7 +49,7 @@ public class CarpoolMessageTest {
 	
 	
 	@Test
-	public void testCreate() throws UserNotFoundException {
+	public void testCreate() throws UserNotFoundException, LocationNotFoundException {
 		CarpoolDaoBasic.clearBothDatabase();
 		Calendar time = DateUtility.DateToCalendar(new Date(0));
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
@@ -57,9 +60,22 @@ public class CarpoolMessageTest {
 		gender genderRequirement = gender.fromInt(0);
 		messageState state = messageState.fromInt(0);
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		//No user
 		Message message=new Message(1, 1, null,false
-				, new LocationRepresentation("p_c_d_2"),time,timeSlot,1,1 , priceList,new LocationRepresentation("p_c_d_2"),
+				, departureLocation,time,timeSlot,1,1 , priceList,arrivalLocation,
 				time,timeSlot,1, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement ,
 				state, time, time,false);
@@ -67,7 +83,7 @@ public class CarpoolMessageTest {
 		//Has user
 		User user = new User("HarryXiong","c2xiong@uwaterloo.ca",new LocationRepresentation("p_c_d_2"), gender.both);
 		Message message2=new Message(1, 2, user,false
-				, new LocationRepresentation("p_c_d_2"),time,timeSlot,3,4 , priceList,new LocationRepresentation("p_c_d_2"),
+				, arrivalLocation,time,timeSlot,3,4 , priceList,departureLocation,
 				time,timeSlot,5, 6,priceList,paymentMethod,
 				"test",  type, genderRequirement ,
 				state, time, time,false);
@@ -75,7 +91,7 @@ public class CarpoolMessageTest {
 	}
 	
 	@Test
-	public void testRead(){
+	public void testRead() throws LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
         User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
@@ -93,11 +109,23 @@ public class CarpoolMessageTest {
 		gender genderRequirement = gender.fromInt(0);
 		messageState state = messageState.fromInt(0);
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
-		
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 				
 		//Message	
 		Message message=new Message(user.getUserId(),false
-				, new LocationRepresentation("p_c_d_2"),time,timeSlot,1 , priceList,new LocationRepresentation("p_c_d_2"),
+				, departureLocation,time,timeSlot,1 , priceList,departureLocation,
 				time,timeSlot, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message);		
@@ -118,7 +146,7 @@ public class CarpoolMessageTest {
 	}
 	
 	@Test
-	public void testUpdate() throws MessageNotFoundException, UserNotFoundException{
+	public void testUpdate() throws MessageNotFoundException, UserNotFoundException, LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
         User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
@@ -136,16 +164,28 @@ public class CarpoolMessageTest {
 		gender genderRequirement = gender.fromInt(0);
 		messageState state = messageState.fromInt(0);
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
-		
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 				
 		//Message	
 		Message message=new Message(user.getUserId(),false
-				, new LocationRepresentation("p_c_d_2"),time,timeSlot,1 , priceList,new LocationRepresentation("p_c_d_2"),
+				, arrivalLocation,time,timeSlot,1 , priceList,arrivalLocation,
 				time, timeSlot,1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message);
 		//Update Location, paymentMethod, and type, state,genderRequirement,timeSlot as well as priceList
-	   message.setArrival_location(new LocationRepresentation("Ontario_Waterloo_UniversityOfWaterloo_2"));
+	   message.setArrival_Location(departureLocation);
 	   message.setGenderRequirement(gender.fromInt(1));
 	   message.setType(messageType.fromInt(1));
 	   message.setPaymentMethod(paymentMethod.fromInt(1));	  
@@ -169,7 +209,7 @@ public class CarpoolMessageTest {
 	
 	}
 	@Test
-	public void testDelete(){
+	public void testDelete() throws LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
 		Calendar time = DateUtility.DateToCalendar(new Date(0));
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
@@ -182,10 +222,22 @@ public class CarpoolMessageTest {
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
 		int messageId=-1;
 		int userId=-1;
-				
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);		
 		//Message	
 		Message message=new Message(userId,false
-				, new LocationRepresentation("p_c_d_2"),time,timeSlot,1 , priceList,new LocationRepresentation("p_c_d_2"),
+				, departureLocation,time,timeSlot,1 , priceList,arrivalLocation,
 				time,timeSlot, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message);
@@ -207,7 +259,7 @@ public class CarpoolMessageTest {
 	}
 	
 	@Test
-	public void testSearch(){
+	public void testSearch() throws LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
 User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
@@ -226,8 +278,19 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 		dt3.add(Calendar.DAY_OF_YEAR, -2);
 		
 		//Location
-		LocationRepresentation dl=new LocationRepresentation("Canada_Ontario_Toronto_2");
-		LocationRepresentation al=new LocationRepresentation("Canada_Ontario_Waterloo_2");		
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);		
 		
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
@@ -245,35 +308,35 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 		int userId=user.getUserId();
 		//These messages should pass the search	
 		//Message	
-		Message message=new Message(userId,false, dl,dt,timeSlot,1 , priceList,al,at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
+		Message message=new Message(userId,false, departureLocation,dt,timeSlot,1 , priceList,arrivalLocation,at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message);
 		//Message2
-		Message message2=new Message(userId,true, dl,dt,timeSlot,1 , priceList,al,at,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
+		Message message2=new Message(userId,true, departureLocation,dt,timeSlot,1 , priceList,arrivalLocation,at,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message2);
 		//Message3
-		Message message3=new Message(userId,true, al,dt2,timeSlot,1 , priceList,dl,dt,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
+		Message message3=new Message(userId,true, arrivalLocation,dt2,timeSlot,1 , priceList,departureLocation,dt,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message3);
 		//Message4
-		Message message4=new Message(userId,false, al,dt2,timeSlot,1 , priceList,dl,dt,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
+		Message message4=new Message(userId,false,arrivalLocation,dt2,timeSlot,1 , priceList,departureLocation,dt,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message4);
 		//Other messages
-		Message message5=new Message(userId,false, al,dt3,timeSlot,1 , priceList,dl,dt,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
+		Message message5=new Message(userId,false, arrivalLocation,dt3,timeSlot,1 , priceList,departureLocation,dt,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message5);
-		Message message6=new Message(userId,true, al,dt3,timeSlot,1 , priceList,dl,dt,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
+		Message message6=new Message(userId,true, arrivalLocation,dt3,timeSlot,1 , priceList,departureLocation,dt,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message6);
-		Message message7=new Message(userId,false, dl,dt3,timeSlot,1 , priceList,al,dt2,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
+		Message message7=new Message(userId,false, departureLocation,dt3,timeSlot,1 , priceList,arrivalLocation,dt2,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message7);
-		Message message8=new Message(userId,true, dl,dt3,timeSlot,1 , priceList,al,dt2,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
+		Message message8=new Message(userId,true, departureLocation,dt3,timeSlot,1 , priceList,arrivalLocation,dt2,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message8);
 		//Seats adjust
-		Message message9=new Message(userId,false, dl,dt,timeSlot,10 , priceList,al,at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
+		Message message9=new Message(userId,false, departureLocation,dt,timeSlot,10 , priceList,arrivalLocation,at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
 		message9.setDeparture_seatsBooked(11);
 		CarpoolDaoMessage.addMessageToDatabase(message9);
 		//SRs
-		SearchRepresentation SR = new SearchRepresentation(false,dl,al,dt,at,type,timeSlot,timeSlot);		
-		SearchRepresentation SR2 = new SearchRepresentation(true,al,dl,dt2,dt,type2,timeSlot,timeSlot);
-		SearchRepresentation SR3 = new SearchRepresentation(false,al,dl,dt2,dt,type2,timeSlot,timeSlot);
-		SearchRepresentation SR4 = new SearchRepresentation(true,dl,al,dt,at,type,timeSlot,timeSlot);
+		SearchRepresentation SR = new SearchRepresentation(false,departure_Id,arrival_Id,dt,at,type,timeSlot,timeSlot);		
+		SearchRepresentation SR2 = new SearchRepresentation(true,arrival_Id,departure_Id,dt2,dt,type2,timeSlot,timeSlot);
+		SearchRepresentation SR3 = new SearchRepresentation(false,arrival_Id,departure_Id,dt2,dt,type2,timeSlot,timeSlot);
+		SearchRepresentation SR4 = new SearchRepresentation(true,departure_Id,arrival_Id,dt,at,type,timeSlot,timeSlot);
 	    //New SRs
 		Calendar dtime = Calendar.getInstance();		
 		dtime.set(Calendar.HOUR_OF_DAY, 24);
@@ -282,7 +345,7 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 		Calendar atime = Calendar.getInstance();
 		atime.add(Calendar.DAY_OF_YEAR, 1);
 		atime.set(Calendar.HOUR_OF_DAY, 18);
-		SearchRepresentation SR5 = new SearchRepresentation(false,dl,al,dtime,atime,type,timeSlot1,timeSlot2);
+		SearchRepresentation SR5 = new SearchRepresentation(false,departure_Id,arrival_Id,dtime,atime,type,timeSlot1,timeSlot2);
 		Calendar dtime2 = Calendar.getInstance();		
 		dtime2.set(Calendar.HOUR_OF_DAY, 9);
 		dtime2.set(Calendar.MINUTE, 30);
@@ -301,13 +364,13 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 		atime3.set(Calendar.SECOND, 59);
 		Calendar dtime4 = Calendar.getInstance();
 		dtime4.add(Calendar.DAY_OF_YEAR, -1);
-		Message message10=new Message(userId,true, dl,dtime3,timeSlot,1 , priceList,al,atime3,timeSlot, 1,priceList,paymentMethod,"test",  type1, genderRequirement);
+		Message message10=new Message(userId,true, departureLocation,dtime3,timeSlot,1 , priceList,arrivalLocation,atime3,timeSlot, 1,priceList,paymentMethod,"test",  type1, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message10);
-		Message message11=new Message(userId,true, dl,dtime3,timeSlot,1 , priceList,al,atime3,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
+		Message message11=new Message(userId,true, departureLocation,dtime3,timeSlot,1 , priceList,arrivalLocation,atime3,timeSlot, 1,priceList,paymentMethod,"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message11);
-		SearchRepresentation SR6 = new SearchRepresentation(false,dl,al,dtime2,atime2,type2,timeSlot1,timeSlot2);
-		SearchRepresentation SR7 = new SearchRepresentation(true,dl,al,dtime2,atime2,type1,timeSlot1,timeSlot2);
-		SearchRepresentation SR8 = new SearchRepresentation(true,al,dl,dtime4,dtime2,type,timeSlot1,timeSlot2);
+		SearchRepresentation SR6 = new SearchRepresentation(false,departure_Id,arrival_Id,dtime2,atime2,type2,timeSlot1,timeSlot2);
+		SearchRepresentation SR7 = new SearchRepresentation(true,departure_Id,arrival_Id,dtime2,atime2,type1,timeSlot1,timeSlot2);
+		SearchRepresentation SR8 = new SearchRepresentation(true,arrival_Id,departure_Id,dtime4,dtime2,type,timeSlot1,timeSlot2);
 		//New SR Test
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();

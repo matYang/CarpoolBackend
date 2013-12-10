@@ -11,6 +11,7 @@ import org.json.JSONArray;
 
 import carpool.common.DebugLog;
 import carpool.dbservice.*;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
@@ -23,7 +24,7 @@ public class RecentMessageResource extends PseudoResource{
 	 * Retrieve all messages from server. This API is intended solely for testing purposes
 	 * @return
 	 */
-	public Representation getRecentMessages() {
+	public Representation getRecentMessages() throws LocationNotFoundException {
 		
 		ArrayList<Message> recentMessages = MessageDaoService.getRecentMessages();
 		JSONArray jsonArray = new JSONArray();

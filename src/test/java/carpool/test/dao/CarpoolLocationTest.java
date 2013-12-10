@@ -193,5 +193,10 @@ public class CarpoolLocationTest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void testGetDefaultLocations(){
+		//TODO
+	}
 
 }

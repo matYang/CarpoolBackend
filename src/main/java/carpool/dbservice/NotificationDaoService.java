@@ -10,6 +10,7 @@ import carpool.carpoolDAO.CarpoolDaoNotification;
 import carpool.common.*;
 import carpool.constants.Constants.NotificationState;
 import carpool.exception.PseudoException;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.notification.NotificationNotFoundException;
 import carpool.exception.notification.NotificationOwnerNotMatchException;
@@ -57,8 +58,9 @@ public class NotificationDaoService{
 	
 	/**
 	 * get all the notifications from database
+	 * @throws LocationNotFoundException 
 	 */
-	public static ArrayList<Notification> getAllNotifications() throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException {
+	public static ArrayList<Notification> getAllNotifications() throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException {
 		return CarpoolDaoNotification.getAllNotifications();
 	}
 	
@@ -88,9 +90,10 @@ public class NotificationDaoService{
 	 * must make sure the given userId matches the notification's targetUserId, targetUserId specifies the owner of the notification
 	 * if not found, throw NotificationNotFoundException
 	 * if targetUserId does not match userId parameter, throw NotificationOwnerNotMatchException
+	 * @throws LocationNotFoundException 
 
 	 */
-	public static void deleteNotification(int notificationId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
+	public static void deleteNotification(int notificationId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException{
 		Notification notification = CarpoolDaoNotification.getNotificationById(notificationId);
 		if(notification==null){
 			throw new NotificationNotFoundException("对不起，您想要删除的提醒不存在，可能它已被删除");
@@ -105,8 +108,9 @@ public class NotificationDaoService{
 	 * if not found, throw NotificationNotFoundException
 	 * if targetUserId does not match userId parameter, throw NotificationOwnerNotMatchException
 	 * if not in unread state, do nothing
+	 * @throws LocationNotFoundException 
 	 */
-	public static Notification checkNotification(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
+	public static Notification checkNotification(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException{
 		Notification notification = CarpoolDaoNotification.getNotificationById(notificationId);
 		if(notification==null){
 			throw new NotificationNotFoundException("对不起，您想要查看的提醒不存在，可能它已被删除");

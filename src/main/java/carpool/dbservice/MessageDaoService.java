@@ -7,6 +7,10 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.Constants.messageState;
 import carpool.exception.PseudoException;
+
+import carpool.exception.validation.ValidationException;
+import carpool.exception.location.LocationNotFoundException;
+
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.message.MessageOwnerNotMatchException;
 import carpool.exception.user.UserNotFoundException;
@@ -22,20 +26,21 @@ import carpool.constants.*;
 public class MessageDaoService{
 	
 	
-	public static ArrayList<Message> getAllMessages() {
+	public static ArrayList<Message> getAllMessages() throws LocationNotFoundException {
 		return CarpoolDaoMessage.getAllMessages();
 	}
 	
 
-	public static Message getMessageById(int messageId) throws MessageNotFoundException, UserNotFoundException{
+	public static Message getMessageById(int messageId) throws MessageNotFoundException, UserNotFoundException, LocationNotFoundException{
 		return CarpoolDaoMessage.getMessageById(messageId);
 	}
 	
 	
 	/**
 	 * gets the recently posted messages, length specified by Constants.max_recents (currently 10)
+	 * @throws LocationNotFoundException 
 	 */
-	public static ArrayList<Message> getRecentMessages(){
+	public static ArrayList<Message> getRecentMessages() throws LocationNotFoundException{
 		return CarpoolDaoMessage.getRecentMessages();
 	}
 	
@@ -51,15 +56,16 @@ public class MessageDaoService{
 	}
 	
 
-	public static Message createNewMessage(Message newMessage){
+	public static Message createNewMessage(Message newMessage) throws LocationNotFoundException{
 		return CarpoolDaoMessage.addMessageToDatabase(newMessage);
 	}
 	
 	
 	/**
 	 * check if the retrieved message's ownerId matches current message's ownerId, if not, throw MessageOwnerNotMatchException (some for methods below)
+	 * @throws LocationNotFoundException 
 	 */
-	public static Message updateMessage(Message message) throws MessageNotFoundException, MessageOwnerNotMatchException, UserNotFoundException{
+	public static Message updateMessage(Message message) throws MessageNotFoundException, MessageOwnerNotMatchException, UserNotFoundException, LocationNotFoundException{
 		Message oldMessage = CarpoolDaoMessage.getMessageById(message.getMessageId());
 		if(oldMessage.getOwnerId()!=message.getOwnerId()){
 			throw new MessageOwnerNotMatchException("对不起，您想更改的信息不存在，可能它已被删除");
@@ -72,8 +78,9 @@ public class MessageDaoService{
 
 	/**
 	 * can not delete if this message has active transactions
+	 * @throws LocationNotFoundException 
 	 */
-	public static boolean deleteMessage(int messageId) throws MessageNotFoundException, MessageOwnerNotMatchException, ValidationException, UserNotFoundException{
+	public static boolean deleteMessage(int messageId) throws MessageNotFoundException, MessageOwnerNotMatchException, ValidationException, UserNotFoundException, LocationNotFoundException{
 		Message oldMessage = CarpoolDaoMessage.getMessageById(messageId);
 //		if(oldMessage.getOwnerId()!=ownerId){
 //			throw new MessageOwnerNotMatchException();
@@ -86,8 +93,9 @@ public class MessageDaoService{
 	
 	/**
 	 * retrives a list of transactions associated with the target message ID
+	 * @throws LocationNotFoundException 
 	 */
-	public static ArrayList<Transaction> getTransactionByMessageId(int messageId) throws MessageNotFoundException, UserNotFoundException {
+	public static ArrayList<Transaction> getTransactionByMessageId(int messageId) throws MessageNotFoundException, UserNotFoundException, LocationNotFoundException {
 		return CarpoolDaoTransaction.getAllTransactionByMessageId(messageId);
 	}
 	
@@ -98,8 +106,8 @@ public class MessageDaoService{
 	*/
 	public static ArrayList<Message> autoMatching(int curMsgId, int curUserId) throws MessageNotFoundException, PseudoException{
 		Message targetMessage = CarpoolDaoMessage.getMessageById(curMsgId);
-		SearchRepresentation sr = new SearchRepresentation(targetMessage.isRoundTrip(), targetMessage.getDeparture_location(),
-                       targetMessage.getArrival_location(), targetMessage.getDeparture_time(), targetMessage.getArrival_time(),
+		SearchRepresentation sr = new SearchRepresentation(targetMessage.isRoundTrip(), targetMessage.getDeparture_Id(),
+                       targetMessage.getArrival_Id(), targetMessage.getDeparture_time(), targetMessage.getArrival_time(),
 			targetMessage.getType() == Constants.messageType.ask ? Constants.messageType.help : Constants.messageType.ask,
                         targetMessage.getDeparture_timeSlot(), targetMessage.getArrival_timeSlot());
                 
