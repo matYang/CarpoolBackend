@@ -12,8 +12,10 @@ import carpool.constants.Constants;
 import carpool.constants.Constants.messageType;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.model.Location;
 import carpool.model.Message;
 import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
@@ -22,10 +24,10 @@ import carpool.model.representation.SearchRepresentation;
 
 public class CarpoolDaoMessage{
 
-	public static ArrayList<Message> searchMessage(SearchRepresentation SR) throws UserNotFoundException {
+	public static ArrayList<Message> searchMessage(SearchRepresentation SR) throws UserNotFoundException, LocationNotFoundException {
 		boolean isRoundTrip = SR.isRoundTrip();
-		LocationRepresentation departureLocation = SR.getDepartureLocation();		 
-		LocationRepresentation arrivalLocation = SR.getArrivalLocation();		 
+		long departureMatch_Id = SR.getDepartureMatch_Id();		 
+		long arrivalMatch_Id = SR.getArrivalMatch_Id();		 
 		Calendar departureDate1 = (Calendar) SR.getDepartureDate().clone();
 		departureDate1.set(Calendar.HOUR_OF_DAY, 0);
 		departureDate1.set(Calendar.MINUTE,0);
@@ -52,15 +54,15 @@ public class CarpoolDaoMessage{
 		ArrayList<Message> retVal = new ArrayList<Message>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		//SR.isRoundTrip()==false
-		String query = "SELECT * from carpoolDAOMessage WHERE((isRoundTrip NOT LIKE ? AND (departure_seatsNumber >= departure_seatsBooked)AND((departure_primaryLocation LIKE ?"+
-				"AND arrival_primaryLocation LIKE ? AND departure_Time >= ? AND departure_Time <= ?)OR(arrival_primaryLocation LIKE ? AND departure_primaryLocation LIKE ? AND arrival_Time >= ? AND arrival_Time <= ?)))"+
-				"OR(isRoundTrip LIKE ? AND (departure_seatsNumber >= departure_seatsBooked) AND departure_primaryLocation LIKE ? AND arrival_primaryLocation LIKE ? AND departure_Time >= ?AND departure_Time <= ?)) AND messageState=2";
+		String query = "SELECT * from carpoolDAOMessage WHERE((isRoundTrip NOT LIKE ? AND (departure_seatsNumber >= departure_seatsBooked)AND((departure_Id LIKE ?"+
+				"AND arrival_IdLIKE ? AND departure_Time >= ? AND departure_Time <= ?)OR(arrival_Id LIKE ? AND departure_Id LIKE ? AND arrival_Time >= ? AND arrival_Time <= ?)))"+
+				"OR(isRoundTrip LIKE ? AND (departure_seatsNumber >= departure_seatsBooked) AND departure_Id LIKE ? AND arrival_Id LIKE ? AND departure_Time >= ?AND departure_Time <= ?)) AND messageState=2";
 		//SR.isRoundTrip()==true		
-		String query2="SELECT * from carpoolDAOMessage WHERE((isRoundTrip LIKE ? AND ((departure_primaryLocation LIKE ?"+
-				"AND arrival_primaryLocation LIKE ? AND ((departure_Time >= ? AND departure_Time <= ? AND (departure_seatsNumber >= departure_seatsBooked)) OR (arrival_Time >= ? AND arrival_Time <= ? AND (arrival_seatsNumber >= arrival_seatsBooked))))" +
-				"OR(departure_primaryLocation LIKE ? AND arrival_primaryLocation LIKE ? AND ((departure_Time >= ? AND departure_Time <= ? AND (departure_seatsNumber >= departure_seatsBooked))OR(arrival_Time >= ? AND arrival_Time <= ? AND (arrival_seatsNumber >= arrival_seatsBooked))))))" +
-				"OR(isRoundTrip NOT LIKE ? AND (((departure_seatsNumber >= departure_seatsBooked) AND departure_primaryLocation LIKE ? AND arrival_primaryLocation LIKE ? AND departure_Time >= ? AND departure_Time <= ?) OR ((departure_seatsNumber >= departure_seatsBooked) AND "+
-				"arrival_primaryLocation LIKE ? AND departure_primaryLocation LIKE ? AND departure_Time >=? AND departure_Time <= ?))))AND messageState=2";
+		String query2="SELECT * from carpoolDAOMessage WHERE((isRoundTrip LIKE ? AND ((departure_Id LIKE ?"+
+				"AND arrival_Id LIKE ? AND ((departure_Time >= ? AND departure_Time <= ? AND (departure_seatsNumber >= departure_seatsBooked)) OR (arrival_Time >= ? AND arrival_Time <= ? AND (arrival_seatsNumber >= arrival_seatsBooked))))" +
+				"OR(departure_Id LIKE ? AND arrival_Id LIKE ? AND ((departure_Time >= ? AND departure_Time <= ? AND (departure_seatsNumber >= departure_seatsBooked))OR(arrival_Time >= ? AND arrival_Time <= ? AND (arrival_seatsNumber >= arrival_seatsBooked))))))" +
+				"OR(isRoundTrip NOT LIKE ? AND (((departure_seatsNumber >= departure_seatsBooked) AND departure_Id LIKE ? AND arrival_Id LIKE ? AND departure_Time >= ? AND departure_Time <= ?) OR ((departure_seatsNumber >= departure_seatsBooked) AND "+
+				"arrival_Id LIKE ? AND departure_Id LIKE ? AND departure_Time >=? AND departure_Time <= ?))))AND messageState=2";
 		if(targetType.code==2){
 			query+=" AND (messageType = 0 or messageType =1 or messageType=?)";
 			query2+=" AND (messageType = 0 or messageType =1 or messageType=?)";
@@ -71,17 +73,17 @@ public class CarpoolDaoMessage{
 		if(!isRoundTrip){
 			try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 				stmt.setInt(1, isRoundTrip ? 1 : 0);			
-				stmt.setString(2, departureLocation.getPrimaryLocationString());							
-				stmt.setString(3, arrivalLocation.getPrimaryLocationString());	
+				stmt.setLong(2, departureMatch_Id);							
+				stmt.setLong(3, arrivalMatch_Id);	
 				stmt.setString(4, DateUtility.toSQLDateTime(departureDate1));
 				stmt.setString(5, DateUtility.toSQLDateTime(departureDate2));			
-				stmt.setString(6, departureLocation.getPrimaryLocationString());							
-				stmt.setString(7, arrivalLocation.getPrimaryLocationString());				
+				stmt.setLong(6, departureMatch_Id);							
+				stmt.setLong(7, arrivalMatch_Id);			
 				stmt.setString(8, DateUtility.toSQLDateTime(departureDate1));
 				stmt.setString(9, DateUtility.toSQLDateTime(departureDate2));			
 				stmt.setInt(10, isRoundTrip ? 1 :0);
-				stmt.setString(11, departureLocation.getPrimaryLocationString());			
-				stmt.setString(12, arrivalLocation.getPrimaryLocationString());		
+				stmt.setLong(11, departureMatch_Id);							
+				stmt.setLong(12, arrivalMatch_Id);		
 				stmt.setString(13, DateUtility.toSQLDateTime(departureDate1));	
 				stmt.setString(14, DateUtility.toSQLDateTime(departureDate2));
 				stmt.setInt(15,targetType.code);
@@ -99,25 +101,25 @@ public class CarpoolDaoMessage{
 		else{
 			try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query2)){
 				stmt.setInt(1, isRoundTrip ? 1 : 0);
-				stmt.setString(2, departureLocation.getPrimaryLocationString());		
-				stmt.setString(3, arrivalLocation.getPrimaryLocationString());	
+				stmt.setLong(2, departureMatch_Id);							
+				stmt.setLong(3, arrivalMatch_Id);	
 				stmt.setString(4, DateUtility.toSQLDateTime(departureDate1));
 				stmt.setString(5, DateUtility.toSQLDateTime(departureDate2));
 				stmt.setString(6, DateUtility.toSQLDateTime(arrivalDate1));
 				stmt.setString(7, DateUtility.toSQLDateTime(arrivalDate2));				
-				stmt.setString(8, arrivalLocation.getPrimaryLocationString());
-				stmt.setString(9, departureLocation.getPrimaryLocationString());
+				stmt.setLong(8, arrivalMatch_Id);
+				stmt.setLong(9, departureMatch_Id);
 				stmt.setString(10, DateUtility.toSQLDateTime(arrivalDate1));
 				stmt.setString(11, DateUtility.toSQLDateTime(arrivalDate2));
 				stmt.setString(12, DateUtility.toSQLDateTime(departureDate1));
 				stmt.setString(13, DateUtility.toSQLDateTime(departureDate2));				
 				stmt.setInt(14, isRoundTrip ? 1 : 0);
-				stmt.setString(15, departureLocation.getPrimaryLocationString());
-				stmt.setString(16, arrivalLocation.getPrimaryLocationString());			
+				stmt.setLong(15, departureMatch_Id);
+				stmt.setLong(16, arrivalMatch_Id);			
 				stmt.setString(17, DateUtility.toSQLDateTime(departureDate1));
 				stmt.setString(18, DateUtility.toSQLDateTime(departureDate2));
-				stmt.setString(19, departureLocation.getPrimaryLocationString());
-				stmt.setString(20, arrivalLocation.getPrimaryLocationString());
+				stmt.setLong(19, departureMatch_Id);
+				stmt.setLong(20, arrivalMatch_Id);
 				stmt.setString(21, DateUtility.toSQLDateTime(arrivalDate1));
 				stmt.setString(22, DateUtility.toSQLDateTime(arrivalDate2));
 				stmt.setInt(23,targetType.code);				
@@ -134,41 +136,44 @@ public class CarpoolDaoMessage{
 	}
 
 
-	public static Message addMessageToDatabase(Message msg){
+	public static Message addMessageToDatabase(Message msg) throws LocationNotFoundException{			
 		String query = "INSERT INTO carpoolDAOMessage (ownerId,isRoundTrip," +
-				"departure_primaryLocation,departure_customLocation,departure_customDepthIndex,departure_Time,departure_seatsNumber,departure_seatsBooked,departure_priceList,arrival_primaryLocation,arrival_customLocation,arrival_customDepthIndex,arrival_Time," +
-				"arrival_seatsNumber,arrival_seatsBooked,arrival_priceList,paymentMethod,note,messageType,gender,messageState,creationTime,editTime,historyDeleted,departure_timeSlot,arrival_timeSlot) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				"departure_Id,departure_Time,departure_seatsNumber,departure_seatsBooked,departure_priceList,arrival_Id,arrival_Time," +
+				"arrival_seatsNumber,arrival_seatsBooked,arrival_priceList,paymentMethod,note,messageType,gender,messageState,creationTime,editTime,historyDeleted,departure_timeSlot,arrival_timeSlot) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 			stmt.setInt(1, msg.getOwnerId());			
 			stmt.setInt(2, msg.isRoundTrip() ? 1:0);
-			stmt.setString(3, msg.getDeparture_location().getPrimaryLocationString());
-			stmt.setString(4, msg.getDeparture_location().getCustomLocationString());
-			stmt.setInt(5, msg.getDeparture_location().getCustomDepthIndex());
-			stmt.setString(6, DateUtility.toSQLDateTime(msg.getDeparture_time()));
-			stmt.setInt(7, msg.getDeparture_seatsNumber());
-			stmt.setInt(8, msg.getDeparture_seatsBooked());
-			stmt.setString(9, Parser.listToString(msg.getDeparture_priceList()));
-			stmt.setString(10, msg.getArrival_location().getPrimaryLocationString());
-			stmt.setString(11, msg.getArrival_location().getCustomLocationString());
-			stmt.setInt(12, msg.getArrival_location().getCustomDepthIndex());
-			stmt.setString(13, DateUtility.toSQLDateTime(msg.getArrival_time()));
-			stmt.setInt(14, msg.getArrival_seatsNumber());
-			stmt.setInt(15, msg.getArrival_seatsBooked());
-			stmt.setString(16, Parser.listToString(msg.getArrival_priceList()));
-			stmt.setInt(17, msg.getPaymentMethod().code);
-			stmt.setString(18, msg.getNote());
-			stmt.setInt(19, msg.getType().code);
-			stmt.setInt(20, msg.getGenderRequirement().code);
-			stmt.setInt(21, msg.getState().code);			
-			stmt.setString(22, DateUtility.toSQLDateTime(msg.getCreationTime()));
-			stmt.setString(23, DateUtility.toSQLDateTime(msg.getEditTime()));
-			stmt.setInt(24, msg.isHistoryDeleted() ? 1:0);
-			stmt.setInt(25, msg.getDeparture_timeSlot().code);
-			stmt.setInt(26, msg.getArrival_timeSlot().code);
+			stmt.setLong(3, msg.getDeparture_Id());
+			stmt.setString(4, DateUtility.toSQLDateTime(msg.getDeparture_time()));
+			stmt.setInt(5, msg.getDeparture_seatsNumber());
+			stmt.setInt(6, msg.getDeparture_seatsBooked());
+			stmt.setString(7, Parser.listToString(msg.getDeparture_priceList()));
+			stmt.setLong(8, msg.getArrival_Id());
+			stmt.setString(9, DateUtility.toSQLDateTime(msg.getArrival_time()));
+			stmt.setInt(10, msg.getArrival_seatsNumber());
+			stmt.setInt(11, msg.getArrival_seatsBooked());
+			stmt.setString(12, Parser.listToString(msg.getArrival_priceList()));
+			stmt.setInt(13, msg.getPaymentMethod().code);
+			stmt.setString(14, msg.getNote());
+			stmt.setInt(15, msg.getType().code);
+			stmt.setInt(16, msg.getGenderRequirement().code);
+			stmt.setInt(17, msg.getState().code);			
+			stmt.setString(18, DateUtility.toSQLDateTime(msg.getCreationTime()));
+			stmt.setString(19, DateUtility.toSQLDateTime(msg.getEditTime()));
+			stmt.setInt(20, msg.isHistoryDeleted() ? 1:0);
+			stmt.setInt(21, msg.getDeparture_timeSlot().code);
+			stmt.setInt(22, msg.getArrival_timeSlot().code);
 			stmt.executeUpdate();
 			ResultSet rs = stmt.getGeneratedKeys();
 			rs.next();
 			msg.setMessageId(rs.getInt(1));
+			
+			if(msg.getArrival_Location()==null){
+				msg.setArrival_Location(CarpoolDaoLocation.getLocationById(msg.getArrival_Id()));
+			}
+			if(msg.getDeparture_Location()==null){
+				msg.setDeparture_Location(CarpoolDaoLocation.getLocationById(msg.getDeparture_Id()));
+			}				
 
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -194,36 +199,32 @@ public class CarpoolDaoMessage{
 	}
 
 	public static void UpdateMessageInDatabase(Message msg) throws MessageNotFoundException{
-		String query = "UPDATE carpoolDAOMessage SET isRoundTrip=?,departure_primaryLocation=?,departure_customLocation=?,departure_customDepthIndex=?,departure_Time=?," +
-				"departure_seatsNumber=?,departure_seatsBooked=?,departure_priceList=?,arrival_primaryLocation=?,arrival_customLocation=?,arrival_customDepthIndex=?,arrival_Time=?," +
+		String query = "UPDATE carpoolDAOMessage SET isRoundTrip=?,departure_Id=?,departure_Time=?," +
+				"departure_seatsNumber=?,departure_seatsBooked=?,departure_priceList=?,arrival_Id=?,arrival_Time=?," +
 				"arrival_seatsNumber=?,arrival_seatsBooked=?,arrival_priceList=?,paymentMethod=?,note=?,messageType=?,gender=?,messageState=?,creationTime=?,editTime=?,historyDeleted=?,departure_timeSlot=?,arrival_timeSlot=? WHERE messageId=?";
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, msg.isRoundTrip() ? 1:0);
-			stmt.setString(2, msg.getDeparture_location().getPrimaryLocationString());
-			stmt.setString(3, msg.getDeparture_location().getCustomLocationString());
-			stmt.setInt(4, msg.getDeparture_location().getCustomDepthIndex());
-			stmt.setString(5, DateUtility.toSQLDateTime(msg.getDeparture_time()));
-			stmt.setInt(6, msg.getDeparture_seatsNumber());
-			stmt.setInt(7, msg.getDeparture_seatsBooked());
-			stmt.setString(8, Parser.listToString(msg.getDeparture_priceList()));
-			stmt.setString(9, msg.getArrival_location().getPrimaryLocationString());
-			stmt.setString(10, msg.getArrival_location().getCustomLocationString());
-			stmt.setInt(11, msg.getArrival_location().getCustomDepthIndex());
-			stmt.setString(12, DateUtility.toSQLDateTime(msg.getArrival_time()));
-			stmt.setInt(13, msg.getArrival_seatsNumber());
-			stmt.setInt(14, msg.getArrival_seatsBooked());
-			stmt.setString(15, Parser.listToString(msg.getArrival_priceList()));
-			stmt.setInt(16, msg.getPaymentMethod().code);
-			stmt.setString(17, msg.getNote());
-			stmt.setInt(18, msg.getType().code);
-			stmt.setInt(19, msg.getGenderRequirement().code);
-			stmt.setInt(20, msg.getState().code);			
-			stmt.setString(21, DateUtility.toSQLDateTime(msg.getCreationTime()));
-			stmt.setString(22, DateUtility.toSQLDateTime(msg.getEditTime()));
-			stmt.setInt(23, msg.isHistoryDeleted() ? 1:0);
-			stmt.setInt(24, msg.getDeparture_timeSlot().code);
-			stmt.setInt(25, msg.getArrival_timeSlot().code);
-			stmt.setInt(26, msg.getMessageId());
+			stmt.setLong(2, msg.getDeparture_Id());			
+			stmt.setString(3, DateUtility.toSQLDateTime(msg.getDeparture_time()));
+			stmt.setInt(4, msg.getDeparture_seatsNumber());
+			stmt.setInt(5, msg.getDeparture_seatsBooked());
+			stmt.setString(6, Parser.listToString(msg.getDeparture_priceList()));
+			stmt.setLong(7, msg.getArrival_Id());			
+			stmt.setString(8, DateUtility.toSQLDateTime(msg.getArrival_time()));
+			stmt.setInt(9, msg.getArrival_seatsNumber());
+			stmt.setInt(10, msg.getArrival_seatsBooked());
+			stmt.setString(11, Parser.listToString(msg.getArrival_priceList()));
+			stmt.setInt(12, msg.getPaymentMethod().code);
+			stmt.setString(13, msg.getNote());
+			stmt.setInt(14, msg.getType().code);
+			stmt.setInt(15, msg.getGenderRequirement().code);
+			stmt.setInt(16, msg.getState().code);			
+			stmt.setString(17, DateUtility.toSQLDateTime(msg.getCreationTime()));
+			stmt.setString(18, DateUtility.toSQLDateTime(msg.getEditTime()));
+			stmt.setInt(19, msg.isHistoryDeleted() ? 1:0);
+			stmt.setInt(20, msg.getDeparture_timeSlot().code);
+			stmt.setInt(21, msg.getArrival_timeSlot().code);
+			stmt.setInt(22, msg.getMessageId());
 			int recordsAffected = stmt.executeUpdate();
 			if(recordsAffected==0){
 				throw new MessageNotFoundException();
@@ -234,7 +235,7 @@ public class CarpoolDaoMessage{
 		}
 	}
 
-	public static ArrayList<Message> getAllMessages(){
+	public static ArrayList<Message> getAllMessages() throws LocationNotFoundException{
 		String query = "SELECT * FROM carpoolDAOMessage;";
 		ArrayList<Message> mlist = new ArrayList<Message>();		
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
@@ -269,7 +270,7 @@ public class CarpoolDaoMessage{
 	}
 
 
-	public static Message getMessageById(int id) throws MessageNotFoundException,UserNotFoundException{
+	public static Message getMessageById(int id) throws MessageNotFoundException,UserNotFoundException, LocationNotFoundException{
 		String query = "SELECT * FROM carpoolDAOMessage WHERE messageId = ?;";
 		Message message = null;
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
@@ -288,11 +289,13 @@ public class CarpoolDaoMessage{
 	}
 
 
-	protected static Message createMessageByResultSet(ResultSet rs, boolean shouldAddUser) throws SQLException, UserNotFoundException {
+	protected static Message createMessageByResultSet(ResultSet rs, boolean shouldAddUser) throws SQLException, UserNotFoundException, LocationNotFoundException {
 		User owner = shouldAddUser ? owner = CarpoolDaoUser.getUserById(rs.getInt("ownerId")) : null;
-		Message message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),owner,rs.getBoolean("isRoundTrip"),new LocationRepresentation(rs.getString("departure_primaryLocation"),rs.getString("departure_customLocation"),rs.getInt("departure_customDepthIndex")),
+		Location departure_Location = CarpoolDaoLocation.getLocationById(rs.getLong("departure_Id"));
+		Location arrival_Location = CarpoolDaoLocation.getLocationById(rs.getLong("arrival_Id"));
+		Message message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),owner,rs.getBoolean("isRoundTrip"),departure_Location,
 				DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("departure_timeSlot")),rs.getInt("departure_seatsNumber"),rs.getInt("departure_seatsBooked"),(ArrayList<Integer>)Parser.stringToList(rs.getString("departure_priceList"),new Integer(0)),
-				new LocationRepresentation(rs.getString("arrival_primaryLocation"),rs.getString("arrival_customLocation"),rs.getInt("arrival_customDepthIndex")),	DateUtility.DateToCalendar(rs.getTimestamp("arrival_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("arrival_timeSlot")),rs.getInt("arrival_seatsNumber"),rs.getInt("arrival_seatsBooked"),
+				arrival_Location,DateUtility.DateToCalendar(rs.getTimestamp("arrival_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("arrival_timeSlot")),rs.getInt("arrival_seatsNumber"),rs.getInt("arrival_seatsBooked"),
 				(ArrayList<Integer>)Parser.stringToList(rs.getString("arrival_priceList"),new Integer(0)),Constants.paymentMethod.fromInt(rs.getInt("paymentMethod")),rs.getString("note"),
 				Constants.messageType.fromInt(rs.getInt("messageType")),Constants.gender.fromInt(rs.getInt("gender")),
 				Constants.messageState.fromInt(rs.getInt("messageState")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
@@ -302,10 +305,12 @@ public class CarpoolDaoMessage{
 		return message;
 	}
 
-	protected static Message createMessagesByResultSetList(ResultSet rs) throws SQLException{		
-		Message message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),null,rs.getBoolean("isRoundTrip"),new LocationRepresentation(rs.getString("departure_primaryLocation"),rs.getString("departure_customLocation"),rs.getInt("departure_customDepthIndex")),
+	protected static Message createMessagesByResultSetList(ResultSet rs) throws SQLException, LocationNotFoundException{	
+		Location departure_Location = CarpoolDaoLocation.getLocationById(rs.getLong("departure_Id"));
+		Location arrival_Location = CarpoolDaoLocation.getLocationById(rs.getLong("arrival_Id"));
+		Message message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),null,rs.getBoolean("isRoundTrip"),departure_Location,
 				DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("departure_timeSlot")),rs.getInt("departure_seatsNumber"),rs.getInt("departure_seatsBooked"),(ArrayList<Integer>)Parser.stringToList(rs.getString("departure_priceList"),new Integer(0)),
-				new LocationRepresentation(rs.getString("arrival_primaryLocation"),rs.getString("arrival_customLocation"),rs.getInt("arrival_customDepthIndex")),	DateUtility.DateToCalendar(rs.getTimestamp("arrival_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("arrival_timeSlot")),rs.getInt("arrival_seatsNumber"),rs.getInt("arrival_seatsBooked"),
+				arrival_Location,DateUtility.DateToCalendar(rs.getTimestamp("arrival_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("arrival_timeSlot")),rs.getInt("arrival_seatsNumber"),rs.getInt("arrival_seatsBooked"),
 				(ArrayList<Integer>)Parser.stringToList(rs.getString("arrival_priceList"),new Integer(0)),Constants.paymentMethod.fromInt(rs.getInt("paymentMethod")),rs.getString("note"),
 				Constants.messageType.fromInt(rs.getInt("messageType")),Constants.gender.fromInt(rs.getInt("gender")),
 				Constants.messageState.fromInt(rs.getInt("messageState")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
@@ -315,7 +320,7 @@ public class CarpoolDaoMessage{
 		return message;
 	}	
 
-	public static ArrayList<Message> getRecentMessages(){
+	public static ArrayList<Message> getRecentMessages() throws LocationNotFoundException{
 		ArrayList<Message> retVal = new ArrayList<Message>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		String query = "SELECT * from carpoolDAOMessage ORDER BY creationTime DESC LIMIT 10;";

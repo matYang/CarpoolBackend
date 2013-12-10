@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import carpool.common.DebugLog;
+import carpool.exception.location.LocationNotFoundException;
 
 
 public class ScheduledClean {
@@ -23,9 +24,14 @@ public class ScheduledClean {
     public void start() {
         scheduler.schedule(new SchedulerTask() {
             public void run() {
-                cleanOldSchedules();
+                try {
+					cleanOldSchedules();
+				} catch (LocationNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
-            private void cleanOldSchedules() {
+            private void cleanOldSchedules() throws LocationNotFoundException {
                 DebugLog.d("ScheduledClean:: cleaning old schedules at time: " + dateFormat.format(new Date()));
                 Clean clean = new Clean();
                 clean.cleanSchedules();

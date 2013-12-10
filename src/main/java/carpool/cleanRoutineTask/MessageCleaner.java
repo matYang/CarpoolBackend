@@ -10,6 +10,7 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.Constants;
 import carpool.constants.Constants.messageType;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
@@ -18,7 +19,7 @@ import carpool.model.representation.SearchRepresentation;
 public class MessageCleaner extends CarpoolDaoMessage {
 
 	
-	public static void Clean(){
+	public static void Clean() throws LocationNotFoundException{
 		
     Calendar currentDate = Calendar.getInstance();
     String ct=DateUtility.toSQLDateTime(currentDate);

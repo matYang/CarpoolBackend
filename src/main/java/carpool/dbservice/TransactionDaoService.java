@@ -11,6 +11,7 @@ import carpool.common.*;
 import carpool.constants.Constants;
 import carpool.exception.PseudoException;
 import carpool.exception.ValidationException;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.message.MessageOwnerNotMatchException;
 import carpool.exception.transaction.TransactionAccessViolationException;
@@ -27,8 +28,9 @@ public class TransactionDaoService{
 	
 	/**
 	 * get all the transactions from database
+	 * @throws LocationNotFoundException 
 	 */
-	public static ArrayList<Transaction> getAllTransactions() throws TransactionNotFoundException, UserNotFoundException, MessageNotFoundException {
+	public static ArrayList<Transaction> getAllTransactions() throws TransactionNotFoundException, UserNotFoundException, MessageNotFoundException, LocationNotFoundException {
 		return CarpoolDaoTransaction.getAllTranscations();
 	}
 	
@@ -37,15 +39,17 @@ public class TransactionDaoService{
 	 * get the full transaction by id
 	 * @param transactionId
 	 * @return the full transaction object constructed by the full constructor, return null if any error occurs
+	 * @throws LocationNotFoundException 
 	 */
-	private static Transaction getTransactionById(int transactionId) throws TransactionNotFoundException, UserNotFoundException, MessageNotFoundException {
+	private static Transaction getTransactionById(int transactionId) throws TransactionNotFoundException, UserNotFoundException, MessageNotFoundException, LocationNotFoundException {
 		return CarpoolDaoTransaction.getTransactionById(transactionId);
 	}
 	
 	/**
 	 * get the transaction by id from API call, adding safety by checking userId ownership, since detailed transactions should be viewed by provider or customer only
+	 * @throws LocationNotFoundException 
 	 */
-	public static Transaction getUserTransactionById(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, UserNotFoundException, MessageNotFoundException{
+	public static Transaction getUserTransactionById(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, UserNotFoundException, MessageNotFoundException, LocationNotFoundException{
 		Transaction transaction = getTransactionById(transactionId);
 
 		if (transaction.getProviderId() != userId && transaction.getCustomerId() != userId){
@@ -59,8 +63,9 @@ public class TransactionDaoService{
 	 * created a new Transaction in SQL
 	 * @return	the full Transaction that was just created in database, use the complete constructor for this, including provider, customer, message
 	 * @throws ValidationException 
+	 * @throws LocationNotFoundException 
 	 */
-	public static Transaction createNewTransaction(Transaction newTransaction) throws MessageNotFoundException, UserNotFoundException, ValidationException{
+	public static Transaction createNewTransaction(Transaction newTransaction) throws MessageNotFoundException, UserNotFoundException, ValidationException, LocationNotFoundException{
 		Transaction t = newTransaction;
 		
 		Message base = CarpoolDaoMessage.getMessageById(t.getMessageId());
@@ -87,8 +92,9 @@ public class TransactionDaoService{
 	 * provider or customer cancels the transaction, changing the state of the transaction from confirm to cancelled
 	 * Expected Condition: current Transaction state in "Constants -> transactonState.init" && userId matches either providerId or messageId
 	 * Action: change state to cancelled, TODO: send notifications, and prompt for explanation
+	 * @throws LocationNotFoundException 
 	 */
-	public static Transaction cancelTransaction(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionStateViolationException, MessageNotFoundException, UserNotFoundException, ValidationException{
+	public static Transaction cancelTransaction(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionStateViolationException, MessageNotFoundException, UserNotFoundException, ValidationException, LocationNotFoundException{
 		Transaction t = CarpoolDaoTransaction.getTransactionById(transactionId);
 
 		if(t.getProviderId() == userId || t.getCustomerId() == userId){
@@ -128,8 +134,9 @@ public class TransactionDaoService{
 	 * initUser or targetUser reports the transaction for investigation, changing the state of the transaction from finishedToEvaluate to underInvestigation
 	 * Expected Condition: current Transaction state in "Constants -> transactonState.finishedToEvaluate" && userId matches either initUser or targetUser
 	 * Action: change the transactionState finishedToEvaluate -> underInvestigation
+	 * @throws LocationNotFoundException 
 	 */
-	public static Transaction reportTransaction(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionStateViolationException, UserNotFoundException, MessageNotFoundException{
+	public static Transaction reportTransaction(int transactionId, int userId) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionStateViolationException, UserNotFoundException, MessageNotFoundException, LocationNotFoundException{
 		Transaction t = CarpoolDaoTransaction.getTransactionById(transactionId);
 
 		if(t.getProviderId() == userId || t.getCustomerId() == userId){
@@ -158,8 +165,9 @@ public class TransactionDaoService{
 	/**
 	 * initUser or targetUser evaluates the transaction， given the transaction is in finished state
 	 * @return	the changed transaction, constructed by the full constructor
+	 * @throws LocationNotFoundException 
 	 */
-	public static Transaction evaluateTransaction(int transactionId, int userId, int score) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionAccessViolationException, TransactionStateViolationException, MessageNotFoundException, UserNotFoundException, ValidationException{
+	public static Transaction evaluateTransaction(int transactionId, int userId, int score) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionAccessViolationException, TransactionStateViolationException, MessageNotFoundException, UserNotFoundException, ValidationException, LocationNotFoundException{
 		Transaction t = CarpoolDaoTransaction.getTransactionById(transactionId);
 		if(t.getState() != Constants.transactionState.finished){
 			throw new TransactionStateViolationException(t.getState(), Constants.transactionState.finished);

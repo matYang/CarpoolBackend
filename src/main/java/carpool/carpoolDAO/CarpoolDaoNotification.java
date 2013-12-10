@@ -10,6 +10,7 @@ import java.util.HashMap;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.Constants;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.notification.NotificationNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
@@ -96,7 +97,7 @@ public class CarpoolDaoNotification {
 
 	}
 
-	public static Notification getNotificationById(int notificationId) throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
+	public static Notification getNotificationById(int notificationId) throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException{
 		String query="select * from carpoolDAONotification where notification_Id=?";
 		Notification notification = null;
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
@@ -129,7 +130,7 @@ public class CarpoolDaoNotification {
 
 	}
 
-	public static ArrayList<Notification> getAllNotifications() throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
+	public static ArrayList<Notification> getAllNotifications() throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException{
 		ArrayList<Notification> list = new ArrayList<Notification>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		ArrayList<Integer> milist = new ArrayList<Integer>();
@@ -153,23 +154,23 @@ public class CarpoolDaoNotification {
 
 	private static ArrayList<Notification> FillNotification(
 			ArrayList<Integer> ilist, ArrayList<Integer> milist,
-			ArrayList<Integer> tlist, ArrayList<Notification> list) {
+			ArrayList<Integer> tlist, ArrayList<Notification> list) throws LocationNotFoundException {
 		HashMap<Integer,User> userMap = new HashMap<Integer,User>();
 		HashMap<Integer,Message> msgMap = new HashMap<Integer,Message>();
 		HashMap<Integer,Transaction> tranMap = new HashMap<Integer,Transaction>();
-		
+
 		if(ilist.size()>0){
 			userMap = CarpoolDaoTransaction.getUsersHashMap(ilist);
 		}
-		
+
 		if(milist.size()>0){
 			msgMap = CarpoolDaoTransaction.getMsgHashMap(milist);
 		}		
-		
+
 		if(tlist.size()>0){
 			tranMap = getTranMap(tlist);
 		}
-		
+
 		for(int i=0;i<list.size();i++){
 			list.get(i).setInitUser(userMap.get(list.get(i).getInitUserId()));
 			list.get(i).setMessage(msgMap.get(list.get(i).getMessageId()));
@@ -179,7 +180,7 @@ public class CarpoolDaoNotification {
 
 	}	
 
-	private static HashMap<Integer,Transaction> getTranMap(ArrayList<Integer> list){
+	private static HashMap<Integer,Transaction> getTranMap(ArrayList<Integer> list) throws LocationNotFoundException{
 		HashMap<Integer,Transaction> map = new HashMap<Integer,Transaction>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		ArrayList<Integer> milist = new ArrayList<Integer>();
@@ -218,7 +219,7 @@ public class CarpoolDaoNotification {
 		return ilist;
 	}
 
-	public static ArrayList<Notification> getByUserId(int userId) throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
+	public static ArrayList<Notification> getByUserId(int userId) throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException{
 		ArrayList<Notification> list = new ArrayList<Notification>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		ArrayList<Integer> milist = new ArrayList<Integer>();
@@ -243,7 +244,7 @@ public class CarpoolDaoNotification {
 
 	}
 
-	private static Notification createNotificationByResultSet(ResultSet rs,String str) throws SQLException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException {
+	private static Notification createNotificationByResultSet(ResultSet rs,String str) throws SQLException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException {
 		User origin = rs.getInt("origin_UserId")==-1 ? null : CarpoolDaoUser.getUserById(rs.getInt("origin_UserId"));
 		Message msg = rs.getInt("origin_MessageId")==-1 ? null : CarpoolDaoMessage.getMessageById(rs.getInt("origin_MessageId"));
 		Transaction transaction = rs.getInt("origin_TransactionId")==-1 ? null : CarpoolDaoTransaction.getTransactionById(rs.getInt("origin_TransactionId"));

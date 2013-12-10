@@ -27,6 +27,7 @@ import carpool.constants.Constants.gender;
 import carpool.constants.Constants.messageType;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.model.representation.LocationRepresentation;
@@ -44,9 +45,9 @@ public class DMResource extends PseudoResource{
 			jsonMessage = (new JsonRepresentation(entity)).getJsonObject();
 			
 			message = new Message(jsonMessage.getInt("ownerId"), jsonMessage.getBoolean("isRoundTrip"),
-					new LocationRepresentation(jsonMessage.getJSONObject("departure_location")), DateUtility.castFromAPIFormat(jsonMessage.getString("departure_time")), Constants.DayTimeSlot.values()[jsonMessage.getInt("departure_timeSlot")],
+					new Location(jsonMessage.getJSONObject("departure_location")), DateUtility.castFromAPIFormat(jsonMessage.getString("departure_time")), Constants.DayTimeSlot.values()[jsonMessage.getInt("departure_timeSlot")],
 					jsonMessage.getInt("departure_seatsNumber"), Parser.parsePriceList(jsonMessage.getJSONArray("departure_priceList")),
-					new LocationRepresentation(jsonMessage.getJSONObject("arrival_location")), DateUtility.castFromAPIFormat(jsonMessage.getString("arrival_time")), Constants.DayTimeSlot.values()[jsonMessage.getInt("arrival_timeSlot")],
+					new Location(jsonMessage.getJSONObject("arrival_location")), DateUtility.castFromAPIFormat(jsonMessage.getString("arrival_time")), Constants.DayTimeSlot.values()[jsonMessage.getInt("arrival_timeSlot")],
 					jsonMessage.getInt("arrival_seatsNumber"), Parser.parsePriceList(jsonMessage.getJSONArray("arrival_priceList")),
 					Constants.paymentMethod.values()[jsonMessage.getInt("paymentMethod")],
 					jsonMessage.getString("note"), Constants.messageType.values()[jsonMessage.getInt("type")], Constants.gender.values()[jsonMessage.getInt("genderRequirement")]);
@@ -64,7 +65,7 @@ public class DMResource extends PseudoResource{
 	 * Retrieve all messages from server. This API is intended solely for testing purposes
 	 * @return
 	 */
-	public Representation getAllMessages() {
+	public Representation getAllMessages() throws LocationNotFoundException {
 
 		ArrayList<Message> allMessages = MessageDaoService.getAllMessages();
 		JSONArray jsonArray = new JSONArray();

@@ -110,7 +110,7 @@ public class PseudoResource extends ServerResource{
 	public String doPseudoException(PseudoException e){
 		DebugLog.d(e);
 		switch(e.getCode()){
-			case 1: case 2: case 4: case 8: case 19:
+			case 1: case 2: case 4: case 8: 
 				//Not Found
 				setStatus(Status.CLIENT_ERROR_NOT_FOUND);
 				break;
@@ -157,6 +157,10 @@ public class PseudoResource extends ServerResource{
 				break;
 			case 18:
 				//ValidationException
+				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+				break;
+			case 19:
+				//LocationNotFoundException
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				break;
 			default:

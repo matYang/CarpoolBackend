@@ -67,11 +67,11 @@ public class CarpoolDaoLocation {
 		}
 	}
 
-	public static Location getLocationById(int location_id)throws LocationNotFoundException{
+	public static Location getLocationById(long l)throws LocationNotFoundException{
 		String query = "SELECT * FROM carpoolDAOLocation where id=?";
 		Location location = null;
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-			stmt.setInt(1, location_id);
+			stmt.setLong(1, l);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
 				location = createLocationByResultSet(rs);
@@ -103,6 +103,25 @@ public class CarpoolDaoLocation {
 	private static Location createLocationByResultSet(ResultSet rs) throws SQLException {
 		return new Location(rs.getInt("id"),rs.getString("province"),rs.getString("city"),rs.getString("region"),rs.getString("pointName"),rs.getString("pointAddress"),rs.getDouble("lat"),rs.getDouble("lng"),rs.getLong("match_Id"));
 	}
+	
+	public static ArrayList<Location> getDefaultLocations(){
+		ArrayList<Location> list = new ArrayList<Location>();
+		String query = "SELECT * FROM carpoolDAOLocation JOIN defaultLocations ON (carpoolDAOLocation.match_Id = defaultLocations.id and carpoolDAOLocation.id = defaultLocations.referenceNum);";
+		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){			
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()){
+				list.add(createLocationByResultSet(rs));
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+			DebugLog.d(e);
+		}
+		return list;
+	}
+	
+	public static void addDefaultLocations(){
+		//TODO
 
+	}
 
 }

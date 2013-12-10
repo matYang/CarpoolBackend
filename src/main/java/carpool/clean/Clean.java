@@ -6,6 +6,7 @@ import java.util.Date;
 
 import carpool.cleanRoutineTask.MessageCleaner;
 import carpool.cleanRoutineTask.TransactionCleaner;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.model.*;
 
 
@@ -25,7 +26,7 @@ public class Clean{
 	}
 
 	
-	public void cleanSchedules(){
+	public void cleanSchedules() throws LocationNotFoundException{
 		MessageCleaner.Clean();
 		TransactionCleaner.Clean();
 	}

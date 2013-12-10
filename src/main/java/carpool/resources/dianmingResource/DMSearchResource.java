@@ -59,7 +59,7 @@ public class DMSearchResource extends PseudoResource{
 			SearchRepresentation sr = srStr != null ? new SearchRepresentation(srStr) : CarpoolConfig.getDefaultSearchRepresentation();
 			
 			//not checking for date..because an invalid date will have no search result anyways
-			if (LocationService.isLocationRepresentationValid(sr.getDepartureLocation()) && LocationService.isLocationRepresentationValid(sr.getArrivalLocation()) ){
+			if (LocationService.isLocationRepresentationValid(sr.getDepartureMatch_Id()) && LocationService.isLocationRepresentationValid(sr.getArrivalMatch_Id()) ){
 				ArrayList<Message> searchResult = new ArrayList<Message>();
 				searchResult = MessageDaoService.primaryMessageSearch(sr, login, userId);
 				response = JSONFactory.toJSON(searchResult);
