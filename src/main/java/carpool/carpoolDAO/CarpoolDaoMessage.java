@@ -7,20 +7,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-
 import carpool.common.Parser;
 import carpool.constants.Constants;
-import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.messageType;
-import carpool.constants.Constants.userSearchState;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.dbservice.NotificationDaoService;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
-import carpool.model.Notification;
-import carpool.model.Transaction;
 import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
@@ -331,10 +325,10 @@ public class CarpoolDaoMessage{
 				ilist = addIds(ilist,rs.getInt("ownerId"));
 				retVal.add(createMessagesByResultSetList(rs));
 			}
-			if(retVal.size()>0){
-				retVal = getUsersForMessages(ilist,retVal);
-			}
-			
+			//if(retVal.size()>0){
+			retVal = getUsersForMessages(ilist,retVal);
+			//}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DebugLog.d(e);

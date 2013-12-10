@@ -420,7 +420,7 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 	@Test
 	public void getRecentMessages(){
 		CarpoolDaoBasic.clearBothDatabase();
-User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -445,6 +445,18 @@ User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepres
 		int messageId=-1;
 		int userId=user.getUserId();
 		
+		try{
+			ArrayList<Message> mlist = new ArrayList<Message>();
+			mlist = CarpoolDaoMessage.getRecentMessages();
+			if(mlist !=null && mlist.size()==0){
+			//Passed;
+			}else{				
+				fail();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
 		//Message	
 		Message message=new Message(userId,false, dl,dt,timeSlot,1 , priceList,al,at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message);		
