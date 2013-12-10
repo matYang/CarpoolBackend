@@ -78,10 +78,9 @@ public class ChangePasswordResource extends PseudoResource{
 			}
 		} catch (PseudoException e){
 			this.addCORSHeader();
-			return new StringRepresentation(this.doPseudoException(e));
+			return this.doPseudoException(e);
         } catch (Exception e){
-        	this.doException(e);
-        	quickResponseText = "Password change failed with exception " + e.toString();
+        	return this.doException(e);
 		}
 		
 		this.addCORSHeader();

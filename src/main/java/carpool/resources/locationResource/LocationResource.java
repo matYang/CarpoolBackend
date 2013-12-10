@@ -40,9 +40,7 @@ public class LocationResource extends PseudoResource{
 			}
 		}
 		catch (Exception e){
-			this.doException(e);
-			setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			return null;
+			return this.doException(e);
 		}
 		
 		

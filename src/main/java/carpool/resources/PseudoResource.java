@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import org.restlet.engine.header.Header;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.*;
 import org.restlet.util.Series;
 import org.restlet.data.*;
@@ -107,10 +108,10 @@ public class PseudoResource extends ServerResource{
 		return val;
 	}
 	
-	public String doPseudoException(PseudoException e){
+	public StringRepresentation doPseudoException(PseudoException e){
 		DebugLog.d(e);
 		switch(e.getCode()){
-			case 1: case 2: case 4: case 8: 
+			case 1: case 2: case 4: case 8: case 19:
 				//Not Found
 				setStatus(Status.CLIENT_ERROR_NOT_FOUND);
 				break;
@@ -159,20 +160,20 @@ public class PseudoResource extends ServerResource{
 				//ValidationException
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				break;
-			case 19:
+			case 21:
 				//LocationNotFoundException
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-				break;
+				setStatus(Status.CLIENT_ERROR_NOT_FOUND);
 			default:
 				setStatus(Status.SERVER_ERROR_INTERNAL);
 				break;
 		}
-		return e.getExceptionText();
+		return new StringRepresentation(e.getExceptionText());
 	}
 	
-	public void doException(Exception e){
+	public StringRepresentation doException(Exception e){
 		DebugLog.d(e);
 		setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+		return new StringRepresentation("Oops, something went wrong, please try again later");
 	}
 	
 	public Representation buildQuickResponse(String responseText){

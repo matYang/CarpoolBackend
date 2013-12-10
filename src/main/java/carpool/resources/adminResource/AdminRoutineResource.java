@@ -49,7 +49,7 @@ public class AdminRoutineResource extends PseudoResource{
 			}
 			
 		} catch(Exception e){
-			this.doException(e);
+			return this.doException(e);
 		}
         
         Representation result =  new JsonRepresentation(new JSONObject());

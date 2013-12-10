@@ -16,6 +16,6 @@ public class LocationNotFoundException extends PseudoException {
 	}
 	@Override
 	public int getCode() {
-        return 19;
+        return 21;
     }
 }

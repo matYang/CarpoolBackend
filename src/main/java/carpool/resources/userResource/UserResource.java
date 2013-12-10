@@ -100,7 +100,7 @@ public class UserResource extends PseudoResource{
 
 		} catch(PseudoException e){
 			this.addCORSHeader();
-			return new StringRepresentation(this.doPseudoException(e));
+			return this.doPseudoException(e);
 		}
 
 		Representation result = new JsonRepresentation(newJsonUser);
