@@ -51,7 +51,7 @@ public class UserEmailResource extends PseudoResource{
         	}
         	
 		} catch (Exception e) {
-			this.doException(e);
+			return this.doException(e);
 		}
         
         Representation result = new JsonRepresentation(jsonObject);

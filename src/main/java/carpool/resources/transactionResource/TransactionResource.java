@@ -70,7 +70,7 @@ public class TransactionResource extends PseudoResource{
 			allTransactions = TransactionDaoService.getAllTransactions();
 		} catch (PseudoException e) {
 			this.addCORSHeader();
-			return new StringRepresentation(this.doPseudoException(e));
+			return this.doPseudoException(e);
 		}
 		
 		JSONArray jsonArray = new JSONArray();
@@ -127,9 +127,9 @@ public class TransactionResource extends PseudoResource{
 			
 		} catch (PseudoException e){
 			this.addCORSHeader();
-			return new StringRepresentation(this.doPseudoException(e));
+			return this.doPseudoException(e);
         } catch(Exception e){
-			this.doException(e);
+			return this.doException(e);
 		}
         
         Representation result =  new JsonRepresentation(newJsonTransaction);

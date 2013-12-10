@@ -24,7 +24,7 @@ public class UserSearchHistoryResource extends PseudoResource{
 			resultArr = JSONFactory.toJSON(searchHistory);
 
 		}  catch (Exception e) {
-			this.doException(e);
+			return this.doException(e);
 		}		
 
 		Representation response = new JsonRepresentation(resultArr);

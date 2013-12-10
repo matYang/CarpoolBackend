@@ -150,11 +150,11 @@ public class ImgResource extends PseudoResource{
         	System.out.println("Handled by PseudoException handler, exception is:");
         	System.out.println(e.getCode());
         	this.addCORSHeader();
-			return new StringRepresentation(this.doPseudoException(e));
+			return this.doPseudoException(e);
         } catch (Exception e) {
         	System.out.println("Handled by general exception, excetion is:");
         	System.out.println(e);
-            this.doException(e);
+            return this.doException(e);
         }
 
 		System.out.println("return");

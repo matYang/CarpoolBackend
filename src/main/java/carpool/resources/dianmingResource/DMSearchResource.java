@@ -70,9 +70,9 @@ public class DMSearchResource extends PseudoResource{
 			
 		} catch (PseudoException e){
 			this.addCORSHeader();
-			return new StringRepresentation(this.doPseudoException(e));
+			return this.doPseudoException(e);
         } catch (Exception e){
-			this.doException(e);
+			return this.doException(e);
 		}
 		
 		Representation result = new JsonRepresentation(response);
