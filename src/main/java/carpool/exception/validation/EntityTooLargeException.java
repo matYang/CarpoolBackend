@@ -10,7 +10,7 @@ public class EntityTooLargeException extends PseudoException {
 	protected String exceptionType = "Entity too large";
 
 	public EntityTooLargeException(){
-        super();
+        super("发布内容过大，请删减信息内容");
     }
 	
 	public EntityTooLargeException(String exceptionText){

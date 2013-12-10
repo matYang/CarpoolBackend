@@ -9,7 +9,7 @@ public class TransactionOwnerNotMatchException extends PseudoException {
 	protected String exceptionType = "TransactionOwnerNotMatchFound";
 	
 	public TransactionOwnerNotMatchException(){
-        super();
+        super("对不起，您没有对该交易执行该操作的权限");
     }
 	
 	public TransactionOwnerNotMatchException(String exceptionText){

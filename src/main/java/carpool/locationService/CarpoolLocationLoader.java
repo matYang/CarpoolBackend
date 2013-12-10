@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import carpool.common.DebugLog;
-import carpool.exception.ValidationException;
 import carpool.exception.location.LocationException;
+import carpool.exception.validation.ValidationException;
 import carpool.model.representation.LocationRepresentation;
 
 

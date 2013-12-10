@@ -9,7 +9,7 @@ public class NotificationOwnerNotMatchException extends PseudoException {
 	protected String exceptionType = "NotificationOwnerNotMatch";
 	
 	public NotificationOwnerNotMatchException(){
-        super();
+        super("对不起，您没有对该提醒执行该操作的权限");
     }
 	
 	public NotificationOwnerNotMatchException(String exceptionText){

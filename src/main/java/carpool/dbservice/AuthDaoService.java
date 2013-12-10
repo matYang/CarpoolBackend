@@ -8,8 +8,8 @@ import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.constants.CarpoolConfig;
 import carpool.exception.PseudoException;
-import carpool.exception.ValidationException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.exception.validation.ValidationException;
 import carpool.model.User;
 
 public class AuthDaoService {
@@ -26,16 +26,19 @@ public class AuthDaoService {
 		User user;
 		try {
 			user = CarpoolDaoUser.getUserByEmail(email);
+			if (!user.isEmailActivated()){
+				throw new ValidationException("请先激活账号邮箱");
+			}
 			if(!user.validate()){
-				throw new ValidationException("Account not valid");
+				throw new ValidationException("用户账号信息不符合要求，请联系我们");
 			}
 			if(!user.isPasswordCorrect(password)){
-				throw new ValidationException("Email/Password Incorrect");
+				throw new ValidationException("您输入的密码不正确");
 			}
 			user.setLastLogin(Calendar.getInstance());
 			UserDaoService.updateUser(user);
 		} catch (UserNotFoundException e) {
-			throw new ValidationException("Email/Password Incorrect");
+			throw new ValidationException("您输入的邮箱不存在");
 		}
 		
 		return user;

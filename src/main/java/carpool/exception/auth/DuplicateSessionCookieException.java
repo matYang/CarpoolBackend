@@ -9,7 +9,7 @@ public class DuplicateSessionCookieException extends PseudoException {
 	protected String exceptionType = "DuplicateSessionCookie";
 
 	public DuplicateSessionCookieException(){
-        super();
+        super("session重复，请先登出");
     }
 	
 	public DuplicateSessionCookieException(String exceptionText){

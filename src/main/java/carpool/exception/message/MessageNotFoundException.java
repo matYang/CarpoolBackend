@@ -9,7 +9,7 @@ public class MessageNotFoundException extends PseudoException {
 	protected String exceptionType = "MessageNotFound";
 
 	public MessageNotFoundException(){
-        super();
+        super("对不起，您要找的信息不存在");
     }
 	
 	public MessageNotFoundException(String exceptionText){

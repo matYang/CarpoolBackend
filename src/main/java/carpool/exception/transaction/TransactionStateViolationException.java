@@ -13,7 +13,7 @@ public class TransactionStateViolationException extends PseudoException {
 	protected String exceptionType = "TransactionStateViolation";
 	
 	public TransactionStateViolationException(transactionState curState, transactionState expectedState){
-        super();
+        super("交易状态冲突，当前交易状态： " + curState.toString() + ", 预期交易状态: " + expectedState.toString());
         this.curState = curState;
         this.expectedState = expectedState;
     }

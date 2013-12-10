@@ -22,7 +22,7 @@ import carpool.constants.Constants.paymentMethod;
 import carpool.dbservice.MessageDaoService;
 import carpool.dbservice.TransactionDaoService;
 import carpool.dbservice.UserDaoService;
-import carpool.exception.ValidationException;
+import carpool.exception.validation.ValidationException;
 import carpool.model.Message;
 import carpool.model.Transaction;
 import carpool.model.User;

@@ -9,7 +9,7 @@ public class MessageOwnerNotMatchException extends PseudoException {
 	protected String exceptionType = "MessageOwnerNotMatchFound";
 
 	public MessageOwnerNotMatchException(){
-        super();
+        super("对不起，您没有对该信息执行该操作的权限");
     }
 	
 	public MessageOwnerNotMatchException(String exceptionText){

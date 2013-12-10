@@ -93,7 +93,7 @@ public class NotificationDaoService{
 	public static void deleteNotification(int notificationId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
 		Notification notification = CarpoolDaoNotification.getNotificationById(notificationId);
 		if(notification==null){
-			throw new NotificationNotFoundException();
+			throw new NotificationNotFoundException("对不起，您想要删除的提醒不存在，可能它已被删除");
 		}
 		
 		CarpoolDaoNotification.deleteNotification(notificationId);
@@ -109,7 +109,7 @@ public class NotificationDaoService{
 	public static Notification checkNotification(int notificationId, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException{
 		Notification notification = CarpoolDaoNotification.getNotificationById(notificationId);
 		if(notification==null){
-			throw new NotificationNotFoundException();
+			throw new NotificationNotFoundException("对不起，您想要查看的提醒不存在，可能它已被删除");
 		}else if(notification.getTargetUserId()==userId){
 			notification.setState(NotificationState.read);
 			CarpoolDaoNotification.updateNotificationInDatabase(notification);

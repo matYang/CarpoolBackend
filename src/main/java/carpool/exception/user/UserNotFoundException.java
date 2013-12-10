@@ -9,7 +9,7 @@ public class UserNotFoundException extends PseudoException {
 	protected String exceptionType = "UserNotFound";
 
 	public UserNotFoundException(){
-        super();
+        super("对不起，您要找的用户不存在");
     }
 	
 	public UserNotFoundException(String exceptionText){

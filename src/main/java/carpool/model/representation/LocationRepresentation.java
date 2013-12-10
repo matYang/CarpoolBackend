@@ -6,7 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.exception.ValidationException;
+import carpool.exception.validation.ValidationException;
 import carpool.interfaces.PseudoRepresentation;
 import carpool.interfaces.PseudoValidatable;
 

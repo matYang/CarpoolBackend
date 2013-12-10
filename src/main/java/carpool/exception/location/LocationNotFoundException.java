@@ -8,7 +8,7 @@ public class LocationNotFoundException extends PseudoException {
 	protected String exceptionType = "LocationNotFound";
 
 	public LocationNotFoundException(){
-        super();
+        super("对不起，您要找的地理位置不存在");
     }
 	
 	public LocationNotFoundException(String exceptionText){
@@ -16,6 +16,6 @@ public class LocationNotFoundException extends PseudoException {
 	}
 	@Override
 	public int getCode() {
-        return 21;
+        return 16;
     }
 }

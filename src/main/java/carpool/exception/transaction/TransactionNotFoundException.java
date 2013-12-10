@@ -9,7 +9,7 @@ public class TransactionNotFoundException extends PseudoException {
 	protected String exceptionType = "TransactionNotFound";
 	
 	public TransactionNotFoundException(){
-        super();
+        super("对不起，您要找的交易不存在");
     }
 	
 	public TransactionNotFoundException(String exceptionText){

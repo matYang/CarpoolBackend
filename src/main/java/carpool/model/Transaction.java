@@ -17,7 +17,7 @@ import carpool.constants.Constants.TransactionType;
 import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.paymentMethod;
 import carpool.constants.Constants.transactionState;
-import carpool.exception.ValidationException;
+import carpool.exception.validation.ValidationException;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoValidatable;
 import carpool.model.representation.LocationRepresentation;

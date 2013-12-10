@@ -9,8 +9,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import carpool.exception.ValidationException;
 import carpool.exception.location.LocationException;
+import carpool.exception.validation.ValidationException;
 import carpool.locationService.LocationService;
 import carpool.model.representation.LocationRepresentation;
 

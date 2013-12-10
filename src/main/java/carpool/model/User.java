@@ -18,7 +18,7 @@ import carpool.constants.Constants;
 import carpool.constants.Constants.gender;
 import carpool.constants.Constants.userSearchState;
 import carpool.constants.Constants.userState;
-import carpool.exception.ValidationException;
+import carpool.exception.validation.ValidationException;
 import carpool.factory.JSONFactory;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoValidatable;

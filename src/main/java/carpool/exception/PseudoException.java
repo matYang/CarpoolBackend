@@ -9,7 +9,7 @@ public class PseudoException extends Exception{
 
 	public PseudoException(){
         super();
-        this.exceptionText = "Unspecified";
+        this.exceptionText = "不明错误，请稍后再试";
     }
 	
 	public PseudoException(String exceptionText){

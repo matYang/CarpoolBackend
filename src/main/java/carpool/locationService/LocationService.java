@@ -8,8 +8,8 @@ import java.util.Map.Entry;
 import org.json.JSONObject;
 
 import carpool.constants.CarpoolConfig;
-import carpool.exception.ValidationException;
 import carpool.exception.location.LocationException;
+import carpool.exception.validation.ValidationException;
 import carpool.model.representation.LocationRepresentation;
 
 
