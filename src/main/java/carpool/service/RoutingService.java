@@ -196,6 +196,9 @@ public class RoutingService extends Application {
 		String locationResourcePrefix = "/location";
 		//   API for location resources:  /api/v1.0/location/location
 		router.attach(Constants.applicationPrefix + Constants.versionPrefix + locationServicePrefix + locationResourcePrefix, LocationResource.class);
+		String locationDefaultResourcePrefix = "/default";
+		//	 API for location default resources: /api/v1.0/location/default
+		router.attach(Constants.applicationPrefix + Constants.versionPrefix + locationServicePrefix + locationDefaultResourcePrefix, LocationDefaultResource.class);
 		
 		
 		
