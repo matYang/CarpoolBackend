@@ -54,15 +54,15 @@ public class CarpoolDaoMessage{
 		ArrayList<Message> retVal = new ArrayList<Message>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		//SR.isRoundTrip()==false
-		String query = "SELECT * from carpoolDAOMessage WHERE((isRoundTrip NOT LIKE ? AND (departure_seatsNumber >= departure_seatsBooked)AND((departure_Id LIKE ?"+
-				"AND arrival_IdLIKE ? AND departure_Time >= ? AND departure_Time <= ?)OR(arrival_Id LIKE ? AND departure_Id LIKE ? AND arrival_Time >= ? AND arrival_Time <= ?)))"+
-				"OR(isRoundTrip LIKE ? AND (departure_seatsNumber >= departure_seatsBooked) AND departure_Id LIKE ? AND arrival_Id LIKE ? AND departure_Time >= ?AND departure_Time <= ?)) AND messageState=2";
+		String query = "SELECT * from carpoolDAOMessage WHERE((isRoundTrip NOT LIKE ? AND (departure_seatsNumber >= departure_seatsBooked)AND((departureMatch_Id = ?"+
+				" AND arrivalMatch_Id = ? AND departure_Time >= ? AND departure_Time <= ?)OR(arrivalMatch_Id = ? AND departureMatch_Id = ? AND arrival_Time >= ? AND arrival_Time <= ?)))"+
+				"OR(isRoundTrip LIKE ? AND (departure_seatsNumber >= departure_seatsBooked) AND departureMatch_Id = ? AND arrivalMatch_Id = ? AND departure_Time >= ?AND departure_Time <= ?)) AND messageState=2";
 		//SR.isRoundTrip()==true		
-		String query2="SELECT * from carpoolDAOMessage WHERE((isRoundTrip LIKE ? AND ((departure_Id LIKE ?"+
-				"AND arrival_Id LIKE ? AND ((departure_Time >= ? AND departure_Time <= ? AND (departure_seatsNumber >= departure_seatsBooked)) OR (arrival_Time >= ? AND arrival_Time <= ? AND (arrival_seatsNumber >= arrival_seatsBooked))))" +
-				"OR(departure_Id LIKE ? AND arrival_Id LIKE ? AND ((departure_Time >= ? AND departure_Time <= ? AND (departure_seatsNumber >= departure_seatsBooked))OR(arrival_Time >= ? AND arrival_Time <= ? AND (arrival_seatsNumber >= arrival_seatsBooked))))))" +
-				"OR(isRoundTrip NOT LIKE ? AND (((departure_seatsNumber >= departure_seatsBooked) AND departure_Id LIKE ? AND arrival_Id LIKE ? AND departure_Time >= ? AND departure_Time <= ?) OR ((departure_seatsNumber >= departure_seatsBooked) AND "+
-				"arrival_Id LIKE ? AND departure_Id LIKE ? AND departure_Time >=? AND departure_Time <= ?))))AND messageState=2";
+		String query2="SELECT * from carpoolDAOMessage WHERE((isRoundTrip LIKE ? AND ((departureMatch_Id = ?"+
+				" AND arrivalMatch_Id = ? AND ((departure_Time >= ? AND departure_Time <= ? AND (departure_seatsNumber >= departure_seatsBooked)) OR (arrival_Time >= ? AND arrival_Time <= ? AND (arrival_seatsNumber >= arrival_seatsBooked))))" +
+				"OR(departureMatch_Id = ? AND arrivalMatch_Id = ? AND ((departure_Time >= ? AND departure_Time <= ? AND (departure_seatsNumber >= departure_seatsBooked))OR(arrival_Time >= ? AND arrival_Time <= ? AND (arrival_seatsNumber >= arrival_seatsBooked))))))" +
+				"OR(isRoundTrip NOT LIKE ? AND (((departure_seatsNumber >= departure_seatsBooked) AND departureMatch_Id = ? AND arrivalMatch_Id = ? AND departure_Time >= ? AND departure_Time <= ?) OR ((departure_seatsNumber >= departure_seatsBooked) AND "+
+				"arrivalMatch_Id = ? AND departureMatch_Id = ? AND departure_Time >=? AND departure_Time <= ?))))AND messageState=2";
 		if(targetType.code==2){
 			query+=" AND (messageType = 0 or messageType =1 or messageType=?)";
 			query2+=" AND (messageType = 0 or messageType =1 or messageType=?)";
@@ -136,10 +136,14 @@ public class CarpoolDaoMessage{
 	}
 
 
-	public static Message addMessageToDatabase(Message msg) throws LocationNotFoundException{			
+	public static Message addMessageToDatabase(Message msg) throws LocationNotFoundException{	
+		CarpoolDaoLocation.addLocationToDatabases(msg.getDeparture_Location());
+		CarpoolDaoLocation.addLocationToDatabases(msg.getArrival_Location());
+		msg.setDeparture_Id(msg.getDeparture_Location().getId());
+		msg.setArrvial_Id(msg.getArrival_Location().getId());
 		String query = "INSERT INTO carpoolDAOMessage (ownerId,isRoundTrip," +
 				"departure_Id,departure_Time,departure_seatsNumber,departure_seatsBooked,departure_priceList,arrival_Id,arrival_Time," +
-				"arrival_seatsNumber,arrival_seatsBooked,arrival_priceList,paymentMethod,note,messageType,gender,messageState,creationTime,editTime,historyDeleted,departure_timeSlot,arrival_timeSlot) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				"arrival_seatsNumber,arrival_seatsBooked,arrival_priceList,paymentMethod,note,messageType,gender,messageState,creationTime,editTime,historyDeleted,departure_timeSlot,arrival_timeSlot,departureMatch_Id,arrivalMatch_Id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 			stmt.setInt(1, msg.getOwnerId());			
 			stmt.setInt(2, msg.isRoundTrip() ? 1:0);
@@ -163,17 +167,12 @@ public class CarpoolDaoMessage{
 			stmt.setInt(20, msg.isHistoryDeleted() ? 1:0);
 			stmt.setInt(21, msg.getDeparture_timeSlot().code);
 			stmt.setInt(22, msg.getArrival_timeSlot().code);
+			stmt.setLong(23, msg.getDeparture_Location().getMatch());
+			stmt.setLong(24, msg.getArrival_Location().getMatch());
 			stmt.executeUpdate();
 			ResultSet rs = stmt.getGeneratedKeys();
 			rs.next();
-			msg.setMessageId(rs.getInt(1));
-			
-			if(msg.getArrival_Location()==null){
-				msg.setArrival_Location(CarpoolDaoLocation.getLocationById(msg.getArrival_Id()));
-			}
-			if(msg.getDeparture_Location()==null){
-				msg.setDeparture_Location(CarpoolDaoLocation.getLocationById(msg.getDeparture_Id()));
-			}				
+			msg.setMessageId(rs.getInt(1));							
 
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -199,9 +198,13 @@ public class CarpoolDaoMessage{
 	}
 
 	public static void UpdateMessageInDatabase(Message msg) throws MessageNotFoundException{
+		CarpoolDaoLocation.addLocationToDatabases(msg.getDeparture_Location());
+		CarpoolDaoLocation.addLocationToDatabases(msg.getArrival_Location());
+		msg.setDeparture_Id(msg.getDeparture_Location().getId());
+		msg.setArrvial_Id(msg.getArrival_Location().getId());
 		String query = "UPDATE carpoolDAOMessage SET isRoundTrip=?,departure_Id=?,departure_Time=?," +
 				"departure_seatsNumber=?,departure_seatsBooked=?,departure_priceList=?,arrival_Id=?,arrival_Time=?," +
-				"arrival_seatsNumber=?,arrival_seatsBooked=?,arrival_priceList=?,paymentMethod=?,note=?,messageType=?,gender=?,messageState=?,creationTime=?,editTime=?,historyDeleted=?,departure_timeSlot=?,arrival_timeSlot=? WHERE messageId=?";
+				"arrival_seatsNumber=?,arrival_seatsBooked=?,arrival_priceList=?,paymentMethod=?,note=?,messageType=?,gender=?,messageState=?,creationTime=?,editTime=?,historyDeleted=?,departure_timeSlot=?,arrival_timeSlot=?,departureMatch_Id=?,arrivalMatch_Id=? WHERE messageId=?";
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			stmt.setInt(1, msg.isRoundTrip() ? 1:0);
 			stmt.setLong(2, msg.getDeparture_Id());			
@@ -223,8 +226,10 @@ public class CarpoolDaoMessage{
 			stmt.setString(18, DateUtility.toSQLDateTime(msg.getEditTime()));
 			stmt.setInt(19, msg.isHistoryDeleted() ? 1:0);
 			stmt.setInt(20, msg.getDeparture_timeSlot().code);
-			stmt.setInt(21, msg.getArrival_timeSlot().code);
-			stmt.setInt(22, msg.getMessageId());
+			stmt.setInt(21, msg.getArrival_timeSlot().code);			
+			stmt.setLong(22, msg.getDeparture_Location().getMatch());
+			stmt.setLong(23, msg.getArrival_Location().getMatch());
+			stmt.setInt(24, msg.getMessageId());
 			int recordsAffected = stmt.executeUpdate();
 			if(recordsAffected==0){
 				throw new MessageNotFoundException();
@@ -253,7 +258,7 @@ public class CarpoolDaoMessage{
 		return mlist;
 	}
 
-	protected static ArrayList<Message> getUsersForMessages(ArrayList<Integer> ilist, ArrayList<Message> mlist) {
+	protected static ArrayList<Message> getUsersForMessages(ArrayList<Integer> ilist, ArrayList<Message> mlist) throws LocationNotFoundException {
 		HashMap<Integer,User> map = new HashMap<Integer,User>();
 		map = getHashMap(ilist);		
 		for(int i=0;i<mlist.size();i++){
@@ -347,7 +352,7 @@ public class CarpoolDaoMessage{
 		return retVal;
 	}
 
-	private static HashMap<Integer,User> getHashMap(ArrayList<Integer> list){
+	private static HashMap<Integer,User> getHashMap(ArrayList<Integer> list) throws LocationNotFoundException{
 		HashMap<Integer,User> map = new HashMap<Integer,User>();
 		String query = "SELECT * FROM carpoolDAOUser where ";
 		for(int i=0;i<list.size()-1;i++){

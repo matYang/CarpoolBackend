@@ -14,9 +14,11 @@ import carpool.constants.Constants;
 import carpool.constants.Constants.LetterState;
 import carpool.constants.Constants.gender;
 import carpool.exception.letter.LetterNotFoundException;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.exception.validation.ValidationException;
 import carpool.model.Letter;
+import carpool.model.Location;
 import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
 
@@ -25,9 +27,22 @@ public class CarpoolLetterTest {
 	@Test
 	public void testAdd() throws ValidationException{
 		CarpoolDaoBasic.clearBothDatabase();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", new LocationRepresentation ("primary1","custom1",1), gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
 		try{
@@ -44,12 +59,24 @@ public class CarpoolLetterTest {
 	}
 
 	@Test
-	public void testLetterById() throws ValidationException, UserNotFoundException {
+	public void testLetterById() throws ValidationException, UserNotFoundException, LocationNotFoundException {
 		CarpoolDaoBasic.clearBothDatabase();
-
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca",departureLocation, gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", new LocationRepresentation ("primary1","custom1",1), gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
 
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
@@ -79,11 +106,24 @@ public class CarpoolLetterTest {
 	}
 
 	@Test
-	public void testUpdate() throws ValidationException, UserNotFoundException{
+	public void testUpdate() throws ValidationException, UserNotFoundException, LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", new LocationRepresentation ("primary1","custom1",1), gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com",arrivalLocation, gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
 
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
@@ -121,11 +161,24 @@ public class CarpoolLetterTest {
 	}
 
 	@Test
-	public void testDelete() throws ValidationException, UserNotFoundException{
+	public void testDelete() throws ValidationException, UserNotFoundException, LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", new LocationRepresentation ("primary1","custom1",1), gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
 
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
@@ -156,11 +209,24 @@ public class CarpoolLetterTest {
 	}
 
 	@Test
-	public void testGetAll() throws ValidationException, UserNotFoundException{
+	public void testGetAll() throws ValidationException, UserNotFoundException, LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", new LocationRepresentation ("primary1","custom1",1), gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
 
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
@@ -197,13 +263,26 @@ public class CarpoolLetterTest {
 	}
 
 	@Test
-	public void testGetUserLetters() throws ValidationException{
+	public void testGetUserLetters() throws ValidationException, LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", new LocationRepresentation ("primary1","custom1",1), gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
-		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", new LocationRepresentation ("primary2","custom2",1), gender.female);
+		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation, gender.female);
 		CarpoolDaoUser.addUserToDatabase(user3);
 
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
@@ -423,15 +502,30 @@ public class CarpoolLetterTest {
 	}
 
 	@Test
-	public void testGetLetterUsers() throws ValidationException{
+	public void testGetLetterUsers() throws ValidationException, LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation1= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation1 = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
+		Location departureLocation2= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation2 = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation1, gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", new LocationRepresentation ("primary1","custom1",1), gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation1, gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
-		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", new LocationRepresentation ("primary2","custom2",1), gender.female);
+		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation2, gender.female);
 		CarpoolDaoUser.addUserToDatabase(user3);
-		User user4 =  new User("sdfsdfdsfhgfg", "sdfojods@hotmail.com", new LocationRepresentation ("primary3","custom3",1), gender.both);
+		User user4 =  new User("sdfsdfdsfhgfg", "sdfojods@hotmail.com", arrivalLocation2, gender.both);
 		CarpoolDaoUser.addUserToDatabase(user4);
 
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
@@ -503,13 +597,26 @@ public class CarpoolLetterTest {
 	}
 
 	@Test
-	public void testCheckLetter() throws ValidationException{
+	public void testCheckLetter() throws ValidationException, LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", new LocationRepresentation ("primary1","custom1",1), gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
-		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", new LocationRepresentation ("primary2","custom2",1), gender.female);
+		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation, gender.female);
 		CarpoolDaoUser.addUserToDatabase(user3);
 
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");

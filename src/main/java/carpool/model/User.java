@@ -40,9 +40,43 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     private gender gender;
     private Calendar birthday;
     private String imgPath;
-    private LocationRepresentation location;
+    private long location_Id;
+    private Location location;
+    private long match_Id;
 
-    private Calendar lastLogin;
+    /**
+	 * @return the location_Id
+	 */
+	public long getLocation_Id() {
+		return location_Id;
+	}
+
+
+	/**
+	 * @param location_Id the location_Id to set
+	 */
+	public void setLocation_Id(long location_Id) {
+		this.location_Id = location_Id;
+	}
+
+
+	/**
+	 * @return the match_Id
+	 */
+	public long getMatch_Id() {
+		return match_Id;
+	}
+
+
+	/**
+	 * @param match_Id the match_Id to set
+	 */
+	public void setMatch_Id(long match_Id) {
+		this.match_Id = match_Id;
+	}
+
+
+	private Calendar lastLogin;
     private Calendar creationTime;
     
     
@@ -107,13 +141,14 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     /*****
      * Constructor for user registration
 	 *****/
-	public User(String password, String email, LocationRepresentation location, gender g) {
+	public User(String password, String email, Location location, gender g) {
 		super();
 		this.userId = -1;
 		this.password = password;
 		this.email = email;
 		this.location = location;
-		
+		this.location_Id = location.getId();
+		this.match_Id = location.getMatch();
 		//dummy fills
 		this.name = "无名氏";
 		this.phone = "";
@@ -165,7 +200,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	 *****/
 	public User(int userId, String password, String name, String email,
 			String phone, String qq, carpool.constants.Constants.gender gender, Calendar birthday,
-			String imgPath, LocationRepresentation location, Calendar lastLogin,
+			String imgPath, Location location, Calendar lastLogin,
 			Calendar creationTime, ArrayList<String> verifications, boolean emailActivated,
 			boolean phoneActivated, boolean emailNotice, boolean phoneNotice,
 			userState state, SearchRepresentation searchRepresentation, int level,
@@ -173,7 +208,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 			String facebookToken, String twitterToken, String paypalToken,
 			String id_docType, String id_docNum, String id_path,
 			String id_vehicleImgPath, String accountId, String accountPass,
-			String accountToken, BigDecimal accountValue) {
+			String accountToken, BigDecimal accountValue,long match_Id) {
 		super();
 		this.userId = userId;
 		this.password = password;
@@ -185,6 +220,8 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.birthday = birthday;
 		this.imgPath = imgPath;
 		this.location = location;
+		this.location_Id = location.getId();
+		this.match_Id = match_Id;
 		this.lastLogin = lastLogin;
 		this.creationTime = creationTime;
 		this.verifications = verifications;
@@ -307,16 +344,16 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	}
 
 
-	public LocationRepresentation getLocation() {
+	public Location getLocation() {
 		return location;
 	}
 
 
-	public void setLocation(LocationRepresentation location) {
+	public void setLocation(Location location) {
 		this.location = location;
+		this.location_Id = location.getId();
 	}
-
-
+		
 	public Calendar getLastLogin() {
 		return lastLogin;
 	}

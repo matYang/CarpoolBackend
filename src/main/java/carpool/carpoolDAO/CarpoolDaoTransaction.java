@@ -334,7 +334,7 @@ public class CarpoolDaoTransaction {
 		return ilist;
 	}	
 
-	public static HashMap<Integer,User> getUsersHashMap(ArrayList<Integer> list){
+	public static HashMap<Integer,User> getUsersHashMap(ArrayList<Integer> list) throws LocationNotFoundException{
 		HashMap<Integer,User> map = new HashMap<Integer,User>();
 		String query = "SELECT * FROM carpoolDAOUser where ";
 		for(int i=0;i<list.size()-1;i++){

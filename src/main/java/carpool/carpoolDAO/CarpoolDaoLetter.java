@@ -14,13 +14,14 @@ import carpool.constants.Constants.LetterDirection;
 import carpool.constants.Constants.LetterState;
 import carpool.constants.Constants.LetterType;
 import carpool.exception.letter.LetterNotFoundException;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Letter;
 import carpool.model.User;
 
 public class CarpoolDaoLetter {
 
-	public static Letter addLetterToDatabases(Letter letter) throws UserNotFoundException{
+	public static Letter addLetterToDatabases(Letter letter) throws UserNotFoundException, LocationNotFoundException{
 		if(letter.getFrom_userId()>0){
 			User fromUser = CarpoolDaoUser.getUserById(letter.getFrom_userId());
 			letter.setFrom_user(fromUser);
@@ -74,7 +75,7 @@ public class CarpoolDaoLetter {
 		}
 	}
 
-	public static Letter getLetterById(int letterId) throws LetterNotFoundException, UserNotFoundException{
+	public static Letter getLetterById(int letterId) throws LetterNotFoundException, UserNotFoundException, LocationNotFoundException{
 		String query = "SELECT * from carpoolDAOLetter where letter_Id = ?";
 		Letter letter = null;
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
@@ -92,7 +93,7 @@ public class CarpoolDaoLetter {
 		return letter;
 	}
 
-	public static ArrayList<Letter> getAllLetters() throws UserNotFoundException{
+	public static ArrayList<Letter> getAllLetters() throws UserNotFoundException, LocationNotFoundException{
 		ArrayList<Letter> list = new ArrayList<Letter>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		String query = "SELECT * from carpoolDAOLetter";
@@ -113,7 +114,7 @@ public class CarpoolDaoLetter {
 		return list;
 	}
 
-	public static  ArrayList<Letter> getUserLetters(int curUserId, int targetUserId, LetterType type, LetterDirection direction) throws UserNotFoundException{		
+	public static  ArrayList<Letter> getUserLetters(int curUserId, int targetUserId, LetterType type, LetterDirection direction) throws UserNotFoundException, LocationNotFoundException{		
 		ArrayList<Letter> list = new ArrayList<Letter>();
 		if((curUserId<=0 && targetUserId<=0)||(curUserId<-1 || targetUserId<-1)||curUserId==0||targetUserId==0){
 			return list;
@@ -375,7 +376,7 @@ public class CarpoolDaoLetter {
 		}
 		return ilist;
 	}
-	private static ArrayList<Letter> getUsersForLetters(ArrayList<Integer> ilist,ArrayList<Letter> letters) {
+	private static ArrayList<Letter> getUsersForLetters(ArrayList<Integer> ilist,ArrayList<Letter> letters) throws LocationNotFoundException {
 		HashMap<Integer,User> map = new HashMap<Integer,User>();
 		map = getHashMap(ilist);		
 		for(int i=0;i<letters.size();i++){
@@ -409,7 +410,7 @@ public class CarpoolDaoLetter {
 		}
 	}
 
-	private static Letter createLetterByResultSet(ResultSet rs) throws SQLException, UserNotFoundException {
+	private static Letter createLetterByResultSet(ResultSet rs) throws SQLException, UserNotFoundException, LocationNotFoundException {
 		User fromUser = null;
 		User toUser = null;
 
@@ -427,7 +428,7 @@ public class CarpoolDaoLetter {
 		return letter;
 	}
 
-	public static ArrayList<User> getLetterUsers(int userId) throws UserNotFoundException{
+	public static ArrayList<User> getLetterUsers(int userId) throws UserNotFoundException, LocationNotFoundException{
 		ArrayList<User> list = new ArrayList<User>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		String query = "SELECT * from carpoolDAOLetter where (from_UserId = ? or to_UserId = ?) and letterType = ?";
@@ -453,7 +454,7 @@ public class CarpoolDaoLetter {
 		return list;
 	}
 
-	private static ArrayList<User> getLetterUsersByIdList(ArrayList<Integer> list){
+	private static ArrayList<User> getLetterUsersByIdList(ArrayList<Integer> list) throws LocationNotFoundException{
 		ArrayList<User> ulist = new ArrayList<User>();
 		String query = "SELECT * FROM carpoolDAOUser where ";
 		for(int i=0;i<list.size()-1;i++){
@@ -507,7 +508,7 @@ public class CarpoolDaoLetter {
 		}
 	}
 	
-	private static HashMap<Integer,User> getHashMap(ArrayList<Integer> list){
+	private static HashMap<Integer,User> getHashMap(ArrayList<Integer> list) throws LocationNotFoundException{
 		HashMap<Integer,User> map = new HashMap<Integer,User>();
 		String query = "SELECT * FROM carpoolDAOUser where ";
 		for(int i=0;i<list.size()-1;i++){

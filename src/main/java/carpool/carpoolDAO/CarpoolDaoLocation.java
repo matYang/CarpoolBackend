@@ -46,7 +46,7 @@ public class CarpoolDaoLocation {
 			stmt.setDouble(6, location.getLat());
 			stmt.setDouble(7, location.getLng());
 			stmt.setLong(8, location.getMatch());
-			stmt.setInt(9, location.getId());
+			stmt.setLong(9, location.getId());
 			int recordsAffected = stmt.executeUpdate();
 			if(recordsAffected==0){
 				throw new LocationNotFoundException();
@@ -57,10 +57,10 @@ public class CarpoolDaoLocation {
 		}
 	}
 
-	public static void deleteLocation(int id){
+	public static void deleteLocation(long l){
 		String query = "DELETE from carpoolDAOLocation where id = ?";
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-			stmt.setInt(1, id);
+			stmt.setLong(1, l);
 			stmt.executeUpdate();	
 		}catch (SQLException e) {
 			DebugLog.d(e);
@@ -101,7 +101,7 @@ public class CarpoolDaoLocation {
 	}
 
 	private static Location createLocationByResultSet(ResultSet rs) throws SQLException {
-		return new Location(rs.getInt("id"),rs.getString("province"),rs.getString("city"),rs.getString("region"),rs.getString("pointName"),rs.getString("pointAddress"),rs.getDouble("lat"),rs.getDouble("lng"),rs.getLong("match_Id"));
+		return new Location(rs.getLong("id"),rs.getString("province"),rs.getString("city"),rs.getString("region"),rs.getString("pointName"),rs.getString("pointAddress"),rs.getDouble("lat"),rs.getDouble("lng"),rs.getLong("match_Id"));
 	}
 	
 	public static ArrayList<Location> getDefaultLocations(){

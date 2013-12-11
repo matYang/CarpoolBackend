@@ -48,10 +48,11 @@ public class SearchRepresentation implements PseudoRepresentation{
 
 	//separated by "+"
 	public SearchRepresentation(String serializedSearchString){
-		String[] representationArray = serializedSearchString.split(CarpoolConfig.urlSeperatorRegx);
+		
+		String[] representationArray = serializedSearchString.split(CarpoolConfig.urlSeperatorRegx);		
 		this.isRoundTrip = Boolean.parseBoolean(representationArray[0]);
-		this.departureMatch_Id = Long.parseLong(representationArray[1]);
-		this.arrivalMatch_Id = Long.parseLong(representationArray[2]);
+		this.departureMatch_Id = Long.parseLong(representationArray[1],10);
+		this.arrivalMatch_Id = Long.parseLong(representationArray[2],10);
 		this.departureDate = DateUtility.castFromAPIFormat(representationArray[3]);
 		this.arrivalDate = DateUtility.castFromAPIFormat(representationArray[4]);
 		this.targetType = Constants.messageType.values()[Integer.parseInt(representationArray[5])];
