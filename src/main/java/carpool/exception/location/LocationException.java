@@ -9,7 +9,7 @@ public class LocationException extends PseudoException{
 	protected String exceptionType = "LocationStructuralError";
 
 	public LocationException(){
-        super();
+        super("Fatal Error: 地理数据错误");
     }
 	
 	public LocationException(String exceptionText){

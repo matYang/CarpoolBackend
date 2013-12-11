@@ -9,7 +9,7 @@ public class SessionEncodingException extends PseudoException {
 	protected String exceptionType = "SessionEncoding";
 
 	public SessionEncodingException(){
-        super();
+        super("session编码错误，请登出或者重新打开页面");
     }
 	
 	public SessionEncodingException(String exceptionText){

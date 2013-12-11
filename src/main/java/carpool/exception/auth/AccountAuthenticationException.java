@@ -9,7 +9,7 @@ public class AccountAuthenticationException extends PseudoException{
 	protected String exceptionType = "Authentication";
 
 	public AccountAuthenticationException(){
-        super();
+        super("账户验证失败");
     }
 	
 	public AccountAuthenticationException(String exceptionText){

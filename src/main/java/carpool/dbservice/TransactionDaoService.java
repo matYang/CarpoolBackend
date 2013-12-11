@@ -10,7 +10,7 @@ import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.common.*;
 import carpool.constants.Constants;
 import carpool.exception.PseudoException;
-import carpool.exception.ValidationException;
+import carpool.exception.validation.ValidationException;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.message.MessageOwnerNotMatchException;
@@ -19,6 +19,7 @@ import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.transaction.TransactionOwnerNotMatchException;
 import carpool.exception.transaction.TransactionStateViolationException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.exception.validation.ValidationException;
 import carpool.model.*;
 
 

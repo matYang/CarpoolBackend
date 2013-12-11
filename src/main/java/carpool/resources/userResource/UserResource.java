@@ -21,7 +21,7 @@ import carpool.constants.Constants;
 import carpool.constants.Constants.gender;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
-import carpool.exception.ValidationException;
+import carpool.exception.validation.ValidationException;
 import carpool.factory.JSONFactory;
 import carpool.locationService.LocationService;
 import carpool.model.*;

@@ -10,8 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import carpool.exception.ValidationException;
 import carpool.exception.location.LocationException;
+import carpool.exception.validation.ValidationException;
 
 public class CarpoolLocation {
 	

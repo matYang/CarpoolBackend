@@ -19,7 +19,7 @@ import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.paymentMethod;
 import carpool.constants.Constants.transactionState;
-import carpool.exception.ValidationException;
+import carpool.exception.validation.ValidationException;
 import carpool.model.Message;
 import carpool.model.Transaction;
 import carpool.model.User;

@@ -28,10 +28,13 @@ import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.paymentMethod;
 import carpool.dbservice.*;
-import carpool.exception.ValidationException;
+
+import carpool.exception.validation.ValidationException;
 import carpool.exception.location.LocationNotFoundException;
+
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.exception.validation.ValidationException;
 import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.UserSearchRepresentation;
 import carpool.model.Location;

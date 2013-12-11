@@ -28,12 +28,17 @@ import carpool.constants.Constants.gender;
 import carpool.constants.Constants.userSearchState;
 import carpool.constants.Constants.userState;
 import carpool.encryption.SessionCrypto;
-import carpool.exception.ValidationException;
+
+import carpool.exception.validation.ValidationException;
 import carpool.exception.location.LocationNotFoundException;
+
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
+
 import carpool.model.Location;
+
+
 import carpool.model.Message;
 import carpool.model.Notification;
 import carpool.model.Transaction;
@@ -118,12 +123,12 @@ public class CarpoolDaoUser {
 			user.setUserId(rs.getInt(1));
 		}catch(SQLException e){
 			if(e.getMessage().contains("Duplicate")){
-				throw new ValidationException("Some user field already exists");
+				throw new ValidationException("一部分账户内容与其他账户冲突");
 			}else{
 				DebugLog.d(e);
 			}
 		} catch (Exception e) {
-			throw new ValidationException("Bad password format");
+			throw new ValidationException("创建用户失败，账户信息错误");
 		} 
 		return user;
 	}
@@ -199,7 +204,7 @@ public class CarpoolDaoUser {
 		} catch(SQLException e){
 			DebugLog.d(e);
 		} catch (Exception e) {
-			throw new ValidationException("Bad password format");
+			throw new ValidationException("更改用户信息失败，账户信息错误");
 		} 	
 	}
 

@@ -9,7 +9,7 @@ public class NotificationNotFoundException extends PseudoException {
 	protected String exceptionType = "NotificationNotFound";
 	
 	public NotificationNotFoundException(){
-        super();
+        super("对不起，您要找的提醒不存在");
     }
 	
 	public NotificationNotFoundException(String exceptionText){

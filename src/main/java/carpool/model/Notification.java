@@ -10,7 +10,7 @@ import carpool.common.DateUtility;
 import carpool.common.HelperOperator;
 import carpool.constants.Constants.NotificationEvent;
 import carpool.constants.Constants.NotificationState;
-import carpool.exception.ValidationException;
+import carpool.exception.validation.ValidationException;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoValidatable;
 

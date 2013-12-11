@@ -1,4 +1,6 @@
-package carpool.exception;
+package carpool.exception.validation;
+
+import carpool.exception.PseudoException;
 
 /**
  * This Exception is thrown thenever there is a validation error in successfully-parsed data
@@ -13,7 +15,7 @@ public class ValidationException extends PseudoException{
 	protected String exceptionType = "GeneralValidationException";
 
 	private ValidationException(){
-        super();
+        super("验证失败，请核对发布内容");
     }
 	
 	public ValidationException(String exceptionText){

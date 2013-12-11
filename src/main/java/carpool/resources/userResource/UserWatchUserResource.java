@@ -18,7 +18,7 @@ import carpool.common.DebugLog;
 import carpool.constants.Constants;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
-import carpool.exception.ValidationException;
+import carpool.exception.validation.ValidationException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.resources.PseudoResource;

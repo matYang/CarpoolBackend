@@ -9,7 +9,7 @@ public class UnexpectedCookieException extends PseudoException {
 	protected String exceptionType = "UnexpectedCookieState";
 
 	public UnexpectedCookieException(){
-        super();
+        super("server吃了坏掉的cookie肚子不好，请先登出或者清理cookie");
     }
 	
 	public UnexpectedCookieException(String exceptionText){

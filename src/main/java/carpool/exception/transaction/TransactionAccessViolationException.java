@@ -10,7 +10,7 @@ public class TransactionAccessViolationException extends PseudoException {
 	protected String exceptionType = "TransactionAccessViolation";
 	
 	public TransactionAccessViolationException(){
-        super();
+        super("您已对该交易打分！");
     }
 	
 	public TransactionAccessViolationException(String exceptionText){

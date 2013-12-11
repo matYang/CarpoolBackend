@@ -9,7 +9,7 @@ public class LetterNotFoundException extends PseudoException {
 	protected String exceptionType = "LetterNotFound";
 
 	public LetterNotFoundException(){
-        super();
+        super("不好意思，您要找的站内信不存在");
     }
 	
 	public LetterNotFoundException(String exceptionText){

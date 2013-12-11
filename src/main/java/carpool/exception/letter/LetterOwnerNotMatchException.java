@@ -9,7 +9,7 @@ public class LetterOwnerNotMatchException extends PseudoException {
 	protected String exceptionType = "LetterOwnerNotMatchFound";
 
 	public LetterOwnerNotMatchException(){
-        super();
+        super("对不起，您没有对该站内信执行该操作的权限");
     }
 	
 	public LetterOwnerNotMatchException(String exceptionText){

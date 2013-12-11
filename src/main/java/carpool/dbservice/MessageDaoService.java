@@ -7,11 +7,14 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.Constants.messageState;
 import carpool.exception.PseudoException;
-import carpool.exception.ValidationException;
+
+import carpool.exception.validation.ValidationException;
 import carpool.exception.location.LocationNotFoundException;
+
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.message.MessageOwnerNotMatchException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.exception.validation.ValidationException;
 import carpool.model.Message;
 import carpool.model.Notification;
 import carpool.model.Transaction;
@@ -65,7 +68,7 @@ public class MessageDaoService{
 	public static Message updateMessage(Message message) throws MessageNotFoundException, MessageOwnerNotMatchException, UserNotFoundException, LocationNotFoundException{
 		Message oldMessage = CarpoolDaoMessage.getMessageById(message.getMessageId());
 		if(oldMessage.getOwnerId()!=message.getOwnerId()){
-			throw new MessageOwnerNotMatchException();
+			throw new MessageOwnerNotMatchException("对不起，您想更改的信息不存在，可能它已被删除");
 		}
 		CarpoolDaoMessage.UpdateMessageInDatabase(message);
 		//sendMessageUpDateNotification(message);

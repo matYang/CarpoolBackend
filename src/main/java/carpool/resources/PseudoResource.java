@@ -132,10 +132,10 @@ public class PseudoResource extends ServerResource{
 				this.getResponse().getCookieSettings().clear();
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				break;
-			case 12:
-				//UnacceptableSearchState
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-				break;
+//			case 12:  gone
+//				//UnacceptableSearchState
+//				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+//				break;
 			case 13:
 				//UnexceppedCookie
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
@@ -149,8 +149,8 @@ public class PseudoResource extends ServerResource{
 				setStatus(Status.CLIENT_ERROR_REQUEST_ENTITY_TOO_LARGE);
 				break;
 			case 16:
-				//InformationValidation
-				setStatus(Status.CLIENT_ERROR_CONFLICT);
+				//LocationNotFoundException
+				setStatus(Status.CLIENT_ERROR_NOT_FOUND);
 				break;
 			case 17:
 				//LocationException
@@ -160,9 +160,6 @@ public class PseudoResource extends ServerResource{
 				//ValidationException
 				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 				break;
-			case 21:
-				//LocationNotFoundException
-				setStatus(Status.CLIENT_ERROR_NOT_FOUND);
 			default:
 				setStatus(Status.SERVER_ERROR_INTERNAL);
 				break;
@@ -173,7 +170,7 @@ public class PseudoResource extends ServerResource{
 	public StringRepresentation doException(Exception e){
 		DebugLog.d(e);
 		setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-		return new StringRepresentation("Oops, something went wrong, please try again later");
+		return new StringRepresentation("不好意思..哪里弄错了，请稍后重试");
 	}
 	
 	public Representation buildQuickResponse(String responseText){

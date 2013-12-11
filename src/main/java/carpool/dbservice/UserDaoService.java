@@ -10,11 +10,12 @@ import carpool.constants.Constants.NotificationEvent;
 import carpool.constants.Constants.gender;
 import carpool.carpoolDAO.*;
 import carpool.exception.PseudoException;
-import carpool.exception.ValidationException;
+import carpool.exception.validation.ValidationException;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.exception.validation.ValidationException;
 import carpool.model.*;
 import carpool.model.representation.SearchRepresentation;
 import carpool.model.representation.UserSearchRepresentation;
@@ -45,16 +46,10 @@ public class UserDaoService{
 
 
 
-	public static User updateUser(User user) throws PseudoException{
-		try {
+	public static User updateUser(User user) throws UserNotFoundException, ValidationException{
 
 			CarpoolDaoUser.UpdateUserInDatabase(user);
-			return user;
-			
-		}catch(Exception e){
-			DebugLog.d(e);
-			throw new PseudoException(e.getMessage());
-		}
+			return user;		
 	}
 
 
@@ -69,7 +64,7 @@ public class UserDaoService{
 	
 	public static boolean changePassword(int userId, String oldPassword, String newPassword) throws UserNotFoundException, ValidationException{
 		if(oldPassword.equals(newPassword)){
-			throw new ValidationException("Old password and new password are equal");
+			throw new ValidationException("新密码不应该和旧密码相同");
 		}
 		User user = CarpoolDaoUser.getUserById(userId);
 		user.setPassword(oldPassword, newPassword);
@@ -77,7 +72,7 @@ public class UserDaoService{
 			CarpoolDaoUser.UpdateUserInDatabase(user);
 			return true;
 		} catch (Exception e) {
-			throw new ValidationException("Action failed, please try again later");
+			throw new ValidationException("操作失败，请稍后再试");
 		}
 		
 	}

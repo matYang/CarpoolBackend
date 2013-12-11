@@ -53,7 +53,7 @@ public class EmailDaoService {
 		CarpoolDaoBasic.getJedis().set(CarpoolConfig.key_emailActivationAuth + userId, authCode);
 		String encryptedEmailKey = EmailCrypto.encrypt(userId, authCode);
 		try {
-			EmailRelayTask emailTask = new EmailRelayTask(newEmail, "Activate your email address", "http://"+CarpoolConfig.domainName+"/#emailActivation/"+encryptedEmailKey);
+			EmailRelayTask emailTask = new EmailRelayTask(newEmail, "激活您的拼车邮箱", "http://"+CarpoolConfig.domainName+"/#emailActivation/"+encryptedEmailKey);
 			ExecutorProvider.executeRelay(emailTask);
 		} catch (Exception e) {
 			DebugLog.d(e);
