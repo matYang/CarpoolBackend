@@ -10,7 +10,7 @@ public class Location implements PseudoModel, PseudoValidatable, Comparable<Loca
 	/******
 	 * the following stores location's informations
 	 ******/
-	private int id;
+	private long id;
 	private String province;
 	private String city;
 	private String region;
@@ -40,7 +40,7 @@ public class Location implements PseudoModel, PseudoValidatable, Comparable<Loca
 	/*****
 	 * full constructor used for SQL retrieval
 	 *****/
-	public Location(int id,String province,String city,String region,String pointName,String pointAddress,Double lat,Double lng,long match){
+	public Location(long id,String province,String city,String region,String pointName,String pointAddress,Double lat,Double lng,long match){
 		super();
 		this.id = id;
 		this.province = province;
@@ -57,14 +57,14 @@ public class Location implements PseudoModel, PseudoValidatable, Comparable<Loca
 	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -242,6 +242,19 @@ public class Location implements PseudoModel, PseudoValidatable, Comparable<Loca
 		this.lat = jsonObject.getDouble("lat");
 		this.lng = jsonObject.getDouble("lng");
 		this.match = jsonObject.getLong("match_Id");
+	}
+
+	public Location(Location departureLocation) {
+		super();
+		this.id = departureLocation.getId();
+		this.province = departureLocation.getProvince();
+		this.city = departureLocation.getCity();
+		this.region = departureLocation.getRegion();
+		this.pointName = departureLocation.getPointName();
+		this.pointAddress = departureLocation.getPointAddress();
+		this.lat = departureLocation.getLat();
+		this.lng = departureLocation.getLng();
+		this.match = departureLocation.getMatch();
 	}
 
 }

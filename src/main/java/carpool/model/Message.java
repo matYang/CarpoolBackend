@@ -38,6 +38,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 
 	private long departure_Id;
 	private Location departure_Location;
+	private long departureMatch_Id;
 	private Calendar departure_time;
 	private DayTimeSlot departure_timeSlot;
 	private int departure_seatsNumber;
@@ -46,6 +47,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 
 	private long arrival_Id;
 	private Location arrival_Location;
+	private long arrivalMatch_Id;
 	private Calendar arrival_time;
 	private DayTimeSlot arrival_timeSlot;
 	private int arrival_seatsNumber;
@@ -84,11 +86,15 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		this.ownerId = ownerId;
 		this.isRoundTrip = isRoundTrip;
 		this.departure_Location = departure_Location;
+		this.departure_Id = departure_Location.getId();
+		this.departureMatch_Id = departure_Location.getMatch();
 		this.departure_time = departure_time;
 		this.departure_timeSlot = departure_timeSlot;
 		this.departure_seatsNumber = departure_seatsNumber;
 		this.departure_priceList = departure_priceList;
 		this.arrival_Location = arrival_Location;
+		this.arrival_Id = arrival_Location.getId();
+		this.arrivalMatch_Id = arrival_Location.getMatch();
 		this.arrival_time = arrival_time;
 		this.arrival_timeSlot  = arrival_timeSlot;
 		this.arrival_seatsNumber = arrival_seatsNumber;
@@ -131,12 +137,16 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		this.owner = owner;
 		this.isRoundTrip = isRoundTrip;
 		this.departure_Location = departure_Location;
+		this.departure_Id = departure_Location.getId();
+		this.departureMatch_Id = departure_Location.getMatch();
 		this.departure_time = departure_time;
 		this.departure_timeSlot = departure_timeSlot;
 		this.departure_seatsNumber = departure_seatsNumber;
 		this.departure_seatsBooked = departures_seatsBooked;
 		this.departure_priceList = departure_priceList;
 		this.arrival_Location = arrival_Location;
+		this.arrival_Id = arrival_Location.getId();
+		this.arrivalMatch_Id = arrival_Location.getMatch();
 		this.arrival_time = arrival_time;
 		this.arrival_timeSlot = arrival_timeSlot;
 		this.arrival_seatsNumber = arrival_seatsNumber;
@@ -152,7 +162,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		this.historyDeleted = historyDeleted;
 	}
 
-
+	
 	public int getMessageId() {
 		return messageId;
 	}
@@ -210,6 +220,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 
 	public void setDeparture_Location(Location departure_Location) {
 		this.departure_Location = departure_Location;
+		this.departureMatch_Id = departure_Location.getMatch();
 	}
 
 
@@ -280,6 +291,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 
 	public void setArrival_Location(Location arrival_Location) {
 		this.arrival_Location = arrival_Location;
+		this.arrivalMatch_Id = arrival_Location.getMatch();
 	}
 
 
@@ -418,6 +430,21 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		this.arrival_Id = id;
 	}
 	
+	public long getDepartureMatch_Id(){
+		return this.departureMatch_Id;
+	}
+	
+	public void setDepartureMatch_Id(long id){
+		this.departureMatch_Id = id;
+	}
+	
+	public long getArrivalMatch_Id(){
+		return this.arrivalMatch_Id;
+	}
+	
+	public void setArrivalMatch_Id(long id){
+		this.arrivalMatch_Id = id;
+	}
 
 	@Override
 	public JSONObject toJSON(){
@@ -469,7 +496,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 					&& HelperOperator.isArrayListEqual(this.getArrival_priceList(), msg.getArrival_priceList()) && this.getArrival_seatsBooked() == msg.getArrival_seatsBooked()
 					&& this.getArrival_seatsNumber() == msg.getArrival_seatsNumber() && this.category == msg.getCategory() 
 					&& this.getCreationTime().getTime().toString().equals(msg.getCreationTime().getTime().toString())
-					&& this.departure_Location.equals(msg.getDeparture_Location()) 
+					&& this.getDeparture_Location().equals(msg.getDeparture_Location()) 
 					&& this.getDeparture_time().getTime().toString().equals(msg.getDeparture_time().getTime().toString())
 					&& HelperOperator.isArrayListEqual(this.getDeparture_priceList(), msg.getDeparture_priceList()) && this.getDeparture_seatsBooked() == msg.getDeparture_seatsBooked() 
 					&& this.getDeparture_seatsNumber() == msg.getDeparture_seatsNumber() 

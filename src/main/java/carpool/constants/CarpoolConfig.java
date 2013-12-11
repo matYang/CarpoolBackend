@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import carpool.common.DebugLog;
+import carpool.constants.Constants.DayTimeSlot;
+import carpool.constants.Constants.messageType;
 import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
 
@@ -78,7 +80,9 @@ public class CarpoolConfig {
 	public static final SearchRepresentation getDefaultSearchRepresentation(){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateStr =  sdf.format(Calendar.getInstance().getTime());
-		return new SearchRepresentation("false" + CarpoolConfig.urlSeperator + getDefaultLocationRepresentation().toSerializedString() + CarpoolConfig.urlSeperator + getDefaultLocationRepresentation().toSerializedString() + CarpoolConfig.urlSeperator + dateStr + CarpoolConfig.urlSeperator + dateStr + CarpoolConfig.urlSeperator  + "0" + CarpoolConfig.urlSeperator + "0" + CarpoolConfig.urlSeperator + "0");
+		long departureMatch_Id = 1;
+		long arrivalMatch_Id = 2;		
+		return new SearchRepresentation("false" + CarpoolConfig.urlSeperator + departureMatch_Id + CarpoolConfig.urlSeperator + arrivalMatch_Id + CarpoolConfig.urlSeperator + dateStr + CarpoolConfig.urlSeperator + dateStr + CarpoolConfig.urlSeperator  + "0" + CarpoolConfig.urlSeperator + "0" + CarpoolConfig.urlSeperator + "0");
 	}
 
 	public static final void initConfig(){
