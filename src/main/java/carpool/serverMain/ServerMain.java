@@ -36,8 +36,6 @@ public class ServerMain {
 	 * @throws Exception
 	 */
 	public void start() throws Exception {
-		LocationService.init();
-		
 		component = new Component();
 
 		// Add a new HTTP server listening on port
@@ -77,7 +75,7 @@ public class ServerMain {
 	public static void main(String... args) throws Exception {
 		CarpoolConfig.initConfig();
 		DebugLog.initializeLogger();
-		
+		LocationService.init();
 		DebugLog.d("Excuting");
 		// Load server logic
 		try {

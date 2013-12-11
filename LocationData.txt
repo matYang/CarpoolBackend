@@ -1,95 +1,11 @@
-#Requirements:
-#Be consistent! （e.g., capital letter for 1st char of every non-numerical word）
-#Example: 43.472586,-80.533895，precise to at least 6 digits after decimal（0.1 meter）
-#No space inside postal code, no space or tab or anything on empty line
-#In the case of no actuarial address, use name instead, e.g., Kennedy Station-Subway #Platform, Toronto, ON
-#In the case of no actuarial postal code, e.g., only knows M1K , use this format for #postal code: [M1K%%%]
-#for any larger areas, use lat and lons of their central points, and vague postal codes and addresses
+#This is the default locations that we will be supporting
+#The format will be:  
+#[province]-[city]-[region]-[name]-[address]-[lat]-[lng]-[radius]-[synonyms]
 
-$start
-[Canada] [45.434117,-75.697389] [%%%%%%] [Canada]
-
-	$start
-	[Ontario] [51.344339,-85.260773] [%%%%%%] [Ontario, Canada]
-
-		$start
-		[Waterloo] [43.474847,-80.556618] [N2L%%%] [Waterloo, ON]
-
-			$start
-			[Matthew's Sweet Little Home] [43.472586,-80.533895] [N2L3W4] [203 Lester, Waterloo, ON]
-			[DC Library] [43.472531,-80.541995] [N2L3G1] [Davis Center Lobby, Waterloo, ON]
-			[WCRI] [43.475229,-80.538481] [N2L3W8] [280 Phillip Street, Waterloo, ON]
-			[UW Plaza] [43.472021,-80.537564] [N2L3E9] [University Shops Plaza, Waterloo, ON]
-			[Cmall Bus Stop] [43.498114,-80.528587] [N2L6L2] [Conestoga Mall, Waterloo, ON]
-			[Cmall Plaza] [43.503266,-80.531068] [N2V2G2] [36 Northfield Dr E, Waterloo, ON]
-			[Matthews Hall] [43.47445,-80.545552] [N2L3G1] [BC Matthews Hall, Waterloo, ON]
-			$end
-
-		$end
-
-		$start
-		[Toronto] [43.654956,-79.379182] [M%%%%%%] [Toronto, ON]
-
-			$start
-			[Convocation Hall] [43.660987,-79.39534] [M5S3G4] [31 King's College Cir, Toronto, ON]
-			[CN Tower] [43.642659,-79.387047] [M5V2T6] [301 Front St W, Toronto, ON]
-			[Eaton Center] [43.654568,-79.380701] [M5B2H1] [220 Yonge St, Toronto, ON]
-			[York Dale] [43.725258,-79.451989] [M6A2T9] [3401 Dufferin Street Toronto, ON]
-			[Parking Lot Near Bloor Street West] [43.650392,-79.482568] [M6S3R1] [256-332 Willard Ave, Toronto, ON]
-			[Bay Street Condo] [43.660217,-79.385815] [M5G2J9] [770 Bay St, Toronto, ON]
-			[Patrick Station - Southbound Platform] [43.654615,-79.388217] [M5G%%%] [375-449 Hwy 11A, Toronto, ON]
-			$end
-
-		$end
-
-		$start
-		[Mississauga] [43.589344,-79.643433] [L%%%%%] [Mississauge, ON]
-
-			$start
-			[Pearson Airport - terminal 1] [43.681451,-79.611958] [L5P1B2] [6135 Silver Dart Dr, Mississauga, ON]
-			[Pearson Airport - terminal 2] [43.681868,-79.607293] [L5P%%%] [Terminal Two Rd, Mississauga, ON]
-			[Pearson Airport - terminal 3] [43.685719,-79.620541] [L5P1B2] [6135 Silver Dart Dr, Mississauga, ON]
-			[Square One] [43.592918,-79.643177] [L5B2C9] [100 City Centre Drive Mississauga, ON]
-			[Brampton Goreway Dr] [43.745421,-79.675138] [L6T5J8] [8526 Goreway Dr, Mississauga, ON]
-			[201 City Centre Dr] [43.589101,-79.642312] [L5B4E4] [201 City Centre Dr, Mississauga, ON]
-			[Bramble Ct] [43.580101,-79.660052] [L5C4S1] [848 Bramble Ct, Mississauga, ON]
-			$end
-
-		$end
-
-		$start
-		[Guelph] [43.544812,-80.248159] [N%%%%%] [Guelph, ON]
-
-			$start
-			[Dettmer Tire & Auto Center] [43.544699,-80.249973] [N1H2W7] [23 Cork St E, Guelph, ON]
-			[Baker Street Station] [43.547827,-80.252177] [N1H%%%] [74 Baker St, Guelph, ON]
-			[Guelph General Hospital] [43.556151,-80.253722] [N1E4J5] [115 Delhi St, Guelph, ON]				
-			$end
-
-		$end
-
-		$start
-		[Markham] [43.856123,-79.336998] [L3%%%%] [Markham, ON]
-
-			$start
-			[Unionville High School] [43.858614,-79.336161] [L3R8G5] [8674 Warden Ave, Markham, ON]
-			[Village Pkwy At Wentworth Ct] [43.867568,-79.329218] [L3R%%%] [25 Charrington Crescent, Markham, ON]
-			[Hillmount Park] [43.87536,-79.37307] [L6C%%%] [175 Hillmount Rd, Markham, ON]
-			$end
-			
-		$end
-
-		$start
-		[Cambridge] [43.361621,-80.314427] [N1%%%%] [Cambridge, ON]
-
-			$start
-			[Dickson Park] [43.364716,-80.320263] [N1S5C3] [145 George St N, Cambridge, ON]
-			[GRT Ainslie Terminal] [43.357386,-80.313129] [N1R3K2] [35 Ainslie St S, Cambridge, ON]
-			[Cambridge Skating Club] [43.363028,-80.306594] [N1R4J8] [Galt Arena Gardens, Cambridge, ON]
-			$end
-			
-		$end
-
-	$end
-
-$end
+[Ontario]-[Waterloo]-[Waterloo]-[Waterloo]-[Waterloo, On]-[43.479332]-[-80.533272]-[4]-[滑铁卢,水loo,卢村,滑铁卢大学,滑大,university of waterloo,wilfrid laurier university,cmall,conestoga]
+[Ontario]-[Toronto]-[Mississauga]-[Toronto Pearson International Airport]-[6301 Silver Dart Dr, Mississauga, ON L5P 1B2]-[43.677805]-[-79.623955]-[3]-[密西沙加,皮尔逊,机场,航站楼,terminal]
+[Ontario]-[Toronto]-[Toronto]-[Downtown Toronto]-[Downtown, Toronto, On]-[43.651603]-[-79.386613]-[1]-[多伦多,多伦多市中心]
+[Ontario]-[Toronto]-[Toronto]-[Finch Station]-[Finch Station, Toronto, On]-[43.780762]-[-79.414835]-[1]-[多伦多,芬治站]
+[Ontario]-[Toronto]-[Toronto]-[Yorkdale Shopping Centre]-[Yorkdale, Toronto, On]-[43.725863]-[-79.453046]-[1]-[多伦多,约克戴尔购物中心]
+[Ontario]-[Markham]-[Markham]-[Pacific Mall]-[Pacific Mall, Markham, ON L3R 0N8]-[43.825874]-[-79.305607]-[2]-[万锦市,太古广场]
+[Ontario]-[Niagara Falls]-[Niagara Falls]-[Niagara Falls]-[Niagara Falls, ON]-[43.089545]-[-79.092986]-[3]-[尼亚加拉瀑布]
