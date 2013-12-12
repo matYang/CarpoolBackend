@@ -24,7 +24,9 @@ import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.gender;
 import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.paymentMethod;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.validation.ValidationException;
+import carpool.model.Location;
 import carpool.model.Message;
 import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
@@ -59,9 +61,29 @@ public class AwsTest {
 	}
 
 	//@Test
-	public void testUploadSearchFile() throws IOException{
+	public void testUploadSearchFile() throws IOException, LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
+		Location departureLocation2= new Location(province,city1,region1,"Test12","Test111",lat1,lng1,arrival_Id*2);
+		Location arrivalLocation2 = new Location(province,city2,region2,"Test22","Test222",lat2,lng2,departure_Id+arrival_Id);
+		long dm = departureLocation.getMatch();
+		long am = arrivalLocation.getMatch();
+		long dm2 = departureLocation2.getMatch();
+		long am2 = arrivalLocation2.getMatch();
+		
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -75,12 +97,7 @@ public class AwsTest {
 		Calendar dt2 = Calendar.getInstance();
 		dt2.add(Calendar.DAY_OF_YEAR, 1);
 		Calendar at2 = Calendar.getInstance();
-		at2.add(Calendar.DAY_OF_YEAR, 2);	
-		//Location
-		LocationRepresentation dl=new LocationRepresentation("Canada_Ontario_dl1_2");
-		LocationRepresentation al=new LocationRepresentation("Canada_Ontario_al1_2");	
-		LocationRepresentation dl2=new LocationRepresentation("Canada_Ontario_dl2_2");
-		LocationRepresentation al2=new LocationRepresentation("Canada_Ontario_al2_2");	
+		at2.add(Calendar.DAY_OF_YEAR, 2);		
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
@@ -94,15 +111,15 @@ public class AwsTest {
 		int userId=user.getUserId();
 
 		//Message	
-		Message message=new Message(userId,false, dl,dt,timeSlot,1 , priceList,al,at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
+		Message message=new Message(userId,false, new Location(departureLocation),dt,timeSlot,1 , priceList,new Location(arrivalLocation),at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message);
 		//SRs
-		SearchRepresentation SR = new SearchRepresentation(false,dl,al,dt,at,type,timeSlot,timeSlot);
-		SearchRepresentation SR2 = new SearchRepresentation(false,dl,al,dt,at,type,timeSlot2,timeSlot2);
-		SearchRepresentation SR3 = new SearchRepresentation(true,dl,al,dt,at,type,timeSlot3,timeSlot3);
-		SearchRepresentation SR4 = new SearchRepresentation(true,dl2,al2,dt2,at2,type,timeSlot2,timeSlot2);
-		SearchRepresentation SR5 = new SearchRepresentation(false,dl2,al2,dt2,at2,type,timeSlot3,timeSlot3);
-		SearchRepresentation SR6 = new SearchRepresentation(false,dl2,al2,dt2,at2,type,timeSlot3,timeSlot3);
+		SearchRepresentation SR = new SearchRepresentation(false,dm,am,dt,at,type,timeSlot,timeSlot);
+		SearchRepresentation SR2 = new SearchRepresentation(false,dm,am,dt,at,type,timeSlot2,timeSlot2);
+		SearchRepresentation SR3 = new SearchRepresentation(true,dm,am,dt,at,type,timeSlot3,timeSlot3);
+		SearchRepresentation SR4 = new SearchRepresentation(true,dm,am2,dt2,at2,type,timeSlot2,timeSlot2);
+		SearchRepresentation SR5 = new SearchRepresentation(false,dm,am2,dt2,at2,type,timeSlot3,timeSlot3);
+		SearchRepresentation SR6 = new SearchRepresentation(false,dm,am2,dt2,at2,type,timeSlot3,timeSlot3);
 
 		Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
 		String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
@@ -176,10 +193,29 @@ public class AwsTest {
 	}
 
 	//@Test
-	public void testGetSearchHistory() throws IOException{
+	public void testGetSearchHistory() throws IOException, LocationNotFoundException{
 
 		CarpoolDaoBasic.clearBothDatabase();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
+		Location departureLocation2= new Location(province,city1,region1,"Test12","Test111",lat1,lng1,arrival_Id*2);
+		Location arrivalLocation2 = new Location(province,city2,region2,"Test22","Test222",lat2,lng2,departure_Id+arrival_Id);
+		long dm = departureLocation.getMatch();
+		long am = arrivalLocation.getMatch();
+		long dm2 = departureLocation2.getMatch();
+		long am2 = arrivalLocation2.getMatch();
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -193,12 +229,7 @@ public class AwsTest {
 		Calendar dt2 = Calendar.getInstance();
 		dt2.add(Calendar.DAY_OF_YEAR, 1);
 		Calendar at2 = Calendar.getInstance();
-		at2.add(Calendar.DAY_OF_YEAR, 2);	
-		//Location
-		LocationRepresentation dl=new LocationRepresentation("Canada_Ontario_dl1_2");
-		LocationRepresentation al=new LocationRepresentation("Canada_Ontario_al1_2");	
-		LocationRepresentation dl2=new LocationRepresentation("Canada_Ontario_dl2_2");
-		LocationRepresentation al2=new LocationRepresentation("Canada_Ontario_al2_2");	
+		at2.add(Calendar.DAY_OF_YEAR, 2);		
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
@@ -212,15 +243,15 @@ public class AwsTest {
 		int userId=user.getUserId();
 
 		//Message	
-		Message message=new Message(userId,false, dl,dt,timeSlot,1 , priceList,al,at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
+		Message message=new Message(userId,false, new Location(departureLocation),dt,timeSlot,1 , priceList,new Location(arrivalLocation),at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message);
 		//SRs
-		SearchRepresentation SR = new SearchRepresentation(false,dl,al,dt,at,type,timeSlot,timeSlot);
-		SearchRepresentation SR2 = new SearchRepresentation(false,dl,al,dt,at,type,timeSlot2,timeSlot2);
-		SearchRepresentation SR3 = new SearchRepresentation(true,dl,al,dt,at,type,timeSlot3,timeSlot3);
-		SearchRepresentation SR4 = new SearchRepresentation(true,dl2,al2,dt2,at2,type,timeSlot2,timeSlot2);
-		SearchRepresentation SR5 = new SearchRepresentation(false,dl2,al2,dt2,at2,type,timeSlot3,timeSlot3);
-		SearchRepresentation SR6 = new SearchRepresentation(false,dl2,al2,dt2,at2,type,timeSlot3,timeSlot3);
+		SearchRepresentation SR = new SearchRepresentation(false,dm,am,dt,at,type,timeSlot,timeSlot);
+		SearchRepresentation SR2 = new SearchRepresentation(false,dm,am,dt,at,type,timeSlot2,timeSlot2);
+		SearchRepresentation SR3 = new SearchRepresentation(true,dm,am,dt,at,type,timeSlot3,timeSlot3);
+		SearchRepresentation SR4 = new SearchRepresentation(true,dm2,am2,dt2,at2,type,timeSlot2,timeSlot2);
+		SearchRepresentation SR5 = new SearchRepresentation(false,dm2,am2,dt2,at2,type,timeSlot3,timeSlot3);
+		SearchRepresentation SR6 = new SearchRepresentation(false,dm2,am2,dt2,at2,type,timeSlot3,timeSlot3);
 		// In this case, we use 6 to be the upper bound
 		ArrayList<SearchRepresentation> list = new ArrayList<SearchRepresentation>();
 		int pre = awsMain.getUserSearchHistory(userId).size();

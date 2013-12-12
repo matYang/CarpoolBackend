@@ -10,6 +10,7 @@ import javax.crypto.NoSuchPaddingException;
 
 import org.junit.Test;
 
+import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.common.DebugLog;
 import carpool.encryption.EmailCrypto;
 import carpool.encryption.ImgCrypto;
@@ -20,6 +21,7 @@ import carpool.encryption.SessionCrypto;
 public class EncryptionTest {
 	@Test
 	public void emailCryptoTest(){
+		CarpoolDaoBasic.clearBothDatabase();
 		int id = 213213;
 		String authCode = "%few%#gHUIBHFJ&^NFJHGFHJ%";
 		
@@ -32,6 +34,7 @@ public class EncryptionTest {
 	
 	@Test
 	public void ImgCryptoTest(){
+		CarpoolDaoBasic.clearBothDatabase();
 		String testImgName = "83_--3498as2-re";
 		
 		String encryptedString = null;
@@ -47,6 +50,7 @@ public class EncryptionTest {
 	
 	@Test
 	public void SessionCryptoTest(){
+		CarpoolDaoBasic.clearBothDatabase();
 		String testSessionKey = "fds$@#tfsdu8YUFG3t+_1~j9";
 		String encryptedString = "";
 		String decryptedString = "";

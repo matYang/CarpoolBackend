@@ -17,6 +17,7 @@ import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.paymentMethod;
 import carpool.factory.JSONFactory;
+import carpool.model.Location;
 import carpool.model.Message;
 import carpool.model.representation.LocationRepresentation;
 
@@ -29,8 +30,19 @@ public class jsonTest {
 		Calendar dt = Calendar.getInstance();		
 		Calendar at = Calendar.getInstance();			
 		//Location
-		LocationRepresentation dl=new LocationRepresentation("Canada_Ontario_Toronto_2");
-		LocationRepresentation al=new LocationRepresentation("Canada_Ontario_Waterloo_2");		
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);		
 		
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
@@ -44,7 +56,7 @@ public class jsonTest {
 		int userId=-1;
 		
 		//Message	
-		Message message = new Message(userId,false, dl,dt,timeSlot,1 , priceList,al,at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
+		Message message = new Message(userId,false, departureLocation,dt,timeSlot,1 , priceList,arrivalLocation,at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
 		
 		
 		assertTrue(message.toJSON() != null);

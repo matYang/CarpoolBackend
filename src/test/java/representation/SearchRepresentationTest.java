@@ -9,6 +9,7 @@ import java.util.Date;
 
 import org.junit.Test;
 
+import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.constants.CarpoolConfig;
 import carpool.dbservice.LocationDaoService;
 import carpool.model.representation.LocationRepresentation;
@@ -18,6 +19,7 @@ public class SearchRepresentationTest {
 
 	@Test
 	public void test() {
+		CarpoolDaoBasic.clearBothDatabase();
 		try{
 			ArrayList<String> lv1 = new ArrayList<String>();
 			ArrayList<String> lv2 = new ArrayList<String>();

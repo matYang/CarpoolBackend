@@ -137,8 +137,8 @@ public class CarpoolDaoMessage{
 
 
 	public static Message addMessageToDatabase(Message msg) throws LocationNotFoundException{	
-		CarpoolDaoLocation.addLocationToDatabases(msg.getDeparture_Location());
-		CarpoolDaoLocation.addLocationToDatabases(msg.getArrival_Location());
+		msg.setDeparture_Location(CarpoolDaoLocation.addLocationToDatabases(msg.getDeparture_Location()));
+		msg.setArrival_Location(CarpoolDaoLocation.addLocationToDatabases(msg.getArrival_Location()));
 		msg.setDeparture_Id(msg.getDeparture_Location().getId());
 		msg.setArrvial_Id(msg.getArrival_Location().getId());
 		String query = "INSERT INTO carpoolDAOMessage (ownerId,isRoundTrip," +
@@ -198,8 +198,8 @@ public class CarpoolDaoMessage{
 	}
 
 	public static void UpdateMessageInDatabase(Message msg) throws MessageNotFoundException{
-		CarpoolDaoLocation.addLocationToDatabases(msg.getDeparture_Location());
-		CarpoolDaoLocation.addLocationToDatabases(msg.getArrival_Location());
+		msg.setDeparture_Location(CarpoolDaoLocation.addLocationToDatabases(msg.getDeparture_Location()));
+		msg.setArrival_Location(CarpoolDaoLocation.addLocationToDatabases(msg.getArrival_Location()));
 		msg.setDeparture_Id(msg.getDeparture_Location().getId());
 		msg.setArrvial_Id(msg.getArrival_Location().getId());
 		String query = "UPDATE carpoolDAOMessage SET isRoundTrip=?,departure_Id=?,departure_Time=?," +

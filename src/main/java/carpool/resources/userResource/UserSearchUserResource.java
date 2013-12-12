@@ -45,7 +45,9 @@ public class UserSearchUserResource extends PseudoResource{
 			if (srStr != null){
 				UserSearchRepresentation userSearchRepresentation = new UserSearchRepresentation(srStr);
 
+
 				if (LocationDaoService.isLocationValid(userSearchRepresentation.getLocation())){
+
 					ArrayList<User> searchResult = new ArrayList<User>();
 					searchResult = UserDaoService.searchForUser(userSearchRepresentation, login, userId);
 					response = JSONFactory.toJSON(searchResult);

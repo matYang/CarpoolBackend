@@ -9,6 +9,7 @@ import carpool.common.EmailHandler;
 import carpool.constants.CarpoolConfig;
 import carpool.carpoolDAO.*;
 import carpool.encryption.EmailCrypto;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.User;
 
@@ -117,8 +118,9 @@ public class EmailDaoService {
 	 * clear the previous authCode session in Redis, use Constants.key_emailActivationAuth + userId as Redis key, generate a new authCode
 	 * @param userId
 	 * @return true if email sent successfully
+	 * @throws LocationNotFoundException 
 	 */
-	public static boolean reSendActivationEmail(int userId){
+	public static boolean reSendActivationEmail(int userId) throws LocationNotFoundException{
 		User user = null;
 		try {
 			user = CarpoolDaoUser.getUserById(userId);
@@ -159,7 +161,7 @@ public class EmailDaoService {
 		return false;
 	}
 
-	public static boolean isEmailAvailable(String email){
+	public static boolean isEmailAvailable(String email) throws LocationNotFoundException{
 		try {
 			CarpoolDaoUser.getUserByEmail(email);
 		} catch (UserNotFoundException e){

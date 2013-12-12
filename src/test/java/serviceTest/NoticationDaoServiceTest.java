@@ -31,7 +31,7 @@ public class NoticationDaoServiceTest {
 	
 	@Test
 	public void addNotificationTest(){
-
+		CarpoolDaoBasic.clearBothDatabase();
         String query0 = "SET FOREIGN_KEY_CHECKS=0 ";       
         String query1 = "TRUNCATE TABLE carpoolDAONotification ";
         String query2 = "SET FOREIGN_KEY_CHECKS=1;";

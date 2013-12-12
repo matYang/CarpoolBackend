@@ -25,13 +25,14 @@ public class UserDaoService{
 	
 	/*****
 	 *  User's CRUD
+	 * @throws LocationNotFoundException 
 	 *****/
 	
-	public static ArrayList<User> getAllUsers(){
+	public static ArrayList<User> getAllUsers() throws LocationNotFoundException{
 		return CarpoolDaoUser.getAllUsers();
 	}
 
-	public static User getUserById(int id) throws UserNotFoundException{
+	public static User getUserById(int id) throws UserNotFoundException, LocationNotFoundException{
 		return CarpoolDaoUser.getUserById(id);
 	}
 	
@@ -60,9 +61,10 @@ public class UserDaoService{
 
 	/*****
 	 *  The follows are user's passwords related
+	 * @throws LocationNotFoundException 
 	 *****/
 	
-	public static boolean changePassword(int userId, String oldPassword, String newPassword) throws UserNotFoundException, ValidationException{
+	public static boolean changePassword(int userId, String oldPassword, String newPassword) throws UserNotFoundException, ValidationException, LocationNotFoundException{
 		if(oldPassword.equals(newPassword)){
 			throw new ValidationException("新密码不应该和旧密码相同");
 		}
@@ -126,7 +128,7 @@ public class UserDaoService{
 	}
 
 	
-	public static ArrayList<User> getWatchedUsers(int id) throws UserNotFoundException{
+	public static ArrayList<User> getWatchedUsers(int id) throws UserNotFoundException, LocationNotFoundException{
 		return CarpoolDaoUser.getSocialListOfUser(id);
 	}
 	
@@ -134,7 +136,7 @@ public class UserDaoService{
 		return CarpoolDaoUser.hasUserInSocialList(userId, targetUserId);
 	}
 
-	public static ArrayList<User> searchForUser(UserSearchRepresentation uSR, boolean isLoggedIn, int userId){
+	public static ArrayList<User> searchForUser(UserSearchRepresentation uSR, boolean isLoggedIn, int userId) throws LocationNotFoundException{
 		ArrayList<User> searchResult = CarpoolDaoUser.searchForUser(uSR);
 		if (isLoggedIn){
 			//maybe log the userSearch

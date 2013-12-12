@@ -245,17 +245,17 @@ public class Location implements PseudoModel, PseudoValidatable, Comparable<Loca
 		this.match = jsonObject.getLong("match_Id");
 	}
 
-	public Location(Location departureLocation) {
+	public Location(Location location) {
 		super();
-		this.id = departureLocation.getId();
-		this.province = departureLocation.getProvince();
-		this.city = departureLocation.getCity();
-		this.region = departureLocation.getRegion();
-		this.pointName = departureLocation.getPointName();
-		this.pointAddress = departureLocation.getPointAddress();
-		this.lat = departureLocation.getLat();
-		this.lng = departureLocation.getLng();
-		this.match = departureLocation.getMatch();
+		this.id = location.getId();
+		this.province = location.getProvince();
+		this.city = location.getCity();
+		this.region = location.getRegion();
+		this.pointName = location.getPointName();
+		this.pointAddress = location.getPointAddress();
+		this.lat = location.getLat();
+		this.lng = location.getLng();
+		this.match = location.getMatch();
 	}
 
 }

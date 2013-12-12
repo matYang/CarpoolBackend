@@ -74,7 +74,7 @@ public class CarpoolDaoUser {
     }
     
 	public static User addUserToDatabase(User user) throws ValidationException{	
-		CarpoolDaoLocation.addLocationToDatabases(user.getLocation());
+		user.setLocation(CarpoolDaoLocation.addLocationToDatabases(user.getLocation()));
 		user.setLocation_Id(user.getLocation().getId());
 		String query = "INSERT INTO carpoolDAOUser (password,name,email,phone,qq,gender,birthday,"+
 	            "imgPath,location_Id,lastLogin,creationTime,"+
@@ -154,7 +154,7 @@ public class CarpoolDaoUser {
 	}
 
 	public static void UpdateUserInDatabase(User user) throws UserNotFoundException, ValidationException{
-		CarpoolDaoLocation.addLocationToDatabases(user.getLocation());
+		user.setLocation(CarpoolDaoLocation.addLocationToDatabases(user.getLocation()));
 		user.setLocation_Id(user.getLocation().getId());
 		String query = "UPDATE carpoolDAOUser SET password=?,name=?,email=?,phone=?,qq=?,gender=?,birthday=?," +
 	            "imgPath=?,location_Id=?,lastLogin=?,"+

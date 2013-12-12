@@ -45,8 +45,52 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 	private int providerEvaluation;
 	
 	//transactions have their data set upon initialization, further change to the base message itself will not effect transaction details
-	private LocationRepresentation departure_location;
-	private LocationRepresentation arrival_location;
+	private Location departure_location;
+	private long departure_Id;
+	private Location arrival_location;
+	private long arrival_Id;
+	/**
+	 * @return the departure_Id
+	 */
+	public long getDeparture_Id() {
+		return departure_Id;
+	}
+
+	/**
+	 * @param departure_Id the departure_Id to set
+	 */
+	public void setDeparture_Id(long departure_Id) {
+		this.departure_Id = departure_Id;
+	}
+
+	/**
+	 * @return the arrival_Id
+	 */
+	public long getArrival_Id() {
+		return arrival_Id;
+	}
+
+	/**
+	 * @param arrival_Id the arrival_Id to set
+	 */
+	public void setArrival_Id(long arrival_Id) {
+		this.arrival_Id = arrival_Id;
+	}
+
+	/**
+	 * @param departure_location the departure_location to set
+	 */
+	public void setDeparture_location(Location departure_location) {
+		this.departure_location = departure_location;
+	}
+
+	/**
+	 * @param arrival_location the arrival_location to set
+	 */
+	public void setArrival_location(Location arrival_location) {
+		this.arrival_location = arrival_location;
+	}
+
 	private Calendar departure_time;
 	private DayTimeSlot departure_timeSlot;
 	private int departure_seatsBooked;
@@ -64,8 +108,7 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 	private Transaction(){}
 	
 	//this constructor is used for transaction initialization
-	public Transaction(int providerId, int customerId, int messageId, paymentMethod p, String cNote, String pNote, LocationRepresentation departure_location, LocationRepresentation arrival_location, 
-			 Calendar d_t, DayTimeSlot d_ts, int d_seats, TransactionType type){
+	public Transaction(int providerId, int customerId, int messageId, paymentMethod p, String cNote, String pNote,Calendar d_t, DayTimeSlot d_ts, int d_seats, TransactionType type){
 		super();
 		this.providerId = providerId;
 		this.customerId = customerId;
@@ -80,9 +123,7 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		this.providerNote = pNote;
 		this.customerEvaluation = 0;
 		this.providerEvaluation = 0;
-		
-		this.departure_location = departure_location;
-		this.arrival_location = arrival_location;
+				
 		this.departure_time = d_t;
 		this.departure_timeSlot = d_ts;
 		this.departure_seatsBooked = d_seats;
@@ -101,8 +142,8 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 			int messageId,
 			carpool.constants.Constants.paymentMethod paymentMethod,
 			String customerNote, String providerNote, int customerEvaluation,
-			int providerEvaluation, LocationRepresentation departure_location,
-			LocationRepresentation arrival_location, Calendar departure_time,
+			int providerEvaluation, Location departure_location,
+			Location arrival_location, Calendar departure_time,
 			DayTimeSlot departure_timeSlot, int departure_seatsBooked,
 			ArrayList<Integer> departure_priceList, TransactionType type,
 			int totalPrice, transactionState state, Calendar creationTime,
@@ -118,7 +159,9 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		this.customerEvaluation = customerEvaluation;
 		this.providerEvaluation = providerEvaluation;
 		this.departure_location = departure_location;
+		this.departure_Id = departure_location.getId();
 		this.arrival_location = arrival_location;
+		this.arrival_Id = arrival_location.getId();
 		this.departure_time = departure_time;
 		this.departure_timeSlot = departure_timeSlot;
 		this.departure_seatsBooked = departure_seatsBooked;
@@ -227,21 +270,13 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		this.providerEvaluation = providerEvaluation;
 	}
 
-	public LocationRepresentation getDeparture_location() {
+	public Location getDeparture_location() {
 		return departure_location;
 	}
 
-	public void setDeparture_location(LocationRepresentation departure_location) {
-		this.departure_location = departure_location;
-	}
-
-	public LocationRepresentation getArrival_location() {
+	public Location getArrival_location() {
 		return arrival_location;
-	}
-
-	public void setArrival_location(LocationRepresentation arrival_location) {
-		this.arrival_location = arrival_location;
-	}
+	}	
 
 	public Calendar getDeparture_time() {
 		return departure_time;

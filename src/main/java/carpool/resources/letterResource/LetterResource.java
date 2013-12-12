@@ -15,6 +15,7 @@ import carpool.common.DebugLog;
 import carpool.constants.Constants;
 import carpool.dbservice.LetterDaoService;
 import carpool.exception.PseudoException;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -41,7 +42,7 @@ public class LetterResource extends PseudoResource{
 	
 	
 	@Get
-	public Representation getAllLetters() throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException {
+	public Representation getAllLetters() throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException {
 
 		ArrayList<Letter> allLetters = LetterDaoService.getAllLetters();
 		JSONArray jsonArray = new JSONArray();
