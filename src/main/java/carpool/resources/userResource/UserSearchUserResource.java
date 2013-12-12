@@ -10,12 +10,12 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 
 import carpool.constants.CarpoolConfig;
+import carpool.dbservice.LocationDaoService;
 import carpool.dbservice.MessageDaoService;
 import carpool.dbservice.UserDaoService;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.AccountAuthenticationException;
 import carpool.factory.JSONFactory;
-import carpool.locationService.LocationService;
 import carpool.model.Message;
 import carpool.model.User;
 import carpool.model.representation.SearchRepresentation;
@@ -45,7 +45,7 @@ public class UserSearchUserResource extends PseudoResource{
 			if (srStr != null){
 				UserSearchRepresentation userSearchRepresentation = new UserSearchRepresentation(srStr);
 
-				if (LocationService.isLocationRepresentationValid(userSearchRepresentation.getLocation())){
+				if (LocationDaoService.isLocationValid(userSearchRepresentation.getLocation())){
 					ArrayList<User> searchResult = new ArrayList<User>();
 					searchResult = UserDaoService.searchForUser(userSearchRepresentation, login, userId);
 					response = JSONFactory.toJSON(searchResult);

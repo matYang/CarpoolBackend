@@ -23,7 +23,6 @@ import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.AccountAuthenticationException;
 import carpool.factory.JSONFactory;
-import carpool.locationService.LocationService;
 import carpool.model.*;
 import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
@@ -58,15 +57,10 @@ public class DMSearchResource extends PseudoResource{
 			
 			SearchRepresentation sr = srStr != null ? new SearchRepresentation(srStr) : CarpoolConfig.getDefaultSearchRepresentation();
 			
-			//not checking for date..because an invalid date will have no search result anyways
-			if (LocationService.isLocationRepresentationValid(sr.getDepartureMatch_Id()) && LocationService.isLocationRepresentationValid(sr.getArrivalMatch_Id()) ){
-				ArrayList<Message> searchResult = new ArrayList<Message>();
-				searchResult = MessageDaoService.primaryMessageSearch(sr, login, userId);
-				response = JSONFactory.toJSON(searchResult);
-			}
-			else{
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			}
+			//no need to valdiate location anymore, as an id will only have match or no-match
+			ArrayList<Message> searchResult = new ArrayList<Message>();
+			searchResult = MessageDaoService.primaryMessageSearch(sr, login, userId);
+			response = JSONFactory.toJSON(searchResult);
 			
 		} catch (PseudoException e){
 			this.addCORSHeader();

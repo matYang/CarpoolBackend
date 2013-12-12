@@ -8,9 +8,9 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 
 import carpool.common.DebugLog;
+import carpool.dbservice.LocationDaoService;
 import carpool.exception.PseudoException;
 import carpool.factory.JSONFactory;
-import carpool.locationService.LocationService;
 import carpool.model.Location;
 import carpool.resources.PseudoResource;
 

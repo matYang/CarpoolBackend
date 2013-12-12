@@ -23,7 +23,6 @@ import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.validation.ValidationException;
 import carpool.factory.JSONFactory;
-import carpool.locationService.LocationService;
 import carpool.model.*;
 import carpool.model.representation.LocationRepresentation;
 import carpool.resources.PseudoResource;
@@ -49,7 +48,7 @@ public class UserResource extends PseudoResource{
 				throw new ValidationException("Email already in use");
 			}
 			
-			if (Validator.isPasswordFormatValid(password) && Validator.isEmailFormatValid(email) && LocationService.isLocationRepresentationValid(location)){
+			if (Validator.isPasswordFormatValid(password) && Validator.isEmailFormatValid(email)){
 				user = new User(password, email, location, g);
 			}
 		} catch (JSONException|IOException e) {

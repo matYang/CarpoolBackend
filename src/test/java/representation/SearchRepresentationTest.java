@@ -10,7 +10,7 @@ import java.util.Date;
 import org.junit.Test;
 
 import carpool.constants.CarpoolConfig;
-import carpool.locationService.LocationService;
+import carpool.dbservice.LocationDaoService;
 import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
 

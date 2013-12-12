@@ -1,4 +1,4 @@
-package carpool.locationService;
+package carpool.dbservice;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,7 +11,9 @@ import carpool.carpoolDAO.CarpoolDaoLocation;
 import carpool.constants.CarpoolConfig;
 import carpool.exception.location.LocationException;
 import carpool.exception.validation.ValidationException;
+import carpool.locationService.CarpoolLocationLoader;
 import carpool.model.Location;
+import carpool.model.representation.DefaultLocationRepresentation;
 import carpool.model.representation.LocationRepresentation;
 
 
@@ -19,7 +21,7 @@ import carpool.model.representation.LocationRepresentation;
  * universal interface for location access, to replace the old LocationManager
  *
  */
-public class LocationService {	
+public class LocationDaoService {	
 
 	public static void init() throws LocationException, ValidationException{
 //		if (!CarpoolDaoLocation.isLocationDefaultEmpty()){
@@ -34,18 +36,28 @@ public class LocationService {
 		}
 	}
 	
+	public static ArrayList<DefaultLocationRepresentation> getDefaultLocations(){
+		ArrayList<DefaultLocationRepresentation> defaultLocationList = new ArrayList<DefaultLocationRepresentation>();
+		
+		
+		return defaultLocationList;
+	}
 	
-	public static final boolean isLocationRepresentationValid(long match_Id){
+	public static Location addLocation(Location newLocation){
+		
+		
+		
+		
+		return newLocation;
+	}
+	
+	
+	public static boolean isLocationValid(Location location){
+
+		
 		return true;
 	}
 	
 	
-	public static final boolean isLocationRepresentationValid(LocationRepresentation locRep){
-		return true;
-	}
-	
-	public static final boolean isLocationRepresentationStored(LocationRepresentation locRep){
-		return true;
-	}
 	
 }
