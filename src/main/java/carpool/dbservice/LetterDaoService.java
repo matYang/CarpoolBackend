@@ -10,6 +10,7 @@ import carpool.constants.Constants.LetterDirection;
 import carpool.constants.Constants.LetterType;
 import carpool.exception.letter.LetterNotFoundException;
 import carpool.exception.letter.LetterOwnerNotMatchException;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Letter;
 import carpool.model.User;
@@ -19,31 +20,31 @@ import carpool.model.User;
 public class LetterDaoService{
 
 
-	public static ArrayList<Letter> getAllLetters() throws UserNotFoundException{
+	public static ArrayList<Letter> getAllLetters() throws UserNotFoundException, LocationNotFoundException{
 
 		return CarpoolDaoLetter.getAllLetters();
 	}
 
 
-	public static ArrayList<Letter> getUserLetters(int curUserId, int targetUserId, LetterType type, LetterDirection direction) throws UserNotFoundException{
+	public static ArrayList<Letter> getUserLetters(int curUserId, int targetUserId, LetterType type, LetterDirection direction) throws UserNotFoundException, LocationNotFoundException{
 		ArrayList<Letter> letters = CarpoolDaoLetter.getUserLetters(curUserId, targetUserId, type, direction);
 		checkLetter(curUserId, targetUserId);
 		return letters;
 	}
 
-	public static ArrayList<User> getLetterUsers(int userId) throws UserNotFoundException{
+	public static ArrayList<User> getLetterUsers(int userId) throws UserNotFoundException, LocationNotFoundException{
 
 		return CarpoolDaoLetter.getLetterUsers(userId);
 	}
 
 
-	public static Letter getLetterById(int letterId) throws LetterNotFoundException, UserNotFoundException{
+	public static Letter getLetterById(int letterId) throws LetterNotFoundException, UserNotFoundException, LocationNotFoundException{
 
 		return CarpoolDaoLetter.getLetterById(letterId);
 	}
 
 
-	public static Letter sendLetter(Letter letter) throws UserNotFoundException{
+	public static Letter sendLetter(Letter letter) throws UserNotFoundException, LocationNotFoundException{
 		LetterRelayTask lTask = new LetterRelayTask(letter);
 		ExecutorProvider.executeRelay(lTask);
 		return CarpoolDaoLetter.addLetterToDatabases(letter);

@@ -34,9 +34,9 @@ import carpool.resources.PseudoResource;
 public class UserSingleLocationResource extends PseudoResource{
 
 
-	public static LocationRepresentation parseJSON(String locationString){
-		LocationRepresentation location = new LocationRepresentation(locationString);
-		if (LocationService.isLocationRepresentationValid(location)){
+	public static Location parseJSON(JSONObject JOlocation){
+		Location location = new Location(JOlocation);
+		if (LocationService.isLocationRepresentationValid(location.getId())){
 			return location;
 		}
 		else{
@@ -49,7 +49,7 @@ public class UserSingleLocationResource extends PseudoResource{
 	public Representation changeLocation(Representation entity) {
 		int userId = -1;
 		JSONObject response = new JSONObject();
-		LocationRepresentation location = null;
+		Location location = null;
 
 		try {
 			this.checkEntity(entity);
@@ -57,7 +57,7 @@ public class UserSingleLocationResource extends PseudoResource{
 			userId = Integer.parseInt(this.getReqAttr("id"));
 			this.validateAuthentication(userId);
 			
-			location = parseJSON((new JsonRepresentation(entity)).getJsonObject().getString("location"));
+			location = parseJSON((new JsonRepresentation(entity)).getJsonObject());
 			if (location != null){
 				
 				User user = UserDaoService.getUserById(userId);

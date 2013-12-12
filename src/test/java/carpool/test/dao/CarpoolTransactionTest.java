@@ -4,6 +4,8 @@ import static org.junit.Assert.fail;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import org.json.JSONObject;
 import org.junit.Test;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoMessage;
@@ -19,25 +21,41 @@ import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.paymentMethod;
 import carpool.constants.Constants.transactionState;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.validation.ValidationException;
+import carpool.model.Location;
 import carpool.model.Message;
 import carpool.model.Transaction;
 import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
 
-public class CarpoolTransactionTest {
+public class CarpoolTransactionTest {	
+
 	@Test
-	public void testAddTransaction(){
+	public void testAddTransaction() throws LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		//Users
-		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca",departureLocation, gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(provider);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1), gender.both);
+		User customer =  new User("fangyuan", "fangyuanlucky", arrivalLocation, gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);
@@ -56,11 +74,11 @@ public class CarpoolTransactionTest {
 
 		//Messages
 		Message message=new Message(provider.getUserId(),false
-				, new LocationRepresentation("p_c_d_2"),time,timeSlot,1 , priceList,new LocationRepresentation("p_c_d_2"),
+				, new Location(departureLocation),time,timeSlot,1 , priceList,new Location(arrivalLocation),
 				time,timeSlot, 1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message);		
-		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",new LocationRepresentation("p_c_d_2"), new LocationRepresentation("p_c_d_2"),time,timeSlot,1,transactiontype);
+		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",time,timeSlot,1,transactiontype);
 
 		//Test
 		try{
@@ -73,17 +91,30 @@ public class CarpoolTransactionTest {
 	}
 
 	@Test
-	public void testReadTransaction(){
+	public void testReadTransaction() throws LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		//Users
-		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new Location(departureLocation), gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(provider);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1), gender.both);
+		User customer =  new User("fangyuan", "fangyuanlucky", new Location(arrivalLocation), gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);
@@ -101,26 +132,24 @@ public class CarpoolTransactionTest {
 		messageType type = messageType.fromInt(0);
 		gender genderRequirement = gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
-
-		LocationRepresentation dl=new LocationRepresentation("Canada_Ontario_Toronto_2");
-		LocationRepresentation al=new LocationRepresentation("Canada_Ontario_Waterloo_2");	
+		
 
 		int dseats = 4;
 		int aseats = 4;
 		//Messages
 		Message message=new Message(provider.getUserId(),false
-				, dl,dt,timeSlot,dseats , priceList,al,
+				, new Location(departureLocation),dt,timeSlot,dseats , priceList,new Location(arrivalLocation),
 				at,timeSlot, aseats,priceList,p,
 				"test",  type, genderRequirement);
 		message = CarpoolDaoMessage.addMessageToDatabase(message);	
 		TransactionType ttype = TransactionType.fromInt(0);
-		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",new LocationRepresentation("Canada_Ontario_Toronto_2"), new LocationRepresentation("Canada_Ontario_Waterloo_2"),dt,timeSlot,dseats,ttype);
+		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
 
 		// Test
 		try{
 			CarpoolDaoTransaction.addTransactionToDatabase(transaction);
 			transaction = CarpoolDaoTransaction.getTransactionById(transaction.getTransactionId());			
-			if(transaction.getProvider().equals(provider)&&transaction.getCustomer().equals(customer)&&transaction.getDeparture_location().equals(dl)&&transaction.getArrival_location().equals(al)&&transaction.getCustomerNote().equals("cNote")&&transaction.getProviderNote().equals("pNote")&&transaction.getPaymentMethod().equals(p)&&transaction.getTotalPrice()==1){
+			if(transaction.getProvider().equals(provider)&&transaction.getCustomer().equals(customer)&&transaction.getDeparture_location().equals(message.getDeparture_Location())&&transaction.getArrival_location().equals(message.getArrival_Location())&&transaction.getCustomerNote().equals("cNote")&&transaction.getProviderNote().equals("pNote")&&transaction.getPaymentMethod().equals(p)&&transaction.getTotalPrice()==1){
 				//Passed;
 			}else{
 				fail();
@@ -130,7 +159,7 @@ public class CarpoolTransactionTest {
 			e.printStackTrace();
 			fail();
 		}
-		Transaction t2 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",new LocationRepresentation("Canada_Ontario_Toronto_2"), new LocationRepresentation("Canada_Ontario_Waterloo_2"),dt,timeSlot,dseats,ttype);
+		Transaction t2 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
 		try{
 			CarpoolDaoTransaction.addTransactionToDatabase(t2);
 			t2 = CarpoolDaoTransaction.getTransactionById(t2.getTransactionId());		
@@ -185,12 +214,12 @@ public class CarpoolTransactionTest {
 		ArrayList<Integer> alist = new ArrayList<Integer>();
 		alist.add(10);
 		Message message2=new Message(provider.getUserId(),true
-				, dl,dt,timeSlot,dseats , priceList,al,
+				, new Location(departureLocation),dt,timeSlot,dseats , priceList,new Location(arrivalLocation),
 				at,timeSlot, aseats,alist,p,
 				"test",  type, genderRequirement);
 		message2 = CarpoolDaoMessage.addMessageToDatabase(message2);
 		ttype = TransactionType.fromInt(1);
-		transaction = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",new LocationRepresentation("Canada_Ontario_Toronto_2"), new LocationRepresentation("Canada_Ontario_Waterloo_2"),dt,timeSlot,dseats,ttype);
+		transaction = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
 		try{
 			transaction = CarpoolDaoTransaction.addTransactionToDatabase(transaction);
 			if(transaction.getProvider().equals(provider)&& transaction.getCustomer().equals(customer)&&transaction.getMessage().equals(message2)&&transaction.getTotalPrice()==10){
@@ -204,17 +233,30 @@ public class CarpoolTransactionTest {
 		}
 	}
 	@Test
-	public void testUpdateTransaction(){
+	public void testUpdateTransaction() throws LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		//Users
-		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(provider);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1), gender.both);
+		User customer =  new User("fangyuan", "fangyuanlucky", arrivalLocation, gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);
@@ -233,21 +275,18 @@ public class CarpoolTransactionTest {
 		gender genderRequirement = gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
 		ArrayList<Integer> alist = new ArrayList<Integer>();
-		alist.add(10);
-
-		LocationRepresentation dl=new LocationRepresentation("Canada_Ontario_Toronto_2");
-		LocationRepresentation al=new LocationRepresentation("Canada_Ontario_Waterloo_2");	
+		alist.add(10);	
 
 		int dseats = 4;
 		int aseats = 4;
 		//Messages
 		Message message=new Message(provider.getUserId(),true
-				, dl,dt,timeSlot,dseats , priceList,al,
+				, new Location(departureLocation),dt,timeSlot,dseats , priceList,new Location(arrivalLocation),
 				at,timeSlot, aseats,alist,p,
 				"test",  type, genderRequirement);
 		message = CarpoolDaoMessage.addMessageToDatabase(message);	
 		TransactionType ttype = TransactionType.fromInt(0);
-		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",new LocationRepresentation("Canada_Ontario_Toronto_2"), new LocationRepresentation("Canada_Ontario_Waterloo_2"),dt,timeSlot,dseats,ttype);
+		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",dt,timeSlot,dseats,ttype);
 		try{
 			CarpoolDaoTransaction.addTransactionToDatabase(transaction);
 			transaction = CarpoolDaoTransaction.getTransactionById(transaction.getTransactionId());		
@@ -265,7 +304,7 @@ public class CarpoolTransactionTest {
 		try{
 			CarpoolDaoTransaction.updateTransactionInDatabase(transaction);
 			transaction = CarpoolDaoTransaction.getTransactionById(transaction.getTransactionId());			
-			if(transaction.getCustomerEvaluation()==100&&transaction.getType().equals(TransactionType.fromInt(1))&&transaction.getProvider().equals(provider)&&transaction.getCustomer().equals(customer)&&transaction.getDeparture_location().equals(al)&&transaction.getArrival_location().equals(dl)&&transaction.getCustomerNote().equals("Good")&&transaction.getProviderNote().equals("pNote")&&transaction.getPaymentMethod().equals(p)&&transaction.getTotalPrice()==10){
+			if(transaction.getCustomerEvaluation()==100&&transaction.getType().equals(TransactionType.fromInt(1))&&transaction.getProvider().equals(provider)&&transaction.getCustomer().equals(customer)&&transaction.getDeparture_location().equals(message.getDeparture_Location())&&transaction.getArrival_location().equals(message.getArrival_Location())&&transaction.getCustomerNote().equals("Good")&&transaction.getProviderNote().equals("pNote")&&transaction.getPaymentMethod().equals(p)&&transaction.getTotalPrice()==10){
 
 			}else{
 				fail();
@@ -278,17 +317,30 @@ public class CarpoolTransactionTest {
 	}
 
 	@Test
-	public void testTransactionCleaner(){    	
+	public void testTransactionCleaner() throws LocationNotFoundException{    	
 		CarpoolDaoBasic.clearBothDatabase();
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		//Users
-		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(provider);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1), gender.both);
+		User customer =  new User("fangyuan", "fangyuanlucky", arrivalLocation, gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);
@@ -296,8 +348,8 @@ public class CarpoolTransactionTest {
 			e.printStackTrace();
 		}
 
-		Calendar dt = Calendar.getInstance();
-		dt.set(Calendar.HOUR_OF_DAY, 20);
+		Calendar dt = Calendar.getInstance();		
+		dt.set(Calendar.HOUR_OF_DAY, dt.get(Calendar.HOUR_OF_DAY)-1);
 		Calendar at = Calendar.getInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);
 
@@ -320,49 +372,46 @@ public class CarpoolTransactionTest {
 		ArrayList<Integer> alist = new ArrayList<Integer>();
 		alist.add(10);
 
-		LocationRepresentation dl=new LocationRepresentation("Canada_Ontario_Toronto_2");
-		LocationRepresentation al=new LocationRepresentation("Canada_Ontario_Waterloo_2");	
-
 		int dseats = 4;
 		int aseats = 4;
 		//Messages
 		Message message=new Message(provider.getUserId(),true
-				, dl,dt,timeSlot,dseats , priceList,al,
+				, new Location(departureLocation),dt,timeSlot,dseats , priceList,new Location(arrivalLocation),
 				at,timeSlot, aseats,alist,p,
 				"test",  type, genderRequirement);
 		message = CarpoolDaoMessage.addMessageToDatabase(message);	
 		Message message2=new Message(provider.getUserId(),true
-				, dl,dt2,timeSlot,dseats , priceList,al,
+				, new Location(departureLocation),dt2,timeSlot,dseats , priceList,new Location(arrivalLocation),
 				at2,timeSlot, aseats,alist,p,
 				"test",  type, genderRequirement);
 		message2 = CarpoolDaoMessage.addMessageToDatabase(message2);
 		Message message3=new Message(provider.getUserId(),true
-				, dl,dt3,timeSlot,dseats , priceList,al,
+				, new Location(departureLocation),dt3,timeSlot,dseats , priceList,new Location(arrivalLocation),
 				at3,timeSlot, aseats,alist,p,
 				"test",  type, genderRequirement);
 		message3 = CarpoolDaoMessage.addMessageToDatabase(message3);
 
 
 		TransactionType ttype = TransactionType.departure;
-		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",new LocationRepresentation("Canada_Ontario_Toronto_2"), new LocationRepresentation("Canada_Ontario_Waterloo_2"),null,timeSlot,dseats,ttype);
+		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction.setState(transactionState.init);//This should pass the test
-		Transaction transaction2 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",new LocationRepresentation("Canada_Ontario_Toronto_2"), new LocationRepresentation("Canada_Ontario_Waterloo_2"),null,timeSlot,dseats,ttype);
+		Transaction transaction2 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction2.setState(transactionState.init);
-		Transaction transaction3 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",new LocationRepresentation("Canada_Ontario_Toronto_2"), new LocationRepresentation("Canada_Ontario_Waterloo_2"),null,timeSlot,dseats,ttype);
+		Transaction transaction3 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction3.setState(transactionState.finished);
-		Transaction transaction4 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",new LocationRepresentation("Canada_Ontario_Toronto_2"), new LocationRepresentation("Canada_Ontario_Waterloo_2"),null,timeSlot,dseats,ttype);
+		Transaction transaction4 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction4.setState(transactionState.aboutToStart);// This should pass the test
-		Transaction transaction5 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",new LocationRepresentation("Canada_Ontario_Toronto_2"), new LocationRepresentation("Canada_Ontario_Waterloo_2"),null,timeSlot,dseats,ttype);
+		Transaction transaction5 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction5.setState(transactionState.init);
-		Transaction transaction6 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",new LocationRepresentation("Canada_Ontario_Toronto_2"), new LocationRepresentation("Canada_Ontario_Waterloo_2"),null,timeSlot,dseats,ttype);
+		Transaction transaction6 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction6.setState(transactionState.aboutToStart);
-		Transaction transaction7 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",new LocationRepresentation("Canada_Ontario_Toronto_2"), new LocationRepresentation("Canada_Ontario_Waterloo_2"),null,timeSlot,dseats,ttype);
+		Transaction transaction7 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote", null,timeSlot,dseats,ttype);
 		transaction7.setState(transactionState.aboutToStart);
-		Transaction transaction8 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",new LocationRepresentation("Canada_Ontario_Toronto_2"), new LocationRepresentation("Canada_Ontario_Waterloo_2"),null,timeSlot,dseats,ttype);
+		Transaction transaction8 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction8.setState(transactionState.finished);
-		Transaction transaction9 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",new LocationRepresentation("Canada_Ontario_Toronto_2"), new LocationRepresentation("Canada_Ontario_Waterloo_2"),null,timeSlot,dseats,ttype);
+		Transaction transaction9 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction9.setState(transactionState.init);
-		Transaction transaction10 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",new LocationRepresentation("Canada_Ontario_Toronto_2"), new LocationRepresentation("Canada_Ontario_Waterloo_2"),null,timeSlot,dseats,ttype);
+		Transaction transaction10 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction10.setState(transactionState.finished);
 
 		try{

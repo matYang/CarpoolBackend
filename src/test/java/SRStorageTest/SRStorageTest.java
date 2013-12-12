@@ -15,6 +15,7 @@ import carpool.constants.Constants.messageState;
 import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.paymentMethod;
 import carpool.exception.validation.ValidationException;
+import carpool.model.Location;
 import carpool.model.User;
 import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
@@ -24,15 +25,30 @@ public class SRStorageTest {
 @Test	
 public void testSRStorage(){
 	CarpoolDaoBasic.clearBothDatabase();
+	long departure_Id = 1;
+	long arrival_Id = 2;
+	String province = "Ontario";		
+	String city1 = "Toronto";
+	String city2 = "Waterloo";
+	String region1 = "Downtown";
+	String region2 = "Downtown UW"; 
+	Double lat1 = 32.123212;
+	Double lat2 = 23.132123;
+	Double lng1 = 34.341232;
+	Double lng2 = 34.123112;
+	Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+	Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
+	long dm = departureLocation.getMatch();
+	long am = arrivalLocation.getMatch();
 	//Users
-	User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+	User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new Location(departureLocation), gender.both);
 	
 	try {
 		CarpoolDaoUser.addUserToDatabase(user);
 	} catch (ValidationException e) {			
 		e.printStackTrace();
 	}	
-   User user2 =  new User("fangyuan&lucyWang", "xiongchuhan@hotmail.com", new LocationRepresentation ("primary","custom",1), gender.both);
+   User user2 =  new User("fangyuan&lucyWang", "xiongchuhan@hotmail.com", new Location(arrivalLocation), gender.both);
 	
 	try {
 		CarpoolDaoUser.addUserToDatabase(user2);
@@ -47,14 +63,12 @@ public void testSRStorage(){
 	at2.add(Calendar.DAY_OF_YEAR, -1);	
 	Calendar dt2 = Calendar.getInstance();	
 	dt2.add(Calendar.DAY_OF_YEAR, -2);	
-	//Location
-	LocationRepresentation dl=new LocationRepresentation("Canada_Ontario_Toronto_2");
-	LocationRepresentation al=new LocationRepresentation("Canada_Ontario_Waterloo_2");			
+			
 	messageType type = messageType.fromInt(0);	
 	DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);	
 	//SRs
-	SearchRepresentation sr = new SearchRepresentation(false,dl,al,dt,at,type,timeSlot,timeSlot);
-	SearchRepresentation sr2 = new SearchRepresentation(true,al,dl,dt2,at2,type,timeSlot,timeSlot);
+	SearchRepresentation sr = new SearchRepresentation(false,dm,am,dt,at,type,timeSlot,timeSlot);
+	SearchRepresentation sr2 = new SearchRepresentation(true,am,dm,dt2,at2,type,timeSlot,timeSlot);
 	//Execute	
 	StoreSearchHistoryTask ssht = new StoreSearchHistoryTask(sr,user.getUserId());
 	ExecutorProvider.executeRelay(ssht);

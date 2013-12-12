@@ -21,6 +21,7 @@ import carpool.constants.Constants;
 import carpool.constants.Constants.gender;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.validation.ValidationException;
 import carpool.factory.JSONFactory;
 import carpool.locationService.LocationService;
@@ -32,7 +33,7 @@ import carpool.resources.PseudoResource;
 public class UserResource extends PseudoResource{
 
 
-	protected User parseJSON(Representation entity) throws ValidationException{
+	protected User parseJSON(Representation entity) throws ValidationException, LocationNotFoundException{
 		JSONObject jsonUser = null;
 		User user = null;
 		
@@ -41,7 +42,7 @@ public class UserResource extends PseudoResource{
 			
 			String password = jsonUser.getString("password");
 			String email = jsonUser.getString("email");
-			LocationRepresentation location = new LocationRepresentation(jsonUser.getJSONObject("location"));
+			Location location = new Location(jsonUser.getJSONObject("location"));
 			gender g = Constants.gender.fromInt(jsonUser.getInt("gender"));
 			
 			//if email is used, do not register
@@ -49,7 +50,7 @@ public class UserResource extends PseudoResource{
 				throw new ValidationException("Email already in use");
 			}
 			
-			if (Validator.isPasswordFormatValid(password) && Validator.isEmailFormatValid(email) && LocationService.isLocationRepresentationValid(location)){
+			if (Validator.isPasswordFormatValid(password) && Validator.isEmailFormatValid(email) && LocationService.isLocationRepresentationValid(location.getId())){
 				user = new User(password, email, location, g);
 			}
 		} catch (JSONException|IOException e) {
@@ -63,7 +64,7 @@ public class UserResource extends PseudoResource{
 	/**
 	 * Retrieve all users from server. This API is intended solely for testing purposes
 	 */
-	public Representation getAllUsers() {
+	public Representation getAllUsers() throws LocationNotFoundException {
 
 		ArrayList<User> allUsers = UserDaoService.getAllUsers();
 		JSONArray jsonArray = JSONFactory.toJSON(allUsers);

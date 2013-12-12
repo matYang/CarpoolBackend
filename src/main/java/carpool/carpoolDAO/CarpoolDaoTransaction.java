@@ -16,6 +16,7 @@ import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.model.Location;
 import carpool.model.Message;
 import carpool.model.Transaction;
 import carpool.model.User;
@@ -27,13 +28,17 @@ public class CarpoolDaoTransaction {
 		String query = "INSERT INTO carpoolDAOTransaction (provider_Id,customer_Id,message_Id,departure_priceList,departure_Time,"+
 				"departure_Id,arrival_Id,departure_seatsBooked,totalPrice,"
 				+"transactionState,departure_timeSlot,creationTime,historyDeleted,paymentMethod,customerNote,providerNote,customerEvaluation,providerEvaluation,transactionType)"+
-				"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+				"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		Message msg = CarpoolDaoMessage.getMessageById(transaction.getMessageId());
 		User  provider = CarpoolDaoUser.getUserById(transaction.getProviderId());
 		User  customer = CarpoolDaoUser.getUserById(transaction.getCustomerId());
 		transaction.setCustomer(customer);
 		transaction.setProvider(provider);
-		transaction.setMessage(msg);		
+		transaction.setMessage(msg);
+		transaction.setDeparture_location(msg.getDeparture_Location());		
+		transaction.setDeparture_Id(msg.getDeparture_Location().getId());
+		transaction.setArrival_location(msg.getArrival_Location());
+		transaction.setArrival_Id(msg.getArrival_Location().getId());
 		int totalPrice = 0;
 		TransactionType direction = transaction.getType();
 		ArrayList<Integer> dplist = new ArrayList<Integer>();
@@ -102,7 +107,12 @@ public class CarpoolDaoTransaction {
 			msg = CarpoolDaoMessage.getMessageById(transaction.getMessageId());
 		}
 		else msg = transaction.getMessage();
-
+		
+		transaction.setDeparture_location(msg.getDeparture_Location());		
+		transaction.setDeparture_Id(msg.getDeparture_Location().getId());
+		transaction.setArrival_location(msg.getArrival_Location());
+		transaction.setArrival_Id(msg.getArrival_Location().getId());
+		
 		int totalPrice = 0;
 		int direction = transaction.getType().code;
 		ArrayList<Integer> dplist = new ArrayList<Integer>();
@@ -131,19 +141,19 @@ public class CarpoolDaoTransaction {
 				stmt.setLong(3, msg.getArrival_Id());						
 				stmt.setLong(4, msg.getDeparture_Id());							
 			}
-			stmt.setInt(9,transaction.getDeparture_seatsBooked());					
-			stmt.setInt(10, totalPrice);				
-			stmt.setInt(11, transaction.getState().code);
-			stmt.setInt(12, transaction.getDeparture_timeSlot().code);				
-			stmt.setString(13, DateUtility.toSQLDateTime(transaction.getCreationTime()));
-			stmt.setInt(14,transaction.isHistoryDeleted() ? 1 : 0);
-			stmt.setInt(15,msg.getPaymentMethod().code);
-			stmt.setString(16,transaction.getCustomerNote());
-			stmt.setString(17, transaction.getProviderNote());
-			stmt.setInt(18,transaction.getCustomerEvaluation());
-			stmt.setInt(19,transaction.getProviderEvaluation());
-			stmt.setInt(20, direction);
-			stmt.setInt(21,transaction.getTransactionId());			
+			stmt.setInt(5,transaction.getDeparture_seatsBooked());					
+			stmt.setInt(6, totalPrice);				
+			stmt.setInt(7, transaction.getState().code);
+			stmt.setInt(8, transaction.getDeparture_timeSlot().code);				
+			stmt.setString(9, DateUtility.toSQLDateTime(transaction.getCreationTime()));
+			stmt.setInt(10,transaction.isHistoryDeleted() ? 1 : 0);
+			stmt.setInt(11,msg.getPaymentMethod().code);
+			stmt.setString(12,transaction.getCustomerNote());
+			stmt.setString(13, transaction.getProviderNote());
+			stmt.setInt(14,transaction.getCustomerEvaluation());
+			stmt.setInt(15,transaction.getProviderEvaluation());
+			stmt.setInt(16, direction);
+			stmt.setInt(17,transaction.getTransactionId());			
 			int recordsAffected = stmt.executeUpdate();
 			if(recordsAffected==0){
 				throw new TransactionNotFoundException();
@@ -175,12 +185,13 @@ public class CarpoolDaoTransaction {
 	protected static Transaction createTransactionByResultSet(ResultSet rs,String str) throws SQLException, UserNotFoundException, MessageNotFoundException, LocationNotFoundException {
 		User provider = CarpoolDaoUser.getUserById(rs.getInt("provider_Id"));
 		User customer = CarpoolDaoUser.getUserById(rs.getInt("customer_Id"));
-		Message msg = CarpoolDaoMessage.getMessageById(rs.getInt("message_Id"));
+		Message msg = CarpoolDaoMessage.getMessageById(rs.getInt("message_Id"));		
+		Location departure_location = msg.getDeparture_Location();
+		Location arrival_location = msg.getArrival_Location();		
 		Transaction transaction = null;
 		transaction = new Transaction(rs.getInt("transaction_Id"),rs.getInt("provider_Id"),rs.getInt("customer_Id"),rs.getInt("message_Id"),
 				Constants.paymentMethod.fromInt(rs.getInt("paymentMethod")),rs.getString("customerNote"),rs.getString("providerNote"),
-				rs.getInt("customerEvaluation"),rs.getInt("providerEvaluation"),new LocationRepresentation(rs.getString("departure_primaryLocation"),rs.getString("departure_customLocation"),rs.getInt("departure_customDepthIndex")),
-				new LocationRepresentation(rs.getString("arrival_primaryLocation"),rs.getString("arrival_customLocation"),rs.getInt("arrival_customDepthIndex")),DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("departure_timeSlot")),rs.getInt("departure_seatsBooked"),
+				rs.getInt("customerEvaluation"),rs.getInt("providerEvaluation"),departure_location,arrival_location,DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("departure_timeSlot")),rs.getInt("departure_seatsBooked"),
 				(ArrayList<Integer>)Parser.stringToList(rs.getString("departure_priceList"), new Integer(0)),Constants.TransactionType.fromInt(rs.getInt("transactionType")),rs.getInt("totalPrice"),Constants.transactionState.fromInt(rs.getInt("transactionState")),
 				DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),rs.getBoolean("historyDeleted"));
 		transaction.setProvider(provider);
@@ -210,12 +221,12 @@ public class CarpoolDaoTransaction {
 		return tlist;
 	}
 
-	protected static Transaction createTransactionByResultSet(ResultSet rs) throws SQLException{
-
+	protected static Transaction createTransactionByResultSet(ResultSet rs) throws SQLException, LocationNotFoundException{
+		Location departure_location = CarpoolDaoLocation.getLocationById(rs.getLong("departure_Id"));
+		Location arrival_location = CarpoolDaoLocation.getLocationById(rs.getLong("arrival_Id"));
 		return new Transaction(rs.getInt("transaction_Id"),rs.getInt("provider_Id"),rs.getInt("customer_Id"),rs.getInt("message_Id"),
 				Constants.paymentMethod.fromInt(rs.getInt("paymentMethod")),rs.getString("customerNote"),rs.getString("providerNote"),
-				rs.getInt("customerEvaluation"),rs.getInt("providerEvaluation"),new LocationRepresentation(rs.getString("departure_primaryLocation"),rs.getString("departure_customLocation"),rs.getInt("departure_customDepthIndex")),
-				new LocationRepresentation(rs.getString("arrival_primaryLocation"),rs.getString("arrival_customLocation"),rs.getInt("arrival_customDepthIndex")),DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("departure_timeSlot")),rs.getInt("departure_seatsBooked"),
+				rs.getInt("customerEvaluation"),rs.getInt("providerEvaluation"),departure_location,arrival_location,DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("departure_timeSlot")),rs.getInt("departure_seatsBooked"),
 				(ArrayList<Integer>)Parser.stringToList(rs.getString("departure_priceList"), new Integer(0)),Constants.TransactionType.fromInt(rs.getInt("transactionType")),rs.getInt("totalPrice"),Constants.transactionState.fromInt(rs.getInt("transactionState")),
 				DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),rs.getBoolean("historyDeleted"));
 

@@ -22,7 +22,9 @@ import carpool.constants.Constants.paymentMethod;
 import carpool.dbservice.MessageDaoService;
 import carpool.dbservice.TransactionDaoService;
 import carpool.dbservice.UserDaoService;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.validation.ValidationException;
+import carpool.model.Location;
 import carpool.model.Message;
 import carpool.model.Transaction;
 import carpool.model.User;
@@ -31,17 +33,30 @@ import carpool.model.representation.LocationRepresentation;
 public class TransactionDaoServiceTest {
 
 	@Test
-	public void test() {
+	public void test() throws LocationNotFoundException {
 		CarpoolDaoBasic.clearBothDatabase();
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		//Users
-        User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new LocationRepresentation ("primary","custom",1), gender.both);
+        User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new Location(departureLocation), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(provider);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		User customer =  new User("fangyuan", "fangyuanlucky", new LocationRepresentation ("primary","custom",1), gender.both);
+		User customer =  new User("fangyuan", "fangyuanlucky", new Location(arrivalLocation), gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);
@@ -60,14 +75,14 @@ public class TransactionDaoServiceTest {
 				
 		//Messages
 		Message message=new Message(provider.getUserId(),false
-				, new LocationRepresentation("p_c_d_2"),time,timeSlot,2 , priceList,new LocationRepresentation("p_c_d_2"),
+				, new Location(departureLocation),time,timeSlot,2 , priceList,new Location(arrivalLocation),
 				time,timeSlot, 2,priceList,paymentMethod,
 				"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message);
 		TransactionType tD = Constants.TransactionType.fromInt(1);
-		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",new LocationRepresentation("p_c_d_2"), new LocationRepresentation("p_c_d_2"),time,timeSlot,1,tD);
-		Transaction transaction2 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",new LocationRepresentation("p_c_d_2"), new LocationRepresentation("p_c_d_2"),time,timeSlot,1,tD);
-		Transaction transaction3 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",new LocationRepresentation("p_c_d_2"), new LocationRepresentation("p_c_d_2"),time,timeSlot,1,tD);
+		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",time,timeSlot,1,tD);
+		Transaction transaction2 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",time,timeSlot,1,tD);
+		Transaction transaction3 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),paymentMethod,"cNote","pNote",time,timeSlot,1,tD);
 		//Test
 		try{
 			transaction = TransactionDaoService.createNewTransaction(transaction);

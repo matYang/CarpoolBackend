@@ -54,8 +54,15 @@ public class SessionRedirect extends PseudoResource{
 				jsonObject = JSONFactory.toJSON(user);
 			}
 			//if not, retun defeault user, front end will detect invalid id==-1 and will use non-session
-			else{
-				jsonObject = JSONFactory.toJSON(new User("","",new LocationRepresentation("Canada_Ontario_Waterloo_Matthew's Sweet Little Home_3"), gender.both));
+			else{				
+				long arrival_Id = 2;
+				String province = "Ontario";			
+				String city = "Waterloo";				
+				String region = "Downtown UW"; 
+				Double lat = 32.123212;
+				Double lng = 23.132123;				
+				Location defaultLocation= new Location(province,city,region,"Test1","Test11",lat,lng,arrival_Id);				
+				jsonObject = JSONFactory.toJSON(new User("","",defaultLocation, gender.both));
 			}
 		
 		}  catch (PseudoException e){
