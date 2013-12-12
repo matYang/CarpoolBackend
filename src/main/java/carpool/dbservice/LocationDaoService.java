@@ -24,15 +24,15 @@ import carpool.model.representation.LocationRepresentation;
 public class LocationDaoService {	
 
 	public static void init() throws LocationException, ValidationException{
-//		if (!CarpoolDaoLocation.isLocationDefaultEmpty()){
-//			return; //TODO add empty checking
-//		}
+		if (!CarpoolDaoLocation.isLocationPoolEmpty()){
+			return;
+		}
 		ArrayList<HashMap<String, String>> bufferList = CarpoolLocationLoader.loadLocationFromFile("LocationData.txt");
 		for (HashMap<String, String> bufferMap : bufferList){
-			//TODO match for default locations can not be determined before they are added to mysql in the first place
+			
 			Location location = new Location(bufferMap.get("province"),bufferMap.get("city"),bufferMap.get("region"),bufferMap.get("name"),bufferMap.get("address"),Double.parseDouble(bufferMap.get("lat")),Double.parseDouble(bufferMap.get("lng")),-1l);
-			//location = CarpoolDaoLocation.addLocationToDatabases(location);
-			//CarpoolDaoLocation.addDefaultLocations(location.getId(), Integer.parseInt(bufferMap.get("radius")), bufferMap.get("synonyms"));
+			DefaultLocationRepresentation defaultLocationRep = new DefaultLocationRepresentation(location, Integer.parseInt(bufferMap.get("radius")), bufferMap.get("synonyms"));
+			CarpoolDaoLocation.addDefaultLocation(defaultLocationRep);
 		}
 	}
 	

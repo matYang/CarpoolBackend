@@ -17,10 +17,10 @@ public class DefaultLocationRepresentation implements PseudoRepresentation, Pseu
 	private String synonyms;
 	
 	
-	public DefaultLocationRepresentation(long referenceId, Location location, int radius, String synonyms) {
+	public DefaultLocationRepresentation(Location location, int radius, String synonyms) {
 		super();
 		this.id = -1;
-		this.referenceId = referenceId;
+		this.referenceId = -1;
 		this.location = location;
 		this.radius = radius;
 		this.synonyms = synonyms;
