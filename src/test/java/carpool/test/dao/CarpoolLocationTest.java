@@ -195,7 +195,7 @@ public class CarpoolLocationTest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	public void testAddDefaultLocationAndGetDefaultLocations() throws LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();				
@@ -212,7 +212,7 @@ public class CarpoolLocationTest {
 		Location location = new Location(province,city1,region1,pointName1,pointAddress1,lat1,lng1,match1);
 		DefaultLocationRepresentation dlr1 = new DefaultLocationRepresentation(location,radius,str);
 		dlr1 = CarpoolDaoLocation.addDefaultLocation(dlr1);
-		
+
 		String city2 = "Toronto";
 		String region2 = "Waterloo";
 		String pointName2 = "pointName2";
@@ -225,9 +225,52 @@ public class CarpoolLocationTest {
 		Location location2 = new Location(province,city2,region2,pointName2,pointAddress2,lat2,lng2,match2);
 		DefaultLocationRepresentation dlr2 = new DefaultLocationRepresentation(location2,radius2,str2);
 		dlr2 = CarpoolDaoLocation.addDefaultLocation(dlr2);
-		
-		//ArrayList<DefaultLocationRepresentation> 
-		
+
+		try{
+			ArrayList<DefaultLocationRepresentation> list = new ArrayList<DefaultLocationRepresentation>();
+			list = CarpoolDaoLocation.getDefaultLocationRepresentations();
+			if(list.size()==2 && list.get(0).equals(dlr1) && list.get(1).equals(dlr2)){
+				//Passed;
+			}else{
+				fail();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}		
+
+		try{
+			DefaultLocationRepresentation test1 = CarpoolDaoLocation.getDefaultLocationRepresentationById(dlr1.getId());
+			DefaultLocationRepresentation test2 = CarpoolDaoLocation.getDefaultLocationRepresentationById(dlr2.getId());
+			if(test1.equals(dlr1) && test2.equals(dlr2)){
+				//Passed;
+			}else{
+				fail();
+			}
+
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}	
+
+	}
+
+	@Test
+	public void testIsLocationPoolEmpty() throws LocationNotFoundException{
+		CarpoolDaoBasic.clearBothDatabase();
+		boolean isEmpty=false;
+		try{
+			isEmpty = CarpoolDaoLocation.isLocationPoolEmpty();
+			if(isEmpty){
+				//Passed;
+			}else{
+				fail();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}	
+
 	}
 
 }

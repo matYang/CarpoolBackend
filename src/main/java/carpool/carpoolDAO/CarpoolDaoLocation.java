@@ -18,7 +18,7 @@ public class CarpoolDaoLocation {
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
-				if(rs.getInt("total")>0){
+				if(rs.getInt("total")<=0){
 					return true;
 				}else{
 					return false;
@@ -92,15 +92,17 @@ public class CarpoolDaoLocation {
 	}	
 
 
-	public static DefaultLocationRepresentation getDefaultLocationRepresentationById(long l){
-		String query = "SELECT * FROM defaultLocations where id = ?";
+	public static DefaultLocationRepresentation getDefaultLocationRepresentationById(long id){
+		String query = "SELECT * FROM defaultLocations JOIN carpoolDAOLocation ON (carpoolDAOLocation.match_Id = ? and carpoolDAOLocation.id = defaultLocations.referenceNum);";		
 		Location location = null;
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){			
+		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			stmt.setLong(1, id);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
 				location = createLocationByResultSet(rs);
-				if(location !=null){
-					return new DefaultLocationRepresentation(location.getMatch(),location.getId(),location,rs.getInt("radius"), rs.getString("synonyms"));
+				if(location !=null){	
+					return new DefaultLocationRepresentation(location.getMatch(),rs.getLong("referenceNum"),location,rs.getInt("radius"), rs.getString("synonyms"));
+
 				}
 			}
 		}catch(SQLException e){
@@ -170,8 +172,9 @@ public class CarpoolDaoLocation {
 		String query = "INSERT INTO defaultLocations (referenceNum,radius,synonyms) values (?,?,?)";
 		Location location = null;		
 		location = CarpoolDaoLocation.addLocationToDatabases(defaultLocationRep.getLocation());
+		defaultLocationRep.setReferenceId(location.getId());
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){			
-			stmt.setLong(1, location.getId());
+			stmt.setLong(1, defaultLocationRep.getReferenceId());
 			stmt.setInt(2, defaultLocationRep.getRadius());
 			stmt.setString(3, defaultLocationRep.getSynonyms());			
 			stmt.executeUpdate();

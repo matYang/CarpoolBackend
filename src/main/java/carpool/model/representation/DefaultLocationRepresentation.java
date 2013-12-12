@@ -74,6 +74,10 @@ public class DefaultLocationRepresentation implements PseudoRepresentation, Pseu
 	public void setId(long id){
 		this.id = id;
 	}
+	
+	public boolean equals(DefaultLocationRepresentation dlr){
+		return this.id==dlr.getId() && this.referenceId==dlr.getReferenceId() && this.radius == dlr.getRadius() && this.synonyms.equals(dlr.getSynonyms());
+	}
 	@Override
 	public boolean validate() throws ValidationException {
 		return true;
