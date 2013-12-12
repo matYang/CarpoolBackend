@@ -11,6 +11,7 @@ import carpool.constants.Constants;
 import carpool.common.DebugLog;
 import carpool.dbservice.LocationDaoService;
 import carpool.exception.location.LocationException;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.validation.ValidationException;
 
 
@@ -86,7 +87,7 @@ public class CarpoolDaoBasic {
         
 		try {
 			LocationDaoService.init();
-		} catch (LocationException | ValidationException e) {
+		} catch (LocationException | ValidationException | LocationNotFoundException e) {
 			e.printStackTrace();
 			throw new RuntimeException();
 		}
