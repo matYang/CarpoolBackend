@@ -25,7 +25,7 @@ public class CarpoolDaoLocation {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			DebugLog.d(e);
 		}
 		return false;
 	}
@@ -46,7 +46,6 @@ public class CarpoolDaoLocation {
 			rs.next();
 			location.setId(rs.getInt(1));
 		}catch(SQLException e){
-			e.printStackTrace();
 			DebugLog.d(e);
 		}
 

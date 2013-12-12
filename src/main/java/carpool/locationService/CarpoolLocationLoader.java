@@ -21,7 +21,6 @@ public class CarpoolLocationLoader {
 	
 	private static final int value_item_amount = 9;
 	
-	private static boolean loadedFlag;
 	private static ArrayList<HashMap<String, String>> locationBufferList = new ArrayList<HashMap<String, String>>();
 	private static int lineTracker = 0;
 	
@@ -67,9 +66,6 @@ public class CarpoolLocationLoader {
 
 	
 	public static ArrayList<HashMap<String, String>> loadLocationFromFile(String pathToFile) throws LocationException, ValidationException{
-		if (loadedFlag == true){
-			throw new LocationException("Locations are already loaded");
-		}
 		
 		DebugLog.d("Starting to load location data from file: " + pathToFile);
 		BufferedReader br = null;
@@ -92,7 +88,6 @@ public class CarpoolLocationLoader {
 			}
 		}
 
-		loadedFlag = true;	
 		DebugLog.d("Location loaded succesfully");
 		return locationBufferList;
 	}
