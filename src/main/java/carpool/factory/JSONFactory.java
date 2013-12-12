@@ -19,7 +19,6 @@ import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
 import carpool.model.representation.DefaultLocationRepresentation;
-import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
 
 
@@ -50,9 +49,6 @@ public class JSONFactory {
 		}
 		else if (obj instanceof Location){
 			return ((Location)obj).toJSON();
-		}
-		else if (obj instanceof LocationRepresentation){
-			return ((LocationRepresentation)obj).toJSON();
 		}
 		else if (obj instanceof SearchRepresentation){
 			return ((SearchRepresentation)obj).toJSON();

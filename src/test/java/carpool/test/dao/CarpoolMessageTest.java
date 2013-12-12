@@ -36,12 +36,10 @@ import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.exception.validation.ValidationException;
-import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
 import carpool.model.Location;
 import carpool.model.Message;
 import carpool.model.User;
-import carpool.model.representation.LocationRepresentation;
 import static java.lang.System.out;
 
 public class CarpoolMessageTest {

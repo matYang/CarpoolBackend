@@ -20,7 +20,6 @@ import carpool.constants.Constants.transactionState;
 import carpool.exception.validation.ValidationException;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoValidatable;
-import carpool.model.representation.LocationRepresentation;
 
 
 
@@ -49,47 +48,6 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 	private long departure_Id;
 	private Location arrival_location;
 	private long arrival_Id;
-	/**
-	 * @return the departure_Id
-	 */
-	public long getDeparture_Id() {
-		return departure_Id;
-	}
-
-	/**
-	 * @param departure_Id the departure_Id to set
-	 */
-	public void setDeparture_Id(long departure_Id) {
-		this.departure_Id = departure_Id;
-	}
-
-	/**
-	 * @return the arrival_Id
-	 */
-	public long getArrival_Id() {
-		return arrival_Id;
-	}
-
-	/**
-	 * @param arrival_Id the arrival_Id to set
-	 */
-	public void setArrival_Id(long arrival_Id) {
-		this.arrival_Id = arrival_Id;
-	}
-
-	/**
-	 * @param departure_location the departure_location to set
-	 */
-	public void setDeparture_location(Location departure_location) {
-		this.departure_location = departure_location;
-	}
-
-	/**
-	 * @param arrival_location the arrival_location to set
-	 */
-	public void setArrival_location(Location arrival_location) {
-		this.arrival_location = arrival_location;
-	}
 
 	private Calendar departure_time;
 	private DayTimeSlot departure_timeSlot;
@@ -204,6 +162,31 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 
 	public void setMessageId(int messageId) {
 		this.messageId = messageId;
+	}
+
+	public long getDeparture_Id() {
+		return departure_Id;
+	}
+
+
+	public void setDeparture_Id(long departure_Id) {
+		this.departure_Id = departure_Id;
+	}
+
+	public long getArrival_Id() {
+		return arrival_Id;
+	}
+
+	public void setArrival_Id(long arrival_Id) {
+		this.arrival_Id = arrival_Id;
+	}
+
+	public void setDeparture_location(Location departure_location) {
+		this.departure_location = departure_location;
+	}
+
+	public void setArrival_location(Location arrival_location) {
+		this.arrival_location = arrival_location;
 	}
 
 	public User getProvider() {

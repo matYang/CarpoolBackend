@@ -43,7 +43,6 @@ import carpool.model.Message;
 import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
-import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
 import carpool.model.representation.UserSearchRepresentation;
 

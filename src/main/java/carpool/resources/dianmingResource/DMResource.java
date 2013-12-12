@@ -30,7 +30,6 @@ import carpool.exception.PseudoException;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
-import carpool.model.representation.LocationRepresentation;
 import carpool.resources.PseudoResource;
 
 

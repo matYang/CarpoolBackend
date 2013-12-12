@@ -19,7 +19,6 @@ import carpool.constants.Constants.paymentMethod;
 import carpool.factory.JSONFactory;
 import carpool.model.Location;
 import carpool.model.Message;
-import carpool.model.representation.LocationRepresentation;
 
 public class jsonTest {
 

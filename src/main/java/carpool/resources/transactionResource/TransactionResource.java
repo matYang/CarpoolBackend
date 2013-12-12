@@ -31,7 +31,6 @@ import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
-import carpool.model.representation.LocationRepresentation;
 import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserResource;
 import carpool.resources.userResource.userAuthResource.UserCookieResource;

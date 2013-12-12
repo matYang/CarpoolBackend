@@ -9,6 +9,9 @@ import java.util.Set;
 import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants;
 import carpool.common.DebugLog;
+import carpool.dbservice.LocationDaoService;
+import carpool.exception.location.LocationException;
+import carpool.exception.validation.ValidationException;
 
 
 import redis.clients.jedis.Jedis;
@@ -80,5 +83,13 @@ public class CarpoolDaoBasic {
         }catch(SQLException e){
         	DebugLog.d(e);
         }
+        
+		try {
+			LocationDaoService.init();
+		} catch (LocationException | ValidationException e) {
+			e.printStackTrace();
+			throw new RuntimeException();
+		}
+
     }
 }

@@ -27,7 +27,6 @@ import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
-import carpool.model.representation.LocationRepresentation;
 import carpool.resources.PseudoResource;
 
 public class SessionRedirect extends PseudoResource{

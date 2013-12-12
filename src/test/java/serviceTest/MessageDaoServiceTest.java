@@ -19,7 +19,6 @@ import carpool.exception.PseudoException;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.model.Location;
 import carpool.model.Message;
-import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
 
 public class MessageDaoServiceTest {

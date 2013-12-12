@@ -25,7 +25,6 @@ import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.validation.ValidationException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
-import carpool.model.representation.LocationRepresentation;
 import carpool.resources.PseudoResource;
 
 

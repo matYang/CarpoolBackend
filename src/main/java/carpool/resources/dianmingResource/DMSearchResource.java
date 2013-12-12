@@ -24,7 +24,6 @@ import carpool.exception.PseudoException;
 import carpool.exception.auth.AccountAuthenticationException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
-import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
 import carpool.resources.PseudoResource;
 

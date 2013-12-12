@@ -15,7 +15,6 @@ import carpool.exception.validation.ValidationException;
 import carpool.locationService.CarpoolLocationLoader;
 import carpool.model.Location;
 import carpool.model.representation.DefaultLocationRepresentation;
-import carpool.model.representation.LocationRepresentation;
 
 
 /**

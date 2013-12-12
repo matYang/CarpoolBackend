@@ -6,7 +6,7 @@ import java.util.Calendar;
 import carpool.common.DebugLog;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.messageType;
-import carpool.model.representation.LocationRepresentation;
+import carpool.model.Location;
 import carpool.model.representation.SearchRepresentation;
 
 public class CarpoolConfig {
@@ -23,7 +23,7 @@ public class CarpoolConfig {
 		}
 	}
 	
-	public static final int max_recents = 10;
+	public static final int max_recents = 6;
 	public static final long max_feedBackLength = 200000l;
 	public static final long max_PostLength = 819200l;
 	public static final long max_FileLength = 81920000l;
@@ -73,8 +73,8 @@ public class CarpoolConfig {
     public static final String log4LogFileFolder = "log4j/";
     public static final String log4jLogFileSuffix = ".info.log";    
     public static final String debugLogChinesePrefix = "_chinese";
-	public static final LocationRepresentation getDefaultLocationRepresentation(){
-		return new LocationRepresentation("Canada_Ontario_Waterloo_undetermined_3");
+	public static final Location getDefaultLocationRepresentation(){
+		return null;
 	}
 	
 	public static final SearchRepresentation getDefaultSearchRepresentation(){

@@ -35,11 +35,7 @@ public class MessageDaoService{
 		return CarpoolDaoMessage.getMessageById(messageId);
 	}
 	
-	
-	/**
-	 * gets the recently posted messages, length specified by Constants.max_recents (currently 10)
-	 * @throws LocationNotFoundException 
-	 */
+
 	public static ArrayList<Message> getRecentMessages() throws LocationNotFoundException{
 		return CarpoolDaoMessage.getRecentMessages();
 	}
@@ -114,50 +110,5 @@ public class MessageDaoService{
                 //use unlogged in state to avoid automatching being recorded in search history   
                	return primaryMessageSearch(sr, false, -1);
 	}
-	
-	
-//	
-//	private static void sendMessageUpDateNotification(Message msg){
-//		ArrayList<Notification> notifications = new ArrayList<Notification>();
-//		
-////		TODO		
-////		for(User user : DaoUser.getUserWhoWatchedMessage(msg.getMessageId())){
-////			Notification n = new Notification(-1, Constants.notificationType.on_user, Constants.notificationEvent.watchingMessageModified,
-////					msg.getOwnerId(), msg.getOwnerName(),msg.getMessageId(), 0, user.getUserId(),
-////					"The Message you've watched has change",Calendar.getInstance(), false, false);
-////			notifications.add(n);
-////		}
-//		
-//		NotificationDaoService.createNewNotificationQueue(notifications);
-//	}
-//	
-//	private static void sendMessageDeleteNotification(Message msg){
-//		ArrayList<Notification> notifications = new ArrayList<Notification>();
-//		
-////		TODO		
-////		for(User user : DaoUser.getUserWhoWatchedMessage(msg.getMessageId())){
-////			Notification n = new Notification(-1, Constants.notificationType.on_user, Constants.notificationEvent.watchingMessageModified,
-////					msg.getOwnerId(), msg.getOwnerName(),msg.getMessageId(), 0, user.getUserId(),
-////					"The Message you've watched no longer exsit",Calendar.getInstance(), false, false);
-////			notifications.add(n);
-////		}
-//		
-//		NotificationDaoService.createNewNotificationQueue(notifications);
-//	}
-//	
-//	private static void sendFollowerNewPostNotification(Message msg){
-//		ArrayList<Notification> notifications = new ArrayList<Notification>();
-//		
-////		TODO
-////		for(User user : DaoUser.getUserWhoWatchedUser(msg.getOwnerId())){
-////			Notification n = new Notification(-1, Constants.notificationType.on_user, Constants.notificationEvent.followerNewPost,
-////					msg.getOwnerId(), msg.getOwnerName(), msg.getMessageId(), 0, user.getUserId(),
-////					"The User you followed has just post a new Message.", Calendar.getInstance(), false, false);
-////			notifications.add(n);
-////		}
-//		
-//		NotificationDaoService.createNewNotificationQueue(notifications);
-//	}
 
-	
 }

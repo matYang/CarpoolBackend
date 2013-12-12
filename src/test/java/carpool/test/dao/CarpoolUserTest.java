@@ -1,13 +1,7 @@
 package carpool.test.dao;
 
 import static org.junit.Assert.fail;
-import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
@@ -35,12 +29,10 @@ import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.exception.validation.ValidationException;
-import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.UserSearchRepresentation;
 import carpool.model.Location;
 import carpool.model.Message;
 import carpool.model.User;
-import carpool.model.representation.LocationRepresentation;
 import static java.lang.System.out;
 
 public class CarpoolUserTest {

@@ -17,7 +17,6 @@ import carpool.constants.Constants.paymentMethod;
 import carpool.exception.validation.ValidationException;
 import carpool.model.Location;
 import carpool.model.User;
-import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
 
 public class SRStorageTest {

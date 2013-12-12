@@ -11,7 +11,6 @@ import java.util.LinkedHashMap;
 import carpool.common.DebugLog;
 import carpool.exception.location.LocationException;
 import carpool.exception.validation.ValidationException;
-import carpool.model.representation.LocationRepresentation;
 
 
 /**

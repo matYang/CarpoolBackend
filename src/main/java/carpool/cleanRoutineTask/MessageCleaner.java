@@ -14,8 +14,8 @@ import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.model.Message;
-import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
+
 public class MessageCleaner extends CarpoolDaoMessage {
 
 	
