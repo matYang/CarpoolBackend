@@ -11,13 +11,14 @@ import org.junit.Test;
 
 import carpool.dbservice.LocationDaoService;
 import carpool.exception.location.LocationException;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.validation.ValidationException;
 import carpool.model.representation.LocationRepresentation;
 
 public class LocationTest {
 	
 	@Test
-	public void testLoadDefaults(){
+	public void testLoadDefaults() throws LocationNotFoundException{
 		try {
 			LocationDaoService.init();
 		} catch (LocationException e) {

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import org.junit.Test;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoLocation;
+import carpool.exception.location.LocationNotFoundException;
 import carpool.model.Location;
+import carpool.model.representation.DefaultLocationRepresentation;
 
 public class CarpoolLocationTest {
 
@@ -195,8 +197,37 @@ public class CarpoolLocationTest {
 	}
 	
 	@Test
-	public void testGetDefaultLocations(){
-		//TODO
+	public void testAddDefaultLocationAndGetDefaultLocations() throws LocationNotFoundException{
+		CarpoolDaoBasic.clearBothDatabase();				
+		String province = "Ontario";
+		String city1 = "Waterloo";
+		String region1 = "Waterloo";
+		String pointName1 = "pointName";
+		String pointAddress1 = "pointAddress";
+		Double lat1 = 43.656273;
+		Double lng1 = 22.812345;
+		long match1 = -1;
+		int radius = 1000;
+		String str = "test1";
+		Location location = new Location(province,city1,region1,pointName1,pointAddress1,lat1,lng1,match1);
+		DefaultLocationRepresentation dlr1 = new DefaultLocationRepresentation(location,radius,str);
+		dlr1 = CarpoolDaoLocation.addDefaultLocation(dlr1);
+		
+		String city2 = "Toronto";
+		String region2 = "Waterloo";
+		String pointName2 = "pointName2";
+		String pointAddress2 = "pointAddress2";
+		Double lat2 = 43.656198;
+		Double lng2 = 26.812345;
+		long match2 = -1;
+		int radius2 = 1000;
+		String str2 = "test2";
+		Location location2 = new Location(province,city2,region2,pointName2,pointAddress2,lat2,lng2,match2);
+		DefaultLocationRepresentation dlr2 = new DefaultLocationRepresentation(location2,radius2,str2);
+		dlr2 = CarpoolDaoLocation.addDefaultLocation(dlr2);
+		
+		//ArrayList<DefaultLocationRepresentation> 
+		
 	}
 
 }
