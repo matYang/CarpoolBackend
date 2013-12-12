@@ -20,7 +20,6 @@ import carpool.model.Location;
 import carpool.model.Message;
 import carpool.model.Transaction;
 import carpool.model.User;
-import carpool.model.representation.LocationRepresentation;
 
 public class CarpoolDaoTransaction {
 

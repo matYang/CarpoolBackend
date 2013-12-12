@@ -13,7 +13,6 @@ import carpool.exception.user.UserNotFoundException;
 import carpool.model.Letter;
 import carpool.model.Location;
 import carpool.model.User;
-import carpool.model.representation.LocationRepresentation;
 
 public class LetterDaoServiceTest {
 	

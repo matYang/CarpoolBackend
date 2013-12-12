@@ -22,7 +22,6 @@ import carpool.exception.validation.ValidationException;
 import carpool.model.Location;
 import carpool.model.Notification;
 import carpool.model.User;
-import carpool.model.representation.LocationRepresentation;
 
 public class CarpoolNotificationTest {
 	

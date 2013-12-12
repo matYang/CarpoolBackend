@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import carpool.common.Parser;
+import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants;
 import carpool.constants.Constants.messageType;
 import carpool.common.DateUtility;
@@ -18,7 +19,6 @@ import carpool.exception.user.UserNotFoundException;
 import carpool.model.Location;
 import carpool.model.Message;
 import carpool.model.User;
-import carpool.model.representation.LocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
 
 
@@ -328,7 +328,7 @@ public class CarpoolDaoMessage{
 	public static ArrayList<Message> getRecentMessages() throws LocationNotFoundException{
 		ArrayList<Message> retVal = new ArrayList<Message>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
-		String query = "SELECT * from carpoolDAOMessage ORDER BY creationTime DESC LIMIT 10;";
+		String query = "SELECT * from carpoolDAOMessage ORDER BY creationTime DESC LIMIT " + CarpoolConfig.max_recents + ";";
 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){

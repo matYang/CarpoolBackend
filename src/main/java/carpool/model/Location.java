@@ -53,130 +53,102 @@ public class Location implements PseudoModel, PseudoValidatable, Comparable<Loca
 		this.lng = lng;
 		this.match = match;
 	}
+	
+	public Location(JSONObject jsonObject) {
+		super();
+		this.id = -1;
+		this.province = jsonObject.getString("province");
+		this.city = jsonObject.getString("city");
+		this.region = jsonObject.getString("region");
+		this.pointName = jsonObject.getString("pointName");
+		this.pointAddress = jsonObject.getString("pointAddress");
+		this.lat = jsonObject.getDouble("lat");
+		this.lng = jsonObject.getDouble("lng");
+		this.match = jsonObject.getLong("match_Id");
+	}
+
+	public Location(Location location) {
+		super();
+		this.id = location.getId();
+		this.province = location.getProvince();
+		this.city = location.getCity();
+		this.region = location.getRegion();
+		this.pointName = location.getPointName();
+		this.pointAddress = location.getPointAddress();
+		this.lat = location.getLat();
+		this.lng = location.getLng();
+		this.match = location.getMatch();
+	}
 
 	
-	/**
-	 * @return the id
-	 */
 	public long getId() {
 		return id;
 	}
 
-	/**
-	 * @param id the id to set
-	 */
 	public void setId(long id) {
 		this.id = id;
 	}
 
-	/**
-	 * @return the province
-	 */
 	public String getProvince() {
 		return province;
 	}
 
-	/**
-	 * @param province the province to set
-	 */
 	public void setProvince(String province) {
 		this.province = province;
 	}
 
-	/**
-	 * @return the city
-	 */
 	public String getCity() {
 		return city;
 	}
 
-	/**
-	 * @param city the city to set
-	 */
 	public void setCity(String city) {
 		this.city = city;
 	}
 
-	/**
-	 * @return the region
-	 */
 	public String getRegion() {
 		return region;
 	}
 
-	/**
-	 * @param region the region to set
-	 */
 	public void setRegion(String region) {
 		this.region = region;
 	}
 
-	/**
-	 * @return the pointName
-	 */
 	public String getPointName() {
 		return pointName;
 	}
 
-	/**
-	 * @param pointName the pointName to set
-	 */
 	public void setPointName(String pointName) {
 		this.pointName = pointName;
 	}
 
-	/**
-	 * @return the pointAddress
-	 */
 	public String getPointAddress() {
 		return pointAddress;
 	}
 
-	/**
-	 * @param pointAddress the pointAddress to set
-	 */
 	public void setPointAddress(String pointAddress) {
 		this.pointAddress = pointAddress;
 	}
 
-	/**
-	 * @return the lat
-	 */
 	public Double getLat() {
 		return lat;
 	}
 
-	/**
-	 * @param lat the lat to set
-	 */
 	public void setLat(Double lat) {
 		this.lat = lat;
 	}
 
-	/**
-	 * @return the lng
-	 */
 	public Double getLng() {
 		return lng;
 	}
 
-	/**
-	 * @param lng the lng to set
-	 */
 	public void setLng(Double lng) {
 		this.lng = lng;
 	}
 
-	/**
-	 * @return the match
-	 */
 	public long getMatch() {
 		return match;
 	}
 
-	/**
-	 * @param match the match to set
-	 */
 	public void setMatch(long match) {
 		this.match = match;
 	}
@@ -201,13 +173,11 @@ public class Location implements PseudoModel, PseudoValidatable, Comparable<Loca
 
 	@Override
 	public int compareTo(Location o) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public boolean validate() throws ValidationException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -219,8 +189,8 @@ public class Location implements PseudoModel, PseudoValidatable, Comparable<Loca
 			jsonLocation.put("province", this.getProvince());
 			jsonLocation.put("city", this.getCity());
 			jsonLocation.put("region", this.getRegion());
-			jsonLocation.put("pointName",this.getPointName()==null?new JSONObject(""):this.getPointName() );
-			jsonLocation.put("pointAddress", this.getPointAddress()==null?new JSONObject(""):this.getPointAddress());
+			jsonLocation.put("pointName",this.getPointName() == null ? "" : this.getPointName());
+			jsonLocation.put("pointAddress", this.getPointAddress() == null ? "": this.getPointAddress());
 			jsonLocation.put("lat", this.getLat());
 			jsonLocation.put("lng", this.getLng());			
 			jsonLocation.put("match_Id", this.getMatch());
@@ -232,30 +202,6 @@ public class Location implements PseudoModel, PseudoValidatable, Comparable<Loca
 		return jsonLocation;
 	}
 	
-	public Location(JSONObject jsonObject) {
-		super();
-		this.id = jsonObject.getInt("id");
-		this.province = jsonObject.getString("province");
-		this.city = jsonObject.getString("city");
-		this.region = jsonObject.getString("region");
-		this.pointName = jsonObject.getString("pointName");
-		this.pointAddress = jsonObject.getString("pointAddress");
-		this.lat = jsonObject.getDouble("lat");
-		this.lng = jsonObject.getDouble("lng");
-		this.match = jsonObject.getLong("match_Id");
-	}
 
-	public Location(Location location) {
-		super();
-		this.id = location.getId();
-		this.province = location.getProvince();
-		this.city = location.getCity();
-		this.region = location.getRegion();
-		this.pointName = location.getPointName();
-		this.pointAddress = location.getPointAddress();
-		this.lat = location.getLat();
-		this.lng = location.getLng();
-		this.match = location.getMatch();
-	}
 
 }

@@ -91,10 +91,15 @@ public class DefaultLocationRepresentation implements PseudoRepresentation, Pseu
 		JSONObject jsonDefaultLocation = new JSONObject();
 		try {
 			jsonDefaultLocation.put("id", this.getId());
-			jsonDefaultLocation.put("location", this.getLocation());
 			jsonDefaultLocation.put("radius", this.getRadius());
 			jsonDefaultLocation.put("synonyms", this.getSynonyms());
-
+			
+			JSONObject jsonLocation = this.getLocation().toJSON();
+			for (Object key : jsonLocation.keySet()){
+				String strKey = (String)key;
+				jsonDefaultLocation.put(strKey, jsonLocation.get(strKey));
+			}
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

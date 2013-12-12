@@ -12,7 +12,6 @@ import org.junit.Test;
 import carpool.dbservice.LocationDaoService;
 import carpool.exception.location.LocationException;
 import carpool.exception.validation.ValidationException;
-import carpool.model.representation.LocationRepresentation;
 
 public class LocationTest {
 	

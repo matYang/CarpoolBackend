@@ -14,7 +14,6 @@ import carpool.constants.Constants.messageType;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoRepresentation;
 import carpool.model.Location;
-import carpool.model.representation.LocationRepresentation;
 
 public class SearchRepresentation implements PseudoRepresentation{
 	

@@ -19,7 +19,6 @@ import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
-import carpool.model.representation.LocationRepresentation;
 import carpool.resources.PseudoResource;
 
 
@@ -90,8 +89,7 @@ public class DMResourceId extends PseudoResource{
         return result;
     }
     
-    //if authentication passed, local model should have the correct password field, thus checking both password and authCode here, please note under other situations password on the front end would be goofypassword
-    //authCode must not equal to initial authCode -1
+    
     @Put 
     public Representation updateMessage(Representation entity) {
         int id = -1;
