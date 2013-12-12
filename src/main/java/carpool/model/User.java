@@ -42,42 +42,8 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     private long location_Id;
     private Location location;
     private long match_Id;
-
-    /**
-	 * @return the location_Id
-	 */
-	public long getLocation_Id() {
-		return location_Id;
-	}
-
-
-	/**
-	 * @param location_Id the location_Id to set
-	 */
-	public void setLocation_Id(long location_Id) {
-		this.location_Id = location_Id;
-	}
-
-
-	/**
-	 * @return the match_Id
-	 */
-	public long getMatch_Id() {
-		return match_Id;
-	}
-
-
-	/**
-	 * @param match_Id the match_Id to set
-	 */
-	public void setMatch_Id(long match_Id) {
-		this.match_Id = match_Id;
-	}
-
-
 	private Calendar lastLogin;
     private Calendar creationTime;
-    
     
     /*****
      * the followings are for user's relations
@@ -87,8 +53,6 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     private ArrayList<User> socialList;
     private ArrayList<Transaction> transactionList;
     private ArrayList<Notification> notificationList;
-    @Deprecated
-    private ArrayList<String> universityGroup;
     
 
     /*****
@@ -163,7 +127,6 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	    this.socialList = new ArrayList<User>();
 	    this.transactionList = new ArrayList<Transaction>();
 	    this.notificationList = new ArrayList<Notification>();
-	    this.universityGroup = new ArrayList<String>();
   
 	    this.verifications = new ArrayList<String>();
 	    this.emailActivated = false;
@@ -251,7 +214,6 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	    this.socialList = new ArrayList<User>();
 	    this.transactionList = new ArrayList<Transaction>();
 	    this.notificationList = new ArrayList<Notification>();
-	    this.universityGroup = new ArrayList<String>();
 	}
 
 	
@@ -626,6 +588,21 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.accountToken = accountToken;
 	}
 
+	public long getLocation_Id() {
+		return location_Id;
+	}
+
+	public void setLocation_Id(long location_Id) {
+		this.location_Id = location_Id;
+	}
+
+	public long getMatch_Id() {
+		return match_Id;
+	}
+
+	public void setMatch_Id(long match_Id) {
+		this.match_Id = match_Id;
+	}
 
 	public BigDecimal getAccountValue() {
 		return accountValue;
@@ -729,8 +706,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 				+ ", historyList=" + historyList + ", watchList=" + watchList
 				+ ", socialList=" + socialList + ", transactionList="
 				+ transactionList + ", notificationList=" + notificationList
-				+ ", universityGroup=" + universityGroup + ", verifications="
-				+ verifications + ", emailActivated="
+				+ ", verifications=" + verifications + ", emailActivated="
 				+ emailActivated + ", phoneActivated=" + phoneActivated
 				+ ", emailNotice=" + emailNotice + ", phoneNotice="
 				+ phoneNotice + ", state=" + state + ", searchRepresentation="

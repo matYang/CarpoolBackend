@@ -25,6 +25,7 @@ import java.sql.SQLException;
 public class TransactionCleaner extends CarpoolDaoTransaction {
 
 	public static void Clean() throws LocationNotFoundException{
+		ArrayList<Notification> notificationQueue = new ArrayList<Notification>();
 		Calendar currentDate = Calendar.getInstance();
 		String ct=DateUtility.toSQLDateTime(currentDate);
 		//System.out.println("currentTime: "+ct);
@@ -68,10 +69,10 @@ public class TransactionCleaner extends CarpoolDaoTransaction {
 				transaction = tlist.get(i);
 				CarpoolDaoTransaction.updateTransactionInDatabase(transaction);
 				//use the queue from notification service here
-				NotificationDaoService.addToNotificationQueue(new Notification(Constants.NotificationEvent.transactionAboutToStart, transaction.getProviderId(), transaction.getCustomerId(), transaction.getMessageId(), transaction.getTransactionId()));
-				NotificationDaoService.addToNotificationQueue(new Notification(Constants.NotificationEvent.transactionAboutToStart, transaction.getCustomerId(), transaction.getProviderId(), transaction.getMessageId(), transaction.getTransactionId()));
+				notificationQueue.add(new Notification(Constants.NotificationEvent.transactionAboutToStart, transaction.getProviderId(), transaction.getCustomerId(), transaction.getMessageId(), transaction.getTransactionId()));
+				notificationQueue.add(new Notification(Constants.NotificationEvent.transactionAboutToStart, transaction.getCustomerId(), transaction.getProviderId(), transaction.getMessageId(), transaction.getTransactionId()));
 			}
-			NotificationDaoService.dispatchNotificationQueue();
+			NotificationDaoService.sendNotification(notificationQueue);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DebugLog.d(e);

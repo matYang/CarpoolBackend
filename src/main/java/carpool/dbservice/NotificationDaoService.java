@@ -1,10 +1,12 @@
 package carpool.dbservice;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import javax.swing.text.DateFormatter;
 
 import carpool.asyncRelayExecutor.ExecutorProvider;
+import carpool.asyncTask.relayTask.EmailRelayTask;
 import carpool.asyncTask.relayTask.NotificationRelayTask;
 import carpool.carpoolDAO.CarpoolDaoNotification;
 import carpool.common.*;
@@ -16,28 +18,13 @@ import carpool.exception.notification.NotificationNotFoundException;
 import carpool.exception.notification.NotificationOwnerNotMatchException;
 import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.factory.JSONFactory;
 import carpool.model.*;
 
 
 
 
 public class NotificationDaoService{
-	
-	private static ArrayList<Notification> db_notificationPendingQeue = new ArrayList<Notification>();
-	public static void addToNotificationQueue(Notification n){
-		db_notificationPendingQeue.add(n);
-	}
-	public static void addToNotificationQueue(ArrayList<Notification> ns){
-		db_notificationPendingQeue.addAll(ns);
-	}
-	private static void clearNotificationQueue(){
-		db_notificationPendingQeue.clear();
-	}
-	public static void dispatchNotificationQueue(){
-		sendNotification(db_notificationPendingQeue);
-		createNewNotification(db_notificationPendingQeue);
-		clearNotificationQueue();
-	}
 	
 	/**
 	 *  submitting to execution 
@@ -50,8 +37,41 @@ public class NotificationDaoService{
 	
 	public static void sendNotification(ArrayList<Notification> ns){
 		NotificationRelayTask nTask = new NotificationRelayTask(ns);
+		createNewNotification(ns);
         ExecutorProvider.executeRelay(nTask);
-        createNewNotification(ns);
+        
+        
+        //trying to send out emai notifications
+        Map<Integer, ArrayList<Notification>> bufferMap = emailRelayBufferMapMaker(ns);
+        for (Entry<Integer, ArrayList<Notification>> entry : bufferMap.entrySet()){
+        	try {
+				User user = UserDaoService.getUserById(entry.getKey());
+				if (user.isEmailNotice()){
+					EmailRelayTask eTask = new EmailRelayTask(user.getEmail(), "拼车网新提醒", JSONFactory.toJSON(entry.getValue()).toString());
+					ExecutorProvider.executeRelay(eTask);
+				}
+			} catch (UserNotFoundException | LocationNotFoundException e) {
+				DebugLog.d(e);
+			}
+        }
+	}
+	
+	private static HashMap<Integer, ArrayList<Notification>> emailRelayBufferMapMaker(ArrayList<Notification> ns){
+		HashMap<Integer, ArrayList<Notification>> bufferMap = new HashMap<Integer, ArrayList<Notification>>();
+		
+		for (Notification n : ns){
+			if (bufferMap.get(n.getTargetUserId()) == null){
+				ArrayList<Notification> nList = new ArrayList<Notification>();
+				nList.add(n);
+				bufferMap.put(n.getTargetUserId(), nList);
+			}
+			else {
+				bufferMap.get(n.getTargetUserId()).add(n);
+			}
+		}
+		
+		
+		return bufferMap;
 	}
 	
 	
@@ -71,7 +91,6 @@ public class NotificationDaoService{
 	 * @Return the notification just stored, with the notificationId
 	 */
 	public static Notification createNewNotification(Notification newNotification){
-		
 		return CarpoolDaoNotification.addNotificationToDatabase(newNotification);
 	}
 	
