@@ -69,7 +69,7 @@ public class CarpoolLocationLoader {
 		
 		DebugLog.d("Starting to load location data from file: " + pathToFile);
 		BufferedReader br = null;
-		 
+		locationBufferList.clear(); 
 		try {
 			String sCurrentLine;
 			br = new BufferedReader(new FileReader(pathToFile));

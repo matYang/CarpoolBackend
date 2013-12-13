@@ -22,12 +22,13 @@ import carpool.model.representation.DefaultLocationRepresentation;
  *
  */
 public class LocationDaoService {	
-
+	public static int defalutLocationsNum=0;
 	public static void init() throws LocationException, ValidationException, LocationNotFoundException{
 		if (!CarpoolDaoLocation.isLocationPoolEmpty()){
 			return;
 		}
 		ArrayList<HashMap<String, String>> bufferList = CarpoolLocationLoader.loadLocationFromFile("LocationData.txt");
+		defalutLocationsNum = bufferList.size();
 		for (HashMap<String, String> bufferMap : bufferList){
 
 			Location location = new Location(bufferMap.get("province"),bufferMap.get("city"),bufferMap.get("region"),bufferMap.get("name"),bufferMap.get("address"),Double.parseDouble(bufferMap.get("lat")),Double.parseDouble(bufferMap.get("lng")),-1l);

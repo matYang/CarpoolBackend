@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import org.junit.Test;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoLocation;
+import carpool.dbservice.LocationDaoService;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.model.Location;
 import carpool.model.representation.DefaultLocationRepresentation;
@@ -117,11 +118,12 @@ public class CarpoolLocationTest {
 		Location location = new Location(province,city,region,pointName,pointAddress,lat,lng,match);
 		Location test = new Location(province,"Toronto","Downtown",pointName,pointAddress,lat,lng,match);
 		ArrayList<Location> list = new ArrayList<Location>();
+		int defaultLocationsNum = LocationDaoService.defalutLocationsNum;
 		try{
 			location = CarpoolDaoLocation.addLocationToDatabases(location);			
 			test = CarpoolDaoLocation.addLocationToDatabases(test);		
 			list = CarpoolDaoLocation.getAllLocation();
-			if(list !=null && list.size()==2 && list.get(0).equals(location)&&list.get(1).equals(test)){
+			if(list !=null && list.size()==defaultLocationsNum + 2 && list.get(defaultLocationsNum).equals(location)&&list.get(defaultLocationsNum+1).equals(test)){
 				//Passed;
 			}else{
 				fail();
@@ -175,15 +177,16 @@ public class CarpoolLocationTest {
 		Location location = new Location(province,city,region,pointName,pointAddress,lat,lng,match);
 		Location test = new Location(province,"Toronto","Downtown",pointName,pointAddress,lat,lng,match);
 		ArrayList<Location> list = new ArrayList<Location>();
+		int defaultLocationsNum = LocationDaoService.defalutLocationsNum;
 		try{
 			location = CarpoolDaoLocation.addLocationToDatabases(location);			
 			test = CarpoolDaoLocation.addLocationToDatabases(test);		
 			CarpoolDaoLocation.deleteLocation(location.getId());
 			list = CarpoolDaoLocation.getAllLocation();
-			if(list.size()==1 && list.get(0).equals(test)){
+			if(list.size()==defaultLocationsNum + 1 && list.get(defaultLocationsNum).equals(test)){
 				CarpoolDaoLocation.deleteLocation(test.getId());
 				list = CarpoolDaoLocation.getAllLocation();
-				if(list.size()==0){
+				if(list.size()==defaultLocationsNum){
 					//Passed;
 				}else{
 					fail();
@@ -198,7 +201,8 @@ public class CarpoolLocationTest {
 
 	@Test
 	public void testAddDefaultLocationAndGetDefaultLocations() throws LocationNotFoundException{
-		CarpoolDaoBasic.clearBothDatabase();				
+		CarpoolDaoBasic.clearBothDatabase();
+		int defaultLocationsNum = LocationDaoService.defalutLocationsNum;
 		String province = "Ontario";
 		String city1 = "Waterloo";
 		String region1 = "Waterloo";
@@ -229,7 +233,7 @@ public class CarpoolLocationTest {
 		try{
 			ArrayList<DefaultLocationRepresentation> list = new ArrayList<DefaultLocationRepresentation>();
 			list = CarpoolDaoLocation.getDefaultLocationRepresentations();
-			if(list.size()==2 && list.get(0).equals(dlr1) && list.get(1).equals(dlr2)){
+			if(list.size()==defaultLocationsNum + 2 && list.get(defaultLocationsNum).equals(dlr1) && list.get(defaultLocationsNum+1).equals(dlr2)){
 				//Passed;
 			}else{
 				fail();
@@ -261,7 +265,7 @@ public class CarpoolLocationTest {
 		boolean isEmpty=false;
 		try{
 			isEmpty = CarpoolDaoLocation.isLocationPoolEmpty();
-			if(isEmpty){
+			if(!isEmpty){
 				//Passed;
 			}else{
 				fail();
@@ -269,8 +273,33 @@ public class CarpoolLocationTest {
 		}catch(Exception e){
 			e.printStackTrace();
 			fail();
-		}	
-
+		}
+		
+		String province = "Ontario";
+		String city1 = "Waterloo";
+		String region1 = "Waterloo";
+		String pointName1 = "pointName";
+		String pointAddress1 = "pointAddress";
+		Double lat1 = 43.656273;
+		Double lng1 = 22.812345;
+		long match1 = -1;
+		int radius = 1000;
+		String str = "test1";
+		Location location = new Location(province,city1,region1,pointName1,pointAddress1,lat1,lng1,match1);
+		DefaultLocationRepresentation dlr1 = new DefaultLocationRepresentation(location,radius,str);
+		dlr1 = CarpoolDaoLocation.addDefaultLocation(dlr1);
+		
+		try{
+			isEmpty = CarpoolDaoLocation.isLocationPoolEmpty();
+			if(!isEmpty){
+				//Passed;
+			}else{
+				fail();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			fail();
+		}
 	}
 
 }
