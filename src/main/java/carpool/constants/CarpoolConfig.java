@@ -76,13 +76,18 @@ public class CarpoolConfig {
 	public static final Location getDefaultLocationRepresentation(){
 		return null;
 	}
+	public static final String UserSRDeparture = "UserSRDeparture";
+	public static final String UserSRArrival = "UserSRArrival";
+	public static final String DatabasesDeparture = "DatabasesDeparture";
+	public static final String DatabasesArrival = "DatabasesArrival";
 	
+	public static final String standardTimeZone = "UTC";
 	public static final SearchRepresentation getDefaultSearchRepresentation(){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String dateStr =  sdf.format(Calendar.getInstance().getTime());
+		String dateStr =  sdf.format(Calendar.getInstance().getTime());		
 		long departureMatch_Id = 1;
 		long arrivalMatch_Id = 2;		
-		return new SearchRepresentation("false" + CarpoolConfig.urlSeperator + departureMatch_Id + CarpoolConfig.urlSeperator + arrivalMatch_Id + CarpoolConfig.urlSeperator + dateStr + CarpoolConfig.urlSeperator + dateStr + CarpoolConfig.urlSeperator  + "0" + CarpoolConfig.urlSeperator + "0" + CarpoolConfig.urlSeperator + "0");
+		return new SearchRepresentation("false" + CarpoolConfig.urlSeperator + departureMatch_Id + CarpoolConfig.urlSeperator + arrivalMatch_Id + CarpoolConfig.urlSeperator + dateStr + CarpoolConfig.urlSeperator + dateStr + CarpoolConfig.urlSeperator  + "0" + CarpoolConfig.urlSeperator + "0" + CarpoolConfig.urlSeperator + "0"+CarpoolConfig.urlSeperator + dateStr);
 	}
 
 	public static final void initConfig(){

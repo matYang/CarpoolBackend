@@ -2,6 +2,7 @@ package carpool.dbservice;
 
 import java.util.ArrayList;
 
+import carpool.aws.awsMain;
 import carpool.carpoolDAO.*;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
@@ -47,6 +48,7 @@ public class MessageDaoService{
 		searchResult = CarpoolDaoMessage.searchMessage(userSearch);
 		if (isLogin){
 			UserDaoService.updateUserSearch(userSearch, userId);
+			awsMain.storeSearchHistory(userSearch, userId);
 		}
 		return searchResult;
 	}

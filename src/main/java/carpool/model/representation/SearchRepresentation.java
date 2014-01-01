@@ -14,6 +14,7 @@ import carpool.constants.Constants.messageType;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoRepresentation;
 import carpool.model.Location;
+import carpool.timeStampService.timeStampConverter;
 
 public class SearchRepresentation implements PseudoRepresentation{
 	
@@ -25,7 +26,7 @@ public class SearchRepresentation implements PseudoRepresentation{
 	private messageType targetType;
 	private DayTimeSlot departureTimeSlot;
 	private DayTimeSlot arrivalTimeSlot;
-	
+	private Calendar timeStamp;
 	
 	@SuppressWarnings("unused")
 	private SearchRepresentation(){}
@@ -43,6 +44,7 @@ public class SearchRepresentation implements PseudoRepresentation{
 		this.targetType = targetType;
 		this.departureTimeSlot = departureTimeSlot;
 		this.arrivalTimeSlot = arrivalTimeSlot;
+		this.timeStamp = timeStampConverter.ConvertToStandard(Calendar.getInstance());
 	}
 
 	//separated by "+"
@@ -57,6 +59,7 @@ public class SearchRepresentation implements PseudoRepresentation{
 		this.targetType = Constants.messageType.values()[Integer.parseInt(representationArray[5])];
 		this.departureTimeSlot = Constants.DayTimeSlot.values()[Integer.parseInt(representationArray[6])];
 		this.arrivalTimeSlot = Constants.DayTimeSlot.values()[Integer.parseInt(representationArray[7])];
+		this.timeStamp = DateUtility.castFromAPIFormat(representationArray[8]);
 	}
 	
 	public SearchRepresentation(JSONObject jsonSearchRepresentation) throws JSONException{
@@ -68,10 +71,13 @@ public class SearchRepresentation implements PseudoRepresentation{
 		this.targetType = Constants.messageType.values()[jsonSearchRepresentation.getInt("targetType")];
 		this.departureTimeSlot = Constants.DayTimeSlot.values()[jsonSearchRepresentation.getInt("departureTimeSlot")];
 		this.arrivalTimeSlot = Constants.DayTimeSlot.values()[jsonSearchRepresentation.getInt("arrivalTimeSlot")];
+		this.timeStamp = DateUtility.castFromAPIFormat(jsonSearchRepresentation.getString("timeStamp"));
 	}
 	
 	
-	
+	public Calendar getTimeStamp(){
+		return timeStamp;
+	}
 	
 	public boolean isRoundTrip() {
 		return isRoundTrip;
@@ -141,7 +147,7 @@ public class SearchRepresentation implements PseudoRepresentation{
 	@Override
 	public String toSerializedString(){
 		return this.isRoundTrip + CarpoolConfig.urlSeperator + this.departureMatch_Id  + CarpoolConfig.urlSeperator + this.arrivalMatch_Id + CarpoolConfig.urlSeperator + 
-				DateUtility.castToAPIFormat(this.departureDate)  + CarpoolConfig.urlSeperator + DateUtility.castToAPIFormat(this.arrivalDate)  + CarpoolConfig.urlSeperator + this.targetType.code + CarpoolConfig.urlSeperator + this.departureTimeSlot.code + CarpoolConfig.urlSeperator + this.arrivalTimeSlot.code;
+				DateUtility.castToAPIFormat(this.departureDate)  + CarpoolConfig.urlSeperator + DateUtility.castToAPIFormat(this.arrivalDate)  + CarpoolConfig.urlSeperator + this.targetType.code + CarpoolConfig.urlSeperator + this.departureTimeSlot.code + CarpoolConfig.urlSeperator + this.arrivalTimeSlot.code+ CarpoolConfig.urlSeperator+DateUtility.castToAPIFormat(this.timeStamp);
 	}
 	
 	@Override
@@ -156,6 +162,7 @@ public class SearchRepresentation implements PseudoRepresentation{
 			jsonSearchRepresentation.put("targetType", this.targetType.code);
 			jsonSearchRepresentation.put("departureTimeSlot", this.departureTimeSlot.code);
 			jsonSearchRepresentation.put("arrivalTimeSlot", this.arrivalTimeSlot.code);
+			jsonSearchRepresentation.put("timeStamp", DateUtility.castToAPIFormat(this.timeStamp));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -165,9 +172,8 @@ public class SearchRepresentation implements PseudoRepresentation{
 	
 	public boolean equals(SearchRepresentation s){
 		return this.isRoundTrip == s.isRoundTrip() && this.departureMatch_Id==s.getDepartureMatch_Id() && this.arrivalMatch_Id==s.getArrivalMatch_Id() &&
-				//this.departureDate.equals(s.getDepartureDate()) && this.arrivalDate.equals(s.getArrivalDate()) && 
-				this.targetType == s.getTargetType() &&
-				this.departureTimeSlot == s.getDepartureTimeSlot() && this.arrivalTimeSlot == s.getArrivalTimeSlot();
+				this.departureDate.equals(s.getDepartureDate()) && this.arrivalDate.equals(s.getArrivalDate()) && this.targetType == s.getTargetType() &&
+				this.departureTimeSlot == s.getDepartureTimeSlot() && this.arrivalTimeSlot == s.getArrivalTimeSlot() && this.timeStamp.equals(s.getTimeStamp());
 	}
 
 }

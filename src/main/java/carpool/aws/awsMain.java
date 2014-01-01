@@ -76,7 +76,7 @@ public class awsMain {
 			e2.printStackTrace();
 			DebugLog.d(e2);
 		}
-		
+
 	}
 
 	public static void getImgObject(int userId){
@@ -203,34 +203,34 @@ public class awsMain {
 				list.add(new SearchRepresentation(appendString.get(i)));
 			}
 
-			object.close();
-			IdleConnectionReaper.shutdown();
-			//		} catch(AmazonServiceException e){			
-			//			if(e.getErrorCode().equals("NoSuchKey")){
-			//				String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
-			//				int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
-			//				Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
-			//				List<String> appendString = redis.lrange(rediskey, 0, upper-1);
-			//
-			//				for(int i=0; i<appendString.size(); i++){
-			//					list.add(new SearchRepresentation(appendString.get(i)));
-			//				}
-			//				if (object != null){
-			//					try {
-			//						object.close();
-			//					} catch (IOException e1) {
-			//						DebugLog.d(e1);
-			//					}
-			//				}
-			//			}
-			//			else{
-			//				DebugLog.d(e);
-			//			}
+			object.close();			
+		} catch(AmazonServiceException e){			
+			if(e.getErrorCode().equals("NoSuchKey")){
+				String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
+				int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
+				Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+				List<String> appendString = redis.lrange(rediskey, 0, upper-1);
+
+				for(int i=0; i<appendString.size(); i++){
+					list.add(new SearchRepresentation(appendString.get(i)));
+				}
+				if (object != null){
+					try {
+						object.close();
+					} catch (IOException e1) {
+						DebugLog.d(e1);
+					}
+				}
+			}
+			else{
+				DebugLog.d(e);
+			}
 		} catch(IOException e){
 			DebugLog.d(e);
 		}
 		//Make sure deleting the temp file
-		file.delete();		
+		file.delete();	
+		IdleConnectionReaper.shutdown();
 		return list;
 	}
 
@@ -338,28 +338,28 @@ public class awsMain {
 				s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
 				//clean redis
 				redis.del(rediskey);
-				//			} catch(AmazonServiceException e){	
-				//				if(e.getErrorCode().equals("NoSuchKey")){
-				//					//Write to file
-				//					try{
-				//						BufferedWriter	bw = new BufferedWriter(new FileWriter(file, true));
-				//						for(int i = upper-1; i >= 0; i--){
-				//							bw.write(appendString.get(i));   
-				//							bw.newLine();
-				//						}    
-				//						bw.flush();
-				//						bw.close();
-				//
-				//						s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
-				//						//clean redis
-				//						redis.del(rediskey);
-				//					} catch (IOException e1){
-				//						DebugLog.d(e);
-				//					}
-				//				}
-				//				else{
-				//					DebugLog.d(e);
-				//				}
+			} catch(AmazonServiceException e){	
+				if(e.getErrorCode().equals("NoSuchKey")){
+					//Write to file
+					try{
+						BufferedWriter	bw = new BufferedWriter(new FileWriter(file, true));
+						for(int i = upper-1; i >= 0; i--){
+							bw.write(appendString.get(i));   
+							bw.newLine();
+						}    
+						bw.flush();
+						bw.close();
+
+						s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
+						//clean redis
+						redis.del(rediskey);
+					} catch (IOException e1){
+						DebugLog.d(e);
+					}
+				}
+				else{
+					DebugLog.d(e);
+				}
 			} catch (IOException e){
 				DebugLog.d(e);
 			}
