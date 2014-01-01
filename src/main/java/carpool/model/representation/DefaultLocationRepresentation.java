@@ -97,7 +97,7 @@ public class DefaultLocationRepresentation implements PseudoRepresentation, Pseu
 	public JSONObject toJSON() {
 		JSONObject jsonDefaultLocation = new JSONObject();
 		try {
-			jsonDefaultLocation.put("id", this.getId());
+			jsonDefaultLocation.put("defaultId", this.getId());
 			jsonDefaultLocation.put("radius", this.getRadius());
 			jsonDefaultLocation.put("synonyms", this.getSynonyms());
 			
