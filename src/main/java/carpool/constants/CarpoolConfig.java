@@ -23,7 +23,7 @@ public class CarpoolConfig {
 		}
 	}
 	
-	public static final int max_recents = 6;
+	public static final int max_recents = 10;
 	public static final long max_feedBackLength = 200000l;
 	public static final long max_PostLength = 819200l;
 	public static final long max_FileLength = 81920000l;
