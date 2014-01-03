@@ -1,4 +1,4 @@
-package AwsS3Service;
+package AwsService;
 
 import static org.junit.Assert.fail;
 
@@ -31,7 +31,7 @@ import carpool.model.Message;
 import carpool.model.User;
 import carpool.model.representation.SearchRepresentation;
 
-public class AwsTest {
+public class AwsS3Test {
 
 	//Note: All the tests have been commented out since some of them may influence the test results of others
 

@@ -23,7 +23,7 @@ public class CarpoolConfig {
 		}
 	}
 	
-	public static final int max_recents = 6;
+	public static final int max_recents = 10;
 	public static final long max_feedBackLength = 200000l;
 	public static final long max_PostLength = 819200l;
 	public static final long max_FileLength = 81920000l;
@@ -82,6 +82,12 @@ public class CarpoolConfig {
 	public static final String DatabasesArrival = "DatabasesArrival";
 	
 	public static final String standardTimeZone = "UTC";
+	
+	public static final String SMTP_USERNAME = "AKIAIKEEMEOO4Z6VCYAA"; 
+	public static final String SMTP_PASSWORD = "Aoy477FjWZtHwCk3VPCDWfJoMbG/QDXZX/FuRKQITXAl";  
+	public static final String HOST = "email-smtp.us-east-1.amazonaws.com";
+	public static final int PORT = 25;
+	
 	public static final SearchRepresentation getDefaultSearchRepresentation(){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateStr =  sdf.format(Calendar.getInstance().getTime());		
