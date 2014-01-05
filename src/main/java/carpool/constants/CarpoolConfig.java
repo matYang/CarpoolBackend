@@ -11,6 +11,7 @@ import carpool.model.representation.SearchRepresentation;
 
 public class CarpoolConfig {
 	private static final String ENV_VAR_KEY = "C_MAINSERVER_ENV";
+	//private static final String ENV_VAR_KEY = "REMOTE";
 	private static final String ENV_REMOTE = "REMOTE";
 	private static final boolean isOnLocal;
 	
@@ -34,6 +35,7 @@ public class CarpoolConfig {
 	
 	public static final String domainName = isOnLocal ? "localhost:8015" : "www.huaixuesheng.com";
 	public static final String sqlPass = isOnLocal ? null : "badstudent";
+	
 	public static final boolean cookieEnabled = false;
 	//time stamp on the session will be updated if it is 3 days old
 	public static final long session_updateThreshould = 259200000l;
@@ -87,6 +89,11 @@ public class CarpoolConfig {
 	public static final String SMTP_PASSWORD = "Aoy477FjWZtHwCk3VPCDWfJoMbG/QDXZX/FuRKQITXAl";  
 	public static final String HOST = "email-smtp.us-east-1.amazonaws.com";
 	public static final int PORT = 25;
+	
+	public static final String RDSreplicaUri = "replica.cunzg2tyzsud.us-west-2.rds.amazonaws.com";
+	public static final String RDSDBInstanceUri = "badstudent.cunzg2tyzsud.us-west-2.rds.amazonaws.com";
+	public static final String localhostUri = "localhost";
+	public static final String jdbcUri = isOnLocal ? localhostUri : RDSreplicaUri;
 	
 	public static final SearchRepresentation getDefaultSearchRepresentation(){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -53,7 +53,7 @@ public class AwsSESTest {
 		
 		try{
 			String From = "lifecentric.o2o@gmail.com";
-			String To = "xiongchuhanplace@hotmail.com";
+			String To = "fyseason@163.com";
 			String Body = "This email was sent through the Amazon SES SMTP interface by using Java.";
 			String Subject = "Test2";
 			awsSES.send(From,To,Body,Subject);

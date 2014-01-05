@@ -22,7 +22,7 @@ public class CarpoolDaoBasic {
     private static Connection connection = null;
     
     private static void connect(){
-        String uri ="jdbc:mysql://localhost:3306/test?allowMultiQueries=true&&characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes";
+        String uri ="jdbc:mysql://"+CarpoolConfig.jdbcUri+":3306/test?allowMultiQueries=true&&characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes";
         try{
             Class.forName("com.mysql.jdbc.Driver");
             connection = DriverManager.getConnection(uri, "root", CarpoolConfig.sqlPass);
