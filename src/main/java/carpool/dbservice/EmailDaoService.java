@@ -3,14 +3,15 @@ package carpool.dbservice;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import carpool.asyncRelayExecutor.ExecutorProvider;
-import carpool.asyncTask.relayTask.EmailRelayTask;
+import carpool.asyncTask.relayTask.SESRelayTask;
 import carpool.common.DebugLog;
-import carpool.common.EmailHandler;
 import carpool.constants.CarpoolConfig;
+import carpool.constants.Constants.EmailEvent;
 import carpool.carpoolDAO.*;
 import carpool.encryption.EmailCrypto;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.factory.JSONFactory;
 import carpool.model.User;
 
 public class EmailDaoService {
@@ -54,7 +55,7 @@ public class EmailDaoService {
 		CarpoolDaoBasic.getJedis().set(CarpoolConfig.key_emailActivationAuth + userId, authCode);
 		String encryptedEmailKey = EmailCrypto.encrypt(userId, authCode);
 		try {
-			EmailRelayTask emailTask = new EmailRelayTask(newEmail, "激活您的拼车邮箱", "http://"+CarpoolConfig.domainName+"/#emailActivation/"+encryptedEmailKey);
+			SESRelayTask emailTask = new SESRelayTask(newEmail, EmailEvent.activeateAccount, "http://"+CarpoolConfig.domainName+"/#emailActivation/"+encryptedEmailKey);
 			ExecutorProvider.executeRelay(emailTask);
 		} catch (Exception e) {
 			DebugLog.d(e);
@@ -129,7 +130,7 @@ public class EmailDaoService {
 			return false;
 		}
 		//make sure you have the prefix...don't want to debug this
-		CarpoolDaoBasic.getJedis().del(CarpoolConfig.key_emailActivationAuth + userId);
+		//TODO inspect: CarpoolDaoBasic.getJedis().del(CarpoolConfig.key_emailActivationAuth + userId);
 		String authCode = RandomStringUtils.randomAlphanumeric(30);
 		CarpoolDaoBasic.getJedis().set(CarpoolConfig.key_emailActivationAuth + userId, authCode);
 		sendActivationEmail(userId, user.getEmail());
@@ -145,7 +146,7 @@ public class EmailDaoService {
 	 * @return isSent
 	 * @throws user not found exception if the user id does not exist
 	 */
-	public static boolean sendChangePasswordEmail(String email) throws UserNotFoundException{
+	public static boolean sendForgotPasswordEmail(String email) throws UserNotFoundException{
 		try {
 			User user = CarpoolDaoUser.getUserByEmail(email);
 			int  userId = user.getUserId();
@@ -153,7 +154,9 @@ public class EmailDaoService {
 			String authCode = RandomStringUtils.randomAlphanumeric(30);
 			CarpoolDaoBasic.getJedis().set(CarpoolConfig.key_forgetPasswordAuth + userId, authCode);
 			String encryptedEmailKey = EmailCrypto.encrypt(userId, authCode);
-			EmailHandler.send(email, "Change your password", CarpoolConfig.domainName+"/forgetPassword?key="+encryptedEmailKey);
+			
+			SESRelayTask eTask = new SESRelayTask(email, EmailEvent.forgotPassword, CarpoolConfig.domainName+"/forgetPassword?key="+encryptedEmailKey);
+			ExecutorProvider.executeRelay(eTask);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

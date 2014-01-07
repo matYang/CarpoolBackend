@@ -25,14 +25,6 @@ public class LetterRelayTask implements PseudoAsyncTask{
 
 	private Letter letter;
 	
-	private boolean logfed = false;
-	
-	private void logconfig(){
-		if (!logfed){
-			BasicConfigurator.configure();
-			logfed = true;
-		}
-	}
 	
 	public LetterRelayTask(Letter letter){
 		this.letter = letter;
@@ -50,7 +42,6 @@ public class LetterRelayTask implements PseudoAsyncTask{
 	    StringEntity entity;
 	    HttpResponse response = null;
 		try {
-			logconfig();
 			
 			entity = new StringEntity(json.toString());
 			

@@ -1,10 +1,14 @@
 package carpool.constants;
 
 import java.text.SimpleDateFormat;
+import java.util.AbstractMap;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import carpool.common.DebugLog;
 import carpool.constants.Constants.DayTimeSlot;
+import carpool.constants.Constants.EmailEvent;
 import carpool.constants.Constants.messageType;
 import carpool.model.Location;
 import carpool.model.representation.SearchRepresentation;
@@ -15,6 +19,11 @@ public class CarpoolConfig {
 	private static final String ENV_REMOTE = "REMOTE";
 	private static final boolean isOnLocal;
 	
+	//used for emails,  Entry consists of subject and template
+	public static final HashMap<EmailEvent, Entry<String, String>> emailEventMap;
+	//key words for replacement indication in email templates
+	public static final String htmlTemplateTarget = "TARGET";
+	
 	static{
 		String value = System.getenv(ENV_VAR_KEY);
 		if (value != null && value.equals(ENV_REMOTE)){
@@ -22,6 +31,11 @@ public class CarpoolConfig {
 		} else{
 			isOnLocal = true;
 		}
+		
+		emailEventMap = new HashMap<EmailEvent, Entry<String, String>>();
+		emailEventMap.put(EmailEvent.activeateAccount, new AbstractMap.SimpleEntry<String, String>("请激活您的账户","TARGET"));
+		emailEventMap.put(EmailEvent.forgotPassword, new AbstractMap.SimpleEntry<String, String>("取回您的密码","TARGET"));
+		emailEventMap.put(EmailEvent.notification, new AbstractMap.SimpleEntry<String, String>("最新动态提示","TARGET"));
 	}
 	
 	public static final int max_recents = 10;
@@ -43,7 +57,6 @@ public class CarpoolConfig {
 	public static final long session_expireThreshould = 604800000l;
 	public static final String cookie_userSession = "userSessionCookie";
 	public static final int cookie_maxAge = 5184000; //2 month
-	
 	
 	
 	public static final int customDepthIndex = 3;
@@ -86,9 +99,10 @@ public class CarpoolConfig {
 	public static final String standardTimeZone = "UTC";
 	
 	public static final String SMTP_USERNAME = "AKIAIKEEMEOO4Z6VCYAA"; 
-	public static final String SMTP_PASSWORD = "Aoy477FjWZtHwCk3VPCDWfJoMbG/QDXZX/FuRKQITXAl";  
-	public static final String HOST = "email-smtp.us-east-1.amazonaws.com";
-	public static final int PORT = 25;
+	public static final String SMTP_PASSWORD = "Aoy477FjWZtHwCk3VPCDWfJoMbG/QDXZX/FuRKQITXAl"; 
+	public static final String SMTP_FROM = "lifecentric.o2o@gmail.com";
+	public static final String SMTP_HOST = "email-smtp.us-east-1.amazonaws.com";
+	public static final int SMTP_PORT = 25;
 	
 	public static final String RDSreplicaUri = "replica.cunzg2tyzsud.us-west-2.rds.amazonaws.com";
 	public static final String RDSDBInstanceUri = "badstudent.cunzg2tyzsud.us-west-2.rds.amazonaws.com";
