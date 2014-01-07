@@ -22,10 +22,6 @@ import carpool.interfaces.PseudoAsyncTask;
 
 
 public class SESRelayTask implements PseudoAsyncTask{
-
-	private static final String smtpServer = "smtp.live.com";
-	private static final String sender = "huaixuesheng@hotmail.com";
-	private static final String password = "password11";
 	
 	private String receiver;
 	private String subject;
@@ -48,12 +44,6 @@ public class SESRelayTask implements PseudoAsyncTask{
 	}
 
 
-	/**
-	 * @param receiver email address of the receiver
-	 * @param subject
-	 * @param body
-	 * Send an email
-	 **/
 	public boolean send(){
 		
 
@@ -62,10 +52,6 @@ public class SESRelayTask implements PseudoAsyncTask{
 			Properties props = System.getProperties();
 			props.put("mail.transport.protocol", "smtp");
 			props.put("mail.smtp.port", CarpoolConfig.SMTP_PORT); 
-
-			// Set properties indicating that we want to use STARTTLS to encrypt the connection.
-			// The SMTP session will begin on an unencrypted connection, and then the client
-			// will issue a STARTTLS command to upgrade to an encrypted connection.
 			props.put("mail.smtp.auth", "true");
 			props.put("mail.smtp.starttls.enable", "true");
 			props.put("mail.smtp.starttls.required", "true");
@@ -80,28 +66,14 @@ public class SESRelayTask implements PseudoAsyncTask{
 			msg.setSubject(this.subject);
 			msg.setContent(this.body,"text/plain");
 
-			// Create a transport.        
 			Transport transport = session.getTransport();
-
-			// Send the message.
-			try
-			{
-				System.out.println("Attempting to send an email through the Amazon SES SMTP interface...");
-
-				// Connect to Amazon SES using the SMTP username and password you specified above.
+			try{
 				transport.connect(CarpoolConfig.SMTP_HOST, CarpoolConfig.SMTP_USERNAME, CarpoolConfig.SMTP_PASSWORD);
-
-				// Send the email.
 				transport.sendMessage(msg, msg.getAllRecipients());
-				System.out.println("Email sent!");
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				DebugLog.d(e);
-			}
-			finally
-			{
-				// Close and terminate the connection.
+			} finally {
 				transport.close();        	
 			}
 
