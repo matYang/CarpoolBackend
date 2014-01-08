@@ -1,9 +1,6 @@
 package carpool.asyncTask.relayTask;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
@@ -13,16 +10,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
-import org.apache.log4j.BasicConfigurator;
 import org.json.JSONArray;
 
 import carpool.common.DebugLog;
 import carpool.factory.JSONFactory;
 import carpool.interfaces.PseudoAsyncTask;
 import carpool.model.Notification;
-
 
 
 public class NotificationRelayTask implements PseudoAsyncTask{

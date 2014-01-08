@@ -19,7 +19,7 @@ import carpool.exception.auth.DuplicateSessionCookieException;
 import carpool.exception.auth.SessionEncodingException;
 import carpool.model.*;
 
-public class UserCookieResource extends ServerResource{
+public class UserAuthenticationResource extends ServerResource{
 
 	/**
 	 * automatically try to authenticate users on login and sensitive API calls, checks the request to see if there is the right cookie

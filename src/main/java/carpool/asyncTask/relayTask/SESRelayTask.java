@@ -1,18 +1,13 @@
 package carpool.asyncTask.relayTask;
 
-import java.util.Date;
 import java.util.Map.Entry;
 import java.util.Properties;
 
 import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
-import org.apache.log4j.BasicConfigurator;
 
 import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;

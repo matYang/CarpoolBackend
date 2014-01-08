@@ -6,6 +6,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoUser;
+import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
 import carpool.exception.PseudoException;
 import carpool.exception.user.UserNotFoundException;
@@ -78,6 +79,7 @@ public class AuthDaoService {
 			return user;
 		} catch (Exception e) {
 			e.printStackTrace();
+			DebugLog.d(e);
 			return null;
 		}
 	}

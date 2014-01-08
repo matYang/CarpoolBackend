@@ -6,7 +6,6 @@ import java.util.Date;
 
 import carpool.cleanRoutineTask.MessageCleaner;
 import carpool.cleanRoutineTask.TransactionCleaner;
-import carpool.constants.CarpoolConfig;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.model.*;
 

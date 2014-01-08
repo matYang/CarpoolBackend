@@ -1,12 +1,12 @@
 package carpool.asyncTask;
-import java.util.concurrent.locks.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import carpool.constants.CarpoolConfig;
 import carpool.interfaces.PseudoAsyncTask;
 import carpool.model.representation.SearchRepresentation;
-import flexjson.JSONSerializer;
+
+
 public class StoreSearchHistoryTask implements PseudoAsyncTask {
 	
 	private int userId;

@@ -105,14 +105,17 @@ public class CarpoolConfig {
 	public static final String SecretKey="zL70yQoj+9PYqoi4Y8Qhcu4GQewjNoPr0nJhqsqi";
 	public static final String SMTP_USERNAME = "AKIAIK5KV62M7VTBOJDQ"; 
 	public static final String SMTP_PASSWORD = "AklHWYPbI4LBZcQZB3BDqj9KQgl20FyUZj296ru6aRD+";
-	public static final String SMTP_FROM = "lifecentric.o2o@gmail.com";
+	public static final String SMTP_FROM = "info@routea.ca";
 	public static final String SMTP_HOST = "email-smtp.us-east-1.amazonaws.com";
 	public static final int SMTP_PORT = 587;
 	
+	/*database configurations*/
 	public static final String RDSreplicaUri = "replica.cunzg2tyzsud.us-west-2.rds.amazonaws.com";
 	public static final String RDSDBInstanceUri = "badstudent.cunzg2tyzsud.us-west-2.rds.amazonaws.com";
+	public static final String RedisEndPoint = "redisserver.ppomgu.0001.usw2.cache.amazonaws.com";
 	public static final String localhostUri = "localhost";
 	public static final String jdbcUri = isOnLocal ? localhostUri : RDSreplicaUri;
+	public static final String redisUri = isOnLocal ? localhostUri : RedisEndPoint;
 	
 	public static final SearchRepresentation getDefaultSearchRepresentation(){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

@@ -18,7 +18,7 @@ import carpool.constants.CarpoolConfig;
 import carpool.exception.PseudoException;
 import carpool.exception.validation.EntityTooLargeException;
 import carpool.factory.JSONFactory;
-import carpool.resources.userResource.userAuthResource.UserCookieResource;
+import carpool.resources.userResource.userAuthResource.UserAuthenticationResource;
 
 public class PseudoResource extends ServerResource{
 	
@@ -67,7 +67,7 @@ public class PseudoResource extends ServerResource{
 		if (!CarpoolConfig.cookieEnabled){
 			return true;
 		}
-		return UserCookieResource.validateCookieSession(userId, this.getSessionString());
+		return UserAuthenticationResource.validateCookieSession(userId, this.getSessionString());
 	}
 	
 	public void clearUserCookies(){
@@ -77,19 +77,19 @@ public class PseudoResource extends ServerResource{
 	
 	public void addAuthenticationSession(int userId) throws PseudoException{
 		Series<CookieSetting> cookieSettings = this.getResponse().getCookieSettings(); 
-		CookieSetting newCookie = UserCookieResource.openCookieSession(userId);
+		CookieSetting newCookie = UserAuthenticationResource.openCookieSession(userId);
 		cookieSettings.add(newCookie);
 		this.setCookieSettings(cookieSettings);
 	}
 	
 	public void closeAuthenticationSession(int userId) throws PseudoException{
 		Series<Cookie> cookies = this.getRequest().getCookies();
-		UserCookieResource.closeCookieSession(cookies);
+		UserAuthenticationResource.closeCookieSession(cookies);
 	}
 	
 	public String getSessionString() throws PseudoException{
 		Series<Cookie> cookies = this.getRequest().getCookies();
-		String sessionString = UserCookieResource.getSessionString(cookies);
+		String sessionString = UserAuthenticationResource.getSessionString(cookies);
 		return sessionString;
 	}
 	

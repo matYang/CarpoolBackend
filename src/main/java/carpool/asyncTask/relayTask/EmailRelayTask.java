@@ -12,8 +12,6 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.log4j.BasicConfigurator;
-
 import carpool.common.DebugLog;
 import carpool.interfaces.PseudoAsyncTask;
 

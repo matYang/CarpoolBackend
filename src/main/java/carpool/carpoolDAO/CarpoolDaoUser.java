@@ -1,47 +1,27 @@
 package carpool.carpoolDAO;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.ShortBufferException;
-
-import carpool.aws.awsMain;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.Parser;
-import carpool.common.Validator;
 import carpool.constants.Constants;
 import carpool.constants.Constants.gender;
-import carpool.constants.Constants.userSearchState;
-import carpool.constants.Constants.userState;
 import carpool.encryption.SessionCrypto;
 
 import carpool.exception.validation.ValidationException;
 import carpool.exception.location.LocationNotFoundException;
 
-import carpool.exception.message.MessageNotFoundException;
-import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 
 import carpool.model.Location;
 
 
 import carpool.model.Message;
-import carpool.model.Notification;
-import carpool.model.Transaction;
 import carpool.model.User;
 import carpool.model.representation.SearchRepresentation;
 import carpool.model.representation.UserSearchRepresentation;

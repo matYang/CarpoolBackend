@@ -7,7 +7,6 @@ import java.sql.Statement;
 import java.util.Set;
 
 import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants;
 import carpool.common.DebugLog;
 import carpool.dbservice.LocationDaoService;
 import carpool.exception.location.LocationException;
