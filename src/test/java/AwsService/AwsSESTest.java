@@ -3,7 +3,7 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 import carpool.aws.awsSES;
 import carpool.carpoolDAO.CarpoolDaoBasic;
-import carpool.constants.CarpoolConfig;
+
 
 public class AwsSESTest {
 	
@@ -15,12 +15,14 @@ public class AwsSESTest {
 			String To = "lifecentric.o2o@gmail.com";
 			String Body = "This email was sent through the Amazon SES SMTP interface by using Java.";
 			String Subject = "Test1";
-			awsSES.send(From,To,Body,Subject);
+			awsSES.sendEmail(From,To,Body,Subject,"plain");			
 			//Passed;			
 		}catch(Exception e){
 			e.printStackTrace();
 			fail();
 		}
+		
+		
 		
 	}
 	
@@ -29,10 +31,10 @@ public class AwsSESTest {
 		CarpoolDaoBasic.clearBothDatabase();
 		try{
 			String From = "lifecentric.o2o@gmail.com";
-			String To = "";
-			String Body = "This email was sent through the Amazon SES SMTP interface by using Java.";
+			String To = "xiongchuhan@hotmail.com";
+			String Body = "<h1>Click it to search using Google <p><div><a href=\"www.google.ca\">google</a></div></p></h1>";
 			String Subject = "Test2";
-			awsSES.send(From,To,Body,Subject);
+			awsSES.sendEmail(From,To,Body,Subject,"html");
 			//Passed;			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -44,7 +46,7 @@ public class AwsSESTest {
 			String To = "x";
 			String Body = "This email was sent through the Amazon SES SMTP interface by using Java.";
 			String Subject = "Test2";
-			awsSES.send(From,To,Body,Subject);
+			awsSES.sendEmail(From,To,Body,Subject,"plain");
 			//Passed;			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -56,7 +58,7 @@ public class AwsSESTest {
 			String To = "fyseason@163.com";
 			String Body = "This email was sent through the Amazon SES SMTP interface by using Java.";
 			String Subject = "Test2";
-			awsSES.send(From,To,Body,Subject);
+			awsSES.sendEmail(From,To,Body,Subject,"plain");
 			//Passed;			
 		}catch(Exception e){
 			e.printStackTrace();

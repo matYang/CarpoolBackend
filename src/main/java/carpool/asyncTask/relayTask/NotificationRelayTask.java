@@ -31,6 +31,14 @@ public class NotificationRelayTask implements PseudoAsyncTask{
 
 	private ArrayList<Notification> notificationQueue;
 	
+	private boolean logfed = false;
+	
+	private void logconfig(){
+		if (!logfed){
+			BasicConfigurator.configure();
+			logfed = true;
+		}
+	}
 	
 	public NotificationRelayTask(ArrayList<Notification> notificationQueue){
 		this.notificationQueue = notificationQueue;
@@ -48,6 +56,7 @@ public class NotificationRelayTask implements PseudoAsyncTask{
 	    StringEntity entity;
 	    HttpResponse response = null;
 		try {
+			logconfig();
 			
 			entity = new StringEntity(json.toString());
 			

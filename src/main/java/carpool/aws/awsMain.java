@@ -49,8 +49,8 @@ import com.amazonaws.services.s3.model.S3Object;
 
 public class awsMain {
 
-	private static String myAccessKeyID="AKIAJAU3ADUWK7CKFPZQ";
-	private static String mySecretKey="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";
+	private static String myAccessKeyID= CarpoolConfig.AccessKeyID;
+	private static String mySecretKey=CarpoolConfig.SecretKey;
 	private static String bucketName="BadStudentTest";
 	private static String filekey ="";
 	private static String imgkey="";
