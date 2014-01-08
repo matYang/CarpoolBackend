@@ -7,6 +7,7 @@ import carpool.asyncTask.StoreSearchHistoryTask;
 import carpool.asyncTask.relayTask.EmailRelayTask;
 import carpool.asyncTask.relayTask.LetterRelayTask;
 import carpool.asyncTask.relayTask.NotificationRelayTask;
+import carpool.asyncTask.relayTask.SESRelayTask;
 import carpool.interfaces.PseudoAsyncTask;
 
 
@@ -25,7 +26,7 @@ public class ExecutorProvider {
 		if (task instanceof NotificationRelayTask){
 			notificationExecutor.submit(executableTask);
 		}
-		else if (task instanceof EmailRelayTask){
+		else if (task instanceof SESRelayTask){
 			emailExecutor.submit(executableTask);
 		}
 		else if(task instanceof StoreSearchHistoryTask){
