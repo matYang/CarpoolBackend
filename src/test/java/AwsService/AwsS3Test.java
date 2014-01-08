@@ -16,7 +16,7 @@ import org.junit.Test;
 
 import redis.clients.jedis.Jedis;
 
-import carpool.aws.awsMain;
+import carpool.aws.AwsMain;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoUser;
@@ -39,7 +39,7 @@ public class AwsS3Test {
 	public void testGetFile(){
 		CarpoolDaoBasic.clearBothDatabase();
 		int userId=1;					
-		awsMain.getFileObject(userId);
+		AwsMain.getFileObject(userId);
 		 
 		
 	}
@@ -48,7 +48,7 @@ public class AwsS3Test {
 	public void testGetImg(){
 		CarpoolDaoBasic.clearBothDatabase();
 		int userId=1;			
-		awsMain.getImgObject(userId);
+		AwsMain.getImgObject(userId);
 		
 		
 	}
@@ -56,7 +56,7 @@ public class AwsS3Test {
 	public void testUploadImg() throws IOException{
 		CarpoolDaoBasic.clearBothDatabase();
 		int userId = 1;			
-		awsMain.uploadProfileImg(userId);
+		AwsMain.uploadProfileImg(userId);
 	}
 
 	//@Test
@@ -125,51 +125,51 @@ public class AwsS3Test {
 		int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
 		//For this test, we set the upper to be 6
 
-		awsMain.storeSearchHistory(SR, userId);			
-		awsMain.storeSearchHistory(SR2, userId);
-		awsMain.storeSearchHistory(SR3, userId);
-		awsMain.storeSearchHistory(SR4, userId);
-		awsMain.storeSearchHistory(SR5, userId);
+		AwsMain.storeSearchHistory(SR, userId);			
+		AwsMain.storeSearchHistory(SR2, userId);
+		AwsMain.storeSearchHistory(SR3, userId);
+		AwsMain.storeSearchHistory(SR4, userId);
+		AwsMain.storeSearchHistory(SR5, userId);
 		if(redis.lrange(rediskey, 0,upper).size()==5){
 			//Pass
 		}else{
 			fail();
 		}
-		awsMain.storeSearchHistory(SR5, userId);
+		AwsMain.storeSearchHistory(SR5, userId);
 
-		awsMain.storeSearchHistory(SR5, userId);
+		AwsMain.storeSearchHistory(SR5, userId);
 		if(redis.lrange(rediskey, 0,upper).size()==1){
 			//Pass
 		}else{
 			fail();
 		}
-		awsMain.storeSearchHistory(SR5, userId);
+		AwsMain.storeSearchHistory(SR5, userId);
 		if(redis.lrange(rediskey, 0,upper).size()==2){
 			//Pass
 		}else{
 			fail();
 		}
-		awsMain.storeSearchHistory(SR5, userId);
+		AwsMain.storeSearchHistory(SR5, userId);
 		if(redis.lrange(rediskey, 0,upper).size()==3){
 			//Pass
 		}else{
 			fail();
 		}
-		awsMain.storeSearchHistory(SR5, userId);
+		AwsMain.storeSearchHistory(SR5, userId);
 		if(redis.lrange(rediskey, 0,upper).size()==4){
 			//Pass
 		}else{
 			fail();
 		}
-		awsMain.storeSearchHistory(SR5, userId);
+		AwsMain.storeSearchHistory(SR5, userId);
 		if(redis.lrange(rediskey, 0,upper).size()==5){
 			//Pass
 		}else{
 			fail();
 		}
-		awsMain.storeSearchHistory(SR5, userId);
+		AwsMain.storeSearchHistory(SR5, userId);
 
-		awsMain.storeSearchHistory(SR5, userId);
+		AwsMain.storeSearchHistory(SR5, userId);
 		if(redis.lrange(rediskey, 0,upper).size()==1){
 			//Pass
 		}else{
@@ -182,7 +182,7 @@ public class AwsS3Test {
 		redis.lpush(rediskey, SR4.toSerializedString());
 		redis.lpush(rediskey, SR5.toSerializedString());
 		redis.lpush(rediskey, SR6.toSerializedString());
-		awsMain.storeSearchHistory(SR5, userId);
+		AwsMain.storeSearchHistory(SR5, userId);
 		if(redis.lrange(rediskey, 0,upper).size()==0){
 			//Pass
 		}else{
@@ -253,26 +253,26 @@ public class AwsS3Test {
 		SearchRepresentation SR6 = new SearchRepresentation(false,dm2,am2,dt2,at2,type,timeSlot3,timeSlot3);
 		// In this case, we use 6 to be the upper bound
 		ArrayList<SearchRepresentation> list = new ArrayList<SearchRepresentation>();
-		int pre = awsMain.getUserSearchHistory(userId).size();
+		int pre = AwsMain.getUserSearchHistory(userId).size();
 
-		awsMain.storeSearchHistory(SR, userId);
-		awsMain.storeSearchHistory(SR2, userId);
-		awsMain.storeSearchHistory(SR3, userId);
-		awsMain.storeSearchHistory(SR4, userId);
-		awsMain.storeSearchHistory(SR5, userId);
+		AwsMain.storeSearchHistory(SR, userId);
+		AwsMain.storeSearchHistory(SR2, userId);
+		AwsMain.storeSearchHistory(SR3, userId);
+		AwsMain.storeSearchHistory(SR4, userId);
+		AwsMain.storeSearchHistory(SR5, userId);
 
 		String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
 		int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
 		int storage = carpool.carpoolDAO.CarpoolDaoBasic.getJedis().lrange(rediskey, 0, upper-1).size();
 
-		list = awsMain.getUserSearchHistory(userId);
+		list = AwsMain.getUserSearchHistory(userId);
 		if(list.size()==(pre+storage)){
 			//Passed;
 		}else{
 			fail();
 		}
-		awsMain.storeSearchHistory(SR6, userId);
-		list = awsMain.getUserSearchHistory(userId);
+		AwsMain.storeSearchHistory(SR6, userId);
+		list = AwsMain.getUserSearchHistory(userId);
 		if(list.size()==(pre+storage+1)){
 			//Passed;
 			//				for(int i=0; i<list.size(); i++){
@@ -285,8 +285,8 @@ public class AwsS3Test {
 			fail();
 		}
 
-		awsMain.storeSearchHistory(SR6, userId);
-		list = awsMain.getUserSearchHistory(userId);
+		AwsMain.storeSearchHistory(SR6, userId);
+		list = AwsMain.getUserSearchHistory(userId);
 		if(list.size()==(pre+storage+2)){
 			//Passed;
 			//				for(int i=0; i<list.size(); i++){
@@ -303,7 +303,7 @@ public class AwsS3Test {
 	//@Test
 	public void testCreateUserFile(){
 		int userId = 1;
-		awsMain.createUserFile(userId);
+		AwsMain.createUserFile(userId);
 		//Check amw management console
 	}
 }

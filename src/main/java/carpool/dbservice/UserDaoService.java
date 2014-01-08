@@ -3,7 +3,7 @@ package carpool.dbservice;
 import java.util.*;
 
 
-import carpool.aws.awsMain;
+import carpool.aws.AwsMain;
 import carpool.common.*;
 import carpool.constants.Constants;
 import carpool.constants.Constants.NotificationEvent;
@@ -40,7 +40,7 @@ public class UserDaoService{
 	public static User createNewUser(User newUser) throws ValidationException{
 		User user = CarpoolDaoUser.addUserToDatabase(newUser);
 		//No exception, then create the userSHfile on AWS
-		awsMain.createUserFile(user.getUserId());
+		AwsMain.createUserFile(user.getUserId());
 		
 		return user;
 	}

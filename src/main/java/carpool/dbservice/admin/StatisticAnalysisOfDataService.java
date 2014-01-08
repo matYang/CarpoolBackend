@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import carpool.aws.awsMain;
+import carpool.aws.AwsMain;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
@@ -44,7 +44,7 @@ public class StatisticAnalysisOfDataService {
 		}
 		ArrayList<SearchRepresentation> srlist = new ArrayList<SearchRepresentation>();
 		while(total>0){
-			srlist = awsMain.getUserSearchHistory(total);
+			srlist = AwsMain.getUserSearchHistory(total);
 			setUserSR(BigMap,srlist,"both");
 			total--;
 		}
@@ -102,7 +102,7 @@ public class StatisticAnalysisOfDataService {
 			}
 			ArrayList<SearchRepresentation> srlist = new ArrayList<SearchRepresentation>();
 			while(total>0){
-				srlist = awsMain.getUserSearchHistory(total);
+				srlist = AwsMain.getUserSearchHistory(total);
 				setUserSR(BigMap,srlist,str.equals(CarpoolConfig.UserSRDeparture) ? "departure" : "arrival");
 				total--;
 			}
@@ -262,7 +262,7 @@ public class StatisticAnalysisOfDataService {
 		ArrayList<SearchRepresentation> srlist = new ArrayList<SearchRepresentation>();
 		ArrayList<SearchRepresentation> finallist = new ArrayList<SearchRepresentation>();
 		while(total>0){
-			srlist = awsMain.getUserSearchHistory(total);
+			srlist = AwsMain.getUserSearchHistory(total);
 			for(int i=0; i<srlist.size(); i++){
 				if(qualifiedSR(srlist.get(i),low,high)){
 					finallist.add(srlist.get(i));

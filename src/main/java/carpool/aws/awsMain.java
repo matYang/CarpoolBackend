@@ -35,7 +35,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 
 
-public class awsMain {
+public class AwsMain {
 
 	private static String myAccessKeyID= CarpoolConfig.AccessKeyID;
 	private static String mySecretKey=CarpoolConfig.SecretKey;
@@ -43,7 +43,7 @@ public class awsMain {
 	private static String filekey ="";
 	private static String imgkey="";
 
-	static Logger logger = Logger.getLogger(awsMain.class);
+	static Logger logger = Logger.getLogger(AwsMain.class);
 
 	public static void createUserFile(int userId){
 

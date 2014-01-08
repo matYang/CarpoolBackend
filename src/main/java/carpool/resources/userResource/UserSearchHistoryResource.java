@@ -5,7 +5,7 @@ import org.json.JSONArray;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
-import carpool.aws.awsMain;
+import carpool.aws.AwsMain;
 import carpool.factory.JSONFactory;
 import carpool.model.representation.SearchRepresentation;
 import carpool.resources.PseudoResource;
@@ -20,7 +20,7 @@ public class UserSearchHistoryResource extends PseudoResource{
 
 		try{
 			userId = Integer.parseInt(this.getAttribute("id"));			
-			searchHistory = awsMain.getUserSearchHistory(userId);
+			searchHistory = AwsMain.getUserSearchHistory(userId);
 			resultArr = JSONFactory.toJSON(searchHistory);
 
 		}  catch (Exception e) {

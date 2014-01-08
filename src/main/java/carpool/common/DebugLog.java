@@ -13,7 +13,7 @@ import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 import org.json.JSONObject;
 
-import carpool.aws.awsMain;
+import carpool.aws.AwsMain;
 import carpool.constants.CarpoolConfig;
 import carpool.factory.JSONFactory;
 import carpool.interfaces.PseudoModel;

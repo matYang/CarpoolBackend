@@ -17,7 +17,7 @@ import carpool.exception.validation.ValidationException;
 import redis.clients.jedis.Jedis;
 
 public class CarpoolDaoBasic {
-    private static Jedis jedis = new Jedis("localhost");
+    private static Jedis jedis = new Jedis(CarpoolConfig.redisUri);
     private static Connection connection = null;
     
     private static void connect(){

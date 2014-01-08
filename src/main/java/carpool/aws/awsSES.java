@@ -9,7 +9,7 @@ import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
 
 
-public class awsSES {	
+public class AwsSES {	
 
 	public static void sendEmail(String FROM, String TO,String BODY,String SUBJECT,String kind) {
 

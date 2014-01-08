@@ -10,14 +10,14 @@ import carpool.aws.*;
 public class FileService {
 
 	public static void storeSearchRepresentation(int userId, SearchRepresentation sr) throws IOException{
-		awsMain.storeSearchHistory(sr, userId);
+		AwsMain.storeSearchHistory(sr, userId);
 	}
 
 	public static ArrayList<SearchRepresentation> getUserSearchHistoryFromS3(int userId) throws IOException{
-		return awsMain.getUserSearchHistory(userId);
+		return AwsMain.getUserSearchHistory(userId);
 	}
 
 	public static String uploadUserProfileImg(int userId, File file, String baseFileName){
-		return awsMain.uploadProfileImg(userId, file, baseFileName);
+		return AwsMain.uploadProfileImg(userId, file, baseFileName);
 	}
 }

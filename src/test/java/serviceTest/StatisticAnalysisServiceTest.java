@@ -10,7 +10,7 @@ import java.util.TimeZone;
 
 import org.junit.Test;
 
-import carpool.aws.awsMain;
+import carpool.aws.AwsMain;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoUser;
@@ -94,10 +94,10 @@ public class StatisticAnalysisServiceTest {
 		sr3.setArrivalMatch_Id(did5);
 		SearchRepresentation sr4 = CarpoolConfig.getDefaultSearchRepresentation();
 				
-		awsMain.storeSearchHistory(sr, userId);
-		awsMain.storeSearchHistory(sr2, userId2);
-		awsMain.storeSearchHistory(sr3, userId3);
-		awsMain.storeSearchHistory(sr4, userId4);
+		AwsMain.storeSearchHistory(sr, userId);
+		AwsMain.storeSearchHistory(sr2, userId2);
+		AwsMain.storeSearchHistory(sr3, userId3);
+		AwsMain.storeSearchHistory(sr4, userId4);
 		
 		ArrayList<SearchRepresentation> srlist = new ArrayList<SearchRepresentation>();
 		Calendar low = Calendar.getInstance();
@@ -170,10 +170,10 @@ public class StatisticAnalysisServiceTest {
 		sr3.setArrivalMatch_Id(did5);
 		SearchRepresentation sr4 = CarpoolConfig.getDefaultSearchRepresentation();
 				
-		awsMain.storeSearchHistory(sr, userId);
-		awsMain.storeSearchHistory(sr2, userId2);
-		awsMain.storeSearchHistory(sr3, userId3);
-		awsMain.storeSearchHistory(sr4, userId4);
+		AwsMain.storeSearchHistory(sr, userId);
+		AwsMain.storeSearchHistory(sr2, userId2);
+		AwsMain.storeSearchHistory(sr3, userId3);
+		AwsMain.storeSearchHistory(sr4, userId4);
 		Calendar dt = Calendar.getInstance();		
 		Calendar at = Calendar.getInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);
@@ -306,10 +306,10 @@ public class StatisticAnalysisServiceTest {
 		sr3.setArrivalMatch_Id(did5);
 		SearchRepresentation sr4 = CarpoolConfig.getDefaultSearchRepresentation();
 				
-		awsMain.storeSearchHistory(sr, userId);
-		awsMain.storeSearchHistory(sr2, userId2);
-		awsMain.storeSearchHistory(sr3, userId3);
-		awsMain.storeSearchHistory(sr4, userId4);
+		AwsMain.storeSearchHistory(sr, userId);
+		AwsMain.storeSearchHistory(sr2, userId2);
+		AwsMain.storeSearchHistory(sr3, userId3);
+		AwsMain.storeSearchHistory(sr4, userId4);
 		Calendar dt = Calendar.getInstance();		
 		Calendar at = Calendar.getInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);
