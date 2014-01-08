@@ -85,10 +85,12 @@ public class CarpoolConfig {
 	
 	public static final String standardTimeZone = "UTC";
 	
-	public static final String SMTP_USERNAME = "AKIAIKEEMEOO4Z6VCYAA"; 
-	public static final String SMTP_PASSWORD = "Aoy477FjWZtHwCk3VPCDWfJoMbG/QDXZX/FuRKQITXAl";  
+	public static final String AccessKeyID="AKIAJAU3ADUWK7CKFPZQ";
+	public static final String SecretKey="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";
+	public static final String SMTP_USERNAME = "AKIAIK5KV62M7VTBOJDQ"; 
+	public static final String SMTP_PASSWORD = "AklHWYPbI4LBZcQZB3BDqj9KQgl20FyUZj296ru6aRD+";  
 	public static final String HOST = "email-smtp.us-east-1.amazonaws.com";
-	public static final int PORT = 25;
+	public static final int PORT = 587;
 	
 	public static final String RDSreplicaUri = "replica.cunzg2tyzsud.us-west-2.rds.amazonaws.com";
 	public static final String RDSDBInstanceUri = "badstudent.cunzg2tyzsud.us-west-2.rds.amazonaws.com";

@@ -1,19 +1,17 @@
 package carpool.aws;
 import java.util.Properties;
 import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
 import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
 
+
 public class awsSES {	
 
-	public static void send(String FROM, String TO,String BODY,String SUBJECT) {
+	public static void sendEmail(String FROM, String TO,String BODY,String SUBJECT,String kind) {
 
 		try{
 			// Create a Properties object to contain connection configuration information.
@@ -36,8 +34,8 @@ public class awsSES {
 			msg.setFrom(new InternetAddress(FROM));
 			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(TO));
 			msg.setSubject(SUBJECT);
-			msg.setContent(BODY,"text/plain");
-
+			msg.setContent(BODY,"text/"+kind);
+			
 			// Create a transport.        
 			Transport transport = session.getTransport();
 
@@ -68,5 +66,5 @@ public class awsSES {
 			DebugLog.d(ex);
 		}
 	}
-
+	
 }
