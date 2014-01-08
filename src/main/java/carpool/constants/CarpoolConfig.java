@@ -17,7 +17,7 @@ public class CarpoolConfig {
 	private static final String ENV_VAR_KEY = "C_MAINSERVER_ENV";
 	//private static final String ENV_VAR_KEY = "REMOTE";
 	private static final String ENV_REMOTE = "REMOTE";
-	private static final boolean isOnLocal;
+	public static final boolean isOnLocal;
 	
 	//used for emails,  Entry consists of subject and template
 	public static final HashMap<EmailEvent, Entry<String, String>> emailEventMap;

@@ -6,13 +6,15 @@ import java.util.Date;
 
 import carpool.cleanRoutineTask.MessageCleaner;
 import carpool.cleanRoutineTask.TransactionCleaner;
+import carpool.constants.CarpoolConfig;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.model.*;
 
 
 public class Clean{
 
-	public static final String timeZoneId = "asia/shanghai";
+	//public static final String timeZoneId = "asia/shanghai";
+	public static final String timeZoneId = "America/New_York";
 	public static final String fileName = "messageHistory.txt";
 
 	public static Calendar dateToCalendar(Date date){ 
