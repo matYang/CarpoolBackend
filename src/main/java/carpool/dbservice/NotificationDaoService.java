@@ -8,8 +8,10 @@ import javax.swing.text.DateFormatter;
 import carpool.asyncRelayExecutor.ExecutorProvider;
 import carpool.asyncTask.relayTask.EmailRelayTask;
 import carpool.asyncTask.relayTask.NotificationRelayTask;
+import carpool.asyncTask.relayTask.SESRelayTask;
 import carpool.carpoolDAO.CarpoolDaoNotification;
 import carpool.common.*;
+import carpool.constants.Constants.EmailEvent;
 import carpool.constants.Constants.NotificationState;
 import carpool.exception.PseudoException;
 import carpool.exception.location.LocationNotFoundException;
@@ -20,7 +22,6 @@ import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
-
 
 
 
@@ -47,7 +48,7 @@ public class NotificationDaoService{
         	try {
 				User user = UserDaoService.getUserById(entry.getKey());
 				if (user.isEmailNotice()){
-					EmailRelayTask eTask = new EmailRelayTask(user.getEmail(), "拼车网新提醒", JSONFactory.toJSON(entry.getValue()).toString());
+					SESRelayTask eTask = new SESRelayTask(user.getEmail(), EmailEvent.notification, JSONFactory.toJSON(entry.getValue()).toString());
 					ExecutorProvider.executeRelay(eTask);
 				}
 			} catch (UserNotFoundException | LocationNotFoundException e) {

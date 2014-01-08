@@ -189,6 +189,19 @@ public class Constants {
     		return map[n];
     	}
     }
+    
+    public static enum EmailEvent{
+    	activeateAccount(0), forgotPassword(1), notification(2);
+    	public int code;
+    	EmailEvent(int code){
+    		this.code = code;
+    	}
+    	private final static EmailEvent[] map = EmailEvent.values();
+    	public static EmailEvent fromInt(int n){
+    		return map[n];
+    	}
+    }
+
 
 
     /*API level constants*/

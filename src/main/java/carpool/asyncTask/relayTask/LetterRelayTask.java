@@ -24,15 +24,7 @@ public class LetterRelayTask implements PseudoAsyncTask{
 	public static final String relay_letterPushUrl = "http://localhost:8017/api/v1.0/letter/push";
 
 	private Letter letter;
-	
-	private boolean logfed = false;
-	
-	private void logconfig(){
-		if (!logfed){
-			BasicConfigurator.configure();
-			logfed = true;
-		}
-	}
+
 	
 	public LetterRelayTask(Letter letter){
 		this.letter = letter;
@@ -50,7 +42,6 @@ public class LetterRelayTask implements PseudoAsyncTask{
 	    StringEntity entity;
 	    HttpResponse response = null;
 		try {
-			logconfig();
 			
 			entity = new StringEntity(json.toString());
 			

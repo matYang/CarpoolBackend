@@ -52,7 +52,7 @@ public class ForgetPasswordResource extends PseudoResource{
         		//if the email format is valid, check if this email has been registered
         		if (!EmailDaoService.isEmailAvailable(email)){
         			//this will need a translation from email to id, another SQL query, wonder if could be improved
-            		isSent = EmailDaoService.sendChangePasswordEmail(email);
+            		isSent = EmailDaoService.sendForgotPasswordEmail(email);
             		if (isSent){
             			setStatus(Status.SUCCESS_OK);
             		}

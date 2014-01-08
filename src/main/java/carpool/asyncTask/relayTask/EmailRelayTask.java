@@ -28,14 +28,6 @@ public class EmailRelayTask implements PseudoAsyncTask{
 	private String subject;
 	private String body;
 
-	private boolean logfed = false;
-	
-	private void logconfig(){
-		if (!logfed){
-			BasicConfigurator.configure();
-			logfed = true;
-		}
-	}
 	
 	public EmailRelayTask(String receiver,String subject, String body){
 		this.receiver = receiver;
@@ -67,7 +59,6 @@ public class EmailRelayTask implements PseudoAsyncTask{
 			Session session = Session.getDefaultInstance(props, null);
 			Message msg = new MimeMessage(session);
 			try {
-				logconfig();
 				
 				msg.setFrom(new InternetAddress(sender));
 				msg.setRecipients(Message.RecipientType.TO,InternetAddress.parse(receiver, false));

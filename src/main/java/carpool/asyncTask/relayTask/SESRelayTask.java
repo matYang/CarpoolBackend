@@ -9,7 +9,6 @@ import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -45,10 +44,8 @@ public class SESRelayTask implements PseudoAsyncTask{
 
 
 	public boolean send(){
-		
 
 		try{
-			// Create a Properties object to contain connection configuration information.
 			Properties props = System.getProperties();
 			props.put("mail.transport.protocol", "smtp");
 			props.put("mail.smtp.port", CarpoolConfig.SMTP_PORT); 
@@ -59,27 +56,28 @@ public class SESRelayTask implements PseudoAsyncTask{
 			// Create a Session object to represent a mail session with the specified properties. 
 			Session session = Session.getDefaultInstance(props);
 
-			// Create a message with the specified information. 
 			MimeMessage msg = new MimeMessage(session);
 			msg.setFrom(new InternetAddress(CarpoolConfig.SMTP_FROM));
 			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(this.receiver));
 			msg.setSubject(this.subject);
-			msg.setContent(this.body,"text/plain");
-
+			msg.setContent(this.body,"text/html");
+			
 			Transport transport = session.getTransport();
+
 			try{
 				transport.connect(CarpoolConfig.SMTP_HOST, CarpoolConfig.SMTP_USERNAME, CarpoolConfig.SMTP_PASSWORD);
+
 				transport.sendMessage(msg, msg.getAllRecipients());
 			} catch (Exception e) {
 				e.printStackTrace();
 				DebugLog.d(e);
-			} finally {
+			} finally{
 				transport.close();        	
 			}
 
-		}catch (Exception ex) {
-			ex.printStackTrace();
-			DebugLog.d(ex);
+		}catch (Exception e) {
+			e.printStackTrace();
+			DebugLog.d(e);
 		}
 		
 		return true;
