@@ -109,12 +109,11 @@ public class CarpoolConfig {
 	public static final String SMTP_HOST = "email-smtp.us-east-1.amazonaws.com";
 	public static final int SMTP_PORT = 587;
 	
-	/*database configurations*/
-	public static final String RDSreplicaUri = "replica.cunzg2tyzsud.us-west-2.rds.amazonaws.com";
+	/*database configurations*/	
 	public static final String RDSDBInstanceUri = "badstudent.cunzg2tyzsud.us-west-2.rds.amazonaws.com";
 	public static final String RedisEndPoint = "redisserver.ppomgu.0001.usw2.cache.amazonaws.com";
 	public static final String localhostUri = "localhost";
-	public static final String jdbcUri = isOnLocal ? localhostUri : RDSreplicaUri;
+	public static final String jdbcUri = isOnLocal ? localhostUri : RDSDBInstanceUri;
 	public static final String redisUri = isOnLocal ? localhostUri : RedisEndPoint;
 	
 	public static final SearchRepresentation getDefaultSearchRepresentation(){
