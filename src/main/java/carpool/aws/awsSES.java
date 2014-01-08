@@ -17,7 +17,7 @@ public class awsSES {
 			// Create a Properties object to contain connection configuration information.
 			Properties props = System.getProperties();
 			props.put("mail.transport.protocol", "smtp");
-			props.put("mail.smtp.port", CarpoolConfig.PORT); 
+			props.put("mail.smtp.port", CarpoolConfig.SMTP_PORT); 
 
 			// Set properties indicating that we want to use STARTTLS to encrypt the connection.
 			// The SMTP session will begin on an unencrypted connection, and then the client
@@ -45,15 +45,15 @@ public class awsSES {
 				System.out.println("Attempting to send an email through the Amazon SES SMTP interface...");
 
 				// Connect to Amazon SES using the SMTP username and password you specified above.
-				transport.connect(CarpoolConfig.HOST, CarpoolConfig.SMTP_USERNAME, CarpoolConfig.SMTP_PASSWORD);
+				transport.connect(CarpoolConfig.SMTP_HOST, CarpoolConfig.SMTP_USERNAME, CarpoolConfig.SMTP_PASSWORD);
 
 				// Send the email.
 				transport.sendMessage(msg, msg.getAllRecipients());
 				System.out.println("Email sent!");
 			}
-			catch (Exception ex) {
-				ex.printStackTrace();
-				DebugLog.d(ex);
+			catch (Exception e) {
+				e.printStackTrace();
+				DebugLog.d(e);
 			}
 			finally
 			{
