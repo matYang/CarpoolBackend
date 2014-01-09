@@ -142,8 +142,6 @@ public class AuthDaoService {
 
 	/**
 	 * delete the (random string+ID) + time stamp pair no matter if it exists or not, and return false
-	 * @param sessionString the session string of the current user (random string + time stamp, remember to separate to get the random string)
-	 * @return  true if delete successfully
 	 */
 	public static boolean closeUserSession(String sessionString){
 		return CarpoolDaoBasic.getJedis().del(sessionString)==1;
