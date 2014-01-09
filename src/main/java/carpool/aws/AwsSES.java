@@ -42,14 +42,14 @@ public class AwsSES {
 			// Send the message.
 			try
 			{
-				System.out.println("Attempting to send an email through the Amazon SES SMTP interface...");
+				DebugLog.d("Attempting to send an email through the Amazon SES SMTP interface...");
 
 				// Connect to Amazon SES using the SMTP username and password you specified above.
 				transport.connect(CarpoolConfig.SMTP_HOST, CarpoolConfig.SMTP_USERNAME, CarpoolConfig.SMTP_PASSWORD);
 
 				// Send the email.
 				transport.sendMessage(msg, msg.getAllRecipients());
-				System.out.println("Email sent!");
+				DebugLog.d("Email sent!");
 			}
 			catch (Exception e) {
 				e.printStackTrace();
