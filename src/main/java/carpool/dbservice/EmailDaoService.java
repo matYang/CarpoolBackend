@@ -146,7 +146,7 @@ public class EmailDaoService {
 		try {
 			User user = CarpoolDaoUser.getUserByEmail(email);
 			int  userId = user.getUserId();
-			CarpoolDaoBasic.getJedis().del(CarpoolConfig.key_forgetPasswordAuth + userId);
+			//CarpoolDaoBasic.getJedis().del(CarpoolConfig.key_forgetPasswordAuth + userId);
 			String authCode = RandomStringUtils.randomAlphanumeric(30);
 			CarpoolDaoBasic.getJedis().set(CarpoolConfig.key_forgetPasswordAuth + userId, authCode);
 			String encryptedEmailKey = EmailCrypto.encrypt(userId, authCode);

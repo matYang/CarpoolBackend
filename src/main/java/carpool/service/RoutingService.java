@@ -7,7 +7,7 @@ import org.restlet.Restlet;
 import org.restlet.routing.Router;
 
 import carpool.common.DebugLog;
-import carpool.constants.Constants;
+import carpool.constants.CarpoolConfig;
 import carpool.resources.adminResource.AdminRoutineResource;
 import carpool.resources.adminResource.AdminStateChangeResource;
 import carpool.resources.dianmingResource.*;
@@ -54,21 +54,21 @@ public class RoutingService extends Application {
 		
 		String DMResourcePrefix = "/dianming";
 		//	API for Get/Post dianming messages: /api/v1.0/dianming/dianming
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMResourcePrefix, DMResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + dMServicePrefix + DMResourcePrefix, DMResource.class);
 		//	API for Get/Put/Delete dianming messages: /api/v1.0/dianming/dianming/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMResourcePrefix + "/{id}", DMResourceId.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + dMServicePrefix + DMResourcePrefix + "/{id}", DMResourceId.class);
 		String DMRecentResourcePrefix = "/recent";
 		//	API for DM message getting recent messages: /api/v1.0/dianming/recent
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMRecentResourcePrefix, RecentMessageResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + dMServicePrefix + DMRecentResourcePrefix, RecentMessageResource.class);
 		String DMSearchResourcePrefix = "/search";
 		//	API for DM message search: /api/v1.0/dianming/search
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMSearchResourcePrefix, DMSearchResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + dMServicePrefix + DMSearchResourcePrefix, DMSearchResource.class);
 		String DMTransactionResourcePrefix = "/transaction";
 		//	API for DM message fetchTransactionList : /api/v1.0/dianming/transaction/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMTransactionResourcePrefix + "/{id}", DMTransactionResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + dMServicePrefix + DMTransactionResourcePrefix + "/{id}", DMTransactionResource.class);
 		String DMAutoMatchResourcePrefix = "/autoMatch";
 		//	API for DM message auto-matching : /api/v1.0/dianming/autoMatch/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + dMServicePrefix + DMAutoMatchResourcePrefix + "/{id}", DMAutoMatchResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + dMServicePrefix + DMAutoMatchResourcePrefix + "/{id}", DMAutoMatchResource.class);
 		
 		
 		/** -------------------- APIs for transaction module -------------- **/
@@ -77,9 +77,9 @@ public class RoutingService extends Application {
 		
 		String TransactionResourcePrefix = "/transaction";
 		//	API for Get/Post transactions: /api/v1.0/transaction/transaction
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + transactionServicePrefix + TransactionResourcePrefix, TransactionResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + transactionServicePrefix + TransactionResourcePrefix, TransactionResource.class);
 		//	API for Get/Put/Delete transactions: /api/v1.0/transaction/transaction/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + transactionServicePrefix + TransactionResourcePrefix + "/{id}", TransactionResourceId.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + transactionServicePrefix + TransactionResourcePrefix + "/{id}", TransactionResourceId.class);
 
 		
 		
@@ -89,9 +89,9 @@ public class RoutingService extends Application {
 		
 		String NotificationResourcePrefix = "/notification";
 		//	API for Get notifications: /api/v1.0/notification/notification
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + notificationServicePrefix + NotificationResourcePrefix, NotificationResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + notificationServicePrefix + NotificationResourcePrefix, NotificationResource.class);
 		//	API for Get/Put/Delete notification: /api/v1.0/notification/notification/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + notificationServicePrefix + NotificationResourcePrefix + "/{id}", NotificationResourceId.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + notificationServicePrefix + NotificationResourcePrefix + "/{id}", NotificationResourceId.class);
 		
 		/** -------------------- APIs for letter module -------------- **/
 		String letterServicePrefix = "/letter";
@@ -99,12 +99,12 @@ public class RoutingService extends Application {
 		
 		String LetterResourcePrefix = "/letter";
 		//	API for Get letters: /api/v1.0/letter/letter
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + letterServicePrefix + LetterResourcePrefix, LetterResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + letterServicePrefix + LetterResourcePrefix, LetterResource.class);
 		//	API for Get/Put/Delete letters: /api/v1.0/letter/letter/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + letterServicePrefix + LetterResourcePrefix + "/{id}", LetterResourceId.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + letterServicePrefix + LetterResourcePrefix + "/{id}", LetterResourceId.class);
 		String LetterUserResourcePrefix = "/user";
 		//	API for Get users in chat history: /api/v1.0/letter/user/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + letterServicePrefix + LetterUserResourcePrefix + "/{id}", LetterUserResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + letterServicePrefix + LetterUserResourcePrefix + "/{id}", LetterUserResource.class);
 		
 		
 		/** -------------------- APIs for user module ------------------ **/
@@ -113,70 +113,70 @@ public class RoutingService extends Application {
 		
 		String SessionRedirectPrefix = "/findSession";
 		//	API for session redirection upon non-session pages: /api/v1.0/users/findSession
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + SessionRedirectPrefix, SessionRedirect.class);
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + SessionRedirectPrefix + "/{id}", SessionRedirect.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + SessionRedirectPrefix, SessionRedirect.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + SessionRedirectPrefix + "/{id}", SessionRedirect.class);
 		
 		String UserResourcePrefix = "/user";
 		//  API for Get/Post user:  /api/v1.0/users/user
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserResourcePrefix, UserResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserResourcePrefix, UserResource.class);
 		//  API for Get/Post/Delete user:  /api/v1.0/users/user/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserResourcePrefix + "/{id}", UserResourceId.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserResourcePrefix + "/{id}", UserResourceId.class);
 		String LogInResourcePrefix = "/login";
 		//  API for user Login:  /api/v1.0/users/login
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + LogInResourcePrefix, LogInResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + LogInResourcePrefix, LogInResource.class);
 		String LogOutResourcePrefix = "/logout";
 		//  API for user Logout:  /api/v1.0/users/logout/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + LogOutResourcePrefix + "/{id}", LogOutResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + LogOutResourcePrefix + "/{id}", LogOutResource.class);
 		String ImgResourcePrefix = "/img";
 		//  API for user Image resources:  /api/v1.0/users/img/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + ImgResourcePrefix + "/{id}", ImgResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + ImgResourcePrefix + "/{id}", ImgResource.class);
 		String EmailResourcePrefix = "/email";
 		//  API for check email availability:  /api/v1.0/users/email
 		//  API for user update email:  /api/v1.0/users/email/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + EmailResourcePrefix, UserEmailResource.class);
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + EmailResourcePrefix + "/{id}", UserEmailResourceId.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + EmailResourcePrefix, UserEmailResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + EmailResourcePrefix + "/{id}", UserEmailResourceId.class);
 		String ChangePasswordResourcePrefix = "/changePassword";
 		//	API for user changing the password:  /api/v1.0/users/changePassword/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + ChangePasswordResourcePrefix + "/{id}", ChangePasswordResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + ChangePasswordResourcePrefix + "/{id}", ChangePasswordResource.class);
 		String ContactInfoResourcePrefix = "/contactInfo";
 		//	API for user changing the contact information:  /api/v1.0/users/contactInfo/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + ContactInfoResourcePrefix + "/{id}", UserContactResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + ContactInfoResourcePrefix + "/{id}", UserContactResource.class);
 		String SingleLocationResourcePrefix = "/singleLocation";
 		//	API for user changing the single location:  /api/v1.0/users/singleLocation/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + SingleLocationResourcePrefix + "/{id}", UserSingleLocationResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + SingleLocationResourcePrefix + "/{id}", UserSingleLocationResource.class);
 		String EmailActivationResourcePrefix = "/emailActivation";
 		//	API for user email activation: /api/v1.0/users/emailActivation
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + EmailActivationResourcePrefix, UserEmailActivationResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + EmailActivationResourcePrefix, UserEmailActivationResource.class);
 		String ResendActivationEmailResourcePrefix = "/resendActivationEmail";
 		//	API for sending activation email to target userId: /api/v1.0/users/resendActivationEmail/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + ResendActivationEmailResourcePrefix + "/{id}", ResendActivationEmailResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + ResendActivationEmailResourcePrefix + "/{id}", ResendActivationEmailResource.class);
 		String ForgetPasswordResourcePrefix = "/forgetPassword";
 		//	API for user forgetting the password: /api/v1.0/users/forgetPassword
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + ForgetPasswordResourcePrefix, ForgetPasswordResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + ForgetPasswordResourcePrefix, ForgetPasswordResource.class);
 		String UserToggleEmailNoticePrefix = "/toggleNotices";
 		//	API for user to toggle email notice state: /api/v1.0/users/toggleNotices/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserToggleEmailNoticePrefix + "/{id}", UserToggleNoticesResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserToggleEmailNoticePrefix + "/{id}", UserToggleNoticesResource.class);
 		String UserWatchUserResourcePrefix = "/watchUser";
 		//	API for user watch/de-watch other users: /api/v1.0/users/watchUser/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserWatchUserResourcePrefix + "/{id}", UserWatchUserResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserWatchUserResourcePrefix + "/{id}", UserWatchUserResource.class);
 		String UserIsWatchedResourcePrefix = "/isWatched";
 		//	API for user watch/de-watch other users: /api/v1.0/users/isWatched/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserIsWatchedResourcePrefix + "/{id}", UserIsWatchedResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserIsWatchedResourcePrefix + "/{id}", UserIsWatchedResource.class);
 		String UserSearchUserResourcePrefix = "/searchUser";
 		//	API for user watch/de-watch other users: /api/v1.0/users/searchUser
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserSearchUserResourcePrefix, UserSearchUserResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserSearchUserResourcePrefix, UserSearchUserResource.class);
 		String UserMessageHistoryResourcePrefix = "/messageHistory";
 		//	API for user getting history messages: /api/v1.0/users/messageHistory/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserMessageHistoryResourcePrefix + "/{id}", UserMessageHistoryResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserMessageHistoryResourcePrefix + "/{id}", UserMessageHistoryResource.class);
 		String UserTransactionResourcePrefix = "/transaction";
 		//	API for user getting transactions: /api/v1.0/users/transaction/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserTransactionResourcePrefix + "/{id}", UserTransactionResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserTransactionResourcePrefix + "/{id}", UserTransactionResource.class);
 		String UserNotificationResourcePrefix = "/notification";
 		//	API for user getting history messages: /api/v1.0/users/notification/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserNotificationResourcePrefix + "/{id}", UserNotificationResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserNotificationResourcePrefix + "/{id}", UserNotificationResource.class);
 		String UserSearchHistoryResourcePrefix = "/searchHistory";
 		// API for user getting history messages: /api/v1.0/users/searchHistory/:id
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + userServicePrefix + UserSearchHistoryResourcePrefix + "/{id}", UserSearchHistoryResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserSearchHistoryResourcePrefix + "/{id}", UserSearchHistoryResource.class);
 		
 		
 		
@@ -186,7 +186,7 @@ public class RoutingService extends Application {
 		
 		String feedBackResourcePrefix = "/feedBack";
 		//	 API for feed back: /api/v1.0/general/feedBack
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + generalServicePrefix + feedBackResourcePrefix, FeedBackResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + generalServicePrefix + feedBackResourcePrefix, FeedBackResource.class);
 		
 		
 		/** APIs for location module**/
@@ -195,7 +195,7 @@ public class RoutingService extends Application {
 				
 		String locationDefaultResourcePrefix = "/default";
 		//	 API for location default resources: /api/v1.0/location/default
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + locationServicePrefix + locationDefaultResourcePrefix, LocationDefaultResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + locationServicePrefix + locationDefaultResourcePrefix, LocationDefaultResource.class);
 		
 		
 		
@@ -205,10 +205,10 @@ public class RoutingService extends Application {
 		
 		String StateChangeResourcePrefix = "/stateChange";
 		//	API for admin state changes actions on user/message/transaction: /api/v1.0/admin/stateChange
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + adminServicePrefix + StateChangeResourcePrefix, AdminStateChangeResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + StateChangeResourcePrefix, AdminStateChangeResource.class);
 		String RoutineResourcePrefix = "/routine";
 		//	API for admin to force routine tasks to take place: /api/v1.0/admin/routine
-		router.attach(Constants.applicationPrefix + Constants.versionPrefix + adminServicePrefix + RoutineResourcePrefix, AdminRoutineResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + RoutineResourcePrefix, AdminRoutineResource.class);
 		
 		return router;
 	}
