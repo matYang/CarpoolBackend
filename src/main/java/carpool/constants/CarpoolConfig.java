@@ -85,7 +85,7 @@ public class CarpoolConfig {
     public static final String imgSize_raw = "raw-0-";
     
     public static final String redisSearchHistoryPrefix = "redis/userSearchHistory-";;
-    public static final int redisSearchHistoryUpbound = 50;
+    public static final int redisSearchHistoryUpbound = isOnLocal ? 6 : 50;
 	
     public static final String log4jBasicPatternLayout = "%d [%t] %-5p %c - %m%n";
     public static final String log4LogFileFolder = "log4j/";

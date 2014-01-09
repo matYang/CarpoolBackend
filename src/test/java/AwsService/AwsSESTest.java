@@ -30,10 +30,10 @@ public class AwsSESTest {
 	public void testSpecialCases(){
 		CarpoolDaoBasic.clearBothDatabase();
 		try{
-			String From = "lifecentric.o2o@gmail.com";
+			String From = "info@routea.ca";
 			String To = "xiongchuhan@hotmail.com";
 			String Body = "<h1>Click it to search using Google <p><div><a href=\"www.google.ca\">google</a></div></p></h1>";
-			String Subject = "Test2";
+			String Subject = "Test21";
 			AwsSES.sendEmail(From,To,Body,Subject,"html");
 			//Passed;			
 		}catch(Exception e){
@@ -45,7 +45,7 @@ public class AwsSESTest {
 			String From = "lifecentric.o2o@gmail.com";
 			String To = "x";
 			String Body = "This email was sent through the Amazon SES SMTP interface by using Java.";
-			String Subject = "Test2";
+			String Subject = "Test22";
 			AwsSES.sendEmail(From,To,Body,Subject,"plain");
 			//Passed;			
 		}catch(Exception e){
@@ -57,7 +57,7 @@ public class AwsSESTest {
 			String From = "lifecentric.o2o@gmail.com";
 			String To = "fyseason@163.com";
 			String Body = "This email was sent through the Amazon SES SMTP interface by using Java.";
-			String Subject = "Test2";
+			String Subject = "Test23";
 			AwsSES.sendEmail(From,To,Body,Subject,"plain");
 			//Passed;			
 		}catch(Exception e){

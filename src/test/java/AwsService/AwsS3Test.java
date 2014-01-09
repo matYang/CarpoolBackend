@@ -32,10 +32,14 @@ import carpool.model.User;
 import carpool.model.representation.SearchRepresentation;
 
 public class AwsS3Test {
-
-	//Note: All the tests have been commented out since some of them may influence the test results of others
-
-	//@Test
+	
+	@Test
+	public void testCreateUserFile(){
+		int userId = 1;
+		AwsMain.createUserFile(userId);
+		//Check amw management console
+	}
+	@Test
 	public void testGetFile(){
 		CarpoolDaoBasic.clearBothDatabase();
 		int userId=1;					
@@ -44,7 +48,7 @@ public class AwsS3Test {
 		
 	}
 
-	//@Test
+	@Test
 	public void testGetImg(){
 		CarpoolDaoBasic.clearBothDatabase();
 		int userId=1;			
@@ -52,14 +56,14 @@ public class AwsS3Test {
 		
 		
 	}
-	//@Test
+	@Test
 	public void testUploadImg() throws IOException{
 		CarpoolDaoBasic.clearBothDatabase();
 		int userId = 1;			
 		AwsMain.uploadProfileImg(userId);
 	}
 
-	//@Test
+	@Test
 	public void testUploadSearchFile() throws IOException, LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
 		long departure_Id = 1;
@@ -191,7 +195,7 @@ public class AwsS3Test {
 
 	}
 
-	//@Test
+	@Test
 	public void testGetSearchHistory() throws IOException, LocationNotFoundException{
 
 		CarpoolDaoBasic.clearBothDatabase();
@@ -300,10 +304,5 @@ public class AwsS3Test {
 		}
 	}
 	
-	//@Test
-	public void testCreateUserFile(){
-		int userId = 1;
-		AwsMain.createUserFile(userId);
-		//Check amw management console
-	}
+	
 }

@@ -5,11 +5,13 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import carpool.carpoolDAO.CarpoolDaoBasic;
+import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.constants.Constants;
 import carpool.constants.Constants.gender;
 import carpool.dbservice.LetterDaoService;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.exception.validation.ValidationException;
 import carpool.model.Letter;
 import carpool.model.Location;
 import carpool.model.User;
@@ -17,7 +19,7 @@ import carpool.model.User;
 public class LetterDaoServiceTest {
 	
 	@Test
-	public void testSendLetter() throws LocationNotFoundException{
+	public void testSendLetter() throws LocationNotFoundException, ValidationException{
 		CarpoolDaoBasic.clearBothDatabase();
 		long departure_Id = 1;
 		long arrival_Id = 2;
@@ -34,7 +36,8 @@ public class LetterDaoServiceTest {
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
 		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
-		
+		CarpoolDaoUser.addUserToDatabase(user);
+		CarpoolDaoUser.addUserToDatabase(user2);
 		Letter letter = new Letter(1,1,Constants.LetterType.user,"Test");
 		
 		try {
