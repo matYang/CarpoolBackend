@@ -103,7 +103,7 @@ public class ImgResource extends PseudoResource{
 			
 			System.out.println("initial validation passed");
 			DiskFileItemFactory factory = new DiskFileItemFactory(); 
-			System.out.println("creating img factoru");
+			System.out.println("creating img factory");
 	        factory.setSizeThreshold(1024000); 
 	        System.out.println("setting file threadshold");
 	        RestletFileUpload upload = new RestletFileUpload(factory); 

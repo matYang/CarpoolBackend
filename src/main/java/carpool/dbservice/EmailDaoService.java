@@ -69,10 +69,6 @@ public class EmailDaoService {
 	 * change emailActivated field of the user in sql to true
 	 * delete the id-authCode key pair in Redis
 	 * fetch the authcode from Redis and check against the authCode passed in first, if does not match, do not activate email
-	 * @param userId
-	 * @param authCode
-	 * @return topBarUser if operation successful, null if error occurred
-	 * @throws user not found exception if the user id does not exist
 	 */
 	public static User activateUserEmail(int userId, String authCode) throws UserNotFoundException{
 		try{

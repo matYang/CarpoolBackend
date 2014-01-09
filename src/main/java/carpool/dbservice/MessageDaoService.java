@@ -109,8 +109,8 @@ public class MessageDaoService{
 			targetMessage.getType() == Constants.messageType.ask ? Constants.messageType.help : Constants.messageType.ask,
                         targetMessage.getDeparture_timeSlot(), targetMessage.getArrival_timeSlot());
                 
-                //use unlogged in state to avoid automatching being recorded in search history   
-               	return primaryMessageSearch(sr, false, -1);
+		//use unlogged in state to avoid automatching being recorded in search history   
+        return primaryMessageSearch(sr, false, -1);
 	}
 
 }
