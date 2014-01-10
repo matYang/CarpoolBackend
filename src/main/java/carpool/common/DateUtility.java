@@ -44,6 +44,15 @@ public class DateUtility {
 	public static String castToAPIFormat(Calendar c){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return sdf.format(c.getTime());
-	}	
+	}
+	
+	public static long getCurTime(){
+		Calendar c = Calendar.getInstance();
+		return c.getTimeInMillis();
+	}
+	
+	public static String getTimeStamp(){
+		return getCurTime() +"";
+	}
 
 }

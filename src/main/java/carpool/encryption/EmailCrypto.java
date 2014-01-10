@@ -44,35 +44,10 @@ public class EmailCrypto {
     }
     
     private static String AESEncrypt(String plainText){
-    	//TODO: investigae the time cost
-    	/*StandardPBEStringEncryptor emailEncrypter = new StandardPBEStringEncryptor();
-    	
-    	emailEncrypter.setProvider(new BouncyCastleProvider());                                                                                                    
-    	emailEncrypter.setAlgorithm(algorithm); 
-    	
-    	generator.setSalt(salt);
-    	
-    	emailEncrypter.setSaltGenerator(generator); 
-    	emailEncrypter.setKeyObtentionIterations(iterations); 
-    	emailEncrypter.setPassword(passphrase_version_1); 
-    	*/
-    	
     	return getCrypto().encrypt(plainText);
     }
     
     private static String AESDecrypt(String encryptedText){
-    	/*StandardPBEStringEncryptor emailEncrypter = new StandardPBEStringEncryptor();
-    	
-    	emailEncrypter.setProvider(new BouncyCastleProvider());                                                                                                    
-    	emailEncrypter.setAlgorithm(algorithm); 
-    	
-    	generator.setSalt(salt);
-    	
-    	emailEncrypter.setSaltGenerator(generator); 
-    	emailEncrypter.setKeyObtentionIterations(iterations); 
-    	emailEncrypter.setPassword(passphrase_version_1); 
-    	*/
-    	//Common.d(encryptedText);
     	return getCrypto().decrypt(encryptedText);
     }
     

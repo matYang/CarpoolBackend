@@ -43,11 +43,18 @@ public class CarpoolConfig {
 	public static final long max_PostLength = 819200l;
 	public static final long max_FileLength = 81920000l;
 	
-	//redis keys
+	//redis related
 	public static final String key_emailActivationAuth = "ea";
 	public static final String key_forgetPasswordAuth = "fp";
-	public static final long session_updateThreshould = 259200000l;		//3 days
-	public static final long session_expireThreshould = 604800000l;		//7 days
+	public static final String redisSeperator = "+";
+	public static final String redisSeperatorRegex = "\\+";
+	public static final long session_updateThreshold = 259200000l;		//3 days
+	public static final long session_expireThreshold = 604800000l;		//7 days
+	public static final long emailActivation_expireThreshold = 604800000l;		//7 days
+	public static final long forgetPassword_expireThreshold = 604800000l;		//7 days
+	public static final int session_sequenceLength = 15;
+	public static final int emailActivation_sequenceLength = 15;
+	public static final int forgetPassword_sequenceLength = 30;
     public static final String redisSearchHistoryPrefix = "redis/userSearchHistory-";;
     public static final int redisSearchHistoryUpbound = isOnLocal ? 6 : 50;
 	
