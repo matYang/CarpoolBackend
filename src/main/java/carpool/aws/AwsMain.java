@@ -11,8 +11,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
@@ -39,7 +43,7 @@ public class AwsMain {
 
 	private static String myAccessKeyID= CarpoolConfig.AccessKeyID;
 	private static String mySecretKey=CarpoolConfig.SecretKey;
-	private static String bucketName="BadStudentTest";
+	private static String bucketName="Badstudent";
 	private static String filekey ="";
 	private static String imgkey="";
 
@@ -50,7 +54,21 @@ public class AwsMain {
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);		
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
 		String fileName = userId+"/"+userId+"_sr.txt";
-		String localfileName = CarpoolConfig.pathToSearchHistoryFolder + userId + CarpoolConfig.searchHistoryFileSufix;
+		String localfileName = CarpoolConfig.pathToSearchHistoryFolder + userId + CarpoolConfig.searchHistoryFileSufix;				
+		Writer writer = null;
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(localfileName), "utf-8"));
+			writer.write("");
+		} catch (IOException ex) {
+			DebugLog.d(ex);
+		} finally {
+			try {
+				writer.close();
+			} catch (Exception ex) {
+				DebugLog.d(ex);
+			}
+		}
+
 		File file = new File(localfileName);
 		try{
 			s3Client.putObject(new PutObjectRequest(bucketName,fileName,file));
@@ -63,6 +81,9 @@ public class AwsMain {
 		catch(AmazonClientException e2){
 			e2.printStackTrace();
 			DebugLog.d(e2);
+		}
+		finally{
+			file.delete();
 		}
 
 	}
@@ -134,8 +155,7 @@ public class AwsMain {
 		}catch(IOException e2){
 			e2.printStackTrace();
 			DebugLog.d(e2);
-		}
-		file.delete();		
+		}				
 	}
 
 	public static  ArrayList<SearchRepresentation> getUserSearchHistory(int userId){
@@ -151,9 +171,7 @@ public class AwsMain {
 		try{
 
 			object = s3Client.getObject(req);
-
-			InputStream objectData = object.getObjectContent(); 
-
+			InputStream objectData = object.getObjectContent();
 			InputStream reader = new BufferedInputStream(objectData);
 
 			//Make sure the file is "empty" before we write to it;

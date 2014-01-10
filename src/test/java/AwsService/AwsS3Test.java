@@ -37,25 +37,26 @@ public class AwsS3Test {
 	public void testCreateUserFile(){
 		int userId = 1;
 		AwsMain.createUserFile(userId);
-		//Check amw management console
+		//Check AWS management console
 	}
+	
 	@Test
 	public void testGetFile(){
 		CarpoolDaoBasic.clearBothDatabase();
 		int userId=1;					
-		AwsMain.getFileObject(userId);
-		 
+		AwsMain.getFileObject(userId);		 
 		
 	}
-
-	@Test
+	
+	//Ignore this test which has already be tested
+	//@Test
 	public void testGetImg(){
 		CarpoolDaoBasic.clearBothDatabase();
 		int userId=1;			
-		AwsMain.getImgObject(userId);
-		
+		AwsMain.getImgObject(userId);		
 		
 	}
+	
 	@Test
 	public void testUploadImg() throws IOException{
 		CarpoolDaoBasic.clearBothDatabase();
@@ -278,28 +279,16 @@ public class AwsS3Test {
 		AwsMain.storeSearchHistory(SR6, userId);
 		list = AwsMain.getUserSearchHistory(userId);
 		if(list.size()==(pre+storage+1)){
-			//Passed;
-			//				for(int i=0; i<list.size(); i++){
-			//	                 System.out.println(list.get(i).toSerializedString());					
-			//					}
-		}else{
-			//				for(int i=0; i<list.size(); i++){
-			//                 System.out.println(list.get(i).toSerializedString());					
-			//				}
+			//Passed;			
+		}else{			
 			fail();
 		}
 
 		AwsMain.storeSearchHistory(SR6, userId);
 		list = AwsMain.getUserSearchHistory(userId);
 		if(list.size()==(pre+storage+2)){
-			//Passed;
-			//				for(int i=0; i<list.size(); i++){
-			//	                 System.out.println(list.get(i).toSerializedString());					
-			//					}
-		}else{
-			//				for(int i=0; i<list.size(); i++){
-			//                 System.out.println(list.get(i).toSerializedString());					
-			//				}
+			//Passed;			
+		}else{			
 			fail();
 		}
 	}

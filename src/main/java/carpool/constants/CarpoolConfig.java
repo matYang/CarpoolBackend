@@ -99,8 +99,8 @@ public class CarpoolConfig {
 	
 	public static final String standardTimeZone = "UTC";
 	
-	public static final String AccessKeyID="AKIAJAU3ADUWK7CKFPZQ";
-	public static final String SecretKey="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";
+	public static final String AccessKeyID="AKIAIE53WCAFSYLUGH2A";
+	public static final String SecretKey="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";
 	public static final String SMTP_USERNAME = "AKIAIK5KV62M7VTBOJDQ"; 
 	public static final String SMTP_PASSWORD = "AklHWYPbI4LBZcQZB3BDqj9KQgl20FyUZj296ru6aRD+";
 	public static final String SMTP_FROM = "info@routea.ca";
