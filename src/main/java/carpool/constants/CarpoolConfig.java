@@ -95,24 +95,17 @@ public class CarpoolConfig {
 	public static final String jdbcUri = isOnLocal ? localhostUri : RDSDBInstanceUri;
 	public static final String redisUri = isOnLocal ? localhostUri : RedisEndPoint;
 	
-	
-<<<<<<< HEAD
 	public static final String AccessKeyID="AKIAIE53WCAFSYLUGH2A";
 	public static final String SecretKey="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";
-=======
+	
 	public static final String standardTimeZone = "UTC";
-
+	
 	//email
-	public static final String AccessKeyID="AKIAJAU3ADUWK7CKFPZQ";
-	public static final String SecretKey="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";
->>>>>>> 4b1737277298c88726302a59bd51563799eb04e5
 	public static final String SMTP_USERNAME = "AKIAIK5KV62M7VTBOJDQ"; 
 	public static final String SMTP_PASSWORD = "AklHWYPbI4LBZcQZB3BDqj9KQgl20FyUZj296ru6aRD+";
 	public static final String SMTP_FROM = "info@routea.ca";
 	public static final String SMTP_HOST = "email-smtp.us-east-1.amazonaws.com";
-	public static final int SMTP_PORT = 587;
-	
-	
+	public static final int SMTP_PORT = 587;	
 	
 	/*API level constants*/
 	public static final int category_DM = 0;
