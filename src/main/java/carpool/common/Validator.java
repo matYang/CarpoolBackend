@@ -5,6 +5,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.*;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
 import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants.userSearchState;
@@ -12,9 +15,6 @@ import carpool.constants.Constants.userSearchState;
 
 public class Validator {
 
-	/**
-	 * TODO check if the phone is in a valid format, only ignore white space, -, (, )
-	 * */
 	public static boolean isPhoneFormatValid(String phone){
 		if (phone == null){
 			return false;
@@ -26,78 +26,58 @@ public class Validator {
 			}
 		}
 		return true;
-	}
+	}	
 
-	/**
-	 * TODO check if the email is in a valid format
-	 * */
+
 	public static boolean isEmailFormatValid(String email){
 
-		if (email == null || email.length() == 0 || email.length() > CarpoolConfig.maxEmailLength){
-			return false;
-		}
-		int index = email.indexOf("@");
-		if (index < 0){
-			return false;
-		}
-		else{
-			if (email.indexOf(".", index) < 0){
+		Pattern emailPattern = Pattern.compile(CarpoolConfig.RegexEmailPattern);
+		try{
+			if (emailPattern.matcher(email).matches() && email.length()<=CarpoolConfig.maxEmailLength) {
+				return true;
+			}else{
 				return false;
 			}
+		}catch(Exception ex){
+			DebugLog.d(ex);
+			return false;
 		}
-		return true;
 	}
-	
-	/**
-	 * check if qq is in a valid format
-	 */
-	public static boolean isQqFormatValid(String qq){
-		if (qq == null || qq.length() == 0 || qq.length() > CarpoolConfig.maxQqLength){
-			return false;
-		}
 
-		//if qq is longer than 15 or contains "@", assume it uses email,turn to check for email format now
-		if (qq.length() > 15 || qq.indexOf("@") > 0){
-			int index = qq.indexOf("@");
-			if (index < 0){
-				return false;
-			}
-			else{
-				if (qq.indexOf(".", index) < 0){
+	public static boolean isQqFormatValid(String qq){
+		if (qq == null || qq.length() < CarpoolConfig.qqMinLength || qq.length() > CarpoolConfig.qqMaxLength){
+			return false;
+		}else{
+			for (int i = 0; i < qq.length(); i++) {
+				if (Character.isDigit(qq.charAt(i)) == false) {
 					return false;
 				}
 			}
-		}
-		return true;
+			return true;
+		}	
 	} 
 
-
-	/**
-	 * check if user's name is in a valid format
-	 * TODO make sure the name does not contain special characters, like !@$,[ etc, it can only contain English and Chinese characters
-	 */
 	public static boolean isNameFormatValid(String userName){
-	    if (userName == null || userName.length() == 0 || userName.length() > CarpoolConfig.maxUserNameLength){
-	        return false;
-	    }
-	    //check for @
-	    if (userName.indexOf("@") >= 0){
-	        return false;
-	    }
-	
-	    return true;
+		Pattern NamePattern = Pattern.compile(CarpoolConfig.RegexNamePattern);
+		if (userName == null || userName.length() == 0 || userName.length() > CarpoolConfig.maxUserNameLength){
+			return false;
+		}	   
+		if (NamePattern.matcher(userName).matches()){
+			return true;
+		}
+		return false;
 	}
 
-	
-	/**
-	 * check if password is in a valid format
-	 * TODO make sure password only contains low/capital letters, numbers, and special characters, no Chinese
-	 */
 	public static boolean isPasswordFormatValid(String password){
-	    if (password == null || password.length() < CarpoolConfig.minPasswordLength || password.length() > CarpoolConfig.maxPasswordLength){
-	        return false;
-	    }
-	    return true;
+		if (password == null || password.length() < CarpoolConfig.minPasswordLength || password.length() > CarpoolConfig.maxPasswordLength){
+			return false;
+		}
+		
+		Pattern PasswordPattern = Pattern.compile(CarpoolConfig.RegexPwPattern);
+		if(PasswordPattern.matcher(password).matches()){
+			return true;
+		}
+		return false;
 	}
 
 
