@@ -6,13 +6,15 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import carpool.constants.Constants;
+import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants.userSearchState;
 
 
 public class Validator {
 
-	//check if the phone is in a valid format
+	/**
+	 * TODO check if the phone is in a valid format, only ignore white space, -, (, )
+	 * */
 	public static boolean isPhoneFormatValid(String phone){
 		if (phone == null){
 			return false;
@@ -26,10 +28,12 @@ public class Validator {
 		return true;
 	}
 
-	//check if the email is in a valid format
+	/**
+	 * TODO check if the email is in a valid format
+	 * */
 	public static boolean isEmailFormatValid(String email){
 
-		if (email == null || email.length() == 0 || email.length() > Constants.maxEmailLength){
+		if (email == null || email.length() == 0 || email.length() > CarpoolConfig.maxEmailLength){
 			return false;
 		}
 		int index = email.indexOf("@");
@@ -43,9 +47,12 @@ public class Validator {
 		}
 		return true;
 	}
-	//check if qq is in a valid format
+	
+	/**
+	 * check if qq is in a valid format
+	 */
 	public static boolean isQqFormatValid(String qq){
-		if (qq == null || qq.length() == 0 || qq.length() > Constants.maxQqLength){
+		if (qq == null || qq.length() == 0 || qq.length() > CarpoolConfig.maxQqLength){
 			return false;
 		}
 
@@ -64,35 +71,13 @@ public class Validator {
 		return true;
 	} 
 
-	public static boolean isStringNullOrEmpty(String entry){
-		if(entry==null){
-			return true;
-		}
-		if(entry.equals("")){
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * check if age is valid
-	 * @param age
-	 * @return true if age is valid
-	 */
-	public static boolean isAgeValid(int age){
-	    if(age>5 && age<99){
-	        return true;
-	    }
-	    return false;
-	}
 
 	/**
 	 * check if user's name is in a valid format
-	 * @param userName
-	 * @return true if name is valid
+	 * TODO make sure the name does not contain special characters, like !@$,[ etc, it can only contain English and Chinese characters
 	 */
 	public static boolean isNameFormatValid(String userName){
-	    if (userName == null || userName.length() == 0 || userName.length() > Constants.maxUserNameLength){
+	    if (userName == null || userName.length() == 0 || userName.length() > CarpoolConfig.maxUserNameLength){
 	        return false;
 	    }
 	    //check for @
@@ -103,11 +88,13 @@ public class Validator {
 	    return true;
 	}
 
+	
 	/**
 	 * check if password is in a valid format
+	 * TODO make sure password only contains low/capital letters, numbers, and special characters, no Chinese
 	 */
 	public static boolean isPasswordFormatValid(String password){
-	    if (password == null || password.length() == 0 || password.length() > Constants.maxPasswordLength){
+	    if (password == null || password.length() < CarpoolConfig.minPasswordLength || password.length() > CarpoolConfig.maxPasswordLength){
 	        return false;
 	    }
 	    return true;

@@ -102,10 +102,9 @@ public class ImgResource extends PseudoResource{
 			
 			DebugLog.d("initial validation passed");
 			DiskFileItemFactory factory = new DiskFileItemFactory(); 
-			DebugLog.d("creating img factoru");
 	        factory.setSizeThreshold(1024000); 
-	        DebugLog.d("setting file threadshold");
 	        RestletFileUpload upload = new RestletFileUpload(factory); 
+	        
 	        DebugLog.d("Waning: creating file items");
 	        List<FileItem> items = upload.parseRepresentation(entity); 
 	        DebugLog.d("Temp files created, fildItem list generated");
@@ -117,7 +116,6 @@ public class ImgResource extends PseudoResource{
 	        } 
 			*/
 //			InputStream inputStream = entity.getStream();
-	        DebugLog.d("starting to read img input stream");
             BufferedImage bufferedImage = ImageIO.read(items.get(0).getInputStream());
             DebugLog.d("stream connected, starting to rescale");
             bufferedImage = Scalr.resize(bufferedImage, Scalr.Method.SPEED, Scalr.Mode.FIT_TO_WIDTH, 128, 128, Scalr.OP_ANTIALIAS);
@@ -140,18 +138,15 @@ public class ImgResource extends PseudoResource{
             DebugLog.d("updating user");
             UserDaoService.updateUser(user);
             
-            DebugLog.d("return usering in success");
             jsonObject = JSONFactory.toJSON(user);
 			setStatus(Status.SUCCESS_OK);
 			DebugLog.d("success response ready");
 
         } catch (PseudoException e){
-        	DebugLog.d("Handled by PseudoException handler, exception is:");
-        	DebugLog.d(e.getCode()+"");
+        	DebugLog.d(e);
         	this.addCORSHeader();
 			return this.doPseudoException(e);
         } catch (Exception e) {
-        	DebugLog.d("Handled by general exception, excetion is:");
         	DebugLog.d(e);
             return this.doException(e);
         }

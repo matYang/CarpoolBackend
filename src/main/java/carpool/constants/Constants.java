@@ -202,27 +202,7 @@ public class Constants {
     	}
     }
 
-
-
-    /*API level constants*/
-    public static final int category_DM = 0;
-    public static final String applicationPrefix = "/api";
-    public static final String versionPrefix = "/v1.0";
-    public static final int maxNameLength = 50;
-    public static final int fixedPhoneLength = 11;
-    public static final int maxEmailLength = 50;
-    public static final int maxQqLength = 50;
-    public static final int maxUserNameLength = 30;
-    public static final int maxPasswordLength = 30;
-
-    public static final String goofyPasswordTrickHackers = "o god you are so gay";
-
-    public static long max_imageSize = 83886080l;
-	
-    
-    public static final String log_errKeyword = "ERROR!:";
-	
-	/** -------------------Administrator-------------------**/
+    /** -------------------Administrator-------------------**/
     //the temporary admin access code, admin access will be checked against this code instead of user cookies
     public static final String access_admin = "4rkozalh48z1";
     
