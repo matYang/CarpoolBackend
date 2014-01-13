@@ -200,7 +200,7 @@ public class AwsMain {
 			}
 			bfreader.close();
 
-			String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
+			String rediskey = carpool.constants.CarpoolConfig.key_searchHistory+userId;
 			int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
 			Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
 			List<String> appendString = redis.lrange(rediskey, 0, upper-1);
@@ -212,7 +212,7 @@ public class AwsMain {
 			object.close();			
 		} catch(AmazonServiceException e){			
 			if(e.getErrorCode().equals("NoSuchKey")){
-				String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
+				String rediskey = carpool.constants.CarpoolConfig.key_searchHistory+userId;
 				int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
 				Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
 				List<String> appendString = redis.lrange(rediskey, 0, upper-1);
@@ -297,7 +297,7 @@ public class AwsMain {
 
 	public static void storeSearchHistory(SearchRepresentation sr,int userId){
 
-		String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
+		String rediskey = carpool.constants.CarpoolConfig.key_searchHistory+userId;
 		int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
 		String srString = sr.toSerializedString();
 		Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();

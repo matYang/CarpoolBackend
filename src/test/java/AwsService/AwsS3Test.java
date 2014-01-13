@@ -126,7 +126,7 @@ public class AwsS3Test {
 		SearchRepresentation SR6 = new SearchRepresentation(false,dm,am2,dt2,at2,type,timeSlot3,timeSlot3);
 
 		Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
-		String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
+		String rediskey = carpool.constants.CarpoolConfig.key_searchHistory+userId;
 		int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
 		//For this test, we set the upper to be 6
 
@@ -266,7 +266,7 @@ public class AwsS3Test {
 		AwsMain.storeSearchHistory(SR4, userId);
 		AwsMain.storeSearchHistory(SR5, userId);
 
-		String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
+		String rediskey = carpool.constants.CarpoolConfig.key_searchHistory+userId;
 		int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
 		int storage = carpool.carpoolDAO.CarpoolDaoBasic.getJedis().lrange(rediskey, 0, upper-1).size();
 
