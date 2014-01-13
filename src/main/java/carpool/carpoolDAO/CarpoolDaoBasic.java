@@ -16,9 +16,19 @@ import carpool.exception.validation.ValidationException;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 public class CarpoolDaoBasic {
-	private static JedisPool jedisPool = new JedisPool(CarpoolConfig.redisUri);
+	
+	private static JedisPool jedisPool;
+	
+	static {
+		JedisPoolConfig config = new JedisPoolConfig();
+		config.setTestOnBorrow(false);
+		config.setMinIdle(5);
+		
+		jedisPool = new JedisPool(config, CarpoolConfig.redisUri, 6379);
+	}	
 
 	private static Connection connection = null;
     
