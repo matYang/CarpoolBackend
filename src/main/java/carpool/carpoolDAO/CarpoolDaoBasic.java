@@ -15,10 +15,12 @@ import carpool.exception.validation.ValidationException;
 
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 public class CarpoolDaoBasic {
-    private static Jedis jedis = new Jedis(CarpoolConfig.redisUri);
-    private static Connection connection = null;
+	private static JedisPool jedisPool = new JedisPool(CarpoolConfig.redisUri);
+
+	private static Connection connection = null;
     
     private static void connect(){
         String uri ="jdbc:mysql://"+CarpoolConfig.jdbcUri+":3306/test?allowMultiQueries=true&&characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes";
@@ -33,7 +35,11 @@ public class CarpoolDaoBasic {
     }
     
     public static Jedis getJedis() {
-        return jedis;
+        return jedisPool.getResource();
+    }
+    
+    public static void returnJedis(Jedis jedis){
+    	jedisPool.returnResource(jedis);
     }
     
     public static Connection getSQLConnection(){
@@ -49,13 +55,11 @@ public class CarpoolDaoBasic {
         return connection;
     }
     
-    
-    public static Set<String> getWholeDatabase(){
-        return jedis.keys("*");  
-    }
 
     public static void clearBothDatabase(){
+    	Jedis jedis = getJedis();
         jedis.flushAll();
+        returnJedis(jedis);
         String query0 = "SET FOREIGN_KEY_CHECKS=0 ";       
         String query1 = "TRUNCATE TABLE SocialList ";
         String query2 = "TRUNCATE TABLE WatchList ";

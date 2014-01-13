@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
+import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
 import carpool.model.representation.SearchRepresentation;
@@ -89,8 +90,8 @@ public class AwsMain {
 	}
 
 	public static void getImgObject(int userId){
-		String userProfile = carpool.constants.CarpoolConfig.profileImgPrefix;
-		String imgSize = carpool.constants.CarpoolConfig.imgSize_m;
+		String userProfile = CarpoolConfig.profileImgPrefix;
+		String imgSize = CarpoolConfig.imgSize_m;
 		String imgName = userProfile+imgSize+userId;
 
 		java.util.Date expiration = new java.util.Date();
@@ -200,11 +201,11 @@ public class AwsMain {
 			}
 			bfreader.close();
 
-			String rediskey = carpool.constants.CarpoolConfig.key_searchHistory+userId;
-			int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
-			Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
-			List<String> appendString = redis.lrange(rediskey, 0, upper-1);
-
+			String rediskey = CarpoolConfig.key_searchHistory+userId;
+			int upper = CarpoolConfig.redisSearchHistoryUpbound;
+			Jedis jedis = CarpoolDaoBasic.getJedis();
+			List<String> appendString = jedis.lrange(rediskey, 0, upper-1);
+			CarpoolDaoBasic.returnJedis(jedis);
 			for(int i=0; i<appendString.size(); i++){
 				list.add(new SearchRepresentation(appendString.get(i)));
 			}
@@ -212,8 +213,8 @@ public class AwsMain {
 			object.close();			
 		} catch(AmazonServiceException e){			
 			if(e.getErrorCode().equals("NoSuchKey")){
-				String rediskey = carpool.constants.CarpoolConfig.key_searchHistory+userId;
-				int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
+				String rediskey = CarpoolConfig.key_searchHistory+userId;
+				int upper = CarpoolConfig.redisSearchHistoryUpbound;
 				Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
 				List<String> appendString = redis.lrange(rediskey, 0, upper-1);
 
@@ -266,8 +267,8 @@ public class AwsMain {
 	}
 
 	public static String uploadProfileImg(int userId){
-		String userProfile = carpool.constants.CarpoolConfig.profileImgPrefix;
-		String imgSize = carpool.constants.CarpoolConfig.imgSize_m;
+		String userProfile = CarpoolConfig.profileImgPrefix;
+		String imgSize = CarpoolConfig.imgSize_m;
 		String imgName = userProfile+imgSize+userId;
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 		AmazonS3Client s3Client = new AmazonS3Client(myCredentials);
@@ -297,16 +298,16 @@ public class AwsMain {
 
 	public static void storeSearchHistory(SearchRepresentation sr,int userId){
 
-		String rediskey = carpool.constants.CarpoolConfig.key_searchHistory+userId;
-		int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
+		String rediskey = CarpoolConfig.key_searchHistory+userId;
+		int upper = CarpoolConfig.redisSearchHistoryUpbound;
 		String srString = sr.toSerializedString();
-		Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
-		redis.lpush(rediskey, srString);
+		Jedis jedis = CarpoolDaoBasic.getJedis();
+		jedis.lpush(rediskey, srString);
 		//check
-		if(redis.llen(rediskey)>=upper){
+		if(jedis.llen(rediskey)>=upper){
 			AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);		
 			AmazonS3 s3Client = new AmazonS3Client(myCredentials);
-			List<String> appendString = redis.lrange(rediskey, 0, upper-1);
+			List<String> appendString = jedis.lrange(rediskey, 0, upper-1);
 			String fileName = userId+"/"+userId+"_sr.txt";
 			String localfileName = CarpoolConfig.pathToSearchHistoryFolder + userId + CarpoolConfig.searchHistoryFileSufix;
 			File file = new File(localfileName);
@@ -343,7 +344,7 @@ public class AwsMain {
 
 				s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
 				//clean redis
-				redis.del(rediskey);
+				jedis.del(rediskey);
 			} catch(AmazonServiceException e){	
 				if(e.getErrorCode().equals("NoSuchKey")){
 					//Write to file
@@ -358,7 +359,7 @@ public class AwsMain {
 
 						s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
 						//clean redis
-						redis.del(rediskey);
+						jedis.del(rediskey);
 					} catch (IOException e1){
 						DebugLog.d(e);
 					}
@@ -368,10 +369,15 @@ public class AwsMain {
 				}
 			} catch (IOException e){
 				DebugLog.d(e);
+			} finally{
+				CarpoolDaoBasic.returnJedis(jedis);
 			}
 			//Make sure deleting the temp file
 			file.delete();
 			IdleConnectionReaper.shutdown();			
+		}
+		else{
+			CarpoolDaoBasic.returnJedis(jedis);
 		}
 
 	}		

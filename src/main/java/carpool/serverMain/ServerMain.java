@@ -58,9 +58,9 @@ public class ServerMain {
 	/**
 	 * Stops RESTlet application
 	 */
-	public void stop() {
-		component.getDefaultHost().detach(component.getApplication());
-	}
+//	public void stop() {
+//		component.getDefaultHost().detach(component.getApplication());
+//	}
 
 	public static ServerMain getInstance() {
 		if (me == null) {
