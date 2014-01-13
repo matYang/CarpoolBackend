@@ -193,7 +193,7 @@ public class AuthFactory {
 	
 	public static final boolean session_closeSession(String sessionString){
 		Jedis jedis = CarpoolDaoBasic.getJedis();
-		boolean result = CarpoolDaoBasic.getJedis().del(sessionString) == 1;
+		boolean result = jedis.del(sessionString) == 1;
 		CarpoolDaoBasic.returnJedis(jedis);
 		return result;
 	}

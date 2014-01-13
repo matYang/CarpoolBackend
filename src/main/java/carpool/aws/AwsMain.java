@@ -215,9 +215,10 @@ public class AwsMain {
 			if(e.getErrorCode().equals("NoSuchKey")){
 				String rediskey = CarpoolConfig.key_searchHistory+userId;
 				int upper = CarpoolConfig.redisSearchHistoryUpbound;
-				Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
-				List<String> appendString = redis.lrange(rediskey, 0, upper-1);
-
+				Jedis jedis = CarpoolDaoBasic.getJedis();
+				List<String> appendString = jedis.lrange(rediskey, 0, upper-1);
+				CarpoolDaoBasic.returnJedis(jedis);
+				
 				for(int i=0; i<appendString.size(); i++){
 					list.add(new SearchRepresentation(appendString.get(i)));
 				}
@@ -371,10 +372,11 @@ public class AwsMain {
 				DebugLog.d(e);
 			} finally{
 				CarpoolDaoBasic.returnJedis(jedis);
+				//Make sure deleting the temp file
+				file.delete();
+				IdleConnectionReaper.shutdown();	
 			}
-			//Make sure deleting the temp file
-			file.delete();
-			IdleConnectionReaper.shutdown();			
+					
 		}
 		else{
 			CarpoolDaoBasic.returnJedis(jedis);
