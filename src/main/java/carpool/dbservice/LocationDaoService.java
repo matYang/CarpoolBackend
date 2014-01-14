@@ -23,6 +23,7 @@ import carpool.model.representation.DefaultLocationRepresentation;
  */
 public class LocationDaoService {	
 	public static int defalutLocationsNum=0;
+	
 	public static void init() throws LocationException, ValidationException, LocationNotFoundException{
 		if (!CarpoolDaoLocation.isLocationPoolEmpty()){
 			return;

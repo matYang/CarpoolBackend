@@ -39,18 +39,34 @@ public class CarpoolDaoUser {
     	long location_Id = usr.getLocationId();
     	
     	String query = "SELECT * FROM carpoolDAOUser WHERE name REGEXP ? AND gender LIKE ? AND match_Id LIKE ?;";
-    	try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+    	
+    	PreparedStatement stmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+    	try{
+    		conn = CarpoolDaoBasic.getSQLConnection();
+    		stmt = conn.prepareStatement(query);
+    		
 			stmt.setString(1, name);
 			stmt.setInt(2,Gender.code);
 			stmt.setLong(3, location_Id);
-			ResultSet rs = stmt.executeQuery();			
-				while(rs.next()){									
-					ulist.add(createUserByResultSet(rs));
-					}			
+			rs = stmt.executeQuery();			
+			while(rs.next()){									
+				ulist.add(createUserByResultSet(rs));
+			}			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DebugLog.d(e);
-		}
+		} finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+	            if (rs != null)  rs.close();  
+	            if (conn != null)  conn.close(); 
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+        } 
     	return ulist;
     	
     }
@@ -141,7 +157,13 @@ public class CarpoolDaoUser {
 		String query3 = "DELETE from carpoolDAOMessage where ownerId = '" + id +"'";
 		String query4 = "DELETE from SocialList where mainUser = '" + id +"'";
 		String query5 = "DELETE FROM carpoolDAOTransaction WHERE provider_Id="+id+" OR customer_Id = "+id;
-		try(Statement stmt = CarpoolDaoBasic.getSQLConnection().createStatement()){
+		
+		Statement stmt = null;
+		Connection conn = null;
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.createStatement();
+					
 			stmt.addBatch(query);
 			stmt.addBatch(query2);
 			stmt.addBatch(query3);
@@ -150,9 +172,17 @@ public class CarpoolDaoUser {
 			if(stmt.executeBatch()[1]==0){
 				throw new UserNotFoundException();
 			}
-		}catch(SQLException e){
+		} catch(SQLException e){
 			DebugLog.d(e);
-		}
+		} finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+	            if (conn != null)  conn.close(); 
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+        } 
 	}
 
 	public static void UpdateUserInDatabase(User user) throws UserNotFoundException, ValidationException{

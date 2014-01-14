@@ -2,6 +2,8 @@ package carpool.carpoolDAO;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -73,6 +75,9 @@ public class CarpoolDaoBasic {
     	Jedis jedis = getJedis();
         jedis.flushAll();
         returnJedis(jedis);
+        
+        Statement stmt = null;
+		Connection conn = null;
         String query0 = "SET FOREIGN_KEY_CHECKS=0 ";       
         String query1 = "TRUNCATE TABLE SocialList ";
         String query2 = "TRUNCATE TABLE WatchList ";
@@ -84,7 +89,10 @@ public class CarpoolDaoBasic {
         String query8 = "TRUNCATE TABLE carpoolDAOLocation";
         String query9 = "TRUNCATE TABLE defaultLocations";
         String query10 = "SET FOREIGN_KEY_CHECKS=1;";
-        try(Statement stmt = getSQLConnection().createStatement()){
+        try{
+        	conn = getSQLConnection();
+        	stmt = conn.createStatement();
+        			
         	stmt.addBatch(query0);
         	stmt.addBatch(query1);
         	stmt.addBatch(query2);
@@ -97,8 +105,16 @@ public class CarpoolDaoBasic {
         	stmt.addBatch(query9);
         	stmt.addBatch(query10);
         	stmt.executeBatch();
-        }catch(SQLException e){
+        } catch(SQLException e) {
         	DebugLog.d(e);
+        } finally {
+			try{
+				if (stmt != null)  stmt.close();  
+	            if (conn != null)  conn.close(); 
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
         }
         
 		try {
