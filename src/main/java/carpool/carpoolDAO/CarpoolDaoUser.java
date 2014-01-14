@@ -1,11 +1,14 @@
 package carpool.carpoolDAO;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
+
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.Parser;
@@ -61,7 +64,15 @@ public class CarpoolDaoUser {
 	            "level,averageScore,totalTranscations,verifications,googleToken,facebookToken,twitterToken,"+
 				"paypalToken,id_docType,id_docNum,id_path,id_vehicleImgPath,accountId,accountPass,accountToken,accountValue,match_Id)"+
 	            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+		
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			
 			stmt.setString(1, SessionCrypto.encrypt(user.getPassword()));
 			stmt.setString(2, user.getName());
 			stmt.setString(3, user.getEmail());
@@ -97,7 +108,7 @@ public class CarpoolDaoUser {
 			stmt.setString(33, user.getAccountValue().toString());
 			stmt.setLong(34, user.getLocation().getMatch());
 			stmt.executeUpdate();
-			ResultSet rs = stmt.getGeneratedKeys();
+			rs = stmt.getGeneratedKeys();
 			rs.next();
 			user.setUserId(rs.getInt(1));
 		}catch(SQLException e){
@@ -107,8 +118,18 @@ public class CarpoolDaoUser {
 				DebugLog.d(e);
 			}
 		} catch (Exception e) {
+			DebugLog.d(e);
 			throw new ValidationException("创建用户失败，账户信息错误");
-		} 
+		} finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+	            if (rs != null)  rs.close();  
+	            if (conn != null)  conn.close(); 
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+        } 
 		return user;
 	}
 

@@ -1,10 +1,11 @@
 package carpool.carpoolDAO;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Set;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 import carpool.constants.CarpoolConfig;
 import carpool.common.DebugLog;
@@ -20,29 +21,33 @@ import redis.clients.jedis.JedisPoolConfig;
 
 public class CarpoolDaoBasic {
 	
-	private static JedisPool jedisPool;
+	private static JedisPool jedisPool; 
+	private static HikariDataSource ds = null;
 	
 	static {
-		JedisPoolConfig config = new JedisPoolConfig();
-		config.setTestOnBorrow(false);
-		config.setMinIdle(5);
+		JedisPoolConfig jedisConfig = new JedisPoolConfig();
+		jedisConfig.setTestOnBorrow(false);
+		jedisConfig.setMinIdle(5);
+		jedisPool = new JedisPool(jedisConfig, CarpoolConfig.redisUri, 6379);
 		
-		jedisPool = new JedisPool(config, CarpoolConfig.redisUri, 6379);
+		
+		HikariConfig sqlConfig = new HikariConfig();
+		
+		//sqlConfig.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
+		sqlConfig.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
+		sqlConfig.addDataSourceProperty("url", "jdbc:mysql://"+CarpoolConfig.jdbcUri+":3306/test?allowMultiQueries=true&&characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes");
+		sqlConfig.addDataSourceProperty("user", "root");
+		sqlConfig.addDataSourceProperty("password", CarpoolConfig.sqlPass);
+		sqlConfig.setPoolName("SQLPool");
+		sqlConfig.setMaxLifetime(1800000l);
+		sqlConfig.setAutoCommit(true);
+		sqlConfig.setMinimumPoolSize(10);
+		sqlConfig.setMaximumPoolSize(100);
+		sqlConfig.setConnectionTimeout(10000l);
+
+		ds = new HikariDataSource(sqlConfig);
 	}	
 
-	private static Connection connection = null;
-    
-    private static void connect(){
-        String uri ="jdbc:mysql://"+CarpoolConfig.jdbcUri+":3306/test?allowMultiQueries=true&&characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes";
-        try{
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection(uri, "root", CarpoolConfig.sqlPass);
-        } catch (ClassNotFoundException e) {
-            DebugLog.d(e);
-        } catch (SQLException e) {
-        	DebugLog.d(e); 
-        }
-    }
     
     public static Jedis getJedis() {
         return jedisPool.getResource();
@@ -53,16 +58,14 @@ public class CarpoolDaoBasic {
     }
     
     public static Connection getSQLConnection(){
-        try {
-			if(connection==null || connection.isClosed()){
-				connect();
-			}
+    	Connection connection;
+    	try {
+			connection = ds.getConnection();
 		} catch (SQLException e) {
 			DebugLog.d(e);
-			DebugLog.d("getSQLConnection:: SQL Connection error, trying to re-establish connection to sql");
-			connect();
-		}
-        return connection;
+			throw new RuntimeException(e.getMessage(), e); 
+		} 
+		return connection;
     }
     
 
@@ -105,5 +108,20 @@ public class CarpoolDaoBasic {
 			throw new RuntimeException();
 		}
 
+    }
+    
+    
+    
+    
+    private static void connect(){
+//        String uri ="jdbc:mysql://"+CarpoolConfig.jdbcUri+":3306/test?allowMultiQueries=true&&characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes";
+//        try{
+//            Class.forName("com.mysql.jdbc.Driver");
+//            connection = DriverManager.getConnection(uri, "root", CarpoolConfig.sqlPass);
+//        } catch (ClassNotFoundException e) {
+//            DebugLog.d(e);
+//        } catch (SQLException e) {
+//        	DebugLog.d(e); 
+//        }
     }
 }

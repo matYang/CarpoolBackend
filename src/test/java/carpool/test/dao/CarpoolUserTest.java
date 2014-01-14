@@ -38,7 +38,7 @@ import static java.lang.System.out;
 public class CarpoolUserTest {
 	
 	@Test
-	public void testCreate() throws ValidationException{
+	public void testCreate() throws ValidationException, InterruptedException{
 		CarpoolDaoBasic.clearBothDatabase();
 		long departure_Id = 1;
 		long arrival_Id = 2;
@@ -55,8 +55,13 @@ public class CarpoolUserTest {
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
 		//Test
-		CarpoolDaoUser.addUserToDatabase(user);		
+		for (int i = 0; i < 80; i++){
+			user.setEmail(user.getEmail()+i);
+			Thread.sleep(1000);
+			CarpoolDaoUser.addUserToDatabase(user);	
+		}
 	}
+	
 	@Test
 	public void testRead() throws LocationNotFoundException{
 		long departure_Id = 1;
