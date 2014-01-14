@@ -1,12 +1,30 @@
 package carpool.test.dao;
 
 import static org.junit.Assert.fail;
+
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.ShortBufferException;
+
 import org.junit.Test;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoMessage;
@@ -15,6 +33,7 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.HelperOperator;
 import carpool.common.Parser;
+import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.gender;
@@ -23,6 +42,7 @@ import carpool.constants.Constants.messageType;
 import carpool.constants.Constants.paymentMethod;
 import carpool.dbservice.*;
 
+import carpool.encryption.SessionCrypto;
 import carpool.exception.validation.ValidationException;
 import carpool.exception.location.LocationNotFoundException;
 
@@ -36,6 +56,95 @@ import carpool.model.User;
 import static java.lang.System.out;
 
 public class CarpoolUserTest {
+	
+	@Test 
+	public void testHikariCP(){
+		CarpoolDaoBasic.clearBothDatabase();
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String region1 = "Downtown";
+		Double lat1 = 32.123212;
+		Double lng1 = 34.341232;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		
+		
+		HikariConfig sqlConfig = new HikariConfig();
+		
+		sqlConfig.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
+		sqlConfig.addDataSourceProperty("url", "jdbc:mysql://"+CarpoolConfig.jdbcUri+":3306/test?allowMultiQueries=true&&characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes");
+		sqlConfig.addDataSourceProperty("user", "root");
+		sqlConfig.addDataSourceProperty("password", CarpoolConfig.sqlPass);
+		sqlConfig.setPoolName("SQLPool");
+		sqlConfig.setMaxLifetime(1800000l);
+		sqlConfig.setAutoCommit(true);
+		sqlConfig.setMinimumPoolSize(10);
+		sqlConfig.setMaximumPoolSize(100);
+		sqlConfig.setConnectionTimeout(10000l);
+
+		HikariDataSource ds = new HikariDataSource(sqlConfig);
+		
+		String query = "INSERT INTO carpoolDAOUser (password,name,email,phone,qq,gender,birthday,"+
+	            "imgPath,location_Id,lastLogin,creationTime,"+
+				"emailActivated,phoneActivated,emailNotice,phoneNotice,state,searchRepresentation,"+
+	            "level,averageScore,totalTranscations,verifications,googleToken,facebookToken,twitterToken,"+
+				"paypalToken,id_docType,id_docNum,id_path,id_vehicleImgPath,accountId,accountPass,accountToken,accountValue,match_Id)"+
+	            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+		
+		Connection connection;
+    	try {
+    		for (int i = 0; i < 1000; i++){
+    			User user =  new User("xch93318yeah", i+"ng@oo.ca", departureLocation, gender.both);
+    			connection = ds.getConnection();
+    			PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+    			stmt.setString(1, SessionCrypto.encrypt(user.getPassword()));
+    			stmt.setString(2, user.getName());
+    			stmt.setString(3, user.getEmail());
+    			stmt.setString(4, user.getPhone());
+    			stmt.setString(5, user.getQq());			
+    			stmt.setInt(6, user.getGender().code);
+    			stmt.setString(7,  DateUtility.toSQLDateTime(user.getBirthday()));
+    			stmt.setString(8, user.getImgPath());
+    			stmt.setLong(9, user.getLocation_Id());			
+    			stmt.setString(10,  DateUtility.toSQLDateTime(user.getLastLogin()));
+    			stmt.setString(11, DateUtility.toSQLDateTime(user.getCreationTime()));
+    			stmt.setInt(12, user.isEmailActivated() ? 1:0);
+    			stmt.setInt(13, user.isPhoneActivated() ? 1:0);
+    			stmt.setInt(14, user.isEmailNotice() ? 1:0);
+    			stmt.setInt(15, user.isPhoneNotice() ? 1:0);
+    			stmt.setInt(16, user.getState().code);
+    			stmt.setString(17, user.getSearchRepresentation().toSerializedString());
+    			stmt.setInt(18, user.getLevel());
+    			stmt.setInt(19, user.getAverageScore());
+    			stmt.setInt(20, user.getTotalTranscations());
+    			stmt.setString(21, Parser.listToString(user.getVerifications()));
+    			stmt.setString(22,user.getGoogleToken());
+    			stmt.setString(23, user.getFacebookToken());
+    			stmt.setString(24, user.getTwitterToken());
+    			stmt.setString(25,user.getPaypalToken());
+    			stmt.setString(26, user.getId_docType());
+    			stmt.setString(27,user.getId_docNum());
+    			stmt.setString(28, user.getId_path());
+    			stmt.setString(29, user.getId_vehicleImgPath());
+    			stmt.setString(30, user.getAccountId());
+    			stmt.setString(31, user.getAccountPass());
+    			stmt.setString(32, user.getAccountToken());		
+    			stmt.setString(33, user.getAccountValue().toString());
+    			stmt.setLong(34, user.getLocation().getMatch());
+    			stmt.executeUpdate();
+    			ResultSet rs = stmt.getGeneratedKeys();
+    			rs.next();
+    			stmt.close();
+    			rs.close();
+    			connection.close();
+    		}
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		} 
+    	
+	}
+	
 	
 	@Test
 	public void testCreate() throws ValidationException, InterruptedException{
@@ -53,11 +162,10 @@ public class CarpoolUserTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@oo.ca", departureLocation, gender.both);
 		//Test
-		for (int i = 0; i < 80; i++){
-			user.setEmail(user.getEmail()+i);
-			Thread.sleep(1000);
+		for (int i = 0; i < 1000; i++){
+			user.setEmail("c2xiong@oo.ca"+i);
 			CarpoolDaoUser.addUserToDatabase(user);	
 		}
 	}

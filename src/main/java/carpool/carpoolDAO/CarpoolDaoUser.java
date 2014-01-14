@@ -115,9 +115,11 @@ public class CarpoolDaoUser {
 			if(e.getMessage().contains("Duplicate")){
 				throw new ValidationException("一部分账户内容与其他账户冲突");
 			}else{
+				e.printStackTrace();
 				DebugLog.d(e);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			DebugLog.d(e);
 			throw new ValidationException("创建用户失败，账户信息错误");
 		} finally  {

@@ -1,6 +1,7 @@
 package carpool.carpoolDAO;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -32,8 +33,6 @@ public class CarpoolDaoBasic {
 		
 		
 		HikariConfig sqlConfig = new HikariConfig();
-		
-		//sqlConfig.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
 		sqlConfig.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
 		sqlConfig.addDataSourceProperty("url", "jdbc:mysql://"+CarpoolConfig.jdbcUri+":3306/test?allowMultiQueries=true&&characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes");
 		sqlConfig.addDataSourceProperty("user", "root");
@@ -44,8 +43,8 @@ public class CarpoolDaoBasic {
 		sqlConfig.setMinimumPoolSize(10);
 		sqlConfig.setMaximumPoolSize(100);
 		sqlConfig.setConnectionTimeout(10000l);
-
 		ds = new HikariDataSource(sqlConfig);
+		
 	}	
 
     
@@ -66,6 +65,7 @@ public class CarpoolDaoBasic {
 			throw new RuntimeException(e.getMessage(), e); 
 		} 
 		return connection;
+
     }
     
 
@@ -111,17 +111,4 @@ public class CarpoolDaoBasic {
     }
     
     
-    
-    
-    private static void connect(){
-//        String uri ="jdbc:mysql://"+CarpoolConfig.jdbcUri+":3306/test?allowMultiQueries=true&&characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes";
-//        try{
-//            Class.forName("com.mysql.jdbc.Driver");
-//            connection = DriverManager.getConnection(uri, "root", CarpoolConfig.sqlPass);
-//        } catch (ClassNotFoundException e) {
-//            DebugLog.d(e);
-//        } catch (SQLException e) {
-//        	DebugLog.d(e); 
-//        }
-    }
 }
