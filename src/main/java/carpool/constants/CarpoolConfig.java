@@ -60,7 +60,7 @@ public class CarpoolConfig {
 	
 	
 	public static final String domainName = isOnLocal ? "localhost:8015" : "www.routea.ca";
-	public static final String sqlPass = isOnLocal ? null : "badstudent";
+	public static final String sqlPass = isOnLocal ? "" : "badstudent";
 	
 	
 	public static final boolean cookieEnabled = false;
