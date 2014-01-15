@@ -146,7 +146,7 @@ public class DMResourceId extends PseudoResource{
 		try {
 			messageId = Integer.parseInt(this.getReqAttr("id"));
 			
-			MessageDaoService.deleteMessage(messageId);
+			MessageDaoService.closeMessage(messageId);
 			setStatus(Status.SUCCESS_OK);
 
         } catch (PseudoException e){

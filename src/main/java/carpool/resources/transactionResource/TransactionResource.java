@@ -105,7 +105,7 @@ public class TransactionResource extends PseudoResource{
 	        	if (transaction.getProviderId() == id || transaction.getCustomerId() == id){
 		        	//check the state of the message, and if the transaction matches the message
 	        		Message message = MessageDaoService.getMessageById(transaction.getMessageId());
-	        		if (message.validate()){
+	        		if (message.validate() && !message.isOpen()){
 	        			Transaction creationFeedBack = TransactionDaoService.createNewTransaction(transaction);
 			                newJsonTransaction = JSONFactory.toJSON(creationFeedBack);
 			                setStatus(Status.SUCCESS_OK);

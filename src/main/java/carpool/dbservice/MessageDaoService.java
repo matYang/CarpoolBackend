@@ -74,6 +74,17 @@ public class MessageDaoService{
 	}
 	
 
+	public static boolean closeMessage(int messageId) throws MessageNotFoundException, MessageOwnerNotMatchException, ValidationException, UserNotFoundException, LocationNotFoundException{
+		Message oldMessage = CarpoolDaoMessage.getMessageById(messageId);
+//		if(oldMessage.getOwnerId()!=ownerId){
+//			throw new MessageOwnerNotMatchException();
+//		}
+		oldMessage.setState(messageState.closed);
+		CarpoolDaoMessage.UpdateMessageInDatabase(oldMessage);
+		return true;
+	}
+	
+
 	/**
 	 * can not delete if this message has active transactions
 	 * @throws LocationNotFoundException 

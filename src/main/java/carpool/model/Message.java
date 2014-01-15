@@ -111,7 +111,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		this.departure_seatsBooked = 0;
 		this.arrival_seatsBooked = 0;
 
-		this.state = Constants.messageState.normal;
+		this.state = Constants.messageState.open;
 		this.creationTime = Calendar.getInstance();
 		this.editTime = Calendar.getInstance();
 		this.historyDeleted = false;
@@ -558,7 +558,11 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		return true;
 	}
 
-
+	public boolean isOpen(){
+		//TODO 
+		
+		return false;
+	}
 
 }
 

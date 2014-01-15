@@ -54,9 +54,6 @@ public class UserAuthenticationResource extends ServerResource{
 	
 	/**
 	 * simply gets the session string from cookies
-	 * @param cookies
-	 * @return
-	 * @throws Exception
 	 */
 	public static String getSessionString(Series<Cookie> cookies) throws PseudoException{
 		ArrayList<String> sessionString = new ArrayList<String>();
@@ -88,8 +85,6 @@ public class UserAuthenticationResource extends ServerResource{
 	/**
 	 * before this method, authenticate cookie session must be checked first, and return false
 	 * if user's login credentials match the expected credentials, a new cookie session is started, a new valid session string will be associated with the user
-	 * @param cookies
-	 * @return  success or failure to start the session
 	 */
 	public static CookieSetting openCookieSession(int id) throws PseudoException{
 		// generate session string and stores session in Redis
