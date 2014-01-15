@@ -27,7 +27,6 @@ public class UserIsWatchedResource extends PseudoResource{
         JSONObject response = new JSONObject();
         
         try {
-			
 			//id from which is list is to be retrieved from
         	id = Integer.parseInt(this.getReqAttr("id"));
 			intendedUserId = Integer.parseInt(this.getQueryVal("intendedUserId"));
@@ -37,7 +36,6 @@ public class UserIsWatchedResource extends PseudoResource{
 			
         	isUserWatched = UserDaoService.isUserWatched(id, intendedUserId);
         	response = JSONFactory.toJSON(isUserWatched);
-        	
         	
 		} catch (PseudoException e){
 			this.addCORSHeader();

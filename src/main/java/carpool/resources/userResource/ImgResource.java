@@ -96,7 +96,7 @@ public class ImgResource extends PseudoResource{
 			
 		try {
 			
-			//this.checkFileEntity(entity);
+			this.checkFileEntity(entity);
 			id = Integer.parseInt(this.getReqAttr("id"));
 			this.validateAuthentication(id);
 			

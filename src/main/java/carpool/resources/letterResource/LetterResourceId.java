@@ -33,8 +33,7 @@ public class LetterResourceId extends PseudoResource{
         JSONArray jsonLetters = new JSONArray();
         
         try {
-        	//int LetterId = Integer.parseInt(this.getReqAttr("id"));
-			
+
         	userId = Integer.parseInt(this.getQueryVal("userId"));
 			this.validateAuthentication(userId);
 			
@@ -73,6 +72,7 @@ public class LetterResourceId extends PseudoResource{
         JSONObject jsonLetter = new JSONObject();
         
 		try {
+			checkEntity(entity);
 			//letterId = Integer.parseInt(this.getReqAttr("id"));
 			JSONObject hashHolder = (new JsonRepresentation(entity)).getJsonObject();
 			userId = hashHolder.getInt("userId");

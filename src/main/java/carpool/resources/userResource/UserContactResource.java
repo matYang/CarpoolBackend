@@ -64,8 +64,6 @@ public class UserContactResource extends PseudoResource{
 	@Put
 	/**
 	 * allows user to change password
-	 * @param entity
-	 * @return
 	 */
 	public Representation changeContactInfo(Representation entity) {
 		int userId = -1;

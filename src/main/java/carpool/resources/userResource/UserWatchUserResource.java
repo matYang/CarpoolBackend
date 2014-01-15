@@ -72,7 +72,7 @@ public class UserWatchUserResource extends PseudoResource{
 		boolean deWatched = false;
 
 		try {
-			//this.checkEntity(entity);
+			this.checkEntity(entity);
 
 			id = Integer.parseInt(this.getReqAttr("id"));
 			JSONObject temp = (new JsonRepresentation(entity)).getJsonObject();

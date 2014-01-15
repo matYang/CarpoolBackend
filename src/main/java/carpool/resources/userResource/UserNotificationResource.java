@@ -38,7 +38,6 @@ public class UserNotificationResource extends PseudoResource{
     public Representation getNotificationByUserId() {
     	int id = -1;
     	int intendedUserId = -1;
-        boolean goOn = false;
         JSONArray response = new JSONArray();
         
         try {

@@ -43,9 +43,6 @@ public class TransactionResourceId extends PseudoResource{
 	
 
     @Get 
-    /**
-     * @return  get the transaction by its transaction id
-     */
     public Representation getTransactionById() {
     	int id = -1;
     	int transactionId = -1;
@@ -88,6 +85,7 @@ public class TransactionResourceId extends PseudoResource{
         Transaction transaction = null;
         
 		try {
+			checkEntity(entity);
 			
 			transactionId = Integer.parseInt(this.getReqAttr("id"));
 			JSONObject hashHolder = (new JsonRepresentation(entity)).getJsonObject();
@@ -129,7 +127,6 @@ public class TransactionResourceId extends PseudoResource{
         } catch(Exception e){
 			return this.doException(e);
 		}
-
         
         Representation result =  new JsonRepresentation(newJsonTransaction);
         this.addCORSHeader(); 

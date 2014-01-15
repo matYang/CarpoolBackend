@@ -45,7 +45,7 @@ public class FeedBackResource extends PseudoResource{
 
 	@Post
 	public String createFeedback(Representation entity) {
-		if (entity.getSize() < CarpoolConfig.max_feedBackLength){
+		if (entity != null && entity.getSize() < CarpoolConfig.max_feedBackLength){
 			String jsonMessage = "";
 			try {
 				jsonMessage = (new JsonRepresentation(entity)).getText() + "\n";

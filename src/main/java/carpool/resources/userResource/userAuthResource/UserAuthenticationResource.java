@@ -113,8 +113,6 @@ public class UserAuthenticationResource extends ServerResource{
 	/**
 	 * before this method, authenticateCookieSession must be checked first and returns true
 	 * delete the session string entry in Redis, redirect to non-login version, make the session string in the cookie no longer valid
-	 * @param request
-	 * @return  if the session is successful or not
 	 */
 	public static boolean closeCookieSession(Series<Cookie> cookies) throws PseudoException{
 		ArrayList<String> sessionString = new ArrayList<String>();

@@ -1,16 +1,9 @@
 package carpool.common;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+
 import java.util.regex.*;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 
 import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants.userSearchState;
 
 
 public class Validator {

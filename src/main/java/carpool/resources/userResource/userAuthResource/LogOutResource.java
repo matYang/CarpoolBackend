@@ -46,7 +46,7 @@ public class LogOutResource extends PseudoResource{
 		int id = -1;
 
 		try {
-			//this.checkEntity(entity);
+			this.checkEntity(entity);
 			id = Integer.parseInt(this.getReqAttr("id"));
 			
 			this.closeAuthenticationSession(id);

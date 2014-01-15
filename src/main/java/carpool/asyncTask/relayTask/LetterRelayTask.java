@@ -30,10 +30,10 @@ public class LetterRelayTask implements PseudoAsyncTask{
 	}
 	
 	public boolean execute(){
-		return sendNotificationToRelay();
+		return sendLetterToRelay();
 	}
 	
-	public  boolean sendNotificationToRelay(){
+	public  boolean sendLetterToRelay(){
 
 	    HttpPost request = new HttpPost(relay_letterPushUrl);
 	    JSONObject json = JSONFactory.toJSON(this.letter);
