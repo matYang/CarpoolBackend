@@ -1,5 +1,6 @@
 package carpool.carpoolDAO;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,8 +24,13 @@ import carpool.model.User;
 public class CarpoolDaoNotification {
 
 	public static Notification addNotificationToDatabase(Notification notification){
+		PreparedStatement stmt = null;
+		Connection conn = null;
 		String query="INSERT INTO carpoolDAONotification(target_UserId,origin_UserId,origin_MessageId,origin_TransactionId,notificationState,historyDeleted,creationTime,notificationEvent)values(?,?,?,?,?,?,?,?)";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+    		stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			
 			stmt.setInt(1, notification.getTargetUserId());
 			stmt.setInt(2, notification.getInitUserId());
 			stmt.setInt(3, notification.getMessageId());
@@ -47,8 +53,13 @@ public class CarpoolDaoNotification {
 
 	public static ArrayList<Notification> addNotificationsToDatabase(ArrayList<Notification> notifications){
 		String query="INSERT INTO carpoolDAONotification(target_UserId,origin_UserId,origin_MessageId,origin_TransactionId,notificationState,historyDeleted,creationTime,notificationEvent)values(?,?,?,?,?,?,?,?)";
-
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+    		stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			
 			for(Notification n:notifications){
 				stmt.setInt(1, n.getTargetUserId());
 				stmt.setInt(2, n.getInitUserId());
@@ -73,7 +84,13 @@ public class CarpoolDaoNotification {
 	}
 	public static void updateNotificationInDatabase(Notification notification) throws NotificationNotFoundException{
 		String query = "UPDATE carpoolDAONotification SET target_UserId=?,origin_UserId=?,origin_MessageId=?,origin_TransactionId=?,notificationState = ?,historyDeleted = ?,creationTime = ?,notificationEvent=? where notification_Id =?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){	
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){	
+			conn = CarpoolDaoBasic.getSQLConnection();
+    		stmt = conn.prepareStatement(query);
+			
 			stmt.setInt(1, notification.getTargetUserId());
 			stmt.setInt(2, notification.getInitUserId());
 			stmt.setInt(3, notification.getMessageId());
@@ -100,7 +117,12 @@ public class CarpoolDaoNotification {
 	public static Notification getNotificationById(int notificationId) throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException{
 		String query="select * from carpoolDAONotification where notification_Id=?";
 		Notification notification = null;
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+    		stmt = conn.prepareStatement(query);
+			
 			stmt.setInt(1, notificationId);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
@@ -114,7 +136,13 @@ public class CarpoolDaoNotification {
 
 	public static void deleteNotification(int notificationId) throws NotificationNotFoundException{
 		String query = "UPDATE carpoolDAONotification SET historyDeleted = 1 where notification_Id =?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){				
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){				
+			conn = CarpoolDaoBasic.getSQLConnection();
+    		stmt = conn.prepareStatement(query);
+    		
 			stmt.setInt(1, notificationId);
 			stmt.executeUpdate();	 			
 			int recordsAffected = stmt.executeUpdate();
@@ -136,7 +164,14 @@ public class CarpoolDaoNotification {
 		ArrayList<Integer> milist = new ArrayList<Integer>();
 		ArrayList<Integer> tlist = new ArrayList<Integer>();
 		String query = "select * from carpoolDAONotification";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+    		stmt = conn.prepareStatement(query);
+    		
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
 				ilist = addIds(ilist,rs.getInt("origin_UserId"));
@@ -190,7 +225,14 @@ public class CarpoolDaoNotification {
 			query += "transaction_Id = ? OR ";
 		}
 		query += "transaction_Id = ?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+    		stmt = conn.prepareStatement(query);
+    		
 			for(int i=0;i<list.size();i++){
 				stmt.setInt(i+1, list.get(i));
 			}
@@ -225,7 +267,13 @@ public class CarpoolDaoNotification {
 		ArrayList<Integer> milist = new ArrayList<Integer>();
 		ArrayList<Integer> tlist = new ArrayList<Integer>();
 		String query = "select * from carpoolDAONotification where target_UserId = ? AND historyDeleted = 0;";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+    		stmt = conn.prepareStatement(query);
 			stmt.setInt(1,userId);
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
