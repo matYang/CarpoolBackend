@@ -32,21 +32,21 @@ import carpool.model.representation.UserSearchRepresentation;
 
 public class CarpoolDaoUser {
 
-    public static ArrayList<User> searchForUser(UserSearchRepresentation usr) throws LocationNotFoundException{
-    	ArrayList<User> ulist = new ArrayList<User>();
-    	String name = usr.getName();
-    	gender Gender = usr.getGender();
-    	long location_Id = usr.getLocationId();
-    	
-    	String query = "SELECT * FROM carpoolDAOUser WHERE name REGEXP ? AND gender LIKE ? AND match_Id LIKE ?;";
-    	
-    	PreparedStatement stmt = null;
+	public static ArrayList<User> searchForUser(UserSearchRepresentation usr) throws LocationNotFoundException{
+		ArrayList<User> ulist = new ArrayList<User>();
+		String name = usr.getName();
+		gender Gender = usr.getGender();
+		long location_Id = usr.getLocationId();
+
+		String query = "SELECT * FROM carpoolDAOUser WHERE name REGEXP ? AND gender LIKE ? AND match_Id LIKE ?;";
+
+		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-    	try{
-    		conn = CarpoolDaoBasic.getSQLConnection();
-    		stmt = conn.prepareStatement(query);
-    		
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setString(1, name);
 			stmt.setInt(2,Gender.code);
 			stmt.setLong(3, location_Id);
@@ -60,35 +60,35 @@ public class CarpoolDaoUser {
 		} finally  {
 			try{
 				if (stmt != null)  stmt.close();  
-	            if (rs != null)  rs.close();  
-	            if (conn != null)  conn.close(); 
+				if (rs != null)  rs.close();  
+				if (conn != null)  conn.close(); 
 			} catch (SQLException e){
 				DebugLog.d("Exception when closing stmt, rs and conn");
 				DebugLog.d(e);
 			}
-        } 
-    	return ulist;
-    	
-    }
-    
+		} 
+		return ulist;
+
+	}
+
 	public static User addUserToDatabase(User user) throws ValidationException{	
 		user.setLocation(CarpoolDaoLocation.addLocationToDatabases(user.getLocation()));
 		user.setLocation_Id(user.getLocation().getId());
 		String query = "INSERT INTO carpoolDAOUser (password,name,email,phone,qq,gender,birthday,"+
-	            "imgPath,location_Id,lastLogin,creationTime,"+
+				"imgPath,location_Id,lastLogin,creationTime,"+
 				"emailActivated,phoneActivated,emailNotice,phoneNotice,state,searchRepresentation,"+
-	            "level,averageScore,totalTranscations,verifications,googleToken,facebookToken,twitterToken,"+
+				"level,averageScore,totalTranscations,verifications,googleToken,facebookToken,twitterToken,"+
 				"paypalToken,id_docType,id_docNum,id_path,id_vehicleImgPath,accountId,accountPass,accountToken,accountValue,match_Id)"+
-	            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
-		
+				" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		
+
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-			
+
 			stmt.setString(1, SessionCrypto.encrypt(user.getPassword()));
 			stmt.setString(2, user.getName());
 			stmt.setString(3, user.getEmail());
@@ -141,13 +141,13 @@ public class CarpoolDaoUser {
 		} finally  {
 			try{
 				if (stmt != null)  stmt.close();  
-	            if (rs != null)  rs.close();  
-	            if (conn != null)  conn.close(); 
+				if (rs != null)  rs.close();  
+				if (conn != null)  conn.close(); 
 			} catch (SQLException e){
 				DebugLog.d("Exception when closing stmt, rs and conn");
 				DebugLog.d(e);
 			}
-        } 
+		} 
 		return user;
 	}
 
@@ -157,13 +157,13 @@ public class CarpoolDaoUser {
 		String query3 = "DELETE from carpoolDAOMessage where ownerId = '" + id +"'";
 		String query4 = "DELETE from SocialList where mainUser = '" + id +"'";
 		String query5 = "DELETE FROM carpoolDAOTransaction WHERE provider_Id="+id+" OR customer_Id = "+id;
-		
+		//Adding by Matthew
 		Statement stmt = null;
 		Connection conn = null;
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.createStatement();
-					
+
 			stmt.addBatch(query);
 			stmt.addBatch(query2);
 			stmt.addBatch(query3);
@@ -177,23 +177,28 @@ public class CarpoolDaoUser {
 		} finally  {
 			try{
 				if (stmt != null)  stmt.close();  
-	            if (conn != null)  conn.close(); 
+				if (conn != null)  conn.close(); 
 			} catch (SQLException e){
 				DebugLog.d("Exception when closing stmt, rs and conn");
 				DebugLog.d(e);
 			}
-        } 
+		} 
 	}
 
 	public static void UpdateUserInDatabase(User user) throws UserNotFoundException, ValidationException{
 		user.setLocation(CarpoolDaoLocation.addLocationToDatabases(user.getLocation()));
 		user.setLocation_Id(user.getLocation().getId());
 		String query = "UPDATE carpoolDAOUser SET password=?,name=?,email=?,phone=?,qq=?,gender=?,birthday=?," +
-	            "imgPath=?,location_Id=?,lastLogin=?,"+
+				"imgPath=?,location_Id=?,lastLogin=?,"+
 				"creationTime=?,emailActivated = ?,phoneActivated = ?,emailNotice = ?,phoneNotice = ?,state = ?,searchRepresentation = ?," +
 				"level=?,averageScore=?,totalTranscations=?,verifications=?,googleToken=?,facebookToken=?,twitterToken=?,paypalToken=?,"+
 				"id_docType=?,id_docNum=?,id_path=?,id_vehicleImgPath=?,accountId=?,accountPass=?,accountToken=?,accountValue=?,match_Id=? WHERE userId = ?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setString(1, SessionCrypto.encrypt(user.getPassword()));
 			stmt.setString(2, user.getName());
 			stmt.setString(3, user.getEmail());
@@ -243,7 +248,13 @@ public class CarpoolDaoUser {
 	public static ArrayList<User> getAllUsers() throws LocationNotFoundException{
 		String query = "SELECT * FROM carpoolDAOUser";
 		ArrayList<User> users = new ArrayList<User>();
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+
+		PreparedStatement stmt = null;
+		Connection conn=null;
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
 				users.add(createUserByResultSet(rs));
@@ -253,12 +264,17 @@ public class CarpoolDaoUser {
 		}
 		return users;
 	}
-	
-	
+
+
 	public static User getUserById(int id) throws UserNotFoundException, LocationNotFoundException{
 		String query = "SELECT * FROM carpoolDAOUser WHERE userId = ?";
 		User user = null;
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setInt(1, id);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
@@ -273,11 +289,16 @@ public class CarpoolDaoUser {
 		return user;
 	}
 
-	
+
 	public static User getUserByEmail(String email) throws UserNotFoundException, LocationNotFoundException{
 		String query = "SELECT * FROM carpoolDAOUser WHERE email = ?";
 		User user = null;
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setString(1, email);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
@@ -291,13 +312,19 @@ public class CarpoolDaoUser {
 
 		return user;
 	}
-	
 
-	
+
+
 	public static ArrayList<User> getUserWhoWatchedUser(int userId) throws LocationNotFoundException{
 		String query = "SELECT * FROM carpoolDAOUser JOIN SocialList ON (User.userId = SocialList.mainUser AND SocialList.subUser = ?)";
 		ArrayList<User> users = new ArrayList<User>();
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setInt(1, userId);
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
@@ -312,7 +339,7 @@ public class CarpoolDaoUser {
 	protected static User createUserByResultSet(ResultSet rs) throws SQLException, LocationNotFoundException {
 		User user = null;
 		Location location = CarpoolDaoLocation.getLocationById(rs.getLong("location_Id"));
-		 try {
+		try {
 			user = new User(rs.getInt("userId"),SessionCrypto.decrypt(rs.getString("password")), rs.getString("name"),
 					rs.getString("email"),rs.getString("phone"),rs.getString("qq"),Constants.gender.fromInt(rs.getInt("gender")),
 					DateUtility.DateToCalendar(rs.getTimestamp("birthday")),rs.getString("imgPath"),location,
@@ -329,39 +356,44 @@ public class CarpoolDaoUser {
 		}
 		return user;
 	}
-	
-//	//tranverse
-//	private static User addHistoryListToUser(User user) throws UserNotFoundException {
-//		ArrayList<Message> historyList = new ArrayList<Message>();
-//		String query = "SELECT * from carpoolDAOMessage WHERE ownerId = ?";
-//		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-//			stmt.setInt(1, user.getUserId());
-//			ResultSet rs = stmt.executeQuery();
-//			while(rs.next()){
-//				historyList.add(CarpoolDaoMessage.createMessageByResultSet(rs, ));
-//			}
-//		}catch(SQLException e){
-//			DebugLog.d(e);
-//		}
-//		query = "SELECT * FROM carpoolDAOMessage JOIN Transaction ON ( Transaction.messageId = carpoolDAOMessage.messageId AND Transaction.initUserId = ?)";
-//		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-//			stmt.setInt(1, user.getUserId());
-//			ResultSet rs = stmt.executeQuery();
-//			while(rs.next()){
-//				historyList.add(CarpoolDaoMessage.createMessageByResultSet(rs));
-//			}
-//		}catch(SQLException e){
-//			DebugLog.d(e);
-//		}
-//		user.setHistoryList(historyList);
-//		return user;
-//	}
 
-	
-    public static boolean hasUserInSocialList(int mainUser, int subUser){
-    	String query = "SELECT COUNT(*) AS total FROM SocialList WHERE mainUser =" +mainUser+ " AND subUser ="+subUser+";";
-    	try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-    		ResultSet rs = stmt.executeQuery();
+	//	//tranverse
+	//	private static User addHistoryListToUser(User user) throws UserNotFoundException {
+	//		ArrayList<Message> historyList = new ArrayList<Message>();
+	//		String query = "SELECT * from carpoolDAOMessage WHERE ownerId = ?";
+	//		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+	//			stmt.setInt(1, user.getUserId());
+	//			ResultSet rs = stmt.executeQuery();
+	//			while(rs.next()){
+	//				historyList.add(CarpoolDaoMessage.createMessageByResultSet(rs, ));
+	//			}
+	//		}catch(SQLException e){
+	//			DebugLog.d(e);
+	//		}
+	//		query = "SELECT * FROM carpoolDAOMessage JOIN Transaction ON ( Transaction.messageId = carpoolDAOMessage.messageId AND Transaction.initUserId = ?)";
+	//		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+	//			stmt.setInt(1, user.getUserId());
+	//			ResultSet rs = stmt.executeQuery();
+	//			while(rs.next()){
+	//				historyList.add(CarpoolDaoMessage.createMessageByResultSet(rs));
+	//			}
+	//		}catch(SQLException e){
+	//			DebugLog.d(e);
+	//		}
+	//		user.setHistoryList(historyList);
+	//		return user;
+	//	}
+
+
+	public static boolean hasUserInSocialList(int mainUser, int subUser){
+		String query = "SELECT COUNT(*) AS total FROM SocialList WHERE mainUser =" +mainUser+ " AND subUser ="+subUser+";";
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
+			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
 				if(rs.getInt("total")==1){
 					return true;
@@ -369,48 +401,61 @@ public class CarpoolDaoUser {
 					return false;
 				}
 			}
-    	} catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-    	return false;
-    }
+		return false;
+	}
 
-    
-    public static void addToSocialList(int user,int subUser) {
- 		String query = "SET foreign_key_checks = 0;INSERT INTO SocialList (mainUser,subUser) VALUES(?,?);SET foreign_key_checks = 1;";
- 		if(!hasUserInSocialList(user,subUser)){
-	 		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+
+	public static void addToSocialList(int user,int subUser) {
+		String query = "SET foreign_key_checks = 0;INSERT INTO SocialList (mainUser,subUser) VALUES(?,?);SET foreign_key_checks = 1;";
+		if(!hasUserInSocialList(user,subUser)){
+			PreparedStatement stmt = null;
+			Connection conn = null;
+			try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+				conn = CarpoolDaoBasic.getSQLConnection();
+				stmt = conn.prepareStatement(query);
+
 				stmt.setInt(1, user);
 				stmt.setInt(2, subUser);
 				stmt.executeUpdate();		
 			}catch(SQLException e){
 				DebugLog.d(e);
 			}
- 		}
-   }	
+		}
+	}	
 
-    public static void deleteFromSocialList(int user,int subUser){
- 	   String query = "SET foreign_key_checks = 0;DELETE FROM SocialList WHERE mainUser =? AND subUser = ?;SET foreign_key_checks = 1;";
- 	   if(hasUserInSocialList(user,subUser)){
- 		   try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+	public static void deleteFromSocialList(int user,int subUser){
+		String query = "SET foreign_key_checks = 0;DELETE FROM SocialList WHERE mainUser =? AND subUser = ?;SET foreign_key_checks = 1;";
+		if(hasUserInSocialList(user,subUser)){
+			PreparedStatement stmt = null;
+			Connection conn = null;
+			try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+				conn = CarpoolDaoBasic.getSQLConnection();
+				stmt = conn.prepareStatement(query);
 				stmt.setInt(1, user);
 				stmt.setInt(2, subUser);
 				stmt.executeUpdate();	
-				
+
 			}catch(SQLException e){
 				DebugLog.d(e);
 			}
 
-	   }
-	   
-   }
+		}
 
-    
-   public static ArrayList<User> getSocialListOfUser(int user) throws LocationNotFoundException{
-	   ArrayList<User> slist = new ArrayList<User>();
-	   String query = "SELECT * FROM carpoolDAOUser JOIN SocialList ON (carpoolDAOUser.userId = SocialList.subUser AND SocialList.mainUser = ?);";
-	   //TODO 
-	   try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+	}
+
+
+	public static ArrayList<User> getSocialListOfUser(int user) throws LocationNotFoundException{
+		ArrayList<User> slist = new ArrayList<User>();
+		String query = "SELECT * FROM carpoolDAOUser JOIN SocialList ON (carpoolDAOUser.userId = SocialList.subUser AND SocialList.mainUser = ?);";
+		PreparedStatement stmt = null;
+		Connection conn = null; 
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setInt(1, user);
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
@@ -419,16 +464,21 @@ public class CarpoolDaoUser {
 		} catch (SQLException e) {
 			DebugLog.d(e);
 		}
-	   return slist;
-   }
-   
+		return slist;
+	}
 
-	
+
+
 	public static ArrayList<Message> getUserMessageHistory(int user) throws UserNotFoundException, LocationNotFoundException{
 		ArrayList<Message> mlist = new ArrayList<Message>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		String query ="SELECT * FROM carpoolDAOMessage WHERE ownerId = ?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null; 
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setInt(1, user);
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){

@@ -22,6 +22,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import redis.clients.jedis.Jedis;
@@ -157,27 +159,86 @@ public class AwsMain {
 		}				
 	}
 
-	public static boolean cleanUpAlltheUserSearchHistory(){
+	public static boolean cleanUpAlltheUserSearchHistory(int userId){
+		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);		
+		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
+		Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+
+		//Clean all the usrSRH
+
+		String fileName = userId+"/"+userId+"_sr.txt";
+		S3Object object = s3Client.getObject(new GetObjectRequest(bucketName,fileName)); 
+		String localfileName = CarpoolConfig.pathToSearchHistoryFolder + userId + CarpoolConfig.searchHistoryFileSufix;
+		File file = new File(localfileName);
+		//Make sure the file is "empty" before we write to it;
+		try{
+			PrintWriter pwriter = new PrintWriter(localfileName);
+			pwriter.write("");
+			pwriter.close();
+
+			InputStream objectData = object.getObjectContent(); 
+			InputStream reader = new BufferedInputStream(objectData);      
+			OutputStream writer = new BufferedOutputStream(new FileOutputStream(file));
+
+			int read = -1;
+			while ( ( read = reader.read() ) != -1 ) {       
+				writer.write(read);
+			}
+			writer.flush();
+			writer.close();
+			reader.close();
+			objectData.close(); 			
+
+			//Get redis SRH of each user
+			String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
+			long upper =redis.llen(rediskey);
+			List<String> appendString = redis.lrange(rediskey, 0, upper-1);
+
+			//Write to file			
+			BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+			for(int k=(int) (upper-1); k>=0; k--){
+				bw.write(appendString.get(k));   
+				bw.newLine();
+			}    
+			bw.flush();
+			bw.close();			
+
+			s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
+
+			//clean redis
+			redis.del(rediskey);
+		}catch(IOException ex){
+			DebugLog.d(ex);
+			return false;
+		}catch(AmazonS3Exception e1){
+			e1.printStackTrace();
+			DebugLog.d(e1);
+			return false;
+		}
+		catch(AmazonClientException e2){
+			e2.printStackTrace();
+			DebugLog.d(e2);
+			return false;
+		}
+		file.delete();
+		IdleConnectionReaper.shutdown();
+
+		return true;
+	}
+
+	public static boolean cleanUpAlltheUsersSearchHistory(){
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);		
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
 		Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
 		//Get the total number of registered users
 		int total = 0;
-		String query = "SELECT MAX(userId) FROM carpoolDAOUser";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){			
-			ResultSet rs = stmt.executeQuery();			
-			if(rs.next()){									
-				total = rs.getInt(1);
-			}			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			DebugLog.d(e);
-		}
+		Set<String> keyset = redis.keys(CarpoolConfig.redisSearchHistoryPrefix + "*");
+		total = keyset.size();
 		//Clean all the usrSRH
 		for(int i=0;i<total;i++){		
 			String fileName = (i+1)+"/"+(i+1)+"_sr.txt";
 			S3Object object = s3Client.getObject(new GetObjectRequest(bucketName,fileName)); 
-			String localfileName = CarpoolConfig.pathToSearchHistoryFolder + i + CarpoolConfig.searchHistoryFileSufix;
+			String localfileName = CarpoolConfig.pathToSearchHistoryFolder + (i+1) + CarpoolConfig.searchHistoryFileSufix;
 			File file = new File(localfileName);
 			//Make sure the file is "empty" before we write to it;
 			try{
@@ -222,10 +283,12 @@ public class AwsMain {
 			}catch(AmazonS3Exception e1){
 				e1.printStackTrace();
 				DebugLog.d(e1);
+				return false;
 			}
 			catch(AmazonClientException e2){
 				e2.printStackTrace();
 				DebugLog.d(e2);
+				return false;
 			}
 			file.delete();
 			IdleConnectionReaper.shutdown();

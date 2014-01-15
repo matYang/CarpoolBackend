@@ -1,5 +1,6 @@
 package carpool.carpoolDAO;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -54,7 +55,14 @@ public class CarpoolDaoTransaction {
 			}
 		}
 
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+		try{	
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
 			stmt.setInt(1,transaction.getProviderId());			
 			stmt.setInt(2, transaction.getCustomerId());
 			stmt.setInt(3, transaction.getMessageId());
@@ -106,12 +114,12 @@ public class CarpoolDaoTransaction {
 			msg = CarpoolDaoMessage.getMessageById(transaction.getMessageId());
 		}
 		else msg = transaction.getMessage();
-		
+
 		transaction.setDeparture_location(msg.getDeparture_Location());		
 		transaction.setDeparture_Id(msg.getDeparture_Location().getId());
 		transaction.setArrival_location(msg.getArrival_Location());
 		transaction.setArrival_Id(msg.getArrival_Location().getId());
-		
+
 		int totalPrice = 0;
 		int direction = transaction.getType().code;
 		ArrayList<Integer> dplist = new ArrayList<Integer>();
@@ -128,7 +136,14 @@ public class CarpoolDaoTransaction {
 			}
 		}	
 
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			if(direction==0){
 				stmt.setString(1, Parser.listToString(dplist));
 				stmt.setString(2, DateUtility.toSQLDateTime(msg.getDeparture_time()));				
@@ -166,7 +181,15 @@ public class CarpoolDaoTransaction {
 	public static Transaction getTransactionById(int transaction_id) throws TransactionNotFoundException, UserNotFoundException, MessageNotFoundException, LocationNotFoundException{
 		String query="select * from carpoolDAOTransaction where transaction_Id=?;";
 		Transaction transaction = null;
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setInt(1, transaction_id);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
@@ -204,7 +227,15 @@ public class CarpoolDaoTransaction {
 		ArrayList<Transaction> tlist = new ArrayList<Transaction>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		ArrayList<Integer> milist = new ArrayList<Integer>();
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){			
+
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){			
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
 				ilist = addIds(ilist,rs.getInt("provider_Id"));	
@@ -233,8 +264,16 @@ public class CarpoolDaoTransaction {
 
 	public static void deleteTransactionFromDatabase(Transaction t) throws SQLException, TransactionNotFoundException{
 		String query="delete from carpoolDAOTransaction where transaction_Id = ?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
 			stmt.executeQuery();
+		}catch(SQLException e){
+			e.printStackTrace();
+			DebugLog.d(e);
 		}
 	}
 
@@ -243,7 +282,15 @@ public class CarpoolDaoTransaction {
 		ArrayList<Transaction> tlist = new ArrayList<Transaction>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		ArrayList<Integer> milist = new ArrayList<Integer>();
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){		
+
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){		
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setInt(1, userId);
 			stmt.setInt(2, userId);
 			ResultSet rs = stmt.executeQuery();
@@ -266,7 +313,15 @@ public class CarpoolDaoTransaction {
 		ArrayList<Transaction> tlist = new ArrayList<Transaction>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		ArrayList<Integer> milist = new ArrayList<Integer>();
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){		
+
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){		
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setInt(1, msgId);			
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
@@ -314,7 +369,15 @@ public class CarpoolDaoTransaction {
 			query += "messageId = ? OR ";
 		}
 		query += "messageId = ?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			for(int i=0;i<list.size();i++){
 				stmt.setInt(i+1, list.get(i));
 			}
@@ -351,7 +414,15 @@ public class CarpoolDaoTransaction {
 			query += "userId = ? OR ";
 		}
 		query += "userId = ?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			for(int i=0;i<list.size();i++){
 				stmt.setInt(i+1, list.get(i));
 			}

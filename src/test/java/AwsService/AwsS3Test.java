@@ -385,7 +385,7 @@ public class AwsS3Test {
 		AwsMain.storeSearchHistory(SR14, userId2);//user2
 		int preuser = AwsMain.getUserSearchHistory(userId).size();
 		int preuser2 = AwsMain.getUserSearchHistory(userId2).size();
-		AwsMain.cleanUpAlltheUserSearchHistory();
+		AwsMain.cleanUpAlltheUsersSearchHistory();
 		//Test for user
 		String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;		
 		int storage = carpool.carpoolDAO.CarpoolDaoBasic.getJedis().lrange(rediskey, 0,redis.llen(rediskey)-1).size();

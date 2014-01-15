@@ -1,5 +1,6 @@
 package carpool.carpoolDAO;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,7 +34,15 @@ public class CarpoolDaoLetter {
 
 		String query = "INSERT INTO carpoolDAOLetter(from_UserId,to_UserId,letterType,content,send_Time,check_Time,letterState,historyDeleted)"+
 				"VALUES(?,?,?,?,?,?,?,?);";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+		try{	
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
 			stmt.setInt(1, letter.getFrom_userId());
 			stmt.setInt(2, letter.getTo_userId());
 			stmt.setInt(3, letter.getType().code);
@@ -43,7 +52,7 @@ public class CarpoolDaoLetter {
 			stmt.setInt(7, letter.getState().code);
 			stmt.setInt(8,letter.isHistoryDeleted() ? 1 : 0);
 			stmt.executeUpdate();
-			ResultSet rs = stmt.getGeneratedKeys();
+			rs = stmt.getGeneratedKeys();
 			rs.next();
 			letter.setLetterId(rs.getInt(1));
 		}catch(SQLException e){
@@ -56,7 +65,13 @@ public class CarpoolDaoLetter {
 	public static void updateLetterInDatabases(Letter letter) throws LetterNotFoundException{
 		String query = "UPDATE carpoolDAOLetter SET from_UserId=?,to_UserId=?,letterType=?,content=?,send_Time=?,check_Time=?,letterState=?,historyDeleted=? where letter_Id=?";
 
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;		
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{	
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setInt(1, letter.getFrom_userId());
 			stmt.setInt(2, letter.getTo_userId());
 			stmt.setInt(3, letter.getType().code);
@@ -78,7 +93,13 @@ public class CarpoolDaoLetter {
 	public static Letter getLetterById(int letterId) throws LetterNotFoundException, UserNotFoundException, LocationNotFoundException{
 		String query = "SELECT * from carpoolDAOLetter where letter_Id = ?";
 		Letter letter = null;
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setInt(1, letterId);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
@@ -97,7 +118,13 @@ public class CarpoolDaoLetter {
 		ArrayList<Letter> list = new ArrayList<Letter>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		String query = "SELECT * from carpoolDAOLetter";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{	
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
 				ilist = addIds(ilist,rs.getInt("from_UserId"),rs.getInt("to_UserId"));
@@ -106,7 +133,7 @@ public class CarpoolDaoLetter {
 			if(list.size()>0){
 				list =  getUsersForLetters(ilist, list);
 			}
-			
+
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}
@@ -128,12 +155,18 @@ public class CarpoolDaoLetter {
 		String query2 = "SELECT * from carpoolDAOLetter where from_UserId=? and to_UserId=? and letterType = ?";		
 		String query3 = "SELECT * from carpoolDAOLetter where (from_UserId=? and to_UserId=?)OR(from_UserId=? and to_UserId=?) and letterType = ?";
 
+		PreparedStatement stmt = null;
+		Connection conn = null;
 		//System
 		if(type.equals(Constants.LetterType.system)){	
 			if(direction.equals(LetterDirection.inbound)){
 				if(curUserId>0){
 					//User send to System
-					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query1)){		
+					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query1)){		
+					try{
+						conn = CarpoolDaoBasic.getSQLConnection();
+						stmt = conn.prepareStatement(query1);	
+
 						stmt.setInt(1, curUserId);
 						stmt.setInt(2, type.code);
 						ResultSet rs = stmt.executeQuery();
@@ -148,7 +181,11 @@ public class CarpoolDaoLetter {
 						DebugLog.d(e);
 					}
 				}else{//System send to User
-					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){		
+					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){		
+					try{
+						conn = CarpoolDaoBasic.getSQLConnection();
+						stmt = conn.prepareStatement(query);
+
 						stmt.setInt(1, targetUserId);
 						stmt.setInt(2, type.code);
 						ResultSet rs = stmt.executeQuery();
@@ -166,7 +203,11 @@ public class CarpoolDaoLetter {
 			}else if(direction.equals(LetterDirection.outbound)){
 				if(curUserId>0){
 					//System to User
-					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){		
+					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){		
+					try{
+						conn = CarpoolDaoBasic.getSQLConnection();
+						stmt = conn.prepareStatement(query);
+
 						stmt.setInt(1, curUserId);
 						stmt.setInt(2, type.code);
 						ResultSet rs = stmt.executeQuery();
@@ -182,7 +223,11 @@ public class CarpoolDaoLetter {
 					}
 				}
 				else{//User to System
-					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query1)){		
+					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query1)){		
+					try{
+						conn = CarpoolDaoBasic.getSQLConnection();
+						stmt = conn.prepareStatement(query1);
+
 						stmt.setInt(1, targetUserId);
 						stmt.setInt(2, type.code);
 						ResultSet rs = stmt.executeQuery();
@@ -200,7 +245,11 @@ public class CarpoolDaoLetter {
 
 			}else{
 				//Both
-				try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query0)){		
+				//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query0)){		
+				try{
+					conn = CarpoolDaoBasic.getSQLConnection();
+					stmt = conn.prepareStatement(query0);
+
 					stmt.setInt(1, curUserId > 0 ? curUserId : targetUserId);
 					stmt.setInt(2, curUserId > 0 ? curUserId : targetUserId);
 					stmt.setInt(3, type.code);
@@ -222,7 +271,11 @@ public class CarpoolDaoLetter {
 			if(direction.equals(Constants.LetterDirection.inbound)){
 				if(curUserId>0 && targetUserId>0){
 					//User to User
-					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query2)){
+					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query2)){
+					try{
+						conn = CarpoolDaoBasic.getSQLConnection();
+						stmt = conn.prepareStatement(query2);
+
 						stmt.setInt(1, curUserId);
 						stmt.setInt(2, targetUserId);
 						stmt.setInt(3, type.code);
@@ -239,7 +292,11 @@ public class CarpoolDaoLetter {
 					}
 				}else if(curUserId<=0){
 					//Users to User
-					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){						
+					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){						
+					try{
+						conn = CarpoolDaoBasic.getSQLConnection();
+						stmt = conn.prepareStatement(query);
+
 						stmt.setInt(1, targetUserId);
 						stmt.setInt(2, type.code);
 						ResultSet rs = stmt.executeQuery();
@@ -255,7 +312,11 @@ public class CarpoolDaoLetter {
 					}
 				}else{
 					//User to Users
-					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query1)){						
+					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query1)){						
+					try{
+						conn = CarpoolDaoBasic.getSQLConnection();
+						stmt = conn.prepareStatement(query1);
+
 						stmt.setInt(1, curUserId);
 						stmt.setInt(2, type.code);
 						ResultSet rs = stmt.executeQuery();
@@ -274,7 +335,11 @@ public class CarpoolDaoLetter {
 			}else if(direction.equals(Constants.LetterDirection.outbound)){
 				if(curUserId>0 && targetUserId>0){
 					//User to User
-					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query2)){
+					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query2)){
+					try{
+						conn = CarpoolDaoBasic.getSQLConnection();
+						stmt = conn.prepareStatement(query2);
+
 						stmt.setInt(1, targetUserId);
 						stmt.setInt(2, curUserId);
 						stmt.setInt(3, type.code);
@@ -291,7 +356,11 @@ public class CarpoolDaoLetter {
 					}
 				}else if(curUserId>0){
 					//Users to User
-					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){						
+					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){						
+					try{
+						conn = CarpoolDaoBasic.getSQLConnection();
+						stmt = conn.prepareStatement(query);
+
 						stmt.setInt(1, curUserId);
 						stmt.setInt(2, type.code);
 						ResultSet rs = stmt.executeQuery();
@@ -307,7 +376,11 @@ public class CarpoolDaoLetter {
 					}
 				}else{
 					//User to Users
-					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query1)){						
+					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query1)){						
+					try{
+						conn = CarpoolDaoBasic.getSQLConnection();
+						stmt = conn.prepareStatement(query1);
+
 						stmt.setInt(1, targetUserId);
 						stmt.setInt(2, type.code);
 						ResultSet rs = stmt.executeQuery();
@@ -326,7 +399,11 @@ public class CarpoolDaoLetter {
 				//Both
 				if(curUserId>0&&targetUserId>0){
 					//User to User
-					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query3)){
+					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query3)){
+					try{
+						conn = CarpoolDaoBasic.getSQLConnection();
+						stmt = conn.prepareStatement(query3);
+
 						stmt.setInt(1, curUserId);
 						stmt.setInt(2, targetUserId);
 						stmt.setInt(3, targetUserId);
@@ -345,7 +422,11 @@ public class CarpoolDaoLetter {
 					}
 				}else{
 					//Users to User or User to Users
-					try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query0)){
+					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query0)){
+					try{
+						conn = CarpoolDaoBasic.getSQLConnection();
+						stmt = conn.prepareStatement(query0);
+
 						stmt.setInt(1, curUserId > 0 ? curUserId : targetUserId);
 						stmt.setInt(2, curUserId > 0 ? curUserId : targetUserId);						
 						stmt.setInt(3, type.code);
@@ -376,6 +457,7 @@ public class CarpoolDaoLetter {
 		}
 		return ilist;
 	}
+
 	private static ArrayList<Letter> getUsersForLetters(ArrayList<Integer> ilist,ArrayList<Letter> letters) throws LocationNotFoundException {
 		HashMap<Integer,User> map = new HashMap<Integer,User>();
 		map = getHashMap(ilist);		
@@ -402,7 +484,14 @@ public class CarpoolDaoLetter {
 
 	public static void deleteLetter(int letterId){
 		String query = "DELETE from carpoolDAOLetter where letter_Id = ?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setInt(1, letterId);
 			stmt.executeUpdate();	
 		}catch (SQLException e) {
@@ -433,7 +522,14 @@ public class CarpoolDaoLetter {
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		String query = "SELECT * from carpoolDAOLetter where (from_UserId = ? or to_UserId = ?) and letterType = ?";
 
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{	
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setInt(1, userId);
 			stmt.setInt(2, userId);
 			stmt.setInt(3, LetterType.user.code);
@@ -461,7 +557,14 @@ public class CarpoolDaoLetter {
 			query += "userId = ? OR ";
 		}
 		query += "userId = ?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			for(int i=0;i<list.size();i++){
 				stmt.setInt(i+1, list.get(i));
 			}
@@ -495,7 +598,14 @@ public class CarpoolDaoLetter {
 
 	public static void checkLetter(int userId, int targetUserId){
 		String query = "UPDATE carpoolDAOLetter set letterState = ? where ((from_UserId = ? and to_UserId=?)or(from_UserId = ? and to_UserId=?)) and letterState = ?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setInt(1, LetterState.read.code);
 			stmt.setInt(2, userId);
 			stmt.setInt(3, targetUserId);
@@ -507,7 +617,7 @@ public class CarpoolDaoLetter {
 			DebugLog.d(e);			
 		}
 	}
-	
+
 	private static HashMap<Integer,User> getHashMap(ArrayList<Integer> list) throws LocationNotFoundException{
 		HashMap<Integer,User> map = new HashMap<Integer,User>();
 		String query = "SELECT * FROM carpoolDAOUser where ";
@@ -515,7 +625,12 @@ public class CarpoolDaoLetter {
 			query += "userId = ? OR ";
 		}
 		query += "userId = ?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+			//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 			for(int i=0;i<list.size();i++){
 				stmt.setInt(i+1, list.get(i));
 			}

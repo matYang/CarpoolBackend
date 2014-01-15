@@ -16,7 +16,13 @@ public class CarpoolDaoLocation {
 
 	public static boolean isLocationPoolEmpty(){
 		String query = "SELECT COUNT(*) AS total FROM carpoolDAOLocation";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
 				if(rs.getInt("total")<=0){
@@ -35,13 +41,13 @@ public class CarpoolDaoLocation {
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		
+
 		String query = "INSERT INTO carpoolDAOLocation (province,city,region,pointName,pointAddress,lat,lng,match_Id)values(?,?,?,?,?,?,?,?)";
 		try {
-			
+
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-			
+
 			stmt.setString(1, location.getProvince());
 			stmt.setString(2, location.getCity());
 			stmt.setString(3, location.getRegion());
@@ -59,13 +65,13 @@ public class CarpoolDaoLocation {
 		} finally  {
 			try{
 				if (stmt != null)  stmt.close();  
-	            if (rs != null)  rs.close();  
-	            if (conn != null)  conn.close(); 
+				if (rs != null)  rs.close();  
+				if (conn != null)  conn.close(); 
 			} catch (SQLException e){
 				DebugLog.d("Exception when closing stmt, rs and conn");
 				DebugLog.d(e);
 			}
-        } 
+		} 
 
 		return location;
 	}
@@ -73,7 +79,13 @@ public class CarpoolDaoLocation {
 	public static Location getLocationById(long l)throws LocationNotFoundException{
 		String query = "SELECT * FROM carpoolDAOLocation where id=?";
 		Location location = null;
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setLong(1, l);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
@@ -93,7 +105,14 @@ public class CarpoolDaoLocation {
 		ArrayList<DefaultLocationRepresentation> list = new ArrayList<DefaultLocationRepresentation>();
 		Location location = null;
 		String query = "SELECT * FROM defaultLocations JOIN carpoolDAOLocation ON (carpoolDAOLocation.match_Id = defaultLocations.id and carpoolDAOLocation.id = defaultLocations.referenceNum);";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){			
+
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){			
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
 				location = createLocationByResultSet(rs);
@@ -112,7 +131,13 @@ public class CarpoolDaoLocation {
 	public static DefaultLocationRepresentation getDefaultLocationRepresentationById(long id){
 		String query = "SELECT * FROM defaultLocations JOIN carpoolDAOLocation ON (carpoolDAOLocation.match_Id = ? and carpoolDAOLocation.id = defaultLocations.referenceNum);";		
 		Location location = null;
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setLong(1, id);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()){
@@ -133,7 +158,12 @@ public class CarpoolDaoLocation {
 
 	public static void updateLocationInDatabases(Location location) throws LocationNotFoundException{
 		String query = "UPDATE carpoolDAOLocation SET province=?, city=?, region=?, pointName=?, pointAddress=?, lat=?, lng=?,match_Id=? where id = ?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setString(1, location.getProvince());
 			stmt.setString(2, location.getCity());
 			stmt.setString(3, location.getRegion());
@@ -155,7 +185,12 @@ public class CarpoolDaoLocation {
 
 	public static void deleteLocation(long l){
 		String query = "DELETE from carpoolDAOLocation where id = ?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
 			stmt.setLong(1, l);
 			stmt.executeUpdate();	
 		}catch (SQLException e) {
@@ -168,7 +203,13 @@ public class CarpoolDaoLocation {
 	public static ArrayList<Location> getAllLocation(){
 		ArrayList<Location> list = new ArrayList<Location>();
 		String query = "select * from carpoolDAOLocation";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){			
+
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){			
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
 				list.add(createLocationByResultSet(rs));
@@ -190,7 +231,13 @@ public class CarpoolDaoLocation {
 		Location location = null;		
 		location = CarpoolDaoLocation.addLocationToDatabases(defaultLocationRep.getLocation());
 		defaultLocationRep.setReferenceId(location.getId());
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){			
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){			
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+
 			stmt.setLong(1, defaultLocationRep.getReferenceId());
 			stmt.setInt(2, defaultLocationRep.getRadius());
 			stmt.setString(3, defaultLocationRep.getSynonyms());			
