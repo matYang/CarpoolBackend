@@ -32,31 +32,31 @@ import carpool.model.User;
 import carpool.model.representation.SearchRepresentation;
 
 public class AwsS3Test {
-	
+
 	@Test
 	public void testCreateUserFile(){
 		int userId = 1;
 		AwsMain.createUserFile(userId);
 		//Check AWS management console
 	}
-	
+
 	@Test
 	public void testGetFile(){
 		CarpoolDaoBasic.clearBothDatabase();
 		int userId=1;					
 		AwsMain.getFileObject(userId);		 
-		
+
 	}
-	
+
 	//Ignore this test which has already be tested
 	//@Test
 	public void testGetImg(){
 		CarpoolDaoBasic.clearBothDatabase();
 		int userId=1;			
 		AwsMain.getImgObject(userId);		
-		
+
 	}
-	
+
 	@Test
 	public void testUploadImg() throws IOException{
 		CarpoolDaoBasic.clearBothDatabase();
@@ -86,7 +86,7 @@ public class AwsS3Test {
 		long am = arrivalLocation.getMatch();
 		long dm2 = departureLocation2.getMatch();
 		long am2 = arrivalLocation2.getMatch();
-		
+
 		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
 
 		try {
@@ -195,7 +195,7 @@ public class AwsS3Test {
 		}   
 
 	}
-
+	
 	@Test
 	public void testGetSearchHistory() throws IOException, LocationNotFoundException{
 
@@ -290,8 +290,134 @@ public class AwsS3Test {
 			//Passed;			
 		}else{			
 			fail();
-		}
+		}		
+		
 	}
 	
-	
+	@Test
+	public void testGetCleanUpUserSearchHistory() throws LocationNotFoundException{
+		CarpoolDaoBasic.clearBothDatabase();
+		Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
+		Location departureLocation2= new Location(province,city1,region1,"Test12","Test111",lat1,lng1,arrival_Id*2);
+		Location arrivalLocation2 = new Location(province,city2,region2,"Test22","Test222",lat2,lng2,departure_Id+arrival_Id);
+		long dm = departureLocation.getMatch();
+		long am = arrivalLocation.getMatch();
+		long dm2 = departureLocation2.getMatch();
+		long am2 = arrivalLocation2.getMatch();
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user2 =  new User("fruitJ", "xiongchuhanplace@hotmail.com", departureLocation, gender.female);
+
+		try {
+			CarpoolDaoUser.addUserToDatabase(user);
+			CarpoolDaoUser.addUserToDatabase(user2);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}
+		//Date
+		Calendar dt = Calendar.getInstance();		
+		Calendar at = Calendar.getInstance();
+		at.add(Calendar.DAY_OF_YEAR, 1);		
+		Calendar dt2 = Calendar.getInstance();
+		dt2.add(Calendar.DAY_OF_YEAR, 1);
+		Calendar at2 = Calendar.getInstance();
+		at2.add(Calendar.DAY_OF_YEAR, 2);		
+
+		ArrayList<Integer> priceList = new ArrayList<Integer>();
+		priceList.add(1);
+		paymentMethod paymentMethod =null;
+		paymentMethod = paymentMethod.fromInt(0);
+		messageType type = messageType.fromInt(0);			
+		gender genderRequirement = gender.fromInt(0);		
+		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);	
+		DayTimeSlot timeSlot2 = DayTimeSlot.fromInt(1);
+		DayTimeSlot timeSlot3 = DayTimeSlot.fromInt(2);
+		int userId=user.getUserId();
+		int userId2=user2.getUserId();
+		//Message	
+		Message message=new Message(userId,false, new Location(departureLocation),dt,timeSlot,1 , priceList,new Location(arrivalLocation),at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
+		CarpoolDaoMessage.addMessageToDatabase(message);
+		Message message2=new Message(userId2,false, new Location(departureLocation),dt,timeSlot,1 , priceList,new Location(arrivalLocation),at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
+		CarpoolDaoMessage.addMessageToDatabase(message2);
+		//SRs
+		SearchRepresentation SR = new SearchRepresentation(false,dm,am,dt,at,type,timeSlot,timeSlot);
+		SearchRepresentation SR2 = new SearchRepresentation(false,dm,am,dt,at,type,timeSlot2,timeSlot2);
+		SearchRepresentation SR3 = new SearchRepresentation(true,dm,am,dt,at,type,timeSlot3,timeSlot3);
+		SearchRepresentation SR4 = new SearchRepresentation(true,dm2,am2,dt2,at2,type,timeSlot2,timeSlot2);
+		SearchRepresentation SR5 = new SearchRepresentation(false,dm2,am2,dt2,at2,type,timeSlot3,timeSlot3);
+		SearchRepresentation SR6 = new SearchRepresentation(false,dm2,am2,dt2,at2,type,timeSlot3,timeSlot3);
+		SearchRepresentation SR7 = new SearchRepresentation(false,dm2,am2,dt2,at2,type,timeSlot3,timeSlot3);
+		SearchRepresentation SR8 = new SearchRepresentation(false,dm2,am2,dt2,at2,type,timeSlot3,timeSlot3);
+		SearchRepresentation SR9 = new SearchRepresentation(false,dm2,am2,dt2,at2,type,timeSlot3,timeSlot3);
+		SearchRepresentation SR10 = new SearchRepresentation(false,dm2,am2,dt2,at2,type,timeSlot3,timeSlot3);
+		SearchRepresentation SR11 = new SearchRepresentation(false,dm2,am2,dt2,at2,type,timeSlot3,timeSlot3);
+		SearchRepresentation SR12 = new SearchRepresentation(false,dm2,am2,dt2,at2,type,timeSlot3,timeSlot3);
+		SearchRepresentation SR13 = new SearchRepresentation(false,dm2,am2,dt2,at2,type,timeSlot3,timeSlot3);
+		SearchRepresentation SR14 = new SearchRepresentation(false,dm2,am2,dt2,at2,type,timeSlot3,timeSlot3);
+
+		ArrayList<SearchRepresentation> list = new ArrayList<SearchRepresentation>();
+
+		AwsMain.storeSearchHistory(SR, userId);
+		AwsMain.storeSearchHistory(SR2, userId2);//user2
+		AwsMain.storeSearchHistory(SR3, userId);
+		AwsMain.storeSearchHistory(SR4, userId2);//user2
+		AwsMain.storeSearchHistory(SR5, userId);
+		AwsMain.storeSearchHistory(SR6, userId2);//user2
+		AwsMain.storeSearchHistory(SR7, userId);
+		AwsMain.storeSearchHistory(SR8, userId2);//user2
+		AwsMain.storeSearchHistory(SR9, userId);
+		AwsMain.storeSearchHistory(SR10, userId2);//user2
+		AwsMain.storeSearchHistory(SR11, userId);
+		AwsMain.storeSearchHistory(SR12, userId2);//user2
+		AwsMain.storeSearchHistory(SR13, userId);
+		AwsMain.storeSearchHistory(SR14, userId2);//user2
+		int preuser = AwsMain.getUserSearchHistory(userId).size();
+		int preuser2 = AwsMain.getUserSearchHistory(userId2).size();
+		AwsMain.cleanUpAlltheUserSearchHistory();
+		//Test for user
+		String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;		
+		int storage = carpool.carpoolDAO.CarpoolDaoBasic.getJedis().lrange(rediskey, 0,redis.llen(rediskey)-1).size();
+		if(storage==0){
+			//Passed;
+		}else{
+			fail();
+		}
+		//Test for user2
+		rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId2;		
+		storage = carpool.carpoolDAO.CarpoolDaoBasic.getJedis().lrange(rediskey, 0,redis.llen(rediskey)-1).size();
+		if(storage==0){
+			//Passed;
+		}else{
+			fail();
+		}
+
+		list = AwsMain.getUserSearchHistory(userId);
+		if(list.size()==preuser){
+			//Passed;
+		}else{
+			fail();
+		}
+
+		list = AwsMain.getUserSearchHistory(userId2);
+		if(list.size()==preuser2){
+			//Passed;
+		}else{
+			fail();
+		}
+
+	}
+
+
 }
