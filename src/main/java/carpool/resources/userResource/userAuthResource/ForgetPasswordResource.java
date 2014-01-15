@@ -120,7 +120,6 @@ public class ForgetPasswordResource extends PseudoResource{
 						if (user.isAbleToLogin()){
 							
 							this.closeAuthenticationSession(userId);
-				            this.clearUserCookies();
 				            this.addAuthenticationSession(userId);
 							
 							jsonResponse = JSONFactory.toJSON(user);

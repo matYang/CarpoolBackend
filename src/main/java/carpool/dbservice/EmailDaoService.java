@@ -28,20 +28,20 @@ public class EmailDaoService {
 	 * @return return false if error occurs, eg inside the catch clause
 	 * @throws user not found exception if the user id does not exist
 	 */
-	public static boolean changeEmail(int userId, String newEmail, String sessionString) throws UserNotFoundException{
-		try {
-			User user = CarpoolDaoUser.getUserById(userId);
-			user.setEmail(newEmail);
-			user.setEmailActivated(false);
-			CarpoolDaoUser.UpdateUserInDatabase(user);
-			AuthDaoService.closeUserSession(sessionString);
-			EmailDaoService.sendActivationEmail(userId, newEmail);
-			return true;
-		} catch (Exception e) {
-			DebugLog.d(e);
-		}
-		return false;
-	}
+//	public static boolean changeEmail(int userId, String newEmail, String sessionString) throws UserNotFoundException{
+//		try {
+//			User user = CarpoolDaoUser.getUserById(userId);
+//			user.setEmail(newEmail);
+//			user.setEmailActivated(false);
+//			CarpoolDaoUser.UpdateUserInDatabase(user);
+//			AuthDaoService.closeUserSession(sessionString);
+//			EmailDaoService.sendActivationEmail(userId, newEmail);
+//			return true;
+//		} catch (Exception e) {
+//			DebugLog.d(e);
+//		}
+//		return false;
+//	}
 
 	/**
 	 * @param newEmail  the new email that an activation email should be sent to

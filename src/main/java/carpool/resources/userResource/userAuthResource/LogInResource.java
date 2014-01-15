@@ -65,7 +65,6 @@ public class LogInResource extends PseudoResource{
 				//UserCookieResource.validateCookieSession(user.getUserId(), cookies);
 					
 				this.closeAuthenticationSession(user.getUserId());
-	            this.clearUserCookies();
 	            this.addAuthenticationSession(user.getUserId());
 				
 				jsonObject = JSONFactory.toJSON(user);

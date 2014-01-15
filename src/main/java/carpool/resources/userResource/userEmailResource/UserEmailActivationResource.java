@@ -56,7 +56,6 @@ public class UserEmailActivationResource extends PseudoResource{
         	
         	if (user != null && user.isEmailActivated() && user.isAbleToLogin()){
         		this.closeAuthenticationSession(userId);
-        		this.clearUserCookies();
         		this.addAuthenticationSession(userId);
   
         		setStatus(Status.SUCCESS_OK);

@@ -2,6 +2,7 @@ package carpool.resources;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import org.restlet.engine.header.Header;
 import org.restlet.ext.json.JsonRepresentation;
@@ -15,7 +16,12 @@ import org.json.JSONObject;
 
 import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
+import carpool.dbservice.AuthDaoService;
+import carpool.encryption.SessionCrypto;
 import carpool.exception.PseudoException;
+import carpool.exception.auth.AccountAuthenticationException;
+import carpool.exception.auth.DuplicateSessionCookieException;
+import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.validation.EntityTooLargeException;
 import carpool.factory.JSONFactory;
 import carpool.resources.userResource.userAuthResource.UserAuthenticationResource;
@@ -63,17 +69,15 @@ public class PseudoResource extends ServerResource{
 	}
 
 	
+	/******************
+	 * 
+	 *  Cookie Area
+	 *  
+	 ******************/
 	public boolean validateAuthentication(int userId) throws PseudoException{
-		if (!CarpoolConfig.cookieEnabled){
-			return true;
-		}
-		return UserAuthenticationResource.validateCookieSession(userId, this.getSessionString());
+		return !CarpoolConfig.cookieEnabled ? true : UserAuthenticationResource.validateCookieSession(userId, this.getSessionString());
 	}
-	
-	public void clearUserCookies(){
-		Series<CookieSetting> cookieSettings = this.getResponse().getCookieSettings(); 
-        cookieSettings.clear(); 
-	}
+
 	
 	public void addAuthenticationSession(int userId) throws PseudoException{
 		Series<CookieSetting> cookieSettings = this.getResponse().getCookieSettings(); 
@@ -87,12 +91,13 @@ public class PseudoResource extends ServerResource{
 		UserAuthenticationResource.closeCookieSession(cookies);
 	}
 	
-	public String getSessionString() throws PseudoException{
-		Series<Cookie> cookies = this.getRequest().getCookies();
-		String sessionString = UserAuthenticationResource.getSessionString(cookies);
-		return sessionString;
-	}
 	
+	
+	/******************
+	 * 
+	 * Query Area
+	 * 
+	 ******************/
 	public String getReqAttr(String fieldName) throws UnsupportedEncodingException{
 		Object attr = this.getRequestAttributes().get(fieldName);
 		return attr != null ? java.net.URLDecoder.decode((String)attr, "utf-8") : null;
@@ -108,6 +113,13 @@ public class PseudoResource extends ServerResource{
 		return val;
 	}
 	
+	
+	
+	/******************
+	 * 
+	 * Exception Handling Area
+	 * 
+	 ******************/
 	public StringRepresentation doPseudoException(PseudoException e){
 		DebugLog.d(e);
 		switch(e.getCode()){
@@ -183,7 +195,12 @@ public class PseudoResource extends ServerResource{
 		addCORSHeader();
 		return buildQuickResponse(responseText);
 	}
-
+	
+	/******************
+	 * 
+	 * Take the options
+	 * 
+	 ******************/
     //needed here since backbone will try to send OPTIONS to /id before PUT or DELETE
     @Options
     public Representation takeOptions(Representation entity) {
@@ -191,5 +208,156 @@ public class PseudoResource extends ServerResource{
     	setStatus(Status.SUCCESS_OK);
         return new JsonRepresentation(new JSONObject());
     }
+    
+    
+    /******************
+     * 
+     *  New Cookie Area
+     *  
+     ******************/
+    protected boolean validateAuthentication() throws PseudoException{
+		return !CarpoolConfig.cookieEnabled ? true : validateCookieSession();
+	}
+
+	protected String generateAuthenticationSessionString(int userId) throws PseudoException{
+		return generateSesstionString(userId);
+	}
+	
+	protected void openAuthenticationSession(int userId) throws PseudoException{
+		Series<CookieSetting> cookieSettings = this.getResponse().getCookieSettings(); 
+		CookieSetting newCookie = openSession(userId);
+		cookieSettings.add(newCookie);
+		this.setCookieSettings(cookieSettings);
+	}
+	
+	protected void closeAuthenticationSession() throws PseudoException{
+		closeSession();
+	}
+	
+	protected String getSessionString() throws PseudoException{
+		ArrayList<String> sessionString = new ArrayList<String>();
+		String newDecryptedString = "";
+		
+		//first check header for auth, if not in header, then check for cookies for auth
+		Series<Header> requestHeaders = (Series<Header>) getRequest().getAttributes().get("org.restlet.http.headers");
+		if (requestHeaders != null) {
+			if (requestHeaders.getFirstValue(CarpoolConfig.cookie_userSession, true) != null){
+				sessionString.add(requestHeaders.getFirstValue(CarpoolConfig.cookie_userSession, true));
+			}
+		}
+		if (sessionString.size() == 0){
+			Series<Cookie> cookies = this.getRequest().getCookies();
+			for( Cookie cookie : cookies){ 
+				if (cookie.getName().equals(CarpoolConfig.cookie_userSession)){
+					sessionString.add(cookie.getValue()); 
+				}
+			} 
+		}
+		
+//		if (sessionString.size() > 1){
+//			throw new DuplicateSessionCookieException();
+//		}
+		if (sessionString.size() == 0){
+			return "";
+		}
+		else{
+			try{
+				newDecryptedString = SessionCrypto.decrypt(sessionString.get(0));
+			}
+			catch (Exception e){
+				e.printStackTrace();
+				throw new SessionEncodingException();
+			}
+			return newDecryptedString;
+		}
+	}
+	
+	protected int getUserIdFromSessionString(String sessionString)throws PseudoException{
+		String userIdStr = sessionString.split(CarpoolConfig.redisSeperatorRegex)[1];
+		int userId = -1;
+		try{
+			userId = Integer.parseInt(userIdStr);
+		} catch (NumberFormatException e){
+			throw new AccountAuthenticationException("UserCookieResource:: getSessionString:: Session does not exist");
+		}
+		
+		return userId;
+	}
+	
+    
+    /******************
+     * 
+     *  Authentication Area
+     *  
+     ******************/
+	private String generateSesstionString(int userId) throws PseudoException{
+		// generate session string and stores session in Redis
+		 String sessionString = AuthDaoService.generateUserSession(userId);
+		 try{
+			 String encrypted = SessionCrypto.encrypt(sessionString);
+			 return encrypted;
+		 } catch (Exception e){
+			 throw new SessionEncodingException();
+		 }
+	}
+	
+	private boolean validateCookieSession() throws PseudoException{
+		String sessionString = getSessionString();
+		if (sessionString == null || sessionString.length() == 0){
+			
+		}
+		int userId = getUserIdFromSessionString(sessionString);
+		if (userId == -1){
+			throw new AccountAuthenticationException("UserCookieResource:: validateCookieSession:: Invalid ID, ID is -1");
+		}
+		boolean login = false;
+		
+		try{
+			String decryptedString = SessionCrypto.decrypt(sessionString);
+			login =  AuthDaoService.validateUserSession(userId, decryptedString);
+		}
+		catch (Exception e){
+			e.printStackTrace();
+			throw new SessionEncodingException();
+		}
+
+		if (!login){
+			throw new AccountAuthenticationException("UserCookieResource:: validateCookieSession:: Session Validation Failed");
+		}
+		return login;
+	}
+	
+	private CookieSetting openSession(int userId) throws PseudoException{
+        String encryptedString = generateSesstionString(userId);
+        CookieSetting newCookieSetting;
+        
+        try{
+        	 newCookieSetting = new CookieSetting(0, CarpoolConfig.cookie_userSession, encryptedString);
+        	 newCookieSetting.setMaxAge(CarpoolConfig.cookie_maxAge);
+        }
+        catch (Exception e){
+			throw new SessionEncodingException();
+		}
+        
+       return newCookieSetting;
+	}
+	
+	private boolean closeSession() throws PseudoException{
+		try{
+			String sessionString = getSessionString();
+			String decryptedString = SessionCrypto.decrypt(sessionString);
+			return AuthDaoService.closeUserSession(decryptedString);
+		}
+		catch (AccountAuthenticationException e){
+			DebugLog.d(e);
+			return true;
+		}
+		catch (Exception e){
+			DebugLog.d(e);
+			throw new SessionEncodingException();
+		}
+		
+	}
+	
 
 }

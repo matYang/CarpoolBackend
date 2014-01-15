@@ -27,7 +27,6 @@ import carpool.resources.userResource.userAuthResource.SessionRedirect;
 import carpool.resources.userResource.userEmailResource.ResendActivationEmailResource;
 import carpool.resources.userResource.userEmailResource.UserEmailActivationResource;
 import carpool.resources.userResource.userEmailResource.UserEmailResource;
-import carpool.resources.userResource.userEmailResource.UserEmailResourceId;
 
 
 /**
@@ -134,7 +133,7 @@ public class RoutingService extends Application {
 		//  API for check email availability:  /api/v1.0/users/email
 		//  API for user update email:  /api/v1.0/users/email/:id
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + EmailResourcePrefix, UserEmailResource.class);
-		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + EmailResourcePrefix + "/{id}", UserEmailResourceId.class);
+		//router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + EmailResourcePrefix + "/{id}", UserEmailResourceId.class);
 		String ChangePasswordResourcePrefix = "/changePassword";
 		//	API for user changing the password:  /api/v1.0/users/changePassword/:id
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + ChangePasswordResourcePrefix + "/{id}", ChangePasswordResource.class);
