@@ -17,6 +17,9 @@ import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.IOUtils;
@@ -60,15 +63,10 @@ public class AwsMain {
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(localfileName), "utf-8"));
 			writer.write("");
+			writer.close();
 		} catch (IOException ex) {
 			DebugLog.d(ex);
-		} finally {
-			try {
-				writer.close();
-			} catch (Exception ex) {
-				DebugLog.d(ex);
-			}
-		}
+		} 
 
 		File file = new File(localfileName);
 		try{
@@ -90,8 +88,8 @@ public class AwsMain {
 	}
 
 	public static void getImgObject(int userId){
-		String userProfile = CarpoolConfig.profileImgPrefix;
-		String imgSize = CarpoolConfig.imgSize_m;
+		String userProfile = carpool.constants.CarpoolConfig.profileImgPrefix;
+		String imgSize = carpool.constants.CarpoolConfig.imgSize_m;
 		String imgName = userProfile+imgSize+userId;
 
 		java.util.Date expiration = new java.util.Date();
@@ -159,6 +157,83 @@ public class AwsMain {
 		}				
 	}
 
+	public static boolean cleanUpAlltheUserSearchHistory(){
+		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);		
+		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
+		Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+		//Get the total number of registered users
+		int total = 0;
+		String query = "SELECT MAX(userId) FROM carpoolDAOUser";
+		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){			
+			ResultSet rs = stmt.executeQuery();			
+			if(rs.next()){									
+				total = rs.getInt(1);
+			}			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			DebugLog.d(e);
+		}
+		//Clean all the usrSRH
+		for(int i=0;i<total;i++){		
+			String fileName = (i+1)+"/"+(i+1)+"_sr.txt";
+			S3Object object = s3Client.getObject(new GetObjectRequest(bucketName,fileName)); 
+			String localfileName = CarpoolConfig.pathToSearchHistoryFolder + i + CarpoolConfig.searchHistoryFileSufix;
+			File file = new File(localfileName);
+			//Make sure the file is "empty" before we write to it;
+			try{
+				PrintWriter pwriter = new PrintWriter(localfileName);
+				pwriter.write("");
+				pwriter.close();
+
+				InputStream objectData = object.getObjectContent(); 
+				InputStream reader = new BufferedInputStream(objectData);      
+				OutputStream writer = new BufferedOutputStream(new FileOutputStream(file));
+
+				int read = -1;
+				while ( ( read = reader.read() ) != -1 ) {       
+					writer.write(read);
+				}
+				writer.flush();
+				writer.close();
+				reader.close();
+				objectData.close(); 			
+
+				//Get redis SRH of each user
+				String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+(i+1);
+				long upper =redis.llen(rediskey);
+				List<String> appendString = redis.lrange(rediskey, 0, upper-1);
+
+				//Write to file			
+				BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
+				for(int k=(int) (upper-1); k>=0; k--){
+					bw.write(appendString.get(k));   
+					bw.newLine();
+				}    
+				bw.flush();
+				bw.close();			
+
+				s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
+
+				//clean redis
+				redis.del(rediskey);
+			}catch(IOException ex){
+				DebugLog.d(ex);
+				return false;
+			}catch(AmazonS3Exception e1){
+				e1.printStackTrace();
+				DebugLog.d(e1);
+			}
+			catch(AmazonClientException e2){
+				e2.printStackTrace();
+				DebugLog.d(e2);
+			}
+			file.delete();
+			IdleConnectionReaper.shutdown();
+		}
+
+
+		return true;
+	} 
 	public static  ArrayList<SearchRepresentation> getUserSearchHistory(int userId){
 		ArrayList<SearchRepresentation> list = new ArrayList<SearchRepresentation>();
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
@@ -201,11 +276,11 @@ public class AwsMain {
 			}
 			bfreader.close();
 
-			String rediskey = CarpoolConfig.key_searchHistory+userId;
-			int upper = CarpoolConfig.redisSearchHistoryUpbound;
-			Jedis jedis = CarpoolDaoBasic.getJedis();
-			List<String> appendString = jedis.lrange(rediskey, 0, upper-1);
-			CarpoolDaoBasic.returnJedis(jedis);
+			String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
+			int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
+			Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+			List<String> appendString = redis.lrange(rediskey, 0, upper-1);
+
 			for(int i=0; i<appendString.size(); i++){
 				list.add(new SearchRepresentation(appendString.get(i)));
 			}
@@ -213,12 +288,11 @@ public class AwsMain {
 			object.close();			
 		} catch(AmazonServiceException e){			
 			if(e.getErrorCode().equals("NoSuchKey")){
-				String rediskey = CarpoolConfig.key_searchHistory+userId;
-				int upper = CarpoolConfig.redisSearchHistoryUpbound;
-				Jedis jedis = CarpoolDaoBasic.getJedis();
-				List<String> appendString = jedis.lrange(rediskey, 0, upper-1);
-				CarpoolDaoBasic.returnJedis(jedis);
-				
+				String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
+				int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
+				Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+				List<String> appendString = redis.lrange(rediskey, 0, upper-1);
+
 				for(int i=0; i<appendString.size(); i++){
 					list.add(new SearchRepresentation(appendString.get(i)));
 				}
@@ -268,8 +342,8 @@ public class AwsMain {
 	}
 
 	public static String uploadProfileImg(int userId){
-		String userProfile = CarpoolConfig.profileImgPrefix;
-		String imgSize = CarpoolConfig.imgSize_m;
+		String userProfile = carpool.constants.CarpoolConfig.profileImgPrefix;
+		String imgSize = carpool.constants.CarpoolConfig.imgSize_m;
 		String imgName = userProfile+imgSize+userId;
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 		AmazonS3Client s3Client = new AmazonS3Client(myCredentials);
@@ -299,16 +373,16 @@ public class AwsMain {
 
 	public static void storeSearchHistory(SearchRepresentation sr,int userId){
 
-		String rediskey = CarpoolConfig.key_searchHistory+userId;
-		int upper = CarpoolConfig.redisSearchHistoryUpbound;
+		String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
+		int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
 		String srString = sr.toSerializedString();
-		Jedis jedis = CarpoolDaoBasic.getJedis();
-		jedis.lpush(rediskey, srString);
+		Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+		redis.lpush(rediskey, srString);
 		//check
-		if(jedis.llen(rediskey)>=upper){
+		if(redis.llen(rediskey)>=upper){
 			AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);		
 			AmazonS3 s3Client = new AmazonS3Client(myCredentials);
-			List<String> appendString = jedis.lrange(rediskey, 0, upper-1);
+			List<String> appendString = redis.lrange(rediskey, 0, upper-1);
 			String fileName = userId+"/"+userId+"_sr.txt";
 			String localfileName = CarpoolConfig.pathToSearchHistoryFolder + userId + CarpoolConfig.searchHistoryFileSufix;
 			File file = new File(localfileName);
@@ -345,7 +419,7 @@ public class AwsMain {
 
 				s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
 				//clean redis
-				jedis.del(rediskey);
+				redis.del(rediskey);
 			} catch(AmazonServiceException e){	
 				if(e.getErrorCode().equals("NoSuchKey")){
 					//Write to file
@@ -360,7 +434,7 @@ public class AwsMain {
 
 						s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
 						//clean redis
-						jedis.del(rediskey);
+						redis.del(rediskey);
 					} catch (IOException e1){
 						DebugLog.d(e);
 					}
@@ -370,16 +444,10 @@ public class AwsMain {
 				}
 			} catch (IOException e){
 				DebugLog.d(e);
-			} finally{
-				CarpoolDaoBasic.returnJedis(jedis);
-				//Make sure deleting the temp file
-				file.delete();
-				IdleConnectionReaper.shutdown();	
 			}
-					
-		}
-		else{
-			CarpoolDaoBasic.returnJedis(jedis);
+			//Make sure deleting the temp file
+			file.delete();
+			IdleConnectionReaper.shutdown();			
 		}
 
 	}		

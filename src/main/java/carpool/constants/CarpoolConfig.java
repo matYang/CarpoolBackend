@@ -46,7 +46,6 @@ public class CarpoolConfig {
 	//redis related
 	public static final String key_emailActivationAuth = "ea";
 	public static final String key_forgetPasswordAuth = "fp";
-	public static final String key_searchHistory = "sr";;
 	public static final String redisSeperator = "+";
 	public static final String redisSeperatorRegex = "\\+";
 	public static final long session_updateThreshold = 259200000l;		//3 days
@@ -56,11 +55,12 @@ public class CarpoolConfig {
 	public static final int session_sequenceLength = 15;
 	public static final int emailActivation_sequenceLength = 15;
 	public static final int forgetPassword_sequenceLength = 30;
+    public static final String redisSearchHistoryPrefix = "redis/usrSRH-";;
     public static final int redisSearchHistoryUpbound = isOnLocal ? 6 : 50;
 	
 	
 	public static final String domainName = isOnLocal ? "localhost:8015" : "www.routea.ca";
-	public static final String sqlPass = isOnLocal ? "" : "badstudent";
+	public static final String sqlPass = isOnLocal ? null : "badstudent";
 	
 	
 	public static final boolean cookieEnabled = false;
