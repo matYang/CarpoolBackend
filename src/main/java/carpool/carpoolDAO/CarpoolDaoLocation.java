@@ -1,5 +1,6 @@
 package carpool.carpoolDAO;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,8 +32,16 @@ public class CarpoolDaoLocation {
 	}
 
 	public static Location addLocationToDatabases(Location location){
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		
 		String query = "INSERT INTO carpoolDAOLocation (province,city,region,pointName,pointAddress,lat,lng,match_Id)values(?,?,?,?,?,?,?,?)";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){			
+		try {
+			
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			
 			stmt.setString(1, location.getProvince());
 			stmt.setString(2, location.getCity());
 			stmt.setString(3, location.getRegion());
@@ -42,12 +51,21 @@ public class CarpoolDaoLocation {
 			stmt.setDouble(7, location.getLng());
 			stmt.setLong(8,location.getMatch());
 			stmt.executeUpdate();
-			ResultSet rs = stmt.getGeneratedKeys();
+			rs = stmt.getGeneratedKeys();
 			rs.next();
 			location.setId(rs.getInt(1));
-		}catch(SQLException e){
+		} catch(SQLException e){
 			DebugLog.d(e);
-		}
+		} finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+	            if (rs != null)  rs.close();  
+	            if (conn != null)  conn.close(); 
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+        } 
 
 		return location;
 	}

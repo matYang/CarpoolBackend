@@ -1,11 +1,14 @@
 package carpool.carpoolDAO;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
+
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.Parser;
@@ -36,18 +39,34 @@ public class CarpoolDaoUser {
     	long location_Id = usr.getLocationId();
     	
     	String query = "SELECT * FROM carpoolDAOUser WHERE name REGEXP ? AND gender LIKE ? AND match_Id LIKE ?;";
-    	try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+    	
+    	PreparedStatement stmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+    	try{
+    		conn = CarpoolDaoBasic.getSQLConnection();
+    		stmt = conn.prepareStatement(query);
+    		
 			stmt.setString(1, name);
 			stmt.setInt(2,Gender.code);
 			stmt.setLong(3, location_Id);
-			ResultSet rs = stmt.executeQuery();			
-				while(rs.next()){									
-					ulist.add(createUserByResultSet(rs));
-					}			
+			rs = stmt.executeQuery();			
+			while(rs.next()){									
+				ulist.add(createUserByResultSet(rs));
+			}			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DebugLog.d(e);
-		}
+		} finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+	            if (rs != null)  rs.close();  
+	            if (conn != null)  conn.close(); 
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+        } 
     	return ulist;
     	
     }
@@ -61,7 +80,15 @@ public class CarpoolDaoUser {
 	            "level,averageScore,totalTranscations,verifications,googleToken,facebookToken,twitterToken,"+
 				"paypalToken,id_docType,id_docNum,id_path,id_vehicleImgPath,accountId,accountPass,accountToken,accountValue,match_Id)"+
 	            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+		
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			
 			stmt.setString(1, SessionCrypto.encrypt(user.getPassword()));
 			stmt.setString(2, user.getName());
 			stmt.setString(3, user.getEmail());
@@ -97,18 +124,30 @@ public class CarpoolDaoUser {
 			stmt.setString(33, user.getAccountValue().toString());
 			stmt.setLong(34, user.getLocation().getMatch());
 			stmt.executeUpdate();
-			ResultSet rs = stmt.getGeneratedKeys();
+			rs = stmt.getGeneratedKeys();
 			rs.next();
 			user.setUserId(rs.getInt(1));
 		}catch(SQLException e){
 			if(e.getMessage().contains("Duplicate")){
 				throw new ValidationException("一部分账户内容与其他账户冲突");
 			}else{
+				e.printStackTrace();
 				DebugLog.d(e);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
+			DebugLog.d(e);
 			throw new ValidationException("创建用户失败，账户信息错误");
-		} 
+		} finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+	            if (rs != null)  rs.close();  
+	            if (conn != null)  conn.close(); 
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+        } 
 		return user;
 	}
 
@@ -118,7 +157,13 @@ public class CarpoolDaoUser {
 		String query3 = "DELETE from carpoolDAOMessage where ownerId = '" + id +"'";
 		String query4 = "DELETE from SocialList where mainUser = '" + id +"'";
 		String query5 = "DELETE FROM carpoolDAOTransaction WHERE provider_Id="+id+" OR customer_Id = "+id;
-		try(Statement stmt = CarpoolDaoBasic.getSQLConnection().createStatement()){
+		
+		Statement stmt = null;
+		Connection conn = null;
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.createStatement();
+					
 			stmt.addBatch(query);
 			stmt.addBatch(query2);
 			stmt.addBatch(query3);
@@ -127,9 +172,17 @@ public class CarpoolDaoUser {
 			if(stmt.executeBatch()[1]==0){
 				throw new UserNotFoundException();
 			}
-		}catch(SQLException e){
+		} catch(SQLException e){
 			DebugLog.d(e);
-		}
+		} finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+	            if (conn != null)  conn.close(); 
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+        } 
 	}
 
 	public static void UpdateUserInDatabase(User user) throws UserNotFoundException, ValidationException{

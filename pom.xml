@@ -72,7 +72,7 @@
 			<artifactId>maven-surefire-plugin</artifactId>
 			<version>2.12.4</version>
 			<configuration>
-				<skipTests>false</skipTests>
+				<skipTests>true</skipTests>
 			</configuration>
 		  </plugin>
 	</plugins>
@@ -137,6 +137,30 @@
 		<artifactId>mysql-connector-java</artifactId>
 		<version>5.1.23</version>
 	</dependency>
+	
+	<dependency>
+		<groupId>org.javassist</groupId>
+		<artifactId>javassist</artifactId>
+		<version>3.18.1-GA</version>
+	</dependency>
+
+	<dependency>
+    <groupId>com.zaxxer</groupId>
+    <artifactId>HikariCP</artifactId>
+    <version>1.2.4</version>
+    <exclusions>
+        <exclusion>
+            <artifactId>tools</artifactId>
+            <groupId>com.sun</groupId>
+        </exclusion>
+    </exclusions>
+	</dependency>
+	
+	<dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>slf4j-api</artifactId>
+	<version>1.7.5</version>
+</dependency>
 	
 	<!-- the followings are Restlet dependencies -->
 	<dependency>
