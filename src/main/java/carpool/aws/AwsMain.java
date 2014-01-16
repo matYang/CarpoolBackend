@@ -162,7 +162,7 @@ public class AwsMain {
 	public static boolean cleanUpAlltheUserSearchHistory(int userId){
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);		
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
-		Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+		Jedis redis = CarpoolDaoBasic.getJedis();
 
 		//Clean all the usrSRH
 
@@ -207,19 +207,22 @@ public class AwsMain {
 
 			//clean redis
 			redis.del(rediskey);
-		}catch(IOException ex){
+		} catch(IOException ex){
 			DebugLog.d(ex);
+			CarpoolDaoBasic.returnJedis(redis);
 			return false;
-		}catch(AmazonS3Exception e1){
+		} catch(AmazonS3Exception e1){
 			e1.printStackTrace();
 			DebugLog.d(e1);
+			CarpoolDaoBasic.returnJedis(redis);
 			return false;
-		}
-		catch(AmazonClientException e2){
+		} catch(AmazonClientException e2){
 			e2.printStackTrace();
 			DebugLog.d(e2);
+			CarpoolDaoBasic.returnJedis(redis);
 			return false;
-		}
+		} 
+		CarpoolDaoBasic.returnJedis(redis);
 		file.delete();
 		IdleConnectionReaper.shutdown();
 
@@ -229,7 +232,8 @@ public class AwsMain {
 	public static boolean cleanUpAlltheUsersSearchHistory(){
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);		
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
-		Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+		Jedis redis = CarpoolDaoBasic.getJedis();
+		
 		//Get the total number of registered users
 		int total = 0;
 		Set<String> keyset = redis.keys(CarpoolConfig.redisSearchHistoryPrefix + "*");
@@ -260,8 +264,8 @@ public class AwsMain {
 				objectData.close(); 			
 
 				//Get redis SRH of each user
-				String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+(i+1);
-				long upper =redis.llen(rediskey);
+				String rediskey = CarpoolConfig.redisSearchHistoryPrefix+(i+1);
+				long upper = redis.llen(rediskey);
 				List<String> appendString = redis.lrange(rediskey, 0, upper-1);
 
 				//Write to file			
@@ -279,21 +283,23 @@ public class AwsMain {
 				redis.del(rediskey);
 			}catch(IOException ex){
 				DebugLog.d(ex);
+				CarpoolDaoBasic.returnJedis(redis);
 				return false;
 			}catch(AmazonS3Exception e1){
 				e1.printStackTrace();
 				DebugLog.d(e1);
+				CarpoolDaoBasic.returnJedis(redis);
 				return false;
-			}
-			catch(AmazonClientException e2){
+			} catch(AmazonClientException e2){
 				e2.printStackTrace();
 				DebugLog.d(e2);
+				CarpoolDaoBasic.returnJedis(redis);
 				return false;
-			}
+			} 
 			file.delete();
 			IdleConnectionReaper.shutdown();
 		}
-
+		CarpoolDaoBasic.returnJedis(redis);
 
 		return true;
 	} 
@@ -339,11 +345,11 @@ public class AwsMain {
 			}
 			bfreader.close();
 
-			String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
-			int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
-			Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+			String rediskey = CarpoolConfig.redisSearchHistoryPrefix+userId;
+			int upper = CarpoolConfig.redisSearchHistoryUpbound;
+			Jedis redis = CarpoolDaoBasic.getJedis();
 			List<String> appendString = redis.lrange(rediskey, 0, upper-1);
-
+			CarpoolDaoBasic.returnJedis(redis);
 			for(int i=0; i<appendString.size(); i++){
 				list.add(new SearchRepresentation(appendString.get(i)));
 			}
@@ -351,11 +357,13 @@ public class AwsMain {
 			object.close();			
 		} catch(AmazonServiceException e){			
 			if(e.getErrorCode().equals("NoSuchKey")){
-				String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
-				int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
-				Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+				String rediskey = CarpoolConfig.redisSearchHistoryPrefix+userId;
+				int upper = CarpoolConfig.redisSearchHistoryUpbound;
+				
+				Jedis redis = CarpoolDaoBasic.getJedis();
 				List<String> appendString = redis.lrange(rediskey, 0, upper-1);
-
+				CarpoolDaoBasic.returnJedis(redis);
+				
 				for(int i=0; i<appendString.size(); i++){
 					list.add(new SearchRepresentation(appendString.get(i)));
 				}
@@ -436,10 +444,10 @@ public class AwsMain {
 
 	public static void storeSearchHistory(SearchRepresentation sr,int userId){
 
-		String rediskey = carpool.constants.CarpoolConfig.redisSearchHistoryPrefix+userId;
-		int upper = carpool.constants.CarpoolConfig.redisSearchHistoryUpbound;
+		String rediskey = CarpoolConfig.redisSearchHistoryPrefix+userId;
+		int upper = CarpoolConfig.redisSearchHistoryUpbound;
 		String srString = sr.toSerializedString();
-		Jedis redis = carpool.carpoolDAO.CarpoolDaoBasic.getJedis();
+		Jedis redis = CarpoolDaoBasic.getJedis();
 		redis.lpush(rediskey, srString);
 		//check
 		if(redis.llen(rediskey)>=upper){
@@ -507,10 +515,14 @@ public class AwsMain {
 				}
 			} catch (IOException e){
 				DebugLog.d(e);
+			} finally {
+				CarpoolDaoBasic.returnJedis(redis);
 			}
 			//Make sure deleting the temp file
 			file.delete();
 			IdleConnectionReaper.shutdown();			
+		} else{
+			CarpoolDaoBasic.returnJedis(redis);
 		}
 
 	}		
