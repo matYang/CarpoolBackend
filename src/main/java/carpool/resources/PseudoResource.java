@@ -295,10 +295,11 @@ public class PseudoResource extends ServerResource{
 		 }
 	}
 	
+	
 	private boolean validateCookieSession() throws PseudoException{
 		String sessionString = getSessionString();
 		if (sessionString == null || sessionString.length() == 0){
-			
+			return false;
 		}
 		int userId = getUserIdFromSessionString(sessionString);
 		if (userId == -1){
@@ -321,10 +322,10 @@ public class PseudoResource extends ServerResource{
 		return login;
 	}
 	
+	
 	private CookieSetting openSession(int userId) throws PseudoException{
         String encryptedString = generateSesstionString(userId);
         CookieSetting newCookieSetting;
-        
         try{
         	 newCookieSetting = new CookieSetting(0, CarpoolConfig.cookie_userSession, encryptedString);
         	 newCookieSetting.setMaxAge(CarpoolConfig.cookie_maxAge);
@@ -335,6 +336,7 @@ public class PseudoResource extends ServerResource{
         
        return newCookieSetting;
 	}
+	
 	
 	private boolean closeSession() throws PseudoException{
 		try{
@@ -350,8 +352,6 @@ public class PseudoResource extends ServerResource{
 			DebugLog.d(e);
 			throw new SessionEncodingException();
 		}
-		
 	}
 	
-
 }

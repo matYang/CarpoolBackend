@@ -770,19 +770,13 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     }
 	@Override
 	public boolean validate() throws ValidationException{
-		// TODO 
-		
-		
-		return true;
+		//TODO remove true
+		return true || Validator.isEmailFormatValid(this.email) && Validator.isNameFormatValid(this.name) && Validator.isPasswordFormatValid(this.password) && Validator.isPhoneFormatValid(this.phone) && Validator.isQqFormatValid(this.qq);
 	}
-
 
 	public String getPassword() {
 		return  this.password;
 	}
 
-
-	
-	
 }
 
