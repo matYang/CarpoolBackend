@@ -150,13 +150,15 @@ public class AwsMain {
 
 			objectData.close();	
 			IdleConnectionReaper.shutdown();
-		}catch(AmazonServiceException e){
+		} catch(AmazonServiceException e){
 			e.printStackTrace();
 			DebugLog.d(e);
-		}catch(IOException e2){
+		} catch(IOException e2){
 			e2.printStackTrace();
 			DebugLog.d(e2);
-		}				
+		} finally{
+			file.delete();
+		}
 	}
 
 	public static boolean cleanUpAlltheUserSearchHistory(int userId){
@@ -210,16 +212,19 @@ public class AwsMain {
 		} catch(IOException ex){
 			DebugLog.d(ex);
 			CarpoolDaoBasic.returnJedis(redis);
+			file.delete();
 			return false;
 		} catch(AmazonS3Exception e1){
 			e1.printStackTrace();
 			DebugLog.d(e1);
 			CarpoolDaoBasic.returnJedis(redis);
+			file.delete();
 			return false;
 		} catch(AmazonClientException e2){
 			e2.printStackTrace();
 			DebugLog.d(e2);
 			CarpoolDaoBasic.returnJedis(redis);
+			file.delete();
 			return false;
 		} 
 		CarpoolDaoBasic.returnJedis(redis);
@@ -284,16 +289,19 @@ public class AwsMain {
 			}catch(IOException ex){
 				DebugLog.d(ex);
 				CarpoolDaoBasic.returnJedis(redis);
+				file.delete();
 				return false;
 			}catch(AmazonS3Exception e1){
 				e1.printStackTrace();
 				DebugLog.d(e1);
 				CarpoolDaoBasic.returnJedis(redis);
+				file.delete();
 				return false;
 			} catch(AmazonClientException e2){
 				e2.printStackTrace();
 				DebugLog.d(e2);
 				CarpoolDaoBasic.returnJedis(redis);
+				file.delete();
 				return false;
 			} 
 			file.delete();
@@ -380,9 +388,10 @@ public class AwsMain {
 			}
 		} catch(IOException e){
 			DebugLog.d(e);
+		} finally{
+			//Make sure deleting the temp file
+			file.delete();	
 		}
-		//Make sure deleting the temp file
-		file.delete();	
 		IdleConnectionReaper.shutdown();
 		return list;
 	}
@@ -517,9 +526,9 @@ public class AwsMain {
 				DebugLog.d(e);
 			} finally {
 				CarpoolDaoBasic.returnJedis(redis);
+				//Make sure deleting the temp file
+				file.delete();
 			}
-			//Make sure deleting the temp file
-			file.delete();
 			IdleConnectionReaper.shutdown();			
 		} else{
 			CarpoolDaoBasic.returnJedis(redis);
