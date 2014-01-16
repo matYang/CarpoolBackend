@@ -57,7 +57,7 @@ public class CarpoolDaoTransaction {
 
 		PreparedStatement stmt = null;
 		Connection conn = null;
-
+		ResultSet rs = null;
 		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 		try{	
 			conn = CarpoolDaoBasic.getSQLConnection();
@@ -94,13 +94,22 @@ public class CarpoolDaoTransaction {
 			stmt.setInt(18,transaction.getProviderEvaluation());
 			stmt.setInt(19, direction.code);
 			stmt.executeUpdate();	 
-			ResultSet rs = stmt.getGeneratedKeys();
+			rs = stmt.getGeneratedKeys();
 			rs.next();
 			transaction.setTransactionId(rs.getInt(1));
 		}catch(SQLException e){
 			e.printStackTrace();
 			DebugLog.d(e);
-		}
+		}finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+				if (conn != null)  conn.close(); 
+				if (rs != null) rs.close();
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+		} 
 		return transaction;
 
 	}
@@ -175,7 +184,15 @@ public class CarpoolDaoTransaction {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DebugLog.d(e);
-		}
+		}finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+				if (conn != null)  conn.close(); 				
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+		} 
 	}	
 
 	public static Transaction getTransactionById(int transaction_id) throws TransactionNotFoundException, UserNotFoundException, MessageNotFoundException, LocationNotFoundException{
@@ -184,14 +201,14 @@ public class CarpoolDaoTransaction {
 
 		PreparedStatement stmt = null;
 		Connection conn = null;
-
+		ResultSet rs = null;
 		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 
 			stmt.setInt(1, transaction_id);
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			if(rs.next()){
 				transaction = createTransactionByResultSet(rs,"ForOneTransaction");
 			}else{
@@ -200,7 +217,16 @@ public class CarpoolDaoTransaction {
 		}catch(SQLException e){
 			e.printStackTrace();
 			DebugLog.d(e);
-		}
+		}finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+				if (conn != null)  conn.close(); 
+				if (rs != null) rs.close();
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+		} 
 		return transaction;
 	}
 
@@ -230,13 +256,13 @@ public class CarpoolDaoTransaction {
 
 		PreparedStatement stmt = null;
 		Connection conn = null;
-
+		ResultSet rs = null;
 		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){			
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while(rs.next()){
 				ilist = addIds(ilist,rs.getInt("provider_Id"));	
 				ilist = addIds(ilist,rs.getInt("customer_Id"));
@@ -247,7 +273,16 @@ public class CarpoolDaoTransaction {
 		}catch(SQLException e){
 			e.printStackTrace();
 			DebugLog.d(e);
-		}
+		}finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+				if (conn != null)  conn.close(); 
+				if (rs != null) rs.close();
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+		} 
 		return tlist;
 	}
 
@@ -274,7 +309,15 @@ public class CarpoolDaoTransaction {
 		}catch(SQLException e){
 			e.printStackTrace();
 			DebugLog.d(e);
-		}
+		}finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+				if (conn != null)  conn.close(); 				
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+		} 
 	}
 
 	public static ArrayList<Transaction> getAllTransactionByUserId(int userId) throws UserNotFoundException, MessageNotFoundException, LocationNotFoundException{	  
@@ -285,7 +328,7 @@ public class CarpoolDaoTransaction {
 
 		PreparedStatement stmt = null;
 		Connection conn = null;
-
+		ResultSet rs = null;
 		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){		
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
@@ -293,7 +336,7 @@ public class CarpoolDaoTransaction {
 
 			stmt.setInt(1, userId);
 			stmt.setInt(2, userId);
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while(rs.next()){
 				ilist = addIds(ilist,rs.getInt("provider_Id"));	
 				ilist = addIds(ilist,rs.getInt("customer_Id"));
@@ -304,7 +347,16 @@ public class CarpoolDaoTransaction {
 		}catch(SQLException e){
 			e.printStackTrace();
 			DebugLog.d(e);
-		}
+		}finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+				if (conn != null)  conn.close(); 
+				if (rs != null) rs.close();
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+		} 
 		return tlist;	  
 	}
 
@@ -316,14 +368,14 @@ public class CarpoolDaoTransaction {
 
 		PreparedStatement stmt = null;
 		Connection conn = null;
-
+		ResultSet rs = null;
 		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){		
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 
 			stmt.setInt(1, msgId);			
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while(rs.next()){
 				ilist = addIds(ilist,rs.getInt("provider_Id"));	
 				ilist = addIds(ilist,rs.getInt("customer_Id"));
@@ -334,7 +386,16 @@ public class CarpoolDaoTransaction {
 		}catch(SQLException e){
 			e.printStackTrace();
 			DebugLog.d(e);
-		}
+		}finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+				if (conn != null)  conn.close(); 
+				if (rs != null) rs.close();
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+		} 
 		return tlist;
 	}
 
@@ -372,7 +433,7 @@ public class CarpoolDaoTransaction {
 
 		PreparedStatement stmt = null;
 		Connection conn = null;
-
+		ResultSet rs = null;
 		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
@@ -381,7 +442,7 @@ public class CarpoolDaoTransaction {
 			for(int i=0;i<list.size();i++){
 				stmt.setInt(i+1, list.get(i));
 			}
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			while(rs.next()){
 				ilist = addIds(ilist,rs.getInt("ownerId"));
 				mlist.add(CarpoolDaoMessage.createMessagesByResultSetList(rs));
@@ -395,7 +456,16 @@ public class CarpoolDaoTransaction {
 
 		}catch(SQLException e){
 			DebugLog.d(e);
-		}
+		}finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+				if (conn != null)  conn.close(); 
+				if (rs != null) rs.close();
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+		} 
 
 		return map;
 	}
@@ -417,7 +487,7 @@ public class CarpoolDaoTransaction {
 
 		PreparedStatement stmt = null;
 		Connection conn = null;
-
+		ResultSet rs = null;
 		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
@@ -426,7 +496,7 @@ public class CarpoolDaoTransaction {
 			for(int i=0;i<list.size();i++){
 				stmt.setInt(i+1, list.get(i));
 			}
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 			int ind = 0;
 			while(rs.next() && ind<list.size()){
 				map.put(rs.getInt("userId"), CarpoolDaoUser.createUserByResultSet(rs));
@@ -434,7 +504,16 @@ public class CarpoolDaoTransaction {
 			}
 		}catch(SQLException e){
 			DebugLog.d(e);
-		}
+		}finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+				if (conn != null)  conn.close(); 
+				if (rs != null) rs.close();
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+		} 
 
 		return map;
 	}	
