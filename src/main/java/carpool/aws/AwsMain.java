@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -100,23 +101,33 @@ public class AwsMain {
 
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
-
+		FileOutputStream fstream = null;
+		
 		try{
 
 			S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, imgkey));
 			InputStream objectData = object.getObjectContent();	
-			IOUtils.copy(objectData, new FileOutputStream(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png"));
+			fstream = new FileOutputStream(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png");
+			IOUtils.copy(objectData, fstream);
 			objectData.close();
 			IdleConnectionReaper.shutdown();
-		}catch(AmazonS3Exception e){
+		} catch(AmazonS3Exception e){
 			e.printStackTrace();
 			DebugLog.d(e);
-		}catch(AmazonServiceException e){
+		} catch(AmazonServiceException e){
 			e.printStackTrace();
 			DebugLog.d(e);
-		}catch (IOException e) {			
+		} catch (IOException e) {			
 			e.printStackTrace();
 			DebugLog.d(e);
+		} finally {
+			if (fstream != null){
+				try {
+					fstream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 
 	}
@@ -311,6 +322,8 @@ public class AwsMain {
 
 		return true;
 	} 
+	
+	
 	public static  ArrayList<SearchRepresentation> getUserSearchHistory(int userId){
 		ArrayList<SearchRepresentation> list = new ArrayList<SearchRepresentation>();
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
@@ -395,61 +408,42 @@ public class AwsMain {
 		IdleConnectionReaper.shutdown();
 		return list;
 	}
-
+	
+	
 	public static String uploadProfileImg(int userId, File file, String imgName){
+		return uploadProfileImg(userId, file, imgName, true);
+	}
+	
+	
+	//the boolean is used for testing so that the sample is not deleted every time
+	public static String uploadProfileImg(int userId, File file, String imgName, boolean shouldDelete){
 
 		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 		AmazonS3Client s3Client = new AmazonS3Client(myCredentials);		
 
-		java.util.Date expiration = new java.util.Date();
+		Date expiration = new Date();
 		long msec = expiration.getTime();
 		imgkey = userId+"/"+imgName+"-"+msec+".png";
 		URL s = null;
 		try{
-			s3Client.putObject(new PutObjectRequest(bucketName,imgkey,new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png")).withCannedAcl(CannedAccessControlList.PublicRead));
+			s3Client.putObject(new PutObjectRequest(bucketName,imgkey,file).withCannedAcl(CannedAccessControlList.PublicRead));
 			s = s3Client.getUrl(bucketName, imgkey);			
-		}catch(AmazonS3Exception e1){
+		} catch(AmazonS3Exception e1){
 			e1.printStackTrace();
 			DebugLog.d(e1);
-		}
-		catch(AmazonClientException e2){
+		} catch(AmazonClientException e2){
 			e2.printStackTrace();
 			DebugLog.d(e2);
+		} finally{
+			if (shouldDelete){
+				file.delete();
+			}
 		}
 		IdleConnectionReaper.shutdown();
 		return  (String) (s.equals(null)? s : s.toString());	
 
 	}
 
-	public static String uploadProfileImg(int userId){
-		String userProfile = carpool.constants.CarpoolConfig.profileImgPrefix;
-		String imgSize = carpool.constants.CarpoolConfig.imgSize_m;
-		String imgName = userProfile+imgSize+userId;
-		AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
-		AmazonS3Client s3Client = new AmazonS3Client(myCredentials);
-
-		java.util.Date expiration = new java.util.Date();
-		long msec = expiration.getTime();
-		imgkey = userId+"/"+imgName+"-"+msec+".png";
-
-		URL s = null;
-
-		try{
-			s3Client.putObject(new PutObjectRequest(bucketName,imgkey,new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png")).withCannedAcl(CannedAccessControlList.PublicRead));
-			s = s3Client.getUrl(bucketName, imgkey);
-			//System.out.println(s.toString());
-			return s.toString();
-		}catch(AmazonS3Exception e1){
-			e1.printStackTrace();
-			DebugLog.d(e1);
-		}
-		catch(AmazonClientException e2){
-			e2.printStackTrace();
-			DebugLog.d(e2);
-		}
-		IdleConnectionReaper.shutdown();
-		return  (String) (s.equals(null)? s : s.toString());
-	}
 
 	public static void storeSearchHistory(SearchRepresentation sr,int userId){
 

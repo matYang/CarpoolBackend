@@ -27,7 +27,7 @@ public class StoreSearchHistoryTask implements PseudoAsyncTask {
 	public boolean storeSearchHistoryTask(){
 		this.lock = new Lock();
 		BufferedWriter bw = null;
-        if(userId !=0 && sr !=null){
+        if(userId != 0 && sr !=null){
         try {
 			this.lock.lock();
 		} catch (InterruptedException ie) {			

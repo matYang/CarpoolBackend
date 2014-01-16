@@ -93,7 +93,7 @@ public class ImgResource extends PseudoResource{
 	public Representation postImage(Representation entity){
 		JSONObject jsonObject = new JSONObject();
 		int id = -1;
-			
+		File imgFile = null;	
 		try {
 			
 			this.checkFileEntity(entity);
@@ -121,16 +121,17 @@ public class ImgResource extends PseudoResource{
             bufferedImage = Scalr.resize(bufferedImage, Scalr.Method.SPEED, Scalr.Mode.FIT_TO_WIDTH, 128, 128, Scalr.OP_ANTIALIAS);
             DebugLog.d("img rescale completed into buffer");
             
-    		String userProfile = carpool.constants.CarpoolConfig.profileImgPrefix;
-    		String imgSize = carpool.constants.CarpoolConfig.imgSize_m;
+    		String userProfile = CarpoolConfig.profileImgPrefix;
+    		String imgSize = CarpoolConfig.imgSize_m;
     		String imgName = userProfile+imgSize+id;
     		DebugLog.d("creating new file on EC2");
-            File imgFile = new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png");
+            imgFile = new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png");
             DebugLog.d("dumping img into buffer");
             
             ImageIO.write(bufferedImage, "png", imgFile);
             DebugLog.d("img file write completed, starting to upload to EC2");
             
+            //warning: can only call this upload once, as it will delete the image file before it exits
             String path = FileService.uploadUserProfileImg(id, imgFile, imgName);
             DebugLog.d("img uploaded, retriving user");
             User user = UserDaoService.getUserById(id);

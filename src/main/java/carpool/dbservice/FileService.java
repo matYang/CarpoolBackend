@@ -9,7 +9,7 @@ import carpool.aws.*;
 
 public class FileService {
 
-	public static void storeSearchRepresentation(int userId, SearchRepresentation sr) throws IOException{
+	public static void storeSearchRepresentation(SearchRepresentation sr, int userId) throws IOException{
 		AwsMain.storeSearchHistory(sr, userId);
 	}
 

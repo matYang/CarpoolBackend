@@ -2,6 +2,7 @@ package AwsService;
 
 import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import carpool.aws.AwsMain;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoUser;
+import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.gender;
@@ -61,8 +63,12 @@ public class AwsS3Test {
 	@Test
 	public void testUploadImg() throws IOException{
 		CarpoolDaoBasic.clearBothDatabase();
-		int userId = 1;			
-		AwsMain.uploadProfileImg(userId);
+		int userId = 1;
+		String userProfile = CarpoolConfig.profileImgPrefix;
+		String imgSize = CarpoolConfig.imgSize_m;
+		String imgName = userProfile+imgSize+userId;
+		File file = new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png");
+		AwsMain.uploadProfileImg(userId, file, imgName, false);
 	}
 
 	@Test
