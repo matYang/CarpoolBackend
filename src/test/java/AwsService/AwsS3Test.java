@@ -43,22 +43,7 @@ public class AwsS3Test {
 		//Check AWS management console
 	}
 
-	@Test
-	public void testGetFile(){
-		CarpoolDaoBasic.clearBothDatabase();
-		int userId=1;					
-		AwsMain.getFileObject(userId);		 
 
-	}
-
-	//Ignore this test which has already be tested
-	//@Test
-	public void testGetImg(){
-		CarpoolDaoBasic.clearBothDatabase();
-		int userId=1;			
-		AwsMain.getImgObject(userId);		
-
-	}
 
 	@Test
 	public void testUploadImg() throws IOException{
@@ -394,7 +379,7 @@ public class AwsS3Test {
 		AwsMain.storeSearchHistory(SR14, userId2);//user2
 		int preuser = AwsMain.getUserSearchHistory(userId).size();
 		int preuser2 = AwsMain.getUserSearchHistory(userId2).size();
-		AwsMain.cleanUpAlltheUsersSearchHistory();
+		AwsMain.migrateAlltheUsersSearchHistory();
 		//Test for user
 		String rediskey = CarpoolConfig.redisSearchHistoryPrefix+userId;		
 		int storage = redis.lrange(rediskey, 0,redis.llen(rediskey)-1).size();

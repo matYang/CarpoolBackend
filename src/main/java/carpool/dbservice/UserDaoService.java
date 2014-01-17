@@ -40,7 +40,7 @@ public class UserDaoService{
 	public static User createNewUser(User newUser) throws ValidationException{
 		User user = CarpoolDaoUser.addUserToDatabase(newUser);
 		//No exception, then create the userSHfile on AWS
-		AwsMain.createUserFile(user.getUserId());
+		FileService.initializeFileForUser(user.getUserId());
 		
 		return user;
 	}

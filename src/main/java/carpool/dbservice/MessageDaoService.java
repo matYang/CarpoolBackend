@@ -50,9 +50,8 @@ public class MessageDaoService{
 		searchResult = CarpoolDaoMessage.searchMessage(userSearch);
 		if (isLogin){
 			UserDaoService.updateUserSearch(userSearch, userId);
-			//StoreSearchHistoryTask ssht = new StoreSearchHistoryTask(userSearch, userId);
-			//ExecutorProvider.executeRelay(ssht);
-			AwsMain.storeSearchHistory(userSearch, userId);
+			StoreSearchHistoryTask ssht = new StoreSearchHistoryTask(userSearch, userId);
+			ExecutorProvider.executeRelay(ssht);
 		}
 		return searchResult;
 	}
