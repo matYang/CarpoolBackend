@@ -118,8 +118,7 @@ public class CarpoolConfig {
 	public static final int category_DM = 0;
 	public static final String applicationPrefix = "/api";
 	public static final String versionPrefix = "/v1.0";
-	public static final int maxEmailLength = 50;
-	public static final int maxQqLength = 15;
+	public static final int maxEmailLength = 50;	
 	public static final int maxUserNameLength = 18;
 	public static final int minPasswordLength = 6;
 	public static final int maxPasswordLength = 30;
