@@ -6,6 +6,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoUser;
+import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
 import carpool.exception.PseudoException;
@@ -37,7 +38,7 @@ public class AuthDaoService {
 			if(!user.isPasswordCorrect(password)){
 				throw new ValidationException("您输入的密码不正确");
 			}
-			user.setLastLogin(Calendar.getInstance());
+			user.setLastLogin(DateUtility.getCurTimeInstance());
 			UserDaoService.updateUser(user);
 		} catch (UserNotFoundException e) {
 			throw new ValidationException("您输入的邮箱不存在");

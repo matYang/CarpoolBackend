@@ -112,8 +112,8 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		this.arrival_seatsBooked = 0;
 
 		this.state = Constants.messageState.open;
-		this.creationTime = Calendar.getInstance();
-		this.editTime = Calendar.getInstance();
+		this.creationTime = DateUtility.getCurTimeInstance();
+		this.editTime = DateUtility.getCurTimeInstance();
 		this.historyDeleted = false;
 	}
 
@@ -559,8 +559,15 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	}
 
 	public boolean isOpen(){
-		//TODO 
-		
+		Calendar curTimeInstance = DateUtility.getCurTimeInstance();
+		if (this.state == messageState.open){
+			if (DateUtility.compareday(curTimeInstance, this.departure_time) < 0){
+				return true;
+			}
+			else if (DateUtility.compareday(curTimeInstance, this.departure_time) == 0 && this.departure_timeSlot.isHourAfter(curTimeInstance)){
+				return true;
+			}
+		}
 		return false;
 	}
 

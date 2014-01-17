@@ -7,18 +7,15 @@ import java.util.Date;
 import carpool.cleanRoutineTask.MessageCleaner;
 import carpool.cleanRoutineTask.RedisCleaner;
 import carpool.cleanRoutineTask.TransactionCleaner;
+import carpool.common.DateUtility;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.model.*;
 
 
 public class Clean{
 
-	//public static final String timeZoneId = "asia/shanghai";
-	public static final String timeZoneId = "America/New_York";
-	public static final String fileName = "messageHistory.txt";
-
 	public static Calendar dateToCalendar(Date date){ 
-		Calendar calendar = Calendar.getInstance();
+		Calendar calendar = DateUtility.getCurTimeInstance();
 		calendar.setTime(date);
 		return calendar;
 	}

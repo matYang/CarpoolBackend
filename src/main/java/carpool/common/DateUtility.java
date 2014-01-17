@@ -9,6 +9,20 @@ import java.util.TimeZone;
 import carpool.constants.CarpoolConfig;
 
 public class DateUtility {
+	
+	public static long milisecInDay = 86400000l;
+	public static long milisecInHour = 3600000l;
+	
+	
+	public static Calendar getCurTimeInstance(){
+		return Calendar.getInstance(TimeZone.getTimeZone(CarpoolConfig.timeZoneIdNY));
+	}
+	
+	public static long getCurTime(){
+		Calendar c = getCurTimeInstance();
+		return c.getTimeInMillis();
+	}
+	
 
 	public static String toSQLDateTime(Calendar c){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -16,7 +30,7 @@ public class DateUtility {
 	}
 
 	public static Calendar DateToCalendar(Date date){ 
-		Calendar cal = Calendar.getInstance();
+		Calendar cal = getCurTimeInstance();
 		cal.setTime(date);
 		return cal;
 	}
@@ -33,7 +47,7 @@ public class DateUtility {
 
 
 	public static Calendar castFromAPIFormat(String dateString){
-		Calendar cal = Calendar.getInstance();
+		Calendar cal = getCurTimeInstance();
 		try {
 			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			cal.setTime(sdf1.parse(dateString));
@@ -47,21 +61,15 @@ public class DateUtility {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return sdf.format(c.getTime());
 	}
-	
-	public static long getCurTime(){
-		Calendar c = Calendar.getInstance();
-		return c.getTimeInMillis();
-	}
+
 	
 	public static String getTimeStamp(){
 		return getCurTime() +"";
 	}
+	
 
-	public static Calendar ConvertToStandard(Calendar old){
-		//System.out.println("old time: "+DateUtility.castToAPIFormat(old));
-		
-		Calendar Standard = Calendar.getInstance(TimeZone.getTimeZone(CarpoolConfig.standardTimeZone));
-		//System.out.println("standard time: "+DateUtility.castToAPIFormat(Standard));
+	public static Calendar convertToStandard(Calendar old){
+		Calendar Standard = getCurTimeInstance();
 		Calendar oldr = Calendar.getInstance(TimeZone.getTimeZone(old.getTimeZone().getID()));
 		
 		int hdif = Standard.get(Calendar.HOUR_OF_DAY) - oldr.get(Calendar.HOUR_OF_DAY);
@@ -71,8 +79,24 @@ public class DateUtility {
 		old.add(Calendar.MINUTE,mdif);
 		old.add(Calendar.HOUR_OF_DAY,hdif);		
 	
-		
 		return old;
+	}
+
+	
+	public static int compareday(Calendar cal1, Calendar cal2){
+		if (cal1.get(Calendar.YEAR) < cal2.get(Calendar.YEAR)){
+			return -1;
+		}
+		else if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && cal1.get(Calendar.DAY_OF_YEAR) < cal2.get(Calendar.DAY_OF_YEAR)){
+			return -1;
+		}
+		else if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)){
+			return 0;
+		}
+		else{
+			return 1;
+		}
+		
 	}
 
 }

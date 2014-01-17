@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.junit.Test;
 
 import carpool.carpoolDAO.CarpoolDaoBasic;
+import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.gender;
@@ -26,8 +27,8 @@ public class jsonTest {
 	public void test() {
 		CarpoolDaoBasic.clearBothDatabase();
 		//Date
-		Calendar dt = Calendar.getInstance();		
-		Calendar at = Calendar.getInstance();			
+		Calendar dt = DateUtility.getCurTimeInstance();		
+		Calendar at = DateUtility.getCurTimeInstance();			
 		//Location
 		long departure_Id = 1;
 		long arrival_Id = 2;

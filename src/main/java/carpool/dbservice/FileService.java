@@ -17,9 +17,6 @@ public class FileService {
 		AwsMain.storeSearchHistory(sr, userId);
 	}
 
-	public static ArrayList<SearchRepresentation> getUserSearchHistoryFromS3(int userId) throws IOException{
-		return AwsMain.getUserSearchHistory(userId);
-	}
 
 	public static String uploadUserProfileImg(int userId, File file, String baseFileName){
 		return AwsMain.uploadProfileImg(userId, file, baseFileName);

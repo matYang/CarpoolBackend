@@ -90,7 +90,7 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		this.type = type;
 		this.totalPrice = 0;
 		this.state = transactionState.init;
-		this.creationTime = Calendar.getInstance();
+		this.creationTime = DateUtility.getCurTimeInstance();
 		this.historyDeleted = false;
 	}
 	

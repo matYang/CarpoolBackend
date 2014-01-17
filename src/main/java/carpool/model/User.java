@@ -117,10 +117,10 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.phone = "";
 		this.qq = "";
 	    this.gender = g;
-	    this.birthday = Calendar.getInstance();
+	    this.birthday = DateUtility.getCurTimeInstance();
 	    this.imgPath = "res/personal/default-avatar.jpg";
-	    this.lastLogin = Calendar.getInstance();
-	    this.creationTime = Calendar.getInstance();
+	    this.lastLogin = DateUtility.getCurTimeInstance();
+	    this.creationTime = DateUtility.getCurTimeInstance();
 	    
 	    this.historyList = new ArrayList<Message>();
 	    this.watchList = new ArrayList<Message>();
@@ -270,7 +270,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 
 
 	public int getAge() {
-		Calendar c_age = Calendar.getInstance();
+		Calendar c_age = DateUtility.getCurTimeInstance();
 		return c_age.get(Calendar.YEAR) - this.birthday.get(Calendar.YEAR);
 	}
 

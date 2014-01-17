@@ -52,7 +52,7 @@ public class Notification implements PseudoModel, PseudoValidatable, Comparable<
 		this.transaction = null;
 		
 		this.state = NotificationState.unread;
-		this.creationTime = Calendar.getInstance();
+		this.creationTime = DateUtility.getCurTimeInstance();
 		this.historyDeleted = false;
 	}
 	
@@ -71,7 +71,7 @@ public class Notification implements PseudoModel, PseudoValidatable, Comparable<
 		this.transaction = null;
 		
 		this.state = NotificationState.unread;
-		this.creationTime = Calendar.getInstance();
+		this.creationTime = DateUtility.getCurTimeInstance();
 		this.historyDeleted = false;
 	}
 	

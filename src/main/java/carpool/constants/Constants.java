@@ -1,5 +1,9 @@
 package carpool.constants;
 
+import java.util.Calendar;
+
+import carpool.common.DateUtility;
+
 
 
 public class Constants {
@@ -143,7 +147,7 @@ public class Constants {
     }
     
     public static enum DayTimeSlot{
-    	all(0), morning(1), afternoon(2), night(3), specific(4);
+    	n0(0), n1(1), n2(2), n3(3), n4(4), n5(5), n6(6), n7(7), n8(8), n9(9), n10(10), n11(11), n12(12), n13(13), n14(14), n15(15), n16(16), n17(17), n18(18), n19(19), n20(20), n21(21), n22(22), n23(23);
     	public int code;
     	DayTimeSlot(int code){
             this.code = code;
@@ -151,6 +155,10 @@ public class Constants {
         private final static DayTimeSlot[] map = DayTimeSlot.values();
         public static DayTimeSlot fromInt(int n){
             return map[n];
+        }
+        public boolean isHourAfter(Calendar cal){
+        	long givenHourTime = (cal.getTimeInMillis() % DateUtility.milisecInDay)/DateUtility.milisecInHour;
+        	return this.code > givenHourTime;
         }
     }
     

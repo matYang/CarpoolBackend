@@ -121,8 +121,8 @@ public class CarpoolTransactionTest {
 			e.printStackTrace();
 		}
 
-		Calendar dt = Calendar.getInstance();
-		Calendar at = Calendar.getInstance();
+		Calendar dt = DateUtility.getCurTimeInstance();
+		Calendar at = DateUtility.getCurTimeInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
@@ -263,8 +263,8 @@ public class CarpoolTransactionTest {
 			e.printStackTrace();
 		}
 
-		Calendar dt = Calendar.getInstance();
-		Calendar at = Calendar.getInstance();
+		Calendar dt = DateUtility.getCurTimeInstance();
+		Calendar at = DateUtility.getCurTimeInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
@@ -347,19 +347,19 @@ public class CarpoolTransactionTest {
 			e.printStackTrace();
 		}
 
-		Calendar dt = Calendar.getInstance();		
+		Calendar dt = DateUtility.getCurTimeInstance();		
 		dt.set(Calendar.HOUR_OF_DAY, dt.get(Calendar.HOUR_OF_DAY)-1);
-		Calendar at = Calendar.getInstance();
+		Calendar at = DateUtility.getCurTimeInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);
 
-		Calendar dt2 = Calendar.getInstance();
+		Calendar dt2 = DateUtility.getCurTimeInstance();
 		dt2.add(Calendar.DAY_OF_YEAR, -1);
-		Calendar at2 = Calendar.getInstance();
+		Calendar at2 = DateUtility.getCurTimeInstance();
 		at2.add(Calendar.DAY_OF_YEAR, 0);
 
-		Calendar dt3 = Calendar.getInstance();
+		Calendar dt3 = DateUtility.getCurTimeInstance();
 		dt3.add(Calendar.DAY_OF_YEAR, 1);
-		Calendar at3 = Calendar.getInstance();
+		Calendar at3 = DateUtility.getCurTimeInstance();
 		at3.add(Calendar.DAY_OF_YEAR, 3);
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();

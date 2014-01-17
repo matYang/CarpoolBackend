@@ -43,7 +43,7 @@ public class SearchRepresentation implements PseudoRepresentation{
 		this.targetType = targetType;
 		this.departureTimeSlot = departureTimeSlot;
 		this.arrivalTimeSlot = arrivalTimeSlot;
-		this.timeStamp = DateUtility.ConvertToStandard(Calendar.getInstance());
+		this.timeStamp = DateUtility.convertToStandard(DateUtility.getCurTimeInstance());
 	}
 
 	//separated by "+"

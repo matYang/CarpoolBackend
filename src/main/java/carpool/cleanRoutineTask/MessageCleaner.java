@@ -21,7 +21,7 @@ public class MessageCleaner extends CarpoolDaoMessage {
 	
 	public static void Clean() throws LocationNotFoundException{
 		
-    Calendar currentDate = Calendar.getInstance();
+    Calendar currentDate = DateUtility.getCurTimeInstance();
     String ct=DateUtility.toSQLDateTime(currentDate);
     
 	String query = "SELECT * from carpoolDAOMessage WHERE((isRoundTrip LIKE ? AND arrival_Time < ?) OR(isRoundTrip LIKE ? AND departure_Time < ?))AND messageState LIKE ?;";

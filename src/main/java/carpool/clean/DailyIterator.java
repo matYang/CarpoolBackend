@@ -3,13 +3,15 @@ package carpool.clean;
 import java.util.Calendar;
 import java.util.Date;
 
+import carpool.common.DateUtility;
+
 /**
  * A DailyIterator class returns a sequence of dates on subsequent days
  * representing the same time each day.
  */
 public class DailyIterator implements ScheduleIterator {
     private final int hourOfDay, minute, second;
-    private final Calendar calendar = Calendar.getInstance();
+    private final Calendar calendar = DateUtility.getCurTimeInstance();
 
     public DailyIterator(int hourOfDay, int minute, int second) {
         this(hourOfDay, minute, second, new Date());

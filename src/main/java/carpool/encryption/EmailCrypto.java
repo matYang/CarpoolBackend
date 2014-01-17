@@ -24,22 +24,20 @@ public class EmailCrypto {
 	
     private static final StandardPBEStringEncryptor emailEncrypter = new StandardPBEStringEncryptor(); 
     private static final FixedStringSaltGenerator generator = new FixedStringSaltGenerator();
-    private static boolean hasInitialized = false;
+    
+    static{
+    	emailEncrypter.setProvider(new BouncyCastleProvider());                                                                                                    
+    	emailEncrypter.setAlgorithm(algorithm); 
+    	
+    	generator.setSalt(salt);
+    	
+    	emailEncrypter.setSaltGenerator(generator); 
+    	emailEncrypter.setKeyObtentionIterations(iterations); 
+    	emailEncrypter.setPassword(passphrase_version_1); 
+    }
     
     //To avoid AlreadyInitializedException
     private static StandardPBEStringEncryptor getCrypto(){
-    	if (!hasInitialized){
-    		emailEncrypter.setProvider(new BouncyCastleProvider());                                                                                                    
-        	emailEncrypter.setAlgorithm(algorithm); 
-        	
-        	generator.setSalt(salt);
-        	
-        	emailEncrypter.setSaltGenerator(generator); 
-        	emailEncrypter.setKeyObtentionIterations(iterations); 
-        	emailEncrypter.setPassword(passphrase_version_1); 
-        	
-        	hasInitialized = true;
-    	}
     	return emailEncrypter;
     }
     

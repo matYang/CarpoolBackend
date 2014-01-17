@@ -289,7 +289,7 @@ public class TransactionDaoService{
 //			// send Transaction released notification
 //			Notification n = new Notification(-1, Constants.notificationType.on_transaction, Constants.notificationEvent.transactionReleased,
 //					0, "", 0, t.getTransactionId(),t.getInitUserId(),
-//					"Your transaction XXX has been released", Calendar.getInstance(), false, false);
+//					"Your transaction XXX has been released", DateUtility.getCurTimeInstance(), false, false);
 //			NotificationDaoService.createNewNotification(n);
 //			n.setTargetUserId(t.getTargetUserId());
 //			NotificationDaoService.createNewNotification(n);

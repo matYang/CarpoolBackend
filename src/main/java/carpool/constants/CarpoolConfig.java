@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.EmailEvent;
@@ -105,8 +106,6 @@ public class CarpoolConfig {
 	public static final String AccessKeyID="AKIAIE53WCAFSYLUGH2A";
 	public static final String SecretKey="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";
 	
-	public static final String standardTimeZone = "UTC";
-	
 	//email
 	public static final String SMTP_USERNAME = "AKIAIK5KV62M7VTBOJDQ"; 
 	public static final String SMTP_PASSWORD = "AklHWYPbI4LBZcQZB3BDqj9KQgl20FyUZj296ru6aRD+";
@@ -131,7 +130,7 @@ public class CarpoolConfig {
 	public static final int qqMaxLength = 10;
 	public static final SearchRepresentation getDefaultSearchRepresentation(){
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String dateStr =  sdf.format(Calendar.getInstance().getTime());		
+		String dateStr =  sdf.format(DateUtility.getCurTimeInstance().getTime());		
 		long departureMatch_Id = 1;
 		long arrivalMatch_Id = 2;		
 		return new SearchRepresentation("false" + CarpoolConfig.urlSeperator + departureMatch_Id + CarpoolConfig.urlSeperator + arrivalMatch_Id + CarpoolConfig.urlSeperator + dateStr + CarpoolConfig.urlSeperator + dateStr + CarpoolConfig.urlSeperator  + "0" + CarpoolConfig.urlSeperator + "0" + CarpoolConfig.urlSeperator + "0"+CarpoolConfig.urlSeperator + dateStr);
@@ -140,5 +139,9 @@ public class CarpoolConfig {
 	public static final void initConfig(){
 		//do nothing, force static block initialization at start of server
 	}
+
+	public static final String timeZoneIdNY = "America/New_York";
+	public static final String timeZoneIdCH = "asia/shanghai";
+	public static final String timeZoneStandard = "UTC";
 	
 }

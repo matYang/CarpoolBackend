@@ -67,6 +67,7 @@ public class RedisCleanTaskTest {
 		String userKey3 = CarpoolConfig.key_forgetPasswordAuth + 3;
 		jedis.lpush(userKey3,authCode);
 		
+		
 		RedisCleaner.cleanForgotPasswordRecords();
 		Set<String> keyset = jedis.keys(CarpoolConfig.key_forgetPasswordAuth + "*");
 		if(keyset.size()==0){

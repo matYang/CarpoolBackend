@@ -27,16 +27,16 @@ public class TransactionCleaner extends CarpoolDaoTransaction {
 
 	public static void Clean() throws LocationNotFoundException{
 		ArrayList<Notification> notificationQueue = new ArrayList<Notification>();
-		Calendar currentDate = Calendar.getInstance();
+		Calendar currentDate = DateUtility.getCurTimeInstance();
 		String ct=DateUtility.toSQLDateTime(currentDate);
 		//System.out.println("currentTime: "+ct);
-		Calendar DayLate = Calendar.getInstance();
+		Calendar DayLate = DateUtility.getCurTimeInstance();
 		DayLate.set(Calendar.HOUR_OF_DAY, 23);
 		DayLate.set(Calendar.MINUTE,59);
 		DayLate.set(Calendar.SECOND,59);
 		String late = DateUtility.toSQLDateTime(DayLate);
 		//System.out.println("lateTime: "+late);
-		Calendar Yesterday = Calendar.getInstance();
+		Calendar Yesterday = DateUtility.getCurTimeInstance();
 		Yesterday.add(Calendar.DAY_OF_YEAR, -1);
 		String yesterday = DateUtility.toSQLDateTime(Yesterday);
 		//System.out.println("yesterday: "+yesterday);

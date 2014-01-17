@@ -263,12 +263,12 @@ public class CarpoolMessageTest {
 	public void testSearch() throws LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();		
 		//Date
-		Calendar dt = Calendar.getInstance();		
-		Calendar at = Calendar.getInstance();
+		Calendar dt = DateUtility.getCurTimeInstance();		
+		Calendar at = DateUtility.getCurTimeInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);		
-		Calendar dt2 = Calendar.getInstance();	
+		Calendar dt2 = DateUtility.getCurTimeInstance();	
 		dt2.add(Calendar.DAY_OF_YEAR, -1);	
-		Calendar dt3 = Calendar.getInstance();	
+		Calendar dt3 = DateUtility.getCurTimeInstance();	
 		dt3.add(Calendar.DAY_OF_YEAR, -2);
 
 		//Location
@@ -338,31 +338,31 @@ public class CarpoolMessageTest {
 		SearchRepresentation SR3 = new SearchRepresentation(false,new Location(arrivalLocation).getMatch(),new Location(departureLocation).getMatch(),dt2,dt,type2,timeSlot,timeSlot);
 		SearchRepresentation SR4 = new SearchRepresentation(true,new Location(departureLocation).getMatch(),new Location(arrivalLocation).getMatch(),dt,at,type,timeSlot,timeSlot);
 		//New SRs
-		Calendar dtime = Calendar.getInstance();		
+		Calendar dtime = DateUtility.getCurTimeInstance();		
 		dtime.set(Calendar.HOUR_OF_DAY, 24);
 		dtime.set(Calendar.MINUTE, 0);
 		dtime.set(Calendar.SECOND, 0);
-		Calendar atime = Calendar.getInstance();
+		Calendar atime = DateUtility.getCurTimeInstance();
 		atime.add(Calendar.DAY_OF_YEAR, 1);
 		atime.set(Calendar.HOUR_OF_DAY, 18);
 		SearchRepresentation SR5 = new SearchRepresentation(false,new Location(departureLocation).getMatch(),new Location(arrivalLocation).getMatch(),dtime,atime,type,timeSlot1,timeSlot2);
-		Calendar dtime2 = Calendar.getInstance();		
+		Calendar dtime2 = DateUtility.getCurTimeInstance();		
 		dtime2.set(Calendar.HOUR_OF_DAY, 9);
 		dtime2.set(Calendar.MINUTE, 30);
 		dtime2.set(Calendar.SECOND, 0);
-		Calendar atime2 = Calendar.getInstance();		
+		Calendar atime2 = DateUtility.getCurTimeInstance();		
 		atime2.set(Calendar.HOUR_OF_DAY, 18);
 		atime2.set(Calendar.MINUTE, 30);
 		atime2.set(Calendar.SECOND, 0);
-		Calendar dtime3 = Calendar.getInstance();		
+		Calendar dtime3 = DateUtility.getCurTimeInstance();		
 		dtime3.set(Calendar.HOUR_OF_DAY, 21);
 		dtime3.set(Calendar.MINUTE, 30);
 		dtime3.set(Calendar.SECOND, 0);
-		Calendar atime3 = Calendar.getInstance();		
+		Calendar atime3 = DateUtility.getCurTimeInstance();		
 		atime3.set(Calendar.HOUR_OF_DAY, 23);
 		atime3.set(Calendar.MINUTE, 59);
 		atime3.set(Calendar.SECOND, 59);
-		Calendar dtime4 = Calendar.getInstance();
+		Calendar dtime4 = DateUtility.getCurTimeInstance();
 		dtime4.add(Calendar.DAY_OF_YEAR, -1);
 		Message message10=new Message(userId,true, new Location(departureLocation),dtime3,timeSlot,1 , priceList,new Location(arrivalLocation),atime3,timeSlot, 1,priceList,paymentMethod,"test",  type1, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message10);
@@ -484,8 +484,8 @@ public class CarpoolMessageTest {
 	public void getRecentMessages() throws LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();		
 		//Date
-		Calendar dt = Calendar.getInstance();		
-		Calendar at = Calendar.getInstance();
+		Calendar dt = DateUtility.getCurTimeInstance();		
+		Calendar at = DateUtility.getCurTimeInstance();
 		//Location
 		long departure_Id = 1;
 		long arrival_Id = 2;
@@ -578,17 +578,17 @@ public class CarpoolMessageTest {
 	@Test
 	public void testMessageCleaner() throws LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
-		Calendar dt1 = Calendar.getInstance();	
-		Calendar at1 = Calendar.getInstance();
+		Calendar dt1 = DateUtility.getCurTimeInstance();	
+		Calendar at1 = DateUtility.getCurTimeInstance();
 
-		Calendar dt2 = Calendar.getInstance();	
+		Calendar dt2 = DateUtility.getCurTimeInstance();	
 		dt2.add(Calendar.DAY_OF_YEAR,-1);
-		Calendar at2 = Calendar.getInstance();
+		Calendar at2 = DateUtility.getCurTimeInstance();
 		at2.add(Calendar.DAY_OF_YEAR,-1);
 
-		Calendar dt3 = Calendar.getInstance();			
+		Calendar dt3 = DateUtility.getCurTimeInstance();			
 		dt3.add(Calendar.DAY_OF_YEAR, 1);
-		Calendar at3 = Calendar.getInstance();
+		Calendar at3 = DateUtility.getCurTimeInstance();
 		at3.add(Calendar.DAY_OF_YEAR, 1);
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
@@ -688,17 +688,17 @@ public class CarpoolMessageTest {
 	@Test
 	public void testMessageIsOpen() throws LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
-		Calendar dt1 = Calendar.getInstance();	
-		Calendar at1 = Calendar.getInstance();
+		Calendar dt1 = DateUtility.getCurTimeInstance();	
+		Calendar at1 = DateUtility.getCurTimeInstance();
 
-		Calendar dt2 = Calendar.getInstance();	
+		Calendar dt2 = DateUtility.getCurTimeInstance();	
 		dt2.add(Calendar.DAY_OF_YEAR,-1);
-		Calendar at2 = Calendar.getInstance();
+		Calendar at2 = DateUtility.getCurTimeInstance();
 		at2.add(Calendar.DAY_OF_YEAR,-1);
 
-		Calendar dt3 = Calendar.getInstance();			
+		Calendar dt3 = DateUtility.getCurTimeInstance();			
 		dt3.add(Calendar.DAY_OF_YEAR, 1);
-		Calendar at3 = Calendar.getInstance();
+		Calendar at3 = DateUtility.getCurTimeInstance();
 		at3.add(Calendar.DAY_OF_YEAR, 1);
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
@@ -774,7 +774,7 @@ public class CarpoolMessageTest {
 		message.setState(carpool.constants.Constants.messageState.closed);
 		message2.setState(carpool.constants.Constants.messageState.deleted);
 		message3.setState(carpool.constants.Constants.messageState.open);
-		message3.setDeparture_time(Calendar.getInstance());
+		message3.setDeparture_time(DateUtility.getCurTimeInstance());
 		//This will pass
 		message4.setState(carpool.constants.Constants.messageState.open);
 		message4.setDeparture_time(dt3);
@@ -782,14 +782,14 @@ public class CarpoolMessageTest {
 		message5.setState(carpool.constants.Constants.messageState.open);
 		message5.setDeparture_time(dt2);
 		message6.setState(carpool.constants.Constants.messageState.deleted);
-		message6.setDeparture_time(Calendar.getInstance());
+		message6.setDeparture_time(DateUtility.getCurTimeInstance());
 		message7.setState(carpool.constants.Constants.messageState.closed);
-		message7.setDeparture_time(Calendar.getInstance());
+		message7.setDeparture_time(DateUtility.getCurTimeInstance());
 		
-		if(CarpoolDaoMessage.IsOpen(message)||CarpoolDaoMessage.IsOpen(message2)||CarpoolDaoMessage.IsOpen(message3)||CarpoolDaoMessage.IsOpen(message5)||CarpoolDaoMessage.IsOpen(message6)||CarpoolDaoMessage.IsOpen(message7)){
+		if(CarpoolDaoMessage.isOpen(message)||CarpoolDaoMessage.isOpen(message2)||CarpoolDaoMessage.isOpen(message3)||CarpoolDaoMessage.isOpen(message5)||CarpoolDaoMessage.isOpen(message6)||CarpoolDaoMessage.isOpen(message7)){
 			fail();
 		}else{
-			if(CarpoolDaoMessage.IsOpen(message4)){
+			if(CarpoolDaoMessage.isOpen(message4)){
 				//Passed;
 			}else{
 				fail();
@@ -800,7 +800,7 @@ public class CarpoolMessageTest {
 	//@Test
 	public void testBenchmark() throws LocationNotFoundException{
 		CarpoolDaoBasic.clearBothDatabase();
-		Calendar  before = Calendar.getInstance();
+		Calendar  before = DateUtility.getCurTimeInstance();
 		Calendar time = DateUtility.DateToCalendar(new Date(0));
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
@@ -903,7 +903,7 @@ public class CarpoolMessageTest {
 		}
 
 
-		Calendar  now = Calendar.getInstance();
+		Calendar  now = DateUtility.getCurTimeInstance();
 		long TimeConsumed =now.getTimeInMillis() - before.getTimeInMillis();
 		System.out.println(TimeConsumed);
 

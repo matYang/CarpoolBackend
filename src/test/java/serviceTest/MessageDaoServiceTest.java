@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoMessage;
+import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.gender;
@@ -26,12 +27,12 @@ public class MessageDaoServiceTest {
 	@Test
 	public void test() throws LocationNotFoundException {
 		CarpoolDaoBasic.clearBothDatabase();
-		Calendar dt = Calendar.getInstance();		
-		Calendar at = Calendar.getInstance();
+		Calendar dt = DateUtility.getCurTimeInstance();		
+		Calendar at = DateUtility.getCurTimeInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);	
-		Calendar dt2 = Calendar.getInstance();	
+		Calendar dt2 = DateUtility.getCurTimeInstance();	
 		dt2.add(Calendar.DAY_OF_YEAR, -1);	
-		Calendar dt3 = Calendar.getInstance();	
+		Calendar dt3 = DateUtility.getCurTimeInstance();	
 		dt3.add(Calendar.DAY_OF_YEAR, -2);
 		
 		//Location

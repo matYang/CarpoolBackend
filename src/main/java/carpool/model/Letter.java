@@ -73,8 +73,8 @@ public class Letter implements PseudoModel, PseudoValidatable, Comparable<Letter
 		this.to_user = null;
 
 		this.content = content;
-		this.send_time = Calendar.getInstance();
-		this.check_time = Calendar.getInstance();
+		this.send_time = DateUtility.getCurTimeInstance();
+		this.check_time = DateUtility.getCurTimeInstance();
 
 		this.state = LetterState.unread;
 		this.historyDeleted = false;

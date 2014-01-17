@@ -9,6 +9,7 @@ import carpool.asyncRelayExecutor.ExecutorProvider;
 import carpool.asyncTask.StoreSearchHistoryTask;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoUser;
+import carpool.common.DateUtility;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.gender;
 import carpool.constants.Constants.messageState;
@@ -55,12 +56,12 @@ public class SRStorageTest {
 			e.printStackTrace();
 		}
 		//Date
-		Calendar dt = Calendar.getInstance();		
-		Calendar at = Calendar.getInstance();
+		Calendar dt = DateUtility.getCurTimeInstance();		
+		Calendar at = DateUtility.getCurTimeInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);	
-		Calendar at2 = Calendar.getInstance();	
+		Calendar at2 = DateUtility.getCurTimeInstance();	
 		at2.add(Calendar.DAY_OF_YEAR, -1);	
-		Calendar dt2 = Calendar.getInstance();	
+		Calendar dt2 = DateUtility.getCurTimeInstance();	
 		dt2.add(Calendar.DAY_OF_YEAR, -2);	
 				
 		messageType type = messageType.fromInt(0);	

@@ -548,8 +548,8 @@ public class CarpoolDaoMessage{
 		return map;
 	}	
 
-	public static boolean IsOpen(Message msg){		
-		String ct=DateUtility.toSQLDateTime( Calendar.getInstance());
+	public static boolean isOpen(Message msg){		
+		String ct = DateUtility.toSQLDateTime(DateUtility.getCurTimeInstance());
 		String dt = DateUtility.toSQLDateTime(msg.getDeparture_time());
 		return (msg.getState().code==carpool.constants.Constants.messageState.open.code && ct.compareTo(dt)<0);
 	}	

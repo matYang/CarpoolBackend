@@ -34,9 +34,9 @@ public class StatisticAnalysisServiceTest {
 	public void testTimeStampConverter(){
 		Calendar oldr = Calendar.getInstance(TimeZone.getTimeZone("Asia/Shanghai"));
 		oldr.add(Calendar.HOUR_OF_DAY, 16);	
-		Calendar test = Calendar.getInstance(TimeZone.getTimeZone(CarpoolConfig.standardTimeZone));
+		Calendar test = Calendar.getInstance(TimeZone.getTimeZone(CarpoolConfig.timeZoneStandard));
 		test.add(Calendar.HOUR_OF_DAY, 16);
-		if(DateUtility.ConvertToStandard(oldr).HOUR_OF_DAY-test.HOUR_OF_DAY==0){
+		if(DateUtility.convertToStandard(oldr).HOUR_OF_DAY-test.HOUR_OF_DAY==0){
 			//Passed;
 		}else{
 			fail();
@@ -99,9 +99,9 @@ public class StatisticAnalysisServiceTest {
 		AwsMain.storeSearchHistory(sr4, userId4);
 		
 		ArrayList<SearchRepresentation> srlist = new ArrayList<SearchRepresentation>();
-		Calendar low = Calendar.getInstance();
+		Calendar low = DateUtility.getCurTimeInstance();
 		low.add(Calendar.HOUR_OF_DAY, -1);
-		Calendar high = Calendar.getInstance();
+		Calendar high = DateUtility.getCurTimeInstance();
 		high.add(Calendar.HOUR_OF_DAY, 1);
 		srlist = StatisticAnalysisOfDataService.getUserSRsBasedOnTimeStamps(low, high);
 		if(srlist.size()==4 && srlist.get(0).equals(sr4)&&srlist.get(1).equals(sr3)&&srlist.get(2).equals(sr2)&&srlist.get(3).equals(sr)){
@@ -173,12 +173,12 @@ public class StatisticAnalysisServiceTest {
 		AwsMain.storeSearchHistory(sr2, userId2);
 		AwsMain.storeSearchHistory(sr3, userId3);
 		AwsMain.storeSearchHistory(sr4, userId4);
-		Calendar dt = Calendar.getInstance();		
-		Calendar at = Calendar.getInstance();
+		Calendar dt = DateUtility.getCurTimeInstance();		
+		Calendar at = DateUtility.getCurTimeInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);
-		Calendar dt2 = Calendar.getInstance();	
+		Calendar dt2 = DateUtility.getCurTimeInstance();	
 		dt2.add(Calendar.DAY_OF_YEAR, -1);	
-		Calendar dt3 = Calendar.getInstance();	
+		Calendar dt3 = DateUtility.getCurTimeInstance();	
 		dt3.add(Calendar.DAY_OF_YEAR, -2);
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
@@ -310,12 +310,12 @@ public class StatisticAnalysisServiceTest {
 		AwsMain.storeSearchHistory(sr2, userId2);
 		AwsMain.storeSearchHistory(sr3, userId3);
 		AwsMain.storeSearchHistory(sr4, userId4);
-		Calendar dt = Calendar.getInstance();		
-		Calendar at = Calendar.getInstance();
+		Calendar dt = DateUtility.getCurTimeInstance();		
+		Calendar at = DateUtility.getCurTimeInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);
-		Calendar dt2 = Calendar.getInstance();	
+		Calendar dt2 = DateUtility.getCurTimeInstance();	
 		dt2.add(Calendar.DAY_OF_YEAR, -1);	
-		Calendar dt3 = Calendar.getInstance();	
+		Calendar dt3 = DateUtility.getCurTimeInstance();	
 		dt3.add(Calendar.DAY_OF_YEAR, -2);
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);

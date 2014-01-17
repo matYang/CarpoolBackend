@@ -21,6 +21,7 @@ import carpool.aws.AwsMain;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoUser;
+import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants.DayTimeSlot;
@@ -87,12 +88,12 @@ public class AwsS3Test {
 			e.printStackTrace();
 		}
 		//Date
-		Calendar dt = Calendar.getInstance();		
-		Calendar at = Calendar.getInstance();
+		Calendar dt = DateUtility.getCurTimeInstance();		
+		Calendar at = DateUtility.getCurTimeInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);		
-		Calendar dt2 = Calendar.getInstance();
+		Calendar dt2 = DateUtility.getCurTimeInstance();
 		dt2.add(Calendar.DAY_OF_YEAR, 1);
-		Calendar at2 = Calendar.getInstance();
+		Calendar at2 = DateUtility.getCurTimeInstance();
 		at2.add(Calendar.DAY_OF_YEAR, 2);		
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
@@ -220,12 +221,12 @@ public class AwsS3Test {
 			e.printStackTrace();
 		}
 		//Date
-		Calendar dt = Calendar.getInstance();		
-		Calendar at = Calendar.getInstance();
+		Calendar dt = DateUtility.getCurTimeInstance();		
+		Calendar at = DateUtility.getCurTimeInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);		
-		Calendar dt2 = Calendar.getInstance();
+		Calendar dt2 = DateUtility.getCurTimeInstance();
 		dt2.add(Calendar.DAY_OF_YEAR, 1);
-		Calendar at2 = Calendar.getInstance();
+		Calendar at2 = DateUtility.getCurTimeInstance();
 		at2.add(Calendar.DAY_OF_YEAR, 2);		
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
@@ -321,12 +322,12 @@ public class AwsS3Test {
 			e.printStackTrace();
 		}
 		//Date
-		Calendar dt = Calendar.getInstance();		
-		Calendar at = Calendar.getInstance();
+		Calendar dt = DateUtility.getCurTimeInstance();		
+		Calendar at = DateUtility.getCurTimeInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);		
-		Calendar dt2 = Calendar.getInstance();
+		Calendar dt2 = DateUtility.getCurTimeInstance();
 		dt2.add(Calendar.DAY_OF_YEAR, 1);
-		Calendar at2 = Calendar.getInstance();
+		Calendar at2 = DateUtility.getCurTimeInstance();
 		at2.add(Calendar.DAY_OF_YEAR, 2);		
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();

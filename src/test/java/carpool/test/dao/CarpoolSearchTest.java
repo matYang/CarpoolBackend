@@ -10,6 +10,7 @@ import org.junit.Test;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoUser;
+import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants.DayTimeSlot;
@@ -52,26 +53,26 @@ public class CarpoolSearchTest {
 		}
 		
 		//Date
-		Calendar dt = Calendar.getInstance();
-		Calendar dt1 = Calendar.getInstance();	
+		Calendar dt = DateUtility.getCurTimeInstance();
+		Calendar dt1 = DateUtility.getCurTimeInstance();	
 		dt1.add(Calendar.DAY_OF_YEAR, -1);	
-		Calendar dt2 = Calendar.getInstance();	
+		Calendar dt2 = DateUtility.getCurTimeInstance();	
 		dt2.add(Calendar.DAY_OF_YEAR, -2);
 		
 		
 		
-		Calendar at = Calendar.getInstance();
+		Calendar at = DateUtility.getCurTimeInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);
-		Calendar at1 = Calendar.getInstance();
+		Calendar at1 = DateUtility.getCurTimeInstance();
 		at.add(Calendar.DAY_OF_YEAR, 2);
-		Calendar at2 = Calendar.getInstance();
+		Calendar at2 = DateUtility.getCurTimeInstance();
 		at.add(Calendar.DAY_OF_YEAR, 3);
 		
 
 		
-		Calendar dt_sameDay = Calendar.getInstance();
+		Calendar dt_sameDay = DateUtility.getCurTimeInstance();
 
-		Calendar at_sameDay = Calendar.getInstance();
+		Calendar at_sameDay = DateUtility.getCurTimeInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);
 		
 		
