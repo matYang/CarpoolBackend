@@ -55,7 +55,7 @@ public class CarpoolConfig {
 	public static final int session_sequenceLength = 15;
 	public static final int emailActivation_sequenceLength = 15;
 	public static final int forgetPassword_sequenceLength = 30;
-    public static final String redisSearchHistoryPrefix = "redis/usrSRH-";;
+    public static final String redisSearchHistoryPrefix = "usrSRH";;
     public static final int redisSearchHistoryUpbound = isOnLocal ? 6 : 50;
 	
 	

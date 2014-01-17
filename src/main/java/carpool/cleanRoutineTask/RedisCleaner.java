@@ -63,11 +63,9 @@ public class RedisCleaner {
 	 *  move all search history of a user to his/her S3 bucket
 	 */
 	private static void migrateSearchHistory(){
-		Jedis jedis = CarpoolDaoBasic.getJedis();
 		//this is the set of keys that holds the list of sr, to find the id, extract it from each of the key, migrate all their SRs to their S3 buckets
 		//this will be running on a different thread, but assume safe to use the aws here
-		AwsMain.cleanUpAlltheUsersSearchHistory();		
-		CarpoolDaoBasic.returnJedis(jedis);
+		AwsMain.migrateAlltheUsersSearchHistory();		
 	}
 
 }

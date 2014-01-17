@@ -2,6 +2,8 @@ package carpool.dbservice;
 
 import java.util.ArrayList;
 
+import carpool.asyncRelayExecutor.ExecutorProvider;
+import carpool.asyncTask.StoreSearchHistoryTask;
 import carpool.aws.AwsMain;
 import carpool.carpoolDAO.*;
 import carpool.common.DateUtility;
@@ -48,7 +50,8 @@ public class MessageDaoService{
 		searchResult = CarpoolDaoMessage.searchMessage(userSearch);
 		if (isLogin){
 			UserDaoService.updateUserSearch(userSearch, userId);
-			AwsMain.storeSearchHistory(userSearch, userId);
+			StoreSearchHistoryTask ssht = new StoreSearchHistoryTask(userSearch, userId);
+			ExecutorProvider.executeRelay(ssht);
 		}
 		return searchResult;
 	}
