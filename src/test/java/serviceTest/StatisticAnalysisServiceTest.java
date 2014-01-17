@@ -119,7 +119,7 @@ public class StatisticAnalysisServiceTest {
 			fail();
 		}
 	}
-	
+	//Note: For this test you need to clean all the user SR files on Aws
 	@Test
 	public void testGetEntireMap() throws ValidationException, LocationNotFoundException{		
 		CarpoolDaoBasic.clearBothDatabase();
@@ -256,6 +256,7 @@ public class StatisticAnalysisServiceTest {
 		}
 	}
 	
+	//Note: For this test you need to clean all the user SR files on Aws
 	@Test
 	public void testGetSpecificList() throws LocationNotFoundException, ValidationException{
 		CarpoolDaoBasic.clearBothDatabase();

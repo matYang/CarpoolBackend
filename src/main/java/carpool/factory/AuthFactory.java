@@ -65,7 +65,7 @@ public class AuthFactory {
 	
 	public static final String forgetPassword_setAuthCode(int userId){
 		Jedis jedis = CarpoolDaoBasic.getJedis();
-		String authCode = RandomStringUtils.randomAlphanumeric(CarpoolConfig.forgetPassword_sequenceLength) + CarpoolConfig.redisSeperator + DateUtility.getTimeStamp();;
+		String authCode = RandomStringUtils.randomAlphanumeric(CarpoolConfig.forgetPassword_sequenceLength) + CarpoolConfig.redisSeperator + DateUtility.getTimeStamp();
 		jedis.set(forgetPassword_getKey(userId), authCode);
 		CarpoolDaoBasic.returnJedis(jedis);
 		return authCode;
