@@ -14,7 +14,6 @@ import carpool.constants.Constants.messageType;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoRepresentation;
 import carpool.model.Location;
-import carpool.timeStampService.timeStampConverter;
 
 public class SearchRepresentation implements PseudoRepresentation{
 	
@@ -44,7 +43,7 @@ public class SearchRepresentation implements PseudoRepresentation{
 		this.targetType = targetType;
 		this.departureTimeSlot = departureTimeSlot;
 		this.arrivalTimeSlot = arrivalTimeSlot;
-		this.timeStamp = timeStampConverter.ConvertToStandard(Calendar.getInstance());
+		this.timeStamp = DateUtility.ConvertToStandard(Calendar.getInstance());
 	}
 
 	//separated by "+"

@@ -41,7 +41,7 @@ public class ServerMain {
 		// Add a new HTTP server listening on port
 
 		Server server = component.getServers().add(Protocol.HTTP, 8015);
-		server.getContext().getParameters().add("maxThreads", "1024");
+		server.getContext().getParameters().add("maxThreads", "256");
 
 		// Attach the sample application
 		RoutingService routingService = new RoutingService();

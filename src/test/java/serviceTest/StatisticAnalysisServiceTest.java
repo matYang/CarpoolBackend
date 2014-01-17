@@ -27,7 +27,6 @@ import carpool.model.Location;
 import carpool.model.Message;
 import carpool.model.User;
 import carpool.model.representation.SearchRepresentation;
-import carpool.timeStampService.timeStampConverter;
 
 public class StatisticAnalysisServiceTest {
 	
@@ -37,7 +36,7 @@ public class StatisticAnalysisServiceTest {
 		oldr.add(Calendar.HOUR_OF_DAY, 16);	
 		Calendar test = Calendar.getInstance(TimeZone.getTimeZone(CarpoolConfig.standardTimeZone));
 		test.add(Calendar.HOUR_OF_DAY, 16);
-		if(timeStampConverter.ConvertToStandard(oldr).HOUR_OF_DAY-test.HOUR_OF_DAY==0){
+		if(DateUtility.ConvertToStandard(oldr).HOUR_OF_DAY-test.HOUR_OF_DAY==0){
 			//Passed;
 		}else{
 			fail();

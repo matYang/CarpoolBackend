@@ -31,6 +31,7 @@ public class CarpoolDaoBasic {
 		JedisPoolConfig jedisConfig = new JedisPoolConfig();
 		jedisConfig.setTestOnBorrow(false);
 		jedisConfig.setMinIdle(5);
+		jedisConfig.setMaxWait(4000l);
 		jedisPool = new JedisPool(jedisConfig, CarpoolConfig.redisUri, 6379);
 		
 		
