@@ -32,7 +32,7 @@ public class RedisCleaner {
 		//this is the set of keys that holds the email activation records, check for the timestamp to see if it is expired, if expired just delete the key-value pair
 		Set<String> keyset = jedis.keys(CarpoolConfig.key_emailActivationAuth + "*");
 		for (String key : keyset){			
-			long time = Long.parseLong(jedis.lrange(key, 0, 0).get(0).split(CarpoolConfig.redisSeperatorRegex)[1]);
+			long time = Long.parseLong(jedis.get(key).split(CarpoolConfig.redisSeperatorRegex)[1]);
 			long cur = DateUtility.getCurTime();
 			if(cur - time >= CarpoolConfig.emailActivation_expireThreshold){
 				jedis.del(key);
@@ -49,7 +49,7 @@ public class RedisCleaner {
 		//this is the set of keys that holds the forgot password records, check for the timestamp to see if it is expired, if expired just delete the key-value pair
 		Set<String> keyset = jedis.keys(CarpoolConfig.key_forgetPasswordAuth + "*");
 		for (String key : keyset){
-			long time = Long.parseLong(jedis.lrange(key, 0, 0).get(0).split(CarpoolConfig.redisSeperatorRegex)[1]);
+			long time = Long.parseLong(jedis.get(key).split(CarpoolConfig.redisSeperatorRegex)[1]);
 			long cur = DateUtility.getCurTime();
 			if(cur - time >= CarpoolConfig.forgetPassword_expireThreshold){
 				jedis.del(key);

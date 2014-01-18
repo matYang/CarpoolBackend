@@ -348,7 +348,7 @@ public class CarpoolTransactionTest {
 		}
 
 		Calendar dt = DateUtility.getCurTimeInstance();		
-		dt.set(Calendar.HOUR_OF_DAY, dt.get(Calendar.HOUR_OF_DAY)-1);
+		dt.set(Calendar.HOUR_OF_DAY, dt.get(Calendar.HOUR_OF_DAY)+1);
 		Calendar at = DateUtility.getCurTimeInstance();
 		at.add(Calendar.DAY_OF_YEAR, 1);
 
@@ -393,19 +393,19 @@ public class CarpoolTransactionTest {
 
 		TransactionType ttype = TransactionType.departure;
 		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction.setState(transactionState.init);//This should pass the test
+		transaction.setState(transactionState.init);// This should pass the test(aboutToStart)
 		Transaction transaction2 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction2.setState(transactionState.init);
 		Transaction transaction3 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction3.setState(transactionState.finished);
 		Transaction transaction4 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction4.setState(transactionState.aboutToStart);// This should pass the test
+		transaction4.setState(transactionState.aboutToStart);// This should pass the test(finished)
 		Transaction transaction5 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction5.setState(transactionState.init);
 		Transaction transaction6 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction6.setState(transactionState.aboutToStart);
+		transaction6.setState(transactionState.aboutToStart);// This should pass the test(finished)
 		Transaction transaction7 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote", null,timeSlot,dseats,ttype);
-		transaction7.setState(transactionState.aboutToStart);
+		transaction7.setState(transactionState.aboutToStart);// This should pass the test(finished)
 		Transaction transaction8 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
 		transaction8.setState(transactionState.finished);
 		Transaction transaction9 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
@@ -437,7 +437,7 @@ public class CarpoolTransactionTest {
 			list.add(CarpoolDaoTransaction.getTransactionById(transaction8.getTransactionId()).getState());
 			list.add(CarpoolDaoTransaction.getTransactionById(transaction9.getTransactionId()).getState());
 			list.add(CarpoolDaoTransaction.getTransactionById(transaction10.getTransactionId()).getState());
-			if(list !=null && list.size()==10 && list.get(0)==transactionState.init && list.get(1)==transactionState.init &&list.get(2)==transactionState.finished && list.get(3)==transactionState.finished && list.get(4)==transactionState.init && list.get(5)==transactionState.finished && list.get(6)==transactionState.finished&& list.get(7)==transactionState.finished && list.get(8)==transactionState.init&&list.get(9)==transactionState.finished){
+			if(list !=null && list.size()==10 && list.get(0)==transactionState.aboutToStart && list.get(1)==transactionState.init &&list.get(2)==transactionState.finished && list.get(3)==transactionState.finished && list.get(4)==transactionState.init && list.get(5)==transactionState.finished && list.get(6)==transactionState.finished&& list.get(7)==transactionState.finished && list.get(8)==transactionState.init&&list.get(9)==transactionState.finished){
 				//Passed;
 			}else{				
 				fail();					

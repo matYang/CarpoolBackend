@@ -20,13 +20,13 @@ public class RedisCleanTaskTest {
 		String RandomString = "MatthewEa";
 		String authCode = RandomString + redisSeperatorRegex + storeTime;
 		String userKey1 = CarpoolConfig.key_emailActivationAuth + 1;
-		jedis.lpush(userKey1, authCode);
+		jedis.set(userKey1, authCode);
 		
 		String userKey2 = CarpoolConfig.key_emailActivationAuth + 2;
-		jedis.lpush(userKey2, authCode);
+		jedis.set(userKey2, authCode);
 		
 		String userKey3 = CarpoolConfig.key_emailActivationAuth + 3;
-		jedis.lpush(userKey3,authCode);
+		jedis.set(userKey3,authCode);
 		
 		RedisCleaner.cleanEmailActivationRecords();
 		Set<String> keyset = jedis.keys(CarpoolConfig.key_emailActivationAuth + "*");
@@ -37,7 +37,7 @@ public class RedisCleanTaskTest {
 		}
 		
 		String userKey5 = CarpoolConfig.key_emailActivationAuth + 3;
-		jedis.lpush(userKey5, RandomString + redisSeperatorRegex + (time - 100));	
+		jedis.set(userKey5, RandomString + redisSeperatorRegex + (time - 100));	
 		
 		RedisCleaner.cleanEmailActivationRecords();
 		keyset = jedis.keys(CarpoolConfig.key_emailActivationAuth + "*");
@@ -59,13 +59,13 @@ public class RedisCleanTaskTest {
 		String RandomString = "MatthewEa";
 		String authCode = RandomString + redisSeperatorRegex + storeTime;
 		String userKey1 = CarpoolConfig.key_forgetPasswordAuth + 1;
-		jedis.lpush(userKey1, authCode);
+		jedis.set(userKey1, authCode);
 		
 		String userKey2 = CarpoolConfig.key_forgetPasswordAuth + 2;
-		jedis.lpush(userKey2, authCode);
+		jedis.set(userKey2, authCode);
 		
 		String userKey3 = CarpoolConfig.key_forgetPasswordAuth + 3;
-		jedis.lpush(userKey3,authCode);
+		jedis.set(userKey3,authCode);
 		
 		
 		RedisCleaner.cleanForgotPasswordRecords();
@@ -77,7 +77,7 @@ public class RedisCleanTaskTest {
 		}
 		
 		String userKey5 = CarpoolConfig.key_forgetPasswordAuth + 3;
-		jedis.lpush(userKey5, RandomString + redisSeperatorRegex + (time - 100));	
+		jedis.set(userKey5, RandomString + redisSeperatorRegex + (time - 100));	
 		
 		RedisCleaner.cleanForgotPasswordRecords();
 		keyset = jedis.keys(CarpoolConfig.key_forgetPasswordAuth + "*");

@@ -28,9 +28,6 @@ public class SessionCrypto{
 	            0x00,0x03,0x06,0x03,0x04,0x05
 	        };
 	
-	   private static Cipher cipher; 
-	   private static SecretKeySpec keySpec;
-	   private static IvParameterSpec ivSpec;
 	   
 	   private final static String HEX = "0123456789ABCDEF";
 	   
@@ -49,9 +46,9 @@ public class SessionCrypto{
 	
 	   public static String encrypt(String plainText) throws NoSuchAlgorithmException, InvalidKeyException, NoSuchPaddingException, InvalidAlgorithmParameterException, ShortBufferException, IllegalBlockSizeException, BadPaddingException,UnsupportedEncodingException{
 		   	
-		    cipher = Cipher.getInstance("AES/CBC/PKCS5Padding"); 
-	        keySpec = new SecretKeySpec(keyBytes, "AES"); 
-	        ivSpec = new IvParameterSpec(ivBytes);
+		   	Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding"); 
+		   	SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES"); 
+		   	IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
 		   
 		    byte[] plainTextBytes = plainText.getBytes("UTF8");
 			cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec); 
@@ -63,9 +60,9 @@ public class SessionCrypto{
 	
 	   public static String decrypt(String cipherTextString) throws InvalidKeyException, InvalidAlgorithmParameterException, ShortBufferException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException{
 		    
-		   cipher = Cipher.getInstance("AES/CBC/PKCS5Padding"); 
-	       keySpec = new SecretKeySpec(keyBytes, "AES"); 
-	       ivSpec = new IvParameterSpec(ivBytes); 
+		   Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding"); 
+		   SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES"); 
+		   IvParameterSpec ivSpec = new IvParameterSpec(ivBytes); 
 		   
 		   byte[] cipherTextBytes = fromHex(cipherTextString);
 		   cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
