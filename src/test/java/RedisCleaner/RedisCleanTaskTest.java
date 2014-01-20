@@ -2,6 +2,8 @@ package RedisCleaner;
 
 import static org.junit.Assert.*;
 import java.util.Set;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import redis.clients.jedis.Jedis;
 import carpool.carpoolDAO.CarpoolDaoBasic;
@@ -17,7 +19,7 @@ public class RedisCleanTaskTest {
 		long time = DateUtility.getCurTime();
 		long storeTime = time - CarpoolConfig.emailActivation_expireThreshold - 1;
 		String redisSeperatorRegex = "+";
-		String RandomString = "MatthewEa";
+		String RandomString = RandomStringUtils.randomAlphanumeric(CarpoolConfig.emailActivation_sequenceLength);
 		String authCode = RandomString + redisSeperatorRegex + storeTime;
 		String userKey1 = CarpoolConfig.key_emailActivationAuth + 1;
 		jedis.set(userKey1, authCode);
@@ -56,7 +58,7 @@ public class RedisCleanTaskTest {
 		long time = DateUtility.getCurTime();
 		long storeTime = time - CarpoolConfig.forgetPassword_expireThreshold - 1;
 		String redisSeperatorRegex = "+";
-		String RandomString = "MatthewEa";
+		String RandomString = RandomStringUtils.randomAlphanumeric(CarpoolConfig.forgetPassword_sequenceLength);
 		String authCode = RandomString + redisSeperatorRegex + storeTime;
 		String userKey1 = CarpoolConfig.key_forgetPasswordAuth + 1;
 		jedis.set(userKey1, authCode);

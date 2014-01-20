@@ -30,7 +30,7 @@ import carpool.model.representation.SearchRepresentation;
 
 
 public class MultiThreadsHandlingTest {
-	private int threads = 80;
+	private int threads = 70;	
 	private ExecutorService testExecutor = Executors.newFixedThreadPool(threads);
 
 	private boolean isCompleted (List<Future<?>> list){
@@ -136,7 +136,7 @@ public class MultiThreadsHandlingTest {
 		mlist2.add(message6);
 		mlist2.add(message8);
 		int numOfThreads = threads;		
-
+		int testThreads = threads;
 		while(numOfThreads > 0){			
 			if(numOfThreads%2==0){
 				task = new MyTestTask(SR2,mlist2);
@@ -157,6 +157,28 @@ public class MultiThreadsHandlingTest {
 		}
 
 		System.out.println("Completed!!!");
+		
+		//Test for run again
+		numOfThreads = testThreads;			
+		while(numOfThreads > 0){			
+			if(numOfThreads%2==0){
+				task = new MyTestTask(SR2,mlist2);
+			}else{
+				task = new MyTestTask(SR,mlist1);
+			}
+			//System.out.println("Add Thread: "+(threads - numOfThreads+1));
+			executableTask = new RelayTaskExecutableWrapper(task);				
+			futurelist.add(testExecutor.submit(executableTask));
+			numOfThreads--;
+		}
+
+		isCompleted = isCompleted(futurelist);
+
+		while(!isCompleted){
+			//Wait
+			isCompleted = isCompleted(futurelist);
+		}
+		System.out.println("Test Completed!!!");
 
 	} 
 

@@ -131,7 +131,7 @@ public class CarpoolTransactionTest {
 		messageType type = messageType.fromInt(0);
 		gender genderRequirement = gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
-		
+
 
 		int dseats = 4;
 		int aseats = 4;
@@ -354,6 +354,7 @@ public class CarpoolTransactionTest {
 
 		Calendar dt2 = DateUtility.getCurTimeInstance();
 		dt2.add(Calendar.DAY_OF_YEAR, -1);
+		dt2.add(Calendar.SECOND, 5);
 		Calendar at2 = DateUtility.getCurTimeInstance();
 		at2.add(Calendar.DAY_OF_YEAR, 0);
 
@@ -438,7 +439,7 @@ public class CarpoolTransactionTest {
 			list.add(CarpoolDaoTransaction.getTransactionById(transaction9.getTransactionId()).getState());
 			list.add(CarpoolDaoTransaction.getTransactionById(transaction10.getTransactionId()).getState());
 			if(list !=null && list.size()==10 && list.get(0)==transactionState.aboutToStart && list.get(1)==transactionState.init &&list.get(2)==transactionState.finished && list.get(3)==transactionState.finished && list.get(4)==transactionState.init && list.get(5)==transactionState.finished && list.get(6)==transactionState.finished&& list.get(7)==transactionState.finished && list.get(8)==transactionState.init&&list.get(9)==transactionState.finished){
-				//Passed;
+				//Passed;				
 			}else{				
 				fail();					
 			}

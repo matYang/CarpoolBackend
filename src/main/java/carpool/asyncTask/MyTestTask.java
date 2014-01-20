@@ -40,8 +40,8 @@ public class MyTestTask implements PseudoAsyncTask{
 			if(ArrayListEquals(testlist)){
 				//Passed;
 			}else{
-				printlist(mlist,"mlist");
-				printlist(testlist,"testlist");
+				//printlist(mlist,"mlist");
+				//printlist(testlist,"testlist");
 				throw new RuntimeException("Message is not found");
 			}
 			
