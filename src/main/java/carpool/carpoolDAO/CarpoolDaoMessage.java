@@ -385,6 +385,9 @@ public class CarpoolDaoMessage{
 
 	protected static ArrayList<Message> getUsersForMessages(ArrayList<Integer> ilist, ArrayList<Message> mlist) throws LocationNotFoundException {
 		HashMap<Integer,User> map = new HashMap<Integer,User>();
+		if(mlist.size()<=0){
+			return mlist;
+		}
 		map = getUsersHashMap(ilist);		
 		for(int i=0;i<mlist.size();i++){
 			mlist.get(i).setOwner(map.get(mlist.get(i).getOwnerId()));		
@@ -510,7 +513,7 @@ public class CarpoolDaoMessage{
 
 	private static HashMap<Integer,User> getUsersHashMap(ArrayList<Integer> list) throws LocationNotFoundException{
 		HashMap<Integer,User> map = new HashMap<Integer,User>();
-		if (list.size() == 0){
+		if(list.size()<=0){
 			return map;
 		}
 		String query = "SELECT * FROM carpoolDAOUser where ";

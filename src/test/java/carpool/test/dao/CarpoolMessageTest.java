@@ -500,24 +500,6 @@ public class CarpoolMessageTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca",departureLocation, gender.both);
-
-		try {
-			CarpoolDaoUser.addUserToDatabase(user);
-		} catch (ValidationException e) {			
-			e.printStackTrace();
-		}
-		ArrayList<Integer> priceList = new ArrayList<Integer>();
-		priceList.add(1);
-		paymentMethod paymentMethod =null;
-		paymentMethod = paymentMethod.fromInt(0);
-		messageType type = messageType.fromInt(0);
-		gender genderRequirement = gender.fromInt(0);
-		messageState state = messageState.fromInt(0);
-		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
-		int messageId=-1;
-		int userId=user.getUserId();
-
 		try{
 			ArrayList<Message> mlist = new ArrayList<Message>();
 			mlist = CarpoolDaoMessage.getRecentMessages();
@@ -530,6 +512,23 @@ public class CarpoolMessageTest {
 			e.printStackTrace();
 			fail();
 		}
+		
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca",departureLocation, gender.both);
+
+		try {
+			CarpoolDaoUser.addUserToDatabase(user);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}
+		ArrayList<Integer> priceList = new ArrayList<Integer>();
+		priceList.add(1);
+		paymentMethod paymentMethod =null;
+		paymentMethod = paymentMethod.fromInt(0);
+		messageType type = messageType.fromInt(0);
+		gender genderRequirement = gender.fromInt(0);		
+		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);		
+		int userId=user.getUserId();
+		
 		//Message	
 		Message message=new Message(userId,false, new Location(departureLocation),dt,timeSlot,1 , priceList,new Location(arrivalLocation),at,timeSlot, 0,priceList,paymentMethod,"test",  type, genderRequirement);
 		CarpoolDaoMessage.addMessageToDatabase(message);		
