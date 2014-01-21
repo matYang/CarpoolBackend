@@ -65,7 +65,7 @@ public class AwsMain {
 			file.createNewFile();
 			s3Client.putObject(new PutObjectRequest(bucketName,getUserSHFileName(userId),file));
 		} catch(AmazonS3Exception e){
-			e.printStackTrace();
+			e.printStackTrace();  
 			DebugLog.d(e);
 		} catch(AmazonClientException | IOException e){
 			e.printStackTrace();
