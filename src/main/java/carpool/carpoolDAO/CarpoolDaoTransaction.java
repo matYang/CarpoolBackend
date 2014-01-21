@@ -424,7 +424,11 @@ public class CarpoolDaoTransaction {
 	public static HashMap<Integer,Message> getMsgHashMap(ArrayList<Integer> list) throws LocationNotFoundException {
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		ArrayList<Message> mlist = new ArrayList<Message>();
-		HashMap<Integer,Message> map = new HashMap<Integer,Message>();		
+		HashMap<Integer,Message> map = new HashMap<Integer,Message>();
+		//Already checked list size, but for the consistency of the code we still check list's size
+		if(list.size()<=0){
+			return map;
+		}
 		String query = "SELECT * FROM carpoolDAOMessage where ";
 		for(int i=0;i<list.size()-1;i++){
 			query += "messageId = ? OR ";
@@ -479,6 +483,9 @@ public class CarpoolDaoTransaction {
 
 	public static HashMap<Integer,User> getUsersHashMap(ArrayList<Integer> list) throws LocationNotFoundException{
 		HashMap<Integer,User> map = new HashMap<Integer,User>();
+		if(list.size()<=0){
+			return map;
+		}
 		String query = "SELECT * FROM carpoolDAOUser where ";
 		for(int i=0;i<list.size()-1;i++){
 			query += "userId = ? OR ";

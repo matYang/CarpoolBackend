@@ -809,6 +809,9 @@ public class CarpoolDaoLetter {
 
 	private static HashMap<Integer,User> getHashMap(ArrayList<Integer> list) throws LocationNotFoundException{
 		HashMap<Integer,User> map = new HashMap<Integer,User>();
+		if(list.size()<=0){
+			return map;
+		}
 		String query = "SELECT * FROM carpoolDAOUser where ";
 		for(int i=0;i<list.size()-1;i++){
 			query += "userId = ? OR ";
