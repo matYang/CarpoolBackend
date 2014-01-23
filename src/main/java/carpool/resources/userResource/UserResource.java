@@ -45,16 +45,12 @@ public class UserResource extends PseudoResource{
 			
 			//if email is used, do not register
 			if (!EmailDaoService.isEmailAvailable(email)){
-				throw new ValidationException("Email already in use");
+				throw new ValidationException("该邮箱已被注册");
 			}
 			
-
-			if (Validator.isPasswordFormatValid(password) && Validator.isEmailFormatValid(email)){
-
-				user = new User(password, email, location, g);
-			}
+			user = new User(password, email, location, g);
 		} catch (JSONException|IOException e) {
-			throw new ValidationException("Invalid data formats");
+			throw new ValidationException("无效数据格式");
 		}
 
 		return user;
@@ -86,7 +82,7 @@ public class UserResource extends PseudoResource{
 			this.checkEntity(entity);
 			User newUser = parseJSON(entity);
 			
-			if (newUser.validate()){
+			if (newUser.validate_create()){
 				creationFeedBack = UserDaoService.createNewUser(newUser);
 
 				DebugLog.d("@Post::resources::createUser: available: " + creationFeedBack.getEmail() + " id: " +  creationFeedBack.getUserId());
