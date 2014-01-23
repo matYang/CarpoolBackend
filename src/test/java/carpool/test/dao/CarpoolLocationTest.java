@@ -301,5 +301,80 @@ public class CarpoolLocationTest {
 			fail();
 		}
 	}
+	
+	@Test
+	public void testLocationDistance() throws LocationNotFoundException{
+		CarpoolDaoBasic.clearBothDatabase();
+		
+		String province = "Ontario";
+		String city1 = "Waterloo";
+		String region1 = "Waterloo";
+		String pointName1 = "pointName";
+		String pointAddress1 = "410 Westcroft Drive";
+		Double lat1 = 43.448931;
+		Double lng1 = -80.566277;
+		long match1 = -1;		
+		Location location = new Location(province,city1,region1,pointName1,pointAddress1,lat1,lng1,match1);
+		
+		String city2 = "Waterloo";
+		String region2 = "Waterloo";
+		String pointName2 = "pointName2";
+		String pointAddress2 = "200 University Ave";
+		Double lat2 = 43.470487;
+		Double lng2 = -80.539326;
+		long match2 = -1;		
+		Location location2 = new Location(province,city2,region2,pointName2,pointAddress2,lat2,lng2,match2);
+		
+		//Test Univeristy vs Home
+		boolean within = false;
+		within = LocationDaoService.withIntheDistance(location, location2, "K", 4);
+		if(within){
+			//Passed;
+		}else{
+			fail();
+		}
+		
+		within = LocationDaoService.withIntheDistance(location, location2, "K", 3);
+		if(!within){
+			//Passed;
+		}else{
+			fail();
+		}
+		
+		//China
+		location2.setLat(22.852133);
+		location2.setLng(113.724262);
+		
+		within = LocationDaoService.withIntheDistance(location, location2, "K", 1000);
+		if(!within){
+			//Passed;
+		}else{
+			fail();
+		}
+		
+		//The same place
+		location2.setLat(lat1);
+		location2.setLng(lng1);
+		
+		within = LocationDaoService.withIntheDistance(location, location2, "K", 0);
+		if(within){
+			//Passed;
+		}else{
+			fail();
+		}
+		
+		//Test Close places
+		location2.setLat(43.447556);
+		location2.setLng(-80.567546);
+		
+		within = LocationDaoService.withIntheDistance(location, location2, "K", 0.5);
+		if(within){
+			//Passed;
+		}else{
+			fail();
+		}
+		
+	}
+	
 
 }

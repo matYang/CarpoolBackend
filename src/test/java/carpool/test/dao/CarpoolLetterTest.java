@@ -804,4 +804,99 @@ public class CarpoolLetterTest {
 
 	}
 
+	@Test
+	public void testGetUncheckedLettersByUserId() throws ValidationException, LocationNotFoundException, UserNotFoundException{
+		CarpoolDaoBasic.clearBothDatabase();
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		CarpoolDaoUser.addUserToDatabase(user);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
+		CarpoolDaoUser.addUserToDatabase(user2);
+		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation, gender.female);
+		CarpoolDaoUser.addUserToDatabase(user3);
+
+		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
+		Letter letter2 =  new Letter(user2.getUserId(),user.getUserId(),Constants.LetterType.user,"Test2");
+		Letter letter3 =  new Letter(user3.getUserId(),user.getUserId(),Constants.LetterType.user,"Test3");
+		Letter letter4 =  new Letter(-1,user.getUserId(),Constants.LetterType.system,"Test4");
+		Letter letter5 =  new Letter(user.getUserId(),user.getUserId(),Constants.LetterType.user,"Test5");
+		Letter letter6 =  new Letter(user2.getUserId(),user3.getUserId(),Constants.LetterType.user,"Test6");
+		Letter letter7 =  new Letter(user3.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test7");
+		Letter letter8 =  new Letter(-1,user3.getUserId(),Constants.LetterType.system,"Test8");
+		Letter letter9 =  new Letter(-1,user2.getUserId(),Constants.LetterType.system,"Test9");
+		Letter letter10 = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test10");
+		Letter letter11 =  new Letter(user3.getUserId(),user.getUserId(),Constants.LetterType.user,"Test11");
+		Letter letter12 =  new Letter(user2.getUserId(),user.getUserId(),Constants.LetterType.user,"Test12");
+
+		//user
+		letter2.setState(LetterState.read);
+		letter3.setState(LetterState.unread);
+		letter4.setState(LetterState.read);
+		letter5.setState(LetterState.read);
+		letter11.setState(LetterState.invalid);
+		letter12.setState(LetterState.invalid);
+		//user2
+		letter.setState(LetterState.unread);
+		letter7.setState(LetterState.unread);
+		letter9.setState(LetterState.unread);
+		letter10.setState(LetterState.unread);
+		//user3
+		letter6.setState(LetterState.read);		
+		letter8.setState(LetterState.read);
+
+		try{
+			letter = CarpoolDaoLetter.addLetterToDatabases(letter);
+			letter2 = CarpoolDaoLetter.addLetterToDatabases(letter2);
+			letter3 = CarpoolDaoLetter.addLetterToDatabases(letter3);
+			letter4 = CarpoolDaoLetter.addLetterToDatabases(letter4);
+			letter5 = CarpoolDaoLetter.addLetterToDatabases(letter5);
+			letter6 = CarpoolDaoLetter.addLetterToDatabases(letter6);
+			letter7 = CarpoolDaoLetter.addLetterToDatabases(letter7);
+			letter8 = CarpoolDaoLetter.addLetterToDatabases(letter8);
+			letter9 = CarpoolDaoLetter.addLetterToDatabases(letter9);
+			letter10 = CarpoolDaoLetter.addLetterToDatabases(letter10);
+			letter11 = CarpoolDaoLetter.addLetterToDatabases(letter11);
+			letter12 = CarpoolDaoLetter.addLetterToDatabases(letter12);
+		}catch(UserNotFoundException e){
+			e.printStackTrace();
+		}
+
+		ArrayList<Letter> list = new ArrayList<Letter>();
+		list = CarpoolDaoLetter.getUncheckedLettersByUserId(user.getUserId());
+		if(list.size()==1&&list.get(0).equals(letter3)){
+			//Passed;
+		}else{
+			fail();
+		}
+
+		list = CarpoolDaoLetter.getUncheckedLettersByUserId(user2.getUserId());
+		if(list.size()==4&&list.get(0).equals(letter)
+				&& list.get(1).equals(letter7)&&list.get(2).equals(letter9)
+				&& list.get(3).equals(letter10)){
+			//Passed;
+		}else{
+			fail();
+		}		
+
+		list = CarpoolDaoLetter.getUncheckedLettersByUserId(user3.getUserId());
+		if(list.size()==0){
+			//Passed;
+		}else{
+			fail();
+		}
+
+	}
+
 }

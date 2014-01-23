@@ -73,5 +73,8 @@ public class LetterDaoService{
 		return list;
 	}
 
+	public static ArrayList<Letter> getUncheckedLettersByUserId(int userId) throws UserNotFoundException, LocationNotFoundException{
+		return sortLetters(CarpoolDaoLetter.getUncheckedLettersByUserId(userId));
+	}
 }
 

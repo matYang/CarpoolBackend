@@ -852,5 +852,34 @@ public class CarpoolDaoLetter {
 		return map;
 	}	
 
+	public static ArrayList<Letter> getUncheckedLettersByUserId(int userId) throws UserNotFoundException, LocationNotFoundException{
+		ArrayList<Letter> list = new ArrayList<Letter>();
+		String query = "SELECT * from CarpoolDAOLetter where to_UserId =? and letterState = ?";
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, userId);
+			stmt.setInt(2, LetterState.unread.code);				
+			rs = stmt.executeQuery();
+			while(rs.next()){
+				list.add(createLetterByResultSet(rs));
+			}					
+		}catch(SQLException e){
+			DebugLog.d(e);			
+		}finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+				if (conn != null)  conn.close(); 	
+				if (rs != null) rs.close();
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+		} 
+		return list;
+	}
 
 }
