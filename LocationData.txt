@@ -3,9 +3,9 @@
 #[province]-[city]-[region]-[name]-[address]-[lat]-[lng]-[radius]-[synonyms]
 
 [Ontario]-[Waterloo]-[Waterloo]-[Waterloo]-[Waterloo, On]-[43.479332]-[-80.533272]-[4]-[滑铁卢,水loo,卢村,滑铁卢大学,滑大,university of waterloo,wilfrid laurier university,cmall,conestoga]
-[Ontario]-[Toronto]-[Mississauga]-[Toronto Pearson International Airport]-[6301 Silver Dart Dr, Mississauga, ON L5P 1B2]-[43.677805]-[-79.623955]-[3]-[密西沙加,皮尔逊,机场,航站楼,terminal]
+[Ontario]-[Toronto]-[Mississauga]-[Pearson Airport]-[6301 Silver Dart Dr, Mississauga, ON L5P 1B2]-[43.677805]-[-79.623955]-[3]-[密西沙加,皮尔逊,机场,航站楼,terminal]
 [Ontario]-[Toronto]-[Toronto]-[Downtown Toronto]-[Downtown, Toronto, On]-[43.651603]-[-79.386613]-[1]-[多伦多,多伦多市中心]
 [Ontario]-[Toronto]-[Toronto]-[Finch Station]-[Finch Station, Toronto, On]-[43.780762]-[-79.414835]-[1]-[多伦多,芬治站]
-[Ontario]-[Toronto]-[Toronto]-[Yorkdale Shopping Centre]-[Yorkdale, Toronto, On]-[43.725863]-[-79.453046]-[1]-[多伦多,约克戴尔购物中心]
+[Ontario]-[Toronto]-[Toronto]-[Yorkdale Mall]-[Yorkdale, Toronto, On]-[43.725863]-[-79.453046]-[1]-[多伦多,约克戴尔购物中心]
 [Ontario]-[Markham]-[Markham]-[Pacific Mall]-[Pacific Mall, Markham, ON L3R 0N8]-[43.825874]-[-79.305607]-[2]-[万锦市,太古广场]
 [Ontario]-[Niagara Falls]-[Niagara Falls]-[Niagara Falls]-[Niagara Falls, ON]-[43.089545]-[-79.092986]-[3]-[尼亚加拉瀑布]

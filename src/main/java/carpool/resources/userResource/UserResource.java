@@ -52,13 +52,12 @@ public class UserResource extends PseudoResource{
 		} catch (JSONException|IOException e) {
 			throw new ValidationException("无效数据格式");
 		}
-
 		return user;
 	}
 	
 	@Get
 	/**
-	 * Retrieve all users from server. This API is intended solely for testing purposes
+	 * Retrieve all users from server. This API is intended solely for testing
 	 */
 	public Representation getAllUsers() throws LocationNotFoundException {
 
