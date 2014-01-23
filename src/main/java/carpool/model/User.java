@@ -773,7 +773,17 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		//TODO remove true
 		return true || Validator.isEmailFormatValid(this.email) && Validator.isNameFormatValid(this.name) && Validator.isPasswordFormatValid(this.password) && Validator.isPhoneFormatValid(this.phone) && Validator.isQqFormatValid(this.qq);
 	}
-
+	
+	public boolean validate_create() throws ValidationException{
+		if (!Validator.isEmailFormatValid(this.email)){
+			throw new ValidationException("邮箱格式不正确");
+		}
+		else if (!Validator.isPasswordFormatValid(this.password)){
+			throw new ValidationException("密码格式不正确");
+		}
+		return true;
+	}
+	
 	public String getPassword() {
 		return  this.password;
 	}
