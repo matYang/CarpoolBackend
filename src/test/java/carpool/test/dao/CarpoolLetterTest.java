@@ -3,6 +3,7 @@ package carpool.test.dao;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import org.junit.Test;
 
@@ -13,6 +14,7 @@ import carpool.common.DebugLog;
 import carpool.constants.Constants;
 import carpool.constants.Constants.LetterState;
 import carpool.constants.Constants.gender;
+import carpool.dbservice.LetterDaoService;
 import carpool.exception.letter.LetterNotFoundException;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -387,7 +389,7 @@ public class CarpoolLetterTest {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		
+
 		try{
 			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.system, Constants.LetterDirection.inbound);
 			if(list.size()==1 && list.get(0).equals(letter4)){
@@ -465,7 +467,7 @@ public class CarpoolLetterTest {
 		}catch(Exception e){			
 			e.printStackTrace();
 		}
-						
+
 		try{
 			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
 			if(list.size()==5 && list.get(0).equals(letter2)&&list.get(1).equals(letter3)&&list.get(2).equals(letter5)&&list.get(3).equals(letter11)&&list.get(4).equals(letter12)){
@@ -476,7 +478,7 @@ public class CarpoolLetterTest {
 		}catch(Exception e){			
 			e.printStackTrace();
 		}
-		
+
 		try{
 			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.outbound);
 			if(list.size()==3 && list.get(0).equals(letter)&&list.get(1).equals(letter5)&&list.get(2).equals(letter10)){
@@ -487,7 +489,7 @@ public class CarpoolLetterTest {
 		}catch(Exception e){			
 			e.printStackTrace();
 		}
-		
+
 		try{
 			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.both);
 			if(list.size()==7 && list.get(0).equals(letter)&&list.get(1).equals(letter2)&&list.get(2).equals(letter3)&&list.get(3).equals(letter5)&&list.get(4).equals(letter10)&&list.get(5).equals(letter11)&&list.get(6).equals(letter12)){
@@ -722,6 +724,84 @@ public class CarpoolLetterTest {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+
+	@Test
+	public void testSortLetters() throws ValidationException, LocationNotFoundException{
+		CarpoolDaoBasic.clearBothDatabase();
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		CarpoolDaoUser.addUserToDatabase(user);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
+		CarpoolDaoUser.addUserToDatabase(user2);
+		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation, gender.female);
+		CarpoolDaoUser.addUserToDatabase(user3);
+
+		ArrayList<Letter> list = new ArrayList<Letter>();
+
+		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
+		list.add(letter);
+		Letter letter2 =  new Letter(user2.getUserId(),user.getUserId(),Constants.LetterType.user,"Test2");
+		list.add(letter2);
+		Letter letter3 =  new Letter(user3.getUserId(),user.getUserId(),Constants.LetterType.user,"Test3");
+		list.add(letter3);
+		Letter letter4 =  new Letter(-1,user.getUserId(),Constants.LetterType.system,"Test4");
+		list.add(letter4);
+		Letter letter5 =  new Letter(user.getUserId(),user.getUserId(),Constants.LetterType.user,"Test5");
+		list.add(letter5);
+		Letter letter6 =  new Letter(user2.getUserId(),user3.getUserId(),Constants.LetterType.user,"Test6");
+		list.add(letter6);
+
+		try{
+			letter = CarpoolDaoLetter.addLetterToDatabases(letter);
+			letter2 = CarpoolDaoLetter.addLetterToDatabases(letter2);
+			letter3 = CarpoolDaoLetter.addLetterToDatabases(letter3);
+			letter4 = CarpoolDaoLetter.addLetterToDatabases(letter4);
+			letter5 = CarpoolDaoLetter.addLetterToDatabases(letter5);
+			letter6 = CarpoolDaoLetter.addLetterToDatabases(letter6);			
+		}catch(UserNotFoundException e){
+			e.printStackTrace();
+		}
+
+		Calendar dt = Calendar.getInstance();
+		Calendar at = (Calendar) dt.clone();
+		at.add(Calendar.DAY_OF_YEAR, 1);
+		Calendar dt2 = (Calendar) dt.clone();
+		dt2.set(Calendar.HOUR_OF_DAY, dt.get(Calendar.HOUR_OF_DAY)-1);
+		Calendar at2 = (Calendar) dt.clone();
+		at2.add(Calendar.DAY_OF_YEAR, -1);
+		Calendar dt3 = (Calendar) dt.clone();
+		dt3.add(Calendar.DAY_OF_YEAR, 2);
+		Calendar at3 = (Calendar) dt.clone();
+		at3.add(Calendar.DAY_OF_YEAR, -2);
+
+		letter.setSend_time(dt3);
+		letter2.setSend_time(dt);
+		letter3.setSend_time(at2);
+		letter4.setSend_time(at3);
+		letter5.setSend_time(at);
+		letter6.setSend_time(dt2);
+
+		ArrayList<Letter> testResult = new ArrayList<Letter>();
+		testResult = LetterDaoService.sortLetters(list);
+		if(testResult.size()==list.size() && testResult.get(0).equals(letter4) && testResult.get(1).equals(letter3) && testResult.get(2).equals(letter6)&&testResult.get(3).equals(letter2)&&testResult.get(4).equals(letter5)&&testResult.get(5).equals(letter)){
+			//Passed;
+		}else{
+			fail();
+		}
+
 	}
 
 }

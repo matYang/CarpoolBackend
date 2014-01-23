@@ -1,11 +1,14 @@
 package carpool.dbservice;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import carpool.asyncRelayExecutor.ExecutorProvider;
 import carpool.asyncTask.relayTask.LetterRelayTask;
 import carpool.asyncTask.relayTask.NotificationRelayTask;
 import carpool.carpoolDAO.CarpoolDaoLetter;
+import carpool.common.DateUtility;
 import carpool.constants.Constants.LetterDirection;
 import carpool.constants.Constants.LetterType;
 import carpool.exception.letter.LetterNotFoundException;
@@ -61,6 +64,14 @@ public class LetterDaoService{
 		CarpoolDaoLetter.deleteLetter(letterId);
 	}
 
+	public static ArrayList<Letter> sortLetters(ArrayList<Letter> list){
+		Collections.sort(list, new Comparator<Letter>() {
+			@Override public int compare(final Letter letter1, final Letter letter2) {
+				return DateUtility.toSQLDateTime(letter1.getSend_time()).compareTo(DateUtility.toSQLDateTime(letter2.getSend_time()));
+			}
+		});
+		return list;
+	}
 
 }
 

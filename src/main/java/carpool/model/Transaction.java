@@ -405,8 +405,7 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 					this.providerNote.equals(t.providerNote) &&
 					this.customerEvaluation == t.customerEvaluation &&
 					this.providerEvaluation == t.providerEvaluation &&	
-					this.departure_location.equals(t.departure_location) &&
-					this.departure_time.getTime().toString().equals(t.departure_time.getTime().toString()) &&
+					this.departure_location.equals(t.departure_location) &&					
 					this.departure_timeSlot == t.departure_timeSlot &&
 					this.departure_seatsBooked == t.departure_seatsBooked &&
 					HelperOperator.isArrayListEqual(this.departure_priceList, t.departure_priceList) && 
