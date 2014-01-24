@@ -21,13 +21,13 @@ import carpool.model.representation.SearchRepresentation;
 import carpool.model.representation.UserSearchRepresentation;
 
 public class UserDaoService{
-	
-	
+
+
 	/*****
 	 *  User's CRUD
 	 * @throws LocationNotFoundException 
 	 *****/
-	
+
 	public static ArrayList<User> getAllUsers() throws LocationNotFoundException{
 		return CarpoolDaoUser.getAllUsers();
 	}
@@ -35,13 +35,13 @@ public class UserDaoService{
 	public static User getUserById(int id) throws UserNotFoundException, LocationNotFoundException{
 		return CarpoolDaoUser.getUserById(id);
 	}
-	
-	
+
+
 	public static User createNewUser(User newUser) throws ValidationException{
 		User user = CarpoolDaoUser.addUserToDatabase(newUser);
 		//No exception, then create the userSHfile on AWS
 		FileService.initializeFileForUser(user.getUserId());
-		
+
 		return user;
 	}
 
@@ -49,8 +49,8 @@ public class UserDaoService{
 
 	public static User updateUser(User user) throws UserNotFoundException, ValidationException{
 
-			CarpoolDaoUser.UpdateUserInDatabase(user);
-			return user;		
+		CarpoolDaoUser.UpdateUserInDatabase(user);
+		return user;		
 	}
 
 
@@ -63,7 +63,7 @@ public class UserDaoService{
 	 *  The follows are user's passwords related
 	 * @throws LocationNotFoundException 
 	 *****/
-	
+
 	public static boolean changePassword(int userId, String oldPassword, String newPassword) throws UserNotFoundException, ValidationException, LocationNotFoundException{
 		if(oldPassword.equals(newPassword)){
 			throw new ValidationException("新密码不应该和旧密码相同");
@@ -76,9 +76,9 @@ public class UserDaoService{
 		} catch (Exception e) {
 			throw new ValidationException("操作失败，请稍后再试");
 		}
-		
+
 	}
-	
+
 	public static boolean resetUserPassword(int userId, String newPassword) throws UserNotFoundException{
 		try {
 			User user = CarpoolDaoUser.getUserById(userId);
@@ -93,12 +93,12 @@ public class UserDaoService{
 		}
 		return false;
 	}
-	
-	
+
+
 	/*****
 	 * The follows are user relations used separately on API 
 	 *****/
-	
+
 	public static boolean watchUser(int userId, int targetUserId) throws UserNotFoundException{
 
 		try {
@@ -107,7 +107,7 @@ public class UserDaoService{
 			Notification n = new Notification(Constants.NotificationEvent.watched, targetUserId);
 			n.setInitUserId(userId);
 			NotificationDaoService.sendNotification(n);
-			
+
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -127,11 +127,11 @@ public class UserDaoService{
 		return false;
 	}
 
-	
+
 	public static ArrayList<User> getWatchedUsers(int id) throws UserNotFoundException, LocationNotFoundException{
 		return CarpoolDaoUser.getSocialListOfUser(id);
 	}
-	
+
 	public static boolean isUserWatched(int userId, int targetUserId){
 		return CarpoolDaoUser.hasUserInSocialList(userId, targetUserId);
 	}
@@ -147,14 +147,18 @@ public class UserDaoService{
 	public static ArrayList<Message> getHistoryMessageByUserId(int id) throws UserNotFoundException, LocationNotFoundException{
 		return CarpoolDaoUser.getUserMessageHistory(id);
 	}
-	
-	
+
+
 	public static ArrayList<Transaction> getTransactionByUserId(int id) throws UserNotFoundException, MessageNotFoundException, LocationNotFoundException{
 		return CarpoolDaoTransaction.getAllTransactionByUserId(id);
 	}
-	
+
 	public static ArrayList<Notification> getNotificationByUserId(int userId) throws UserNotFoundException, MessageNotFoundException, TransactionNotFoundException, LocationNotFoundException{
-		return CarpoolDaoNotification.getByUserId(userId);
+		return CarpoolDaoNotification.getByUserId(userId,false);
+	}
+
+	public static ArrayList<Notification> getUncheckedNotificationByUserId(int userId) throws UserNotFoundException, MessageNotFoundException, TransactionNotFoundException, LocationNotFoundException{
+		return NotificationDaoService.sortNotifications(CarpoolDaoNotification.getByUserId(userId,true));
 	}
 
 	public static void updateUserSearch(SearchRepresentation userSearch, int id) throws PseudoException {

@@ -26,7 +26,7 @@ import carpool.model.*;
 
 
 public class NotificationDaoService{
-	
+
 	/**
 	 *  submitting to execution 
 	 */
@@ -35,17 +35,17 @@ public class NotificationDaoService{
 		ns.add(n);
 		sendNotification(ns);
 	}
-	
+
 	public static void sendNotification(ArrayList<Notification> ns){
 		NotificationRelayTask nTask = new NotificationRelayTask(ns);
 		createNewNotification(ns);
-        ExecutorProvider.executeRelay(nTask);
-        
-        
-        //trying to send out emai notifications
-        Map<Integer, ArrayList<Notification>> bufferMap = emailRelayBufferMapMaker(ns);
-        for (Entry<Integer, ArrayList<Notification>> entry : bufferMap.entrySet()){
-        	try {
+		ExecutorProvider.executeRelay(nTask);
+
+
+		//trying to send out emai notifications
+		Map<Integer, ArrayList<Notification>> bufferMap = emailRelayBufferMapMaker(ns);
+		for (Entry<Integer, ArrayList<Notification>> entry : bufferMap.entrySet()){
+			try {
 				User user = UserDaoService.getUserById(entry.getKey());
 				if (user.isEmailNotice()){
 					SESRelayTask eTask = new SESRelayTask(user.getEmail(), EmailEvent.notification, JSONFactory.toJSON(entry.getValue()).toString());
@@ -54,12 +54,12 @@ public class NotificationDaoService{
 			} catch (UserNotFoundException | LocationNotFoundException e) {
 				DebugLog.d(e);
 			}
-        }
+		}
 	}
-	
+
 	private static HashMap<Integer, ArrayList<Notification>> emailRelayBufferMapMaker(ArrayList<Notification> ns){
 		HashMap<Integer, ArrayList<Notification>> bufferMap = new HashMap<Integer, ArrayList<Notification>>();
-		
+
 		for (Notification n : ns){
 			if (bufferMap.get(n.getTargetUserId()) == null){
 				ArrayList<Notification> nList = new ArrayList<Notification>();
@@ -70,13 +70,13 @@ public class NotificationDaoService{
 				bufferMap.get(n.getTargetUserId()).add(n);
 			}
 		}
-		
-		
+
+
 		return bufferMap;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * get all the notifications from database
 	 * @throws LocationNotFoundException 
@@ -84,8 +84,8 @@ public class NotificationDaoService{
 	public static ArrayList<Notification> getAllNotifications() throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException {
 		return CarpoolDaoNotification.getAllNotifications();
 	}
-	
-	
+
+
 
 	/**
 	 * created a new notification in SQL, constructed using the notification initialization constructor
@@ -94,13 +94,13 @@ public class NotificationDaoService{
 	public static Notification createNewNotification(Notification newNotification){
 		return CarpoolDaoNotification.addNotificationToDatabase(newNotification);
 	}
-	
+
 	/**
 	 * created new notifications in SQL, note all of these notification will be different
 	 * @Return the notifications just stored, with the notificationIds
 	 */
 	public static ArrayList<Notification> createNewNotification(ArrayList<Notification> newNotifications){
-		
+
 		return CarpoolDaoNotification.addNotificationsToDatabase(newNotifications);
 	}
 
@@ -118,11 +118,11 @@ public class NotificationDaoService{
 		if(notification==null){
 			throw new NotificationNotFoundException("对不起，您想要删除的提醒不存在，可能它已被删除");
 		}
-		
+
 		CarpoolDaoNotification.deleteNotification(notificationId);
-       
+
 	}
-	
+
 	/**
 	 * mark the notification as read(change its state)
 	 * if not found, throw NotificationNotFoundException
@@ -139,7 +139,16 @@ public class NotificationDaoService{
 			CarpoolDaoNotification.updateNotificationInDatabase(notification);
 		}
 		return notification;
-       
+
+	}	
+
+	public static ArrayList<Notification> sortNotifications(ArrayList<Notification> list){
+		Collections.sort(list, new Comparator<Notification>() {
+			@Override public int compare(final Notification n1, final Notification n2) {
+				return DateUtility.toSQLDateTime(n1.getCreationTime()).compareTo(DateUtility.toSQLDateTime(n2.getCreationTime()));
+			}
+		});
+		return list;
 	}
-	
+
 }

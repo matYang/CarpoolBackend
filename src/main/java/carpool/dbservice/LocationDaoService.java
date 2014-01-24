@@ -23,7 +23,7 @@ import carpool.model.representation.DefaultLocationRepresentation;
  */
 public class LocationDaoService {	
 	public static int defalutLocationsNum=0;
-	
+
 	public static void init() throws LocationException, ValidationException, LocationNotFoundException{
 		if (!CarpoolDaoLocation.isLocationPoolEmpty()){
 			return;
@@ -55,5 +55,31 @@ public class LocationDaoService {
 	}
 
 
+	/*
+	 * 'M' is statute miles
+	 * 'K' is kilometers (default)
+	 * 'N' is nautical miles
+	 */
+	public static boolean withIntheDistance(Location l1, Location l2, String Unit, double distance){
+		double lat1 = l1.getLat();
+		double lat2 = l2.getLat();
+		double lon1 = l1.getLng();
+		double lon2 = l2.getLng();
+
+		double radlat1 = Math.PI * lat1/180;
+		double radlat2 = Math.PI * lat2/180;
+
+		double theta = lon1-lon2;			
+		double radtheta = Math.PI * theta/180;		
+		double calDist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+		calDist = Math.acos(calDist);			
+		calDist = calDist * 180/Math.PI;			
+		calDist = calDist * 60 * 1.1515;			
+		if (Unit=="K") { calDist = calDist * 1.609344; }
+		if (Unit=="N") { calDist = calDist * 0.8684; }
+		//System.out.println("The distance between two places is "+calDist+"Km");
+		return calDist<=distance;			   
+
+	}
 
 }

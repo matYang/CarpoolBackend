@@ -322,12 +322,12 @@ public class CarpoolDaoNotification {
 		return ilist;
 	}
 
-	public static ArrayList<Notification> getByUserId(int userId) throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException{
+	public static ArrayList<Notification> getByUserId(int userId, boolean onlyGetUnchecked) throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException{
 		ArrayList<Notification> list = new ArrayList<Notification>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		ArrayList<Integer> milist = new ArrayList<Integer>();
 		ArrayList<Integer> tlist = new ArrayList<Integer>();
-		String query = "select * from carpoolDAONotification where target_UserId = ? AND historyDeleted = 0;";
+		String query = onlyGetUnchecked ? "select * from carpoolDAONotification where target_UserId = ? AND notificationState = 0 AND historyDeleted = 0;" : "select * from carpoolDAONotification where target_UserId = ? AND historyDeleted = 0;";
 
 		PreparedStatement stmt = null;
 		Connection conn = null;
