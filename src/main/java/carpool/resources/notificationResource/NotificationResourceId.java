@@ -107,7 +107,7 @@ public class NotificationResourceId extends PseudoResource{
 		}
 		
 		this.addCORSHeader();
-        return null;
+		return new JsonRepresentation(new JSONObject());
     }
 
 }

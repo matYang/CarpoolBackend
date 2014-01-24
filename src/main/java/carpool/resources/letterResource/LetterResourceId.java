@@ -114,7 +114,7 @@ public class LetterResourceId extends PseudoResource{
 		}
 		
 	    this.addCORSHeader();
-        return null;
+	    return new JsonRepresentation(new JSONObject());
     }
 	
 }

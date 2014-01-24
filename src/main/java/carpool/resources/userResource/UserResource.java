@@ -2,6 +2,7 @@ package carpool.resources.userResource;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import org.restlet.engine.header.Header;
 import org.restlet.ext.json.JsonRepresentation;
@@ -15,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.Validator;
 import carpool.constants.Constants;
@@ -42,6 +44,8 @@ public class UserResource extends PseudoResource{
 			String email = jsonUser.getString("email");
 			Location location = new Location(jsonUser.getJSONObject("location"));
 			gender g = Constants.gender.fromInt(jsonUser.getInt("gender"));
+			Calendar birthday = DateUtility.castFromAPIFormat(jsonUser.getString("birthday"));
+			
 			
 			//if email is used, do not register
 			if (!EmailDaoService.isEmailAvailable(email)){
@@ -49,6 +53,7 @@ public class UserResource extends PseudoResource{
 			}
 			
 			user = new User(password, email, location, g);
+			user.setBirthday(birthday);
 		} catch (JSONException|IOException e) {
 			throw new ValidationException("无效数据格式");
 		}
