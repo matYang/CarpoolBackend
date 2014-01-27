@@ -51,5 +51,10 @@ public class AdminService {
 	public static void forceTransactionMonitoring() throws LocationNotFoundException{
 		TransactionCleaner.Clean();
 	}
+	
+	public static void forceReloadLocation() throws PseudoException{
+		//TODO
+
+	}
 
 }

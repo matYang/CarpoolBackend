@@ -11,7 +11,7 @@ import carpool.constants.Constants.AdminRoutineAction;
 import carpool.dbservice.admin.AdminService;
 import carpool.resources.PseudoResource;
 
-public class AdminRoutineResource extends PseudoResource{
+public class AdminStateResource extends PseudoResource{
 	
     @Get
     public Representation updateTransaction(Representation entity) {
@@ -30,26 +30,9 @@ public class AdminRoutineResource extends PseudoResource{
 				
 			}
 			
-			AdminRoutineAction action = AdminRoutineAction.fromInt(actionIndex);
 			
-			switch(action){
-				case clearBothDatabase:
-					AdminService.clearBothDatabase();
-					break;
-				case messageClean:
-					AdminService.forceMessageClean();
-					break;
-				case transactionMonitor:
-					AdminService.forceTransactionMonitoring();
-					break;
-				case cleanAndMonitor:
-					AdminService.forceMessageClean();
-					AdminService.forceTransactionMonitoring();
-					break;
-				case reloadLocation:
-					AdminService.forceReloadLocation();
-					break;
-			}
+			//TODO put the functional code here
+			
 			
 		} catch(Exception e){
 			return this.doException(e);

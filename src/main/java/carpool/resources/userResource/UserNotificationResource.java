@@ -28,7 +28,6 @@ import carpool.resources.PseudoResource;
 
 
 
-
 public class UserNotificationResource extends PseudoResource{	
 
     @Get 
