@@ -215,7 +215,7 @@ public class Constants {
     public static final String access_admin = "4rkozalh48z1";
     
     public static enum AdminRoutineAction{
-    	clearBothDatabase(0), messageClean(1), transactionMonitor(2), cleanAndMonitor(3);
+    	clearBothDatabase(0), messageClean(1), transactionMonitor(2), cleanAndMonitor(3), reloadLocation(4);
     	public int code;
     	AdminRoutineAction(int code){
             this.code = code;

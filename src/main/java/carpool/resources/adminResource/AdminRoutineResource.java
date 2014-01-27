@@ -46,6 +46,9 @@ public class AdminRoutineResource extends PseudoResource{
 					AdminService.forceMessageClean();
 					AdminService.forceTransactionMonitoring();
 					break;
+				case reloadLocation:
+					AdminService.forceReloadLocation();
+					break;
 			}
 			
 		} catch(Exception e){
