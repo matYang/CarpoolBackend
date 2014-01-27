@@ -160,6 +160,10 @@ public class UserDaoService{
 	public static ArrayList<Notification> getUncheckedNotificationByUserId(int userId) throws UserNotFoundException, MessageNotFoundException, TransactionNotFoundException, LocationNotFoundException{
 		return NotificationDaoService.sortNotifications(CarpoolDaoNotification.getByUserId(userId,true));
 	}
+	
+	public static ArrayList<Letter> getUncheckedLettersByUserId(int userId) throws UserNotFoundException, LocationNotFoundException{
+		return LetterDaoService.getUncheckedLettersByUserId(userId);
+	}
 
 	public static void updateUserSearch(SearchRepresentation userSearch, int id) throws PseudoException {
 		User user = getUserById(id);

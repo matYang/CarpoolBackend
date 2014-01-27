@@ -10,6 +10,7 @@ import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
 import carpool.resources.adminResource.AdminRoutineResource;
 import carpool.resources.adminResource.AdminStateChangeResource;
+import carpool.resources.adminResource.AdminStateResource;
 import carpool.resources.dianmingResource.*;
 import carpool.resources.generalResource.*;
 import carpool.resources.letterResource.LetterResource;
@@ -171,8 +172,14 @@ public class RoutingService extends Application {
 		//	API for user getting transactions: /api/v1.0/users/transaction/:id
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserTransactionResourcePrefix + "/{id}", UserTransactionResource.class);
 		String UserNotificationResourcePrefix = "/notification";
-		//	API for user getting history messages: /api/v1.0/users/notification/:id
+		//	API for user getting history notification: /api/v1.0/users/notification/:id
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserNotificationResourcePrefix + "/{id}", UserNotificationResource.class);
+		String UserUncheckedNotificationResourcePrefix = "/uncheckedNotification";
+		//	API for user getting unread notificaitons: /api/v1.0/users/uncheckedNotification/:id
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserUncheckedNotificationResourcePrefix + "/{id}", UserUncheckedNotificationResource.class);
+		String UserUncheckedLetterResourcePefix = "/uncheckedLetter";
+		//	API for user getting unread letters: /api/v1.0/users/uncheckedLetter/:id
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserUncheckedLetterResourcePefix + "/{id}", UserUncheckedLetterResource.class);
 		String UserSearchHistoryResourcePrefix = "/searchHistory";
 		// API for user getting history messages: /api/v1.0/users/searchHistory/:id
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserSearchHistoryResourcePrefix + "/{id}", UserSearchHistoryResource.class);
@@ -208,6 +215,9 @@ public class RoutingService extends Application {
 		String RoutineResourcePrefix = "/routine";
 		//	API for admin to force routine tasks to take place: /api/v1.0/admin/routine
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + RoutineResourcePrefix, AdminRoutineResource.class);
+		String StateResourcePrefix = "/state";
+		//	API for admin to force routine tasks to take place: /api/v1.0/admin/state
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + StateResourcePrefix, AdminStateResource.class);
 		
 		return router;
 	}
