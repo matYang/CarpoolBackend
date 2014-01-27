@@ -40,6 +40,7 @@ public class Letter implements PseudoModel, PseudoValidatable, Comparable<Letter
 	private int letterId;
 	private int from_userId;
 	private int to_userId;
+	private int owner_userId;
 	private LetterType type;
 
 	private User from_user;
@@ -208,7 +209,14 @@ public class Letter implements PseudoModel, PseudoValidatable, Comparable<Letter
 	public void setHistoryDeleted(boolean historyDeleted) {
 		this.historyDeleted = historyDeleted;
 	}
-
+	
+	public void setOwner_id(int userId){
+		this.owner_userId = userId;
+	}
+	
+	public int getOwnder_id(){
+		return this.owner_userId;
+	}
 
 	@Override
 	public JSONObject toJSON(){
@@ -216,6 +224,7 @@ public class Letter implements PseudoModel, PseudoValidatable, Comparable<Letter
 		try {
 			jsonUser.put("letterId", this.getLetterId());
 			jsonUser.put("from_userId", this.getFrom_userId());
+			jsonUser.put("owner_userId", this.getOwnder_id());
 			jsonUser.put("to_userId", this.getTo_userId());
 			jsonUser.put("type", this.getType().code);
 			jsonUser.put("from_user", this.getFrom_user() == null ? new JSONObject() : this.getFrom_user().toJSON());
@@ -237,19 +246,19 @@ public class Letter implements PseudoModel, PseudoValidatable, Comparable<Letter
 	public boolean equals(Letter anotherLetter) {
 		try {
 			if(this.from_user==null&&this.to_user!=null){
-				return this.letterId == anotherLetter.letterId && this.from_userId == anotherLetter.from_userId && this.to_userId == anotherLetter.to_userId &&
+				return this.letterId == anotherLetter.letterId && this.from_userId == anotherLetter.from_userId && this.to_userId == anotherLetter.to_userId && this.owner_userId == anotherLetter.owner_userId &&
 						this.type == anotherLetter.type && anotherLetter.from_user==null &&this.to_user.equals(anotherLetter.to_user) && 
 						this.content.equals(anotherLetter.content) && this.state == anotherLetter.state && this.historyDeleted == anotherLetter.historyDeleted &&
 						this.send_time.getTime().toString().equals(anotherLetter.send_time.getTime().toString()) &&
 						this.check_time.getTime().toString().equals(anotherLetter.check_time.getTime().toString()); 
 			}else if(this.from_user!=null&&this.to_user!=null){
-				return this.letterId == anotherLetter.letterId && this.from_userId == anotherLetter.from_userId && this.to_userId == anotherLetter.to_userId &&
+				return this.letterId == anotherLetter.letterId && this.from_userId == anotherLetter.from_userId && this.to_userId == anotherLetter.to_userId && this.owner_userId == anotherLetter.owner_userId &&
 						this.type == anotherLetter.type &&this.from_user.equals(anotherLetter.from_user) && this.to_user.equals(anotherLetter.to_user) && 
 						this.content.equals(anotherLetter.content) && this.state == anotherLetter.state && this.historyDeleted == anotherLetter.historyDeleted &&
 						this.send_time.getTime().toString().equals(anotherLetter.send_time.getTime().toString()) &&
 						this.check_time.getTime().toString().equals(anotherLetter.check_time.getTime().toString());
 			}else if(this.from_user!=null&&this.to_user==null){
-				return this.letterId == anotherLetter.letterId && this.from_userId == anotherLetter.from_userId && this.to_userId == anotherLetter.to_userId &&
+				return this.letterId == anotherLetter.letterId && this.from_userId == anotherLetter.from_userId && this.to_userId == anotherLetter.to_userId && this.owner_userId == anotherLetter.owner_userId &&
 						this.type == anotherLetter.type && this.from_user.equals(anotherLetter.from_user) && anotherLetter.to_user==null&& 
 						this.content.equals(anotherLetter.content) && this.state == anotherLetter.state && this.historyDeleted == anotherLetter.historyDeleted &&
 						this.send_time.getTime().toString().equals(anotherLetter.send_time.getTime().toString()) &&
