@@ -16,12 +16,10 @@ public class AdminStateResource extends PseudoResource{
     @Get
     public Representation updateTransaction(Representation entity) {
     	String access_admin = "";
-    	int actionIndex = -1;
         
 		try {
 			
 			access_admin = this.getQueryVal("access_admin");
-			actionIndex = Integer.parseInt(this.getQueryVal("actionIndex"));
 			
 			if (!access_admin.equals(Constants.access_admin)){
 				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);

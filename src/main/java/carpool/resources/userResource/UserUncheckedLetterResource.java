@@ -12,7 +12,6 @@ import carpool.dbservice.UserDaoService;
 import carpool.exception.PseudoException;
 import carpool.factory.JSONFactory;
 import carpool.model.Letter;
-import carpool.model.Notification;
 import carpool.resources.PseudoResource;
 
 public class UserUncheckedLetterResource extends PseudoResource{
