@@ -25,6 +25,35 @@ import carpool.model.User;
 
 public class CarpoolLetterTest {
 
+	private boolean letterEquals(Letter l1, Letter l2){		
+		try {
+			if(l1.getFrom_user()==null&&l1.getTo_user()!=null){
+				return  l1.getFrom_userId() == l2.getFrom_userId() && l1.getTo_userId() == l2.getTo_userId() &&
+						l1.getType().code == l2.getType().code && l2.getFrom_user()==null && l1.getTo_user().equals(l2.getTo_user()) && 
+						l1.getContent().equals(l2.getContent()) && l1.getState().code == l2.getState().code && l1.isHistoryDeleted() == l2.isHistoryDeleted() &&
+						l1.getSend_time().getTime().toString().equals(l2.getSend_time().getTime().toString()) &&
+						l1.getCheck_time().getTime().toString().equals(l2.getCheck_time().getTime().toString());
+			}else if(l1.getFrom_user()!=null&&l1.getTo_user()!=null){
+				return  l1.getFrom_userId() == l2.getFrom_userId() && l1.getTo_userId() == l2.getTo_userId() &&
+						l1.getType().code == l2.getType().code && l1.getFrom_user().equals(l2.getFrom_user()) && l1.getTo_user().equals(l2.getTo_user()) && 
+						l1.getContent().equals(l2.getContent()) && l1.getState().code == l2.getState().code && l1.isHistoryDeleted() == l2.isHistoryDeleted() &&
+						l1.getSend_time().getTime().toString().equals(l2.getSend_time().getTime().toString()) &&
+						l1.getCheck_time().getTime().toString().equals(l2.getCheck_time().getTime().toString());
+			}else if(l1.getFrom_user()!=null&&l1.getTo_user()==null){
+				return  l1.getFrom_userId() == l2.getFrom_userId() && l1.getTo_userId() == l2.getTo_userId() &&
+						l1.getType().code == l2.getType().code && l1.getFrom_user().equals(l2.getFrom_user()) && l2.getTo_user()==null && 
+						l1.getContent().equals(l2.getContent()) && l1.getState().code == l2.getState().code && l1.isHistoryDeleted() == l2.isHistoryDeleted() &&
+						l1.getSend_time().getTime().toString().equals(l2.getSend_time().getTime().toString()) &&
+						l1.getCheck_time().getTime().toString().equals(l2.getCheck_time().getTime().toString());
+			}else{
+				return false;
+			}
+
+		} catch (ValidationException e) {
+			return false;
+		}
+	}
+
 	@Test
 	public void testAdd() throws ValidationException{
 		CarpoolDaoBasic.clearBothDatabase();
@@ -48,7 +77,7 @@ public class CarpoolLetterTest {
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
 		try{
 			letter = CarpoolDaoLetter.addLetterToDatabases(letter);
-			if(letter.getFrom_userId()==1 && letter.getTo_userId()==2 && letter.getType()==Constants.LetterType.user && letter.getContent().equals("Test")){
+			if(letter.getFrom_userId()==1 && letter.getOwnder_id()==2 && letter.getTo_userId()==2 && letter.getType()==Constants.LetterType.user && letter.getContent().equals("Test")){
 				//Passed;
 			}else{
 				fail();
@@ -238,7 +267,7 @@ public class CarpoolLetterTest {
 		ArrayList<Letter> list = new ArrayList<Letter>();
 		try{
 			list = CarpoolDaoLetter.getAllLetters();
-			if(list.size()==2 && list.get(0).equals(letter)&&list.get(1).equals(letter2)){
+			if(list.size()==3 && list.get(1).equals(letter)&&list.get(2).equals(letter2)){
 				//Passed;
 			}else{
 				fail();
@@ -252,7 +281,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getAllLetters();
-			if(list.size()==1 && list.get(0).equals(letter)){
+			if(list.size()==2 && list.get(1).equals(letter)){
 				//Passed;
 			}else{
 				fail();
@@ -315,7 +344,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(user.getUserId(), user2.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
-			if(list.size()==1 && list.get(0).equals(letter)){
+			if(list.size()==1 && letterEquals(list.get(0),letter)){
 				//Passed;
 			}else{
 				fail();
@@ -326,7 +355,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(user2.getUserId(), user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
-			if(list.size()==1 && list.get(0).equals(letter2)){
+			if(list.size()==1 && letterEquals(list.get(0),letter2)){
 				//Passed;
 			}else{
 				fail();
@@ -337,7 +366,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(user.getUserId(), user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
-			if(list.size()==1 && list.get(0).equals(letter5)){
+			if(list.size()==1 && letterEquals(list.get(0),letter5)){
 				//Passed;
 			}else{
 				fail();
@@ -348,7 +377,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(user2.getUserId(), user3.getUserId(), Constants.LetterType.user, Constants.LetterDirection.outbound);
-			if(list.size()==1 && list.get(0).equals(letter7)){
+			if(list.size()==1 && letterEquals(list.get(0),letter7)){
 				//Passed;
 			}else{
 				fail();
@@ -359,7 +388,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(user3.getUserId(),user2.getUserId(), Constants.LetterType.user, Constants.LetterDirection.both);
-			if(list.size()==2 && list.get(0).equals(letter6)&&list.get(1).equals(letter7)){
+			if(list.size()==2 && letterEquals(list.get(0),letter6) && letterEquals(list.get(1),letter7)){
 				//Passed;
 			}else{
 				fail();
@@ -370,7 +399,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.system, Constants.LetterDirection.both);
-			if(list.size()==2 && list.get(0).equals(letter4)&&list.get(1).equals(letter0)){
+			if(list.size()==2 && letterEquals(list.get(0),letter4)&&letterEquals(list.get(1),letter0)){
 				//Passed;
 			}else{
 				fail();
@@ -381,7 +410,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.system, Constants.LetterDirection.outbound);
-			if(list.size()==1 && list.get(0).equals(letter0)){
+			if(list.size()==1 && letterEquals(list.get(0),letter0)){
 				//Passed;
 			}else{
 				fail();
@@ -392,7 +421,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.system, Constants.LetterDirection.inbound);
-			if(list.size()==1 && list.get(0).equals(letter4)){
+			if(list.size()==1 && letterEquals(list.get(0),letter4)){
 				//Passed;
 			}else{
 				fail();
@@ -414,7 +443,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(-1, user3.getUserId(), Constants.LetterType.system, Constants.LetterDirection.both);
-			if(list.size()==1 && list.get(0).equals(letter8)){
+			if(list.size()==1 && letterEquals(list.get(0),letter8)){
 				//Passed;
 			}else{
 				fail();
@@ -437,7 +466,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(user.getUserId(), user2.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
-			if(list.size()==2 && list.get(0).equals(letter)&&list.get(1).equals(letter10)){
+			if(list.size()==2 && letterEquals(list.get(0),letter)&&letterEquals(list.get(1),letter10)){
 				//Passed;
 			}else{
 				fail();
@@ -448,7 +477,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(user3.getUserId(), user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
-			if(list.size()==2 && list.get(0).equals(letter3)&&list.get(1).equals(letter11)){
+			if(list.size()==2 && letterEquals(list.get(0),letter3)&&letterEquals(list.get(1),letter11)){
 				//Passed;
 			}else{
 				fail();
@@ -459,7 +488,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(user2.getUserId(), user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
-			if(list.size()==2 && list.get(0).equals(letter2)&&list.get(1).equals(letter12)){
+			if(list.size()==2 && letterEquals(list.get(0),letter2)&&letterEquals(list.get(1),letter12)){
 				//Passed;
 			}else{
 				fail();
@@ -470,7 +499,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
-			if(list.size()==5 && list.get(0).equals(letter2)&&list.get(1).equals(letter3)&&list.get(2).equals(letter5)&&list.get(3).equals(letter11)&&list.get(4).equals(letter12)){
+			if(list.size()==5 && letterEquals(list.get(0),letter2)&&letterEquals(list.get(1),letter3)&&letterEquals(list.get(2),letter5)&&letterEquals(list.get(3),letter11)&&letterEquals(list.get(4),letter12)){
 				//Passed;
 			}else{
 				fail();
@@ -481,7 +510,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.outbound);
-			if(list.size()==3 && list.get(0).equals(letter)&&list.get(1).equals(letter5)&&list.get(2).equals(letter10)){
+			if(list.size()==3 &&letterEquals(list.get(0),letter)&&letterEquals(list.get(1),letter5)&&letterEquals(list.get(2),letter10)){
 				//Passed;
 			}else{
 				fail();
@@ -492,7 +521,7 @@ public class CarpoolLetterTest {
 
 		try{
 			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.both);
-			if(list.size()==7 && list.get(0).equals(letter)&&list.get(1).equals(letter2)&&list.get(2).equals(letter3)&&list.get(3).equals(letter5)&&list.get(4).equals(letter10)&&list.get(5).equals(letter11)&&list.get(6).equals(letter12)){
+			if(list.size()==7 && letterEquals(list.get(0),letter)&&letterEquals(list.get(1),letter2)&&letterEquals(list.get(2),letter3)&&letterEquals(list.get(3),letter5)&&letterEquals(list.get(4),letter10)&&letterEquals(list.get(5),letter11)&&letterEquals(list.get(6),letter12)){
 				//Passed;
 			}else{
 				fail();
@@ -624,7 +653,7 @@ public class CarpoolLetterTest {
 		Letter letter2 =  new Letter(user2.getUserId(),user.getUserId(),Constants.LetterType.user,"Test2");
 		Letter letter3 =  new Letter(user3.getUserId(),user.getUserId(),Constants.LetterType.user,"Test3");
 		Letter letter4 =  new Letter(-1,user.getUserId(),Constants.LetterType.system,"Test4");
-		Letter letter5 =  new Letter(user.getUserId(),user.getUserId(),Constants.LetterType.user,"Test5");
+		Letter letter5 =  new Letter(user.getUserId(),user3.getUserId(),Constants.LetterType.user,"Test5");
 		Letter letter6 =  new Letter(user2.getUserId(),user3.getUserId(),Constants.LetterType.user,"Test6");
 		Letter letter7 =  new Letter(user3.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test7");
 		Letter letter8 =  new Letter(-1,user3.getUserId(),Constants.LetterType.system,"Test8");
@@ -653,10 +682,10 @@ public class CarpoolLetterTest {
 		try{
 			CarpoolDaoLetter.checkLetter(user.getUserId(),user2.getUserId());
 			list = CarpoolDaoLetter.getAllLetters();
-			if(list.size()==12&&list.get(0).getState().code==LetterState.read.code&&list.get(1).getState().code==LetterState.read.code&&list.get(2).getState().code==LetterState.unread.code
-					&&list.get(3).getState().code==LetterState.unread.code&&list.get(4).getState().code==LetterState.unread.code&&list.get(5).getState().code==LetterState.unread.code&&list.get(6).getState().code==LetterState.unread.code
-					&&list.get(7).getState().code==LetterState.unread.code&&list.get(8).getState().code==LetterState.unread.code&&list.get(9).getState().code==LetterState.read.code
-					&&list.get(10).getState().code==LetterState.unread.code&&list.get(11).getState().code==LetterState.read.code){
+			if(list.size()==24&&list.get(1).getState().code==LetterState.read.code&&list.get(3).getState().code==LetterState.read.code&&list.get(5).getState().code==LetterState.unread.code
+					&&list.get(7).getState().code==LetterState.unread.code&&list.get(9).getState().code==LetterState.unread.code&&list.get(11).getState().code==LetterState.unread.code&&list.get(13).getState().code==LetterState.unread.code
+					&&list.get(15).getState().code==LetterState.unread.code&&list.get(17).getState().code==LetterState.unread.code&&list.get(19).getState().code==LetterState.read.code
+					&&list.get(21).getState().code==LetterState.unread.code&&list.get(23).getState().code==LetterState.read.code){
 				//Passed;
 			}else{
 				fail();
@@ -668,10 +697,10 @@ public class CarpoolLetterTest {
 		try{
 			CarpoolDaoLetter.checkLetter(user2.getUserId(),user.getUserId());
 			list = CarpoolDaoLetter.getAllLetters();
-			if(list.size()==12&&list.get(0).getState().code==LetterState.read.code&&list.get(1).getState().code==LetterState.read.code&&list.get(2).getState().code==LetterState.unread.code
-					&&list.get(3).getState().code==LetterState.unread.code&&list.get(4).getState().code==LetterState.unread.code&&list.get(5).getState().code==LetterState.unread.code&&list.get(6).getState().code==LetterState.unread.code
-					&&list.get(7).getState().code==LetterState.unread.code&&list.get(8).getState().code==LetterState.unread.code&&list.get(9).getState().code==LetterState.read.code
-					&&list.get(10).getState().code==LetterState.unread.code&&list.get(11).getState().code==LetterState.read.code){
+			if(list.size()==24&&list.get(1).getState().code==LetterState.read.code&&list.get(3).getState().code==LetterState.read.code&&list.get(5).getState().code==LetterState.unread.code
+					&&list.get(7).getState().code==LetterState.unread.code&&list.get(9).getState().code==LetterState.unread.code&&list.get(11).getState().code==LetterState.unread.code&&list.get(13).getState().code==LetterState.unread.code
+					&&list.get(15).getState().code==LetterState.unread.code&&list.get(17).getState().code==LetterState.unread.code&&list.get(19).getState().code==LetterState.read.code
+					&&list.get(21).getState().code==LetterState.unread.code&&list.get(23).getState().code==LetterState.read.code){
 				//Passed;
 			}else{
 				fail();
@@ -683,10 +712,10 @@ public class CarpoolLetterTest {
 		try{
 			CarpoolDaoLetter.checkLetter(user2.getUserId(),user3.getUserId());
 			list = CarpoolDaoLetter.getAllLetters();
-			if(list.size()==12&&list.get(0).getState().code==LetterState.read.code&&list.get(1).getState().code==LetterState.read.code&&list.get(2).getState().code==LetterState.unread.code
-					&&list.get(3).getState().code==LetterState.unread.code&&list.get(4).getState().code==LetterState.unread.code&&list.get(5).getState().code==LetterState.read.code&&list.get(6).getState().code==LetterState.read.code
-					&&list.get(7).getState().code==LetterState.unread.code&&list.get(8).getState().code==LetterState.unread.code&&list.get(9).getState().code==LetterState.read.code
-					&&list.get(10).getState().code==LetterState.unread.code&&list.get(11).getState().code==LetterState.read.code){
+			if(list.size()==24&&list.get(1).getState().code==LetterState.read.code&&list.get(3).getState().code==LetterState.read.code&&list.get(5).getState().code==LetterState.unread.code
+					&&list.get(7).getState().code==LetterState.unread.code&&list.get(9).getState().code==LetterState.unread.code&&list.get(11).getState().code==LetterState.read.code&&list.get(13).getState().code==LetterState.read.code
+					&&list.get(15).getState().code==LetterState.unread.code&&list.get(17).getState().code==LetterState.unread.code&&list.get(19).getState().code==LetterState.read.code
+					&&list.get(21).getState().code==LetterState.unread.code&&list.get(23).getState().code==LetterState.read.code){
 				//Passed;
 			}else{
 				fail();
@@ -698,10 +727,10 @@ public class CarpoolLetterTest {
 		try{
 			CarpoolDaoLetter.checkLetter(user.getUserId(),user3.getUserId());
 			list = CarpoolDaoLetter.getAllLetters();
-			if(list.size()==12&&list.get(0).getState().code==LetterState.read.code&&list.get(1).getState().code==LetterState.read.code&&list.get(2).getState().code==LetterState.read.code
-					&&list.get(3).getState().code==LetterState.unread.code&&list.get(4).getState().code==LetterState.unread.code&&list.get(5).getState().code==LetterState.read.code&&list.get(6).getState().code==LetterState.read.code
-					&&list.get(7).getState().code==LetterState.unread.code&&list.get(8).getState().code==LetterState.unread.code&&list.get(9).getState().code==LetterState.read.code
-					&&list.get(10).getState().code==LetterState.read.code&&list.get(11).getState().code==LetterState.read.code){
+			if(list.size()==24&&list.get(1).getState().code==LetterState.read.code&&list.get(3).getState().code==LetterState.read.code&&list.get(5).getState().code==LetterState.read.code
+					&&list.get(7).getState().code==LetterState.unread.code&&list.get(9).getState().code==LetterState.read.code&&list.get(11).getState().code==LetterState.read.code&&list.get(13).getState().code==LetterState.read.code
+					&&list.get(15).getState().code==LetterState.unread.code&&list.get(17).getState().code==LetterState.unread.code&&list.get(19).getState().code==LetterState.read.code
+					&&list.get(21).getState().code==LetterState.read.code&&list.get(23).getState().code==LetterState.read.code){
 				//Passed;
 			}else{
 				fail();
@@ -710,20 +739,6 @@ public class CarpoolLetterTest {
 			e.printStackTrace();
 		}
 
-		try{
-			CarpoolDaoLetter.checkLetter(user.getUserId(),user.getUserId());
-			list = CarpoolDaoLetter.getAllLetters();
-			if(list.size()==12&&list.get(0).getState().code==LetterState.read.code&&list.get(1).getState().code==LetterState.read.code&&list.get(2).getState().code==LetterState.read.code
-					&&list.get(3).getState().code==LetterState.unread.code&&list.get(4).getState().code==LetterState.read.code&&list.get(5).getState().code==LetterState.read.code&&list.get(6).getState().code==LetterState.read.code
-					&&list.get(7).getState().code==LetterState.unread.code&&list.get(8).getState().code==LetterState.unread.code&&list.get(9).getState().code==LetterState.read.code
-					&&list.get(10).getState().code==LetterState.read.code&&list.get(11).getState().code==LetterState.read.code){
-				//Passed;
-			}else{
-				fail();
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 
 	@Test

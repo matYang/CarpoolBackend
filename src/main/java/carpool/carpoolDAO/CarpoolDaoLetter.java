@@ -29,35 +29,55 @@ public class CarpoolDaoLetter {
 		if(letter.getFrom_userId()>0){
 			User fromUser = CarpoolDaoUser.getUserById(letter.getFrom_userId());
 			letter.setFrom_user(fromUser);
+		}else{
+			letter.setFrom_userId(-1);
 		}
 		if(letter.getTo_userId()>0){
 			User toUser = CarpoolDaoUser.getUserById(letter.getTo_userId());
 			letter.setTo_user(toUser);
+		}else{
+			letter.setTo_userId(-1);
 		}
 
-		String query = "INSERT INTO carpoolDAOLetter(from_UserId,to_UserId,letterType,content,send_Time,check_Time,letterState,historyDeleted)"+
-				"VALUES(?,?,?,?,?,?,?,?);";
+		String query = "INSERT INTO carpoolDAOLetter(from_UserId,to_UserId,letterType,content,send_Time,check_Time,letterState,historyDeleted,ownerId)"+
+				"VALUES(?,?,?,?,?,?,?,?,?);";
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
 
 		//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
 		try{	
-			conn = CarpoolDaoBasic.getSQLConnection();
-			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			conn = CarpoolDaoBasic.getSQLConnection();			
+			int ownerId = -1;
+			int round = letter.getFrom_userId()==letter.getTo_userId() ? 1 : 0;
 
-			stmt.setInt(1, letter.getFrom_userId());
-			stmt.setInt(2, letter.getTo_userId());
-			stmt.setInt(3, letter.getType().code);
-			stmt.setString(4, letter.getContent());
-			stmt.setString(5, DateUtility.toSQLDateTime(letter.getSend_time()));
-			stmt.setString(6, DateUtility.toSQLDateTime(letter.getCheck_time()));
-			stmt.setInt(7, letter.getState().code);
-			stmt.setInt(8,letter.isHistoryDeleted() ? 1 : 0);
-			stmt.executeUpdate();
-			rs = stmt.getGeneratedKeys();
-			rs.next();
-			letter.setLetterId(rs.getInt(1));
+			while(round<2){
+				if(round==0){
+					ownerId = letter.getFrom_userId();					
+				}else{
+					ownerId = letter.getTo_userId();
+				}
+				letter.setOwner_id(ownerId);
+
+				stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+				stmt.setInt(1, letter.getFrom_userId());
+				stmt.setInt(2, letter.getTo_userId());
+				stmt.setInt(3, letter.getType().code);
+				stmt.setString(4, letter.getContent());
+				stmt.setString(5, DateUtility.toSQLDateTime(letter.getSend_time()));
+				stmt.setString(6, DateUtility.toSQLDateTime(letter.getCheck_time()));
+				stmt.setInt(7, letter.getState().code);
+				stmt.setInt(8,letter.isHistoryDeleted() ? 1 : 0);
+				stmt.setInt(9,ownerId);			
+				stmt.executeUpdate();
+				rs = stmt.getGeneratedKeys();
+				rs.next();
+				letter.setLetterId(rs.getInt(1));
+
+				round++;
+			}
+
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
@@ -75,7 +95,7 @@ public class CarpoolDaoLetter {
 	}
 
 	public static void updateLetterInDatabases(Letter letter) throws LetterNotFoundException{
-		String query = "UPDATE carpoolDAOLetter SET from_UserId=?,to_UserId=?,letterType=?,content=?,send_Time=?,check_Time=?,letterState=?,historyDeleted=? where letter_Id=?";
+		String query = "UPDATE carpoolDAOLetter SET from_UserId=?,to_UserId=?,letterType=?,content=?,send_Time=?,check_Time=?,letterState=?,historyDeleted=?, ownerId=? where letter_Id=?";
 
 		PreparedStatement stmt = null;
 		Connection conn = null;		
@@ -92,7 +112,8 @@ public class CarpoolDaoLetter {
 			stmt.setString(6, DateUtility.toSQLDateTime(letter.getCheck_time()));
 			stmt.setInt(7, letter.getState().code);
 			stmt.setInt(8,letter.isHistoryDeleted() ? 1 : 0);
-			stmt.setInt(9, letter.getLetterId());
+			stmt.setInt(9, letter.getOwnder_id());
+			stmt.setInt(10, letter.getLetterId());
 			int recordsAffected = stmt.executeUpdate();
 			if(recordsAffected==0){
 				throw new LetterNotFoundException();
@@ -189,11 +210,11 @@ public class CarpoolDaoLetter {
 		ArrayList<Integer> ilist = new ArrayList<Integer>();		
 		int fromUserId;
 		int toUserId;
-		String query0 = "SELECT * from carpoolDAOLetter where (to_UserId = ? or from_UserId = ?) and letterType = ? ";
-		String query =  "SELECT * from carpoolDAOLetter where to_UserId = ? and letterType = ?";
-		String query1 = "SELECT * from carpoolDAOLetter where from_UserId = ? and letterType = ?";
-		String query2 = "SELECT * from carpoolDAOLetter where from_UserId=? and to_UserId=? and letterType = ?";		
-		String query3 = "SELECT * from carpoolDAOLetter where (from_UserId=? and to_UserId=?)OR(from_UserId=? and to_UserId=?) and letterType = ?";
+		String query0 = "SELECT * from carpoolDAOLetter where (to_UserId = ? or from_UserId = ?) and letterType = ? and ownerId= ?";
+		String query =  "SELECT * from carpoolDAOLetter where to_UserId = ? and letterType = ? and ownerId= ?";
+		String query1 = "SELECT * from carpoolDAOLetter where from_UserId = ? and letterType = ? and ownerId=?";
+		String query2 = "SELECT * from carpoolDAOLetter where from_UserId=? and to_UserId=? and letterType = ? and ownerId = ?";		
+		String query3 = "SELECT * from carpoolDAOLetter where (from_UserId=? and to_UserId=? and ownerId=?)OR(from_UserId=? and to_UserId=? and ownerId = ?) and letterType = ?";
 
 		PreparedStatement stmt = null;
 		Connection conn = null;
@@ -210,6 +231,7 @@ public class CarpoolDaoLetter {
 
 						stmt.setInt(1, curUserId);
 						stmt.setInt(2, type.code);
+						stmt.setInt(3, curUserId);
 						rs = stmt.executeQuery();
 						while(rs.next()){							
 							fromUserId = rs.getInt("from_UserId");
@@ -238,6 +260,7 @@ public class CarpoolDaoLetter {
 
 						stmt.setInt(1, targetUserId);
 						stmt.setInt(2, type.code);
+						stmt.setInt(3, curUserId);
 						rs = stmt.executeQuery();
 						while(rs.next()){							
 							fromUserId = rs.getInt("from_UserId");
@@ -269,6 +292,7 @@ public class CarpoolDaoLetter {
 
 						stmt.setInt(1, curUserId);
 						stmt.setInt(2, type.code);
+						stmt.setInt(3, curUserId);
 						rs = stmt.executeQuery();
 						while(rs.next()){							
 							fromUserId = rs.getInt("from_UserId");
@@ -298,6 +322,7 @@ public class CarpoolDaoLetter {
 
 						stmt.setInt(1, targetUserId);
 						stmt.setInt(2, type.code);
+						stmt.setInt(3, curUserId);
 						rs = stmt.executeQuery();
 						while(rs.next()){							
 							fromUserId = rs.getInt("from_UserId");
@@ -330,6 +355,7 @@ public class CarpoolDaoLetter {
 					stmt.setInt(1, curUserId > 0 ? curUserId : targetUserId);
 					stmt.setInt(2, curUserId > 0 ? curUserId : targetUserId);
 					stmt.setInt(3, type.code);
+					stmt.setInt(4, curUserId);
 					rs = stmt.executeQuery();
 					while(rs.next()){							
 						fromUserId = rs.getInt("from_UserId");
@@ -365,6 +391,7 @@ public class CarpoolDaoLetter {
 						stmt.setInt(1, curUserId);
 						stmt.setInt(2, targetUserId);
 						stmt.setInt(3, type.code);
+						stmt.setInt(4, curUserId);
 						rs = stmt.executeQuery();
 						while(rs.next()){							
 							fromUserId = rs.getInt("from_UserId");
@@ -394,6 +421,7 @@ public class CarpoolDaoLetter {
 
 						stmt.setInt(1, targetUserId);
 						stmt.setInt(2, type.code);
+						stmt.setInt(3, targetUserId);
 						rs = stmt.executeQuery();
 						while(rs.next()){							
 							fromUserId = rs.getInt("from_UserId");
@@ -423,6 +451,7 @@ public class CarpoolDaoLetter {
 
 						stmt.setInt(1, curUserId);
 						stmt.setInt(2, type.code);
+						stmt.setInt(3, curUserId);
 						rs = stmt.executeQuery();
 						while(rs.next()){							
 							fromUserId = rs.getInt("from_UserId");
@@ -456,6 +485,7 @@ public class CarpoolDaoLetter {
 						stmt.setInt(1, targetUserId);
 						stmt.setInt(2, curUserId);
 						stmt.setInt(3, type.code);
+						stmt.setInt(4, curUserId);
 						rs = stmt.executeQuery();
 						while(rs.next()){							
 							fromUserId = rs.getInt("from_UserId");
@@ -485,6 +515,7 @@ public class CarpoolDaoLetter {
 
 						stmt.setInt(1, curUserId);
 						stmt.setInt(2, type.code);
+						stmt.setInt(3, curUserId);
 						rs = stmt.executeQuery();
 						while(rs.next()){							
 							fromUserId = rs.getInt("from_UserId");
@@ -514,6 +545,7 @@ public class CarpoolDaoLetter {
 
 						stmt.setInt(1, targetUserId);
 						stmt.setInt(2, type.code);
+						stmt.setInt(3, targetUserId);
 						rs = stmt.executeQuery();
 						while(rs.next()){							
 							fromUserId = rs.getInt("from_UserId");
@@ -546,9 +578,11 @@ public class CarpoolDaoLetter {
 
 						stmt.setInt(1, curUserId);
 						stmt.setInt(2, targetUserId);
-						stmt.setInt(3, targetUserId);
-						stmt.setInt(4, curUserId);
-						stmt.setInt(5, type.code);
+						stmt.setInt(3, curUserId);
+						stmt.setInt(4, targetUserId);
+						stmt.setInt(5, curUserId);
+						stmt.setInt(6, targetUserId);
+						stmt.setInt(7, type.code);						
 						rs = stmt.executeQuery();
 						while(rs.next()){							
 							fromUserId = rs.getInt("from_UserId");
@@ -579,6 +613,7 @@ public class CarpoolDaoLetter {
 						stmt.setInt(1, curUserId > 0 ? curUserId : targetUserId);
 						stmt.setInt(2, curUserId > 0 ? curUserId : targetUserId);						
 						stmt.setInt(3, type.code);
+						stmt.setInt(4, curUserId > 0 ? curUserId : targetUserId);
 						rs = stmt.executeQuery();
 						while(rs.next()){							
 							fromUserId = rs.getInt("from_UserId");
@@ -635,7 +670,7 @@ public class CarpoolDaoLetter {
 	private static Letter createLettersByResultSetList(ResultSet rs) throws SQLException {
 		return 	 new Letter(rs.getInt("letter_Id"),rs.getInt("from_UserId"),rs.getInt("to_UserId"),LetterType.fromInt(rs.getInt("letterType")),null,null,
 				rs.getString("content"),DateUtility.DateToCalendar(rs.getTimestamp("send_Time")),DateUtility.DateToCalendar(rs.getTimestamp("check_Time")),
-				Constants.LetterState.fromInt(rs.getInt("letterState")),rs.getBoolean("historyDeleted"));
+				Constants.LetterState.fromInt(rs.getInt("letterState")),rs.getBoolean("historyDeleted"),rs.getInt("ownerId"));
 
 
 	}
@@ -679,14 +714,14 @@ public class CarpoolDaoLetter {
 
 		Letter letter = new Letter(rs.getInt("letter_Id"),rs.getInt("from_UserId"),rs.getInt("to_UserId"),LetterType.fromInt(rs.getInt("letterType")),fromUser,toUser,
 				rs.getString("content"),DateUtility.DateToCalendar(rs.getTimestamp("send_Time")),DateUtility.DateToCalendar(rs.getTimestamp("check_Time")),
-				Constants.LetterState.fromInt(rs.getInt("letterState")),rs.getBoolean("historyDeleted"));
+				Constants.LetterState.fromInt(rs.getInt("letterState")),rs.getBoolean("historyDeleted"),rs.getInt("ownerId"));
 		return letter;
 	}
 
 	public static ArrayList<User> getLetterUsers(int userId) throws UserNotFoundException, LocationNotFoundException{
 		ArrayList<User> list = new ArrayList<User>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
-		String query = "SELECT * from carpoolDAOLetter where (from_UserId = ? or to_UserId = ?) and letterType = ?";
+		String query = "SELECT * from carpoolDAOLetter where (from_UserId = ? or to_UserId = ?) and ownerId=? and letterType = ?";
 
 		PreparedStatement stmt = null;
 		Connection conn = null;
@@ -698,7 +733,8 @@ public class CarpoolDaoLetter {
 
 			stmt.setInt(1, userId);
 			stmt.setInt(2, userId);
-			stmt.setInt(3, LetterType.user.code);
+			stmt.setInt(3, userId);
+			stmt.setInt(4, LetterType.user.code);
 			rs = stmt.executeQuery();			
 			while(rs.next()){
 				int tempId = checkUser(rs,userId);
@@ -781,7 +817,7 @@ public class CarpoolDaoLetter {
 	}	
 
 	public static void checkLetter(int userId, int targetUserId){
-		String query = "UPDATE carpoolDAOLetter set letterState = ? where ((from_UserId = ? and to_UserId=?)or(from_UserId = ? and to_UserId=?)) and letterState = ?";
+		String query = "UPDATE carpoolDAOLetter set letterState = ? where ((from_UserId = ? and to_UserId=? and ownerId=? )or(from_UserId = ? and to_UserId=? and ownerId=?)) and letterState = ?";
 		PreparedStatement stmt = null;
 		Connection conn = null;
 
@@ -794,8 +830,10 @@ public class CarpoolDaoLetter {
 			stmt.setInt(2, userId);
 			stmt.setInt(3, targetUserId);
 			stmt.setInt(4, targetUserId);
-			stmt.setInt(5, userId);
-			stmt.setInt(6, LetterState.unread.code);
+			stmt.setInt(5, targetUserId);
+			stmt.setInt(6, userId);
+			stmt.setInt(7, userId);
+			stmt.setInt(8, LetterState.unread.code);
 			stmt.executeUpdate();			
 		}catch(SQLException e){
 			DebugLog.d(e);			
@@ -854,7 +892,7 @@ public class CarpoolDaoLetter {
 
 	public static ArrayList<Letter> getUncheckedLettersByUserId(int userId) throws UserNotFoundException, LocationNotFoundException{
 		ArrayList<Letter> list = new ArrayList<Letter>();
-		String query = "SELECT * from CarpoolDAOLetter where to_UserId =? and letterState = ?";
+		String query = "SELECT * from CarpoolDAOLetter where to_UserId =? and ownerId = ? and letterState = ?";
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -862,7 +900,8 @@ public class CarpoolDaoLetter {
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, userId);
-			stmt.setInt(2, LetterState.unread.code);				
+			stmt.setInt(2, userId);
+			stmt.setInt(3, LetterState.unread.code);				
 			rs = stmt.executeQuery();
 			while(rs.next()){
 				list.add(createLetterByResultSet(rs));
