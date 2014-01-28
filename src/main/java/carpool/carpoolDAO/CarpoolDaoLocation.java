@@ -6,9 +6,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
+import carpool.common.DateUtility;
 import carpool.common.DebugLog;
+import carpool.dbservice.LocationDaoService;
+import carpool.exception.location.LocationException;
 import carpool.exception.location.LocationNotFoundException;
+import carpool.exception.validation.ValidationException;
+import carpool.locationService.CarpoolLocationLoader;
+import carpool.model.Letter;
 import carpool.model.Location;
 import carpool.model.representation.DefaultLocationRepresentation;
 
@@ -286,7 +295,35 @@ public class CarpoolDaoLocation {
 		return new Location(rs.getLong("id"),rs.getString("province"),rs.getString("city"),rs.getString("region"),rs.getString("pointName"),rs.getString("pointAddress"),rs.getDouble("lat"),rs.getDouble("lng"),rs.getLong("match_Id"));
 	}
 
-
+	private static void updateDefaultLocation(DefaultLocationRepresentation defaultLocationRep) throws LocationNotFoundException{
+		String query = "UPDATE defaultLocations SET radius=?,synonyms = ? where id=?";	
+		//May consider not updating location later...
+		CarpoolDaoLocation.updateLocationInDatabases(defaultLocationRep.getLocation());		
+		PreparedStatement stmt = null;
+		Connection conn = null;	
+		try{		
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, defaultLocationRep.getRadius());
+			stmt.setString(2, defaultLocationRep.getSynonyms());
+			stmt.setLong(3, defaultLocationRep.getId());
+			int recordsAffected = stmt.executeUpdate();
+			if(recordsAffected==0){
+				throw new LocationNotFoundException();
+			} 
+		}catch(SQLException e){
+			e.printStackTrace();
+			DebugLog.d(e);
+		}finally  {
+			try{
+				if (stmt != null)  stmt.close();  
+				if (conn != null)  conn.close(); 				
+			} catch (SQLException e){
+				DebugLog.d("Exception when closing stmt, rs and conn");
+				DebugLog.d(e);
+			}
+		} 
+	}
 	public static DefaultLocationRepresentation addDefaultLocation(DefaultLocationRepresentation defaultLocationRep) throws LocationNotFoundException{
 		String query = "INSERT INTO defaultLocations (referenceNum,radius,synonyms) values (?,?,?)";
 		Location location = null;		
@@ -322,6 +359,61 @@ public class CarpoolDaoLocation {
 			}
 		} 
 		return defaultLocationRep;
+
+	}
+
+	private static DefaultLocationRepresentation defaultLocationCopy(DefaultLocationRepresentation d1,
+			DefaultLocationRepresentation d2){
+		d1.setId(d2.getId());		
+		d1.setReferenceId(d2.getReferenceId());
+		d1.setLocation(d2.getLocation());
+		return d1;
+
+	}
+
+	private static DefaultLocationRepresentation getOldLocation(DefaultLocationRepresentation dr, 
+			ArrayList<DefaultLocationRepresentation>list){
+		for(DefaultLocationRepresentation dlr: list){
+			if(dlr.getLocation().getLat().equals(dr.getLocation().getLat())&&dlr.getLocation().getLng().equals(dr.getLocation().getLng())){
+				if(dlr.getRadius()!=dr.getRadius()||!dlr.getSynonyms().equals(dr.getSynonyms())||!dlr.getLocation().getCity().equals(dr.getLocation().getCity())
+						||!dlr.getLocation().getPointAddress().equals(dr.getLocation().getPointAddress())||!dlr.getLocation().getPointName().equals(dr.getLocation().getPointName())
+						||!dlr.getLocation().getProvince().equals(dr.getLocation().getProvince())||!dlr.getLocation().getRegion().equals(dr.getLocation().getRegion())){
+					return defaultLocationCopy(dr,dlr);
+				}else{
+					return dr;
+				}
+
+			}
+		}
+		return null;
+
+	}
+
+	public static void reloadDefaultLocations() throws LocationException, ValidationException, LocationNotFoundException {
+
+		int defaultLocationsNum = 0;
+
+		ArrayList<DefaultLocationRepresentation> dlist = new ArrayList<DefaultLocationRepresentation>();		
+		dlist = getDefaultLocationRepresentations();
+
+		ArrayList<HashMap<String, String>> bufferList = CarpoolLocationLoader.loadLocationFromFile("LocationData.txt");
+		defaultLocationsNum = bufferList.size();
+
+		for (HashMap<String, String> bufferMap : bufferList){
+			Location location = new Location(bufferMap.get("province"),bufferMap.get("city"),bufferMap.get("region"),bufferMap.get("name"),bufferMap.get("address"),Double.parseDouble(bufferMap.get("lat")),Double.parseDouble(bufferMap.get("lng")),-1l);
+			DefaultLocationRepresentation defaultLocationRep = new DefaultLocationRepresentation(location, Integer.parseInt(bufferMap.get("radius")), bufferMap.get("synonyms"));
+			DefaultLocationRepresentation tempdlr = getOldLocation(defaultLocationRep,dlist);
+			if(tempdlr!=null){
+				//Update old
+				if(!tempdlr.equals(defaultLocationRep)){
+					updateDefaultLocation(tempdlr);
+				}				
+			}else{
+				//Add new
+				addDefaultLocation(defaultLocationRep);
+			}
+		}
+
 
 	}
 

@@ -27,7 +27,7 @@ public class LocationDaoService {
 	public static void init() throws LocationException, ValidationException, LocationNotFoundException{
 		if (!CarpoolDaoLocation.isLocationPoolEmpty()){
 			return;
-		}
+		}		
 		ArrayList<HashMap<String, String>> bufferList = CarpoolLocationLoader.loadLocationFromFile("LocationData.txt");
 		defalutLocationsNum = bufferList.size();
 		for (HashMap<String, String> bufferMap : bufferList){
