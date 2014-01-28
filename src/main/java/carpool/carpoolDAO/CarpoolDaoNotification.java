@@ -315,6 +315,16 @@ public class CarpoolDaoNotification {
 
 		return map;
 	}
+	
+	
+	public static void checkNotificationByIdList(ArrayList<Integer> idList, int userId){
+		//TODO
+	}
+	
+	public static void deleteNotificationByIdList(ArrayList<Integer> idList, int userId){
+		//TODO
+	}
+	
 	private static ArrayList<Integer> addIds(ArrayList<Integer> ilist, int id) {		
 		if(id !=-1 && !ilist.contains(id)){
 			ilist.add(id);

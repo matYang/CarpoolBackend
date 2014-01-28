@@ -43,7 +43,7 @@ public class Parser {
 		return null;
 	}
 	
-	public static ArrayList<Integer> parsePriceList(JSONArray jsonList){
+	public static ArrayList<Integer> parseIntegerList(JSONArray jsonList){
 		ArrayList<Integer> list = new ArrayList<Integer>();   
 		try {
 			if (jsonList != null) { 

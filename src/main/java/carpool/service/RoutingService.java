@@ -92,6 +92,9 @@ public class RoutingService extends Application {
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + notificationServicePrefix + NotificationResourcePrefix, NotificationResource.class);
 		//	API for Get/Put/Delete notification: /api/v1.0/notification/notification/:id
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + notificationServicePrefix + NotificationResourcePrefix + "/{id}", NotificationResourceId.class);
+		String NotificationDeleteByIdListResourcePrefix = "/notificationByIdList";
+		//	API for Check/Delete notification by an id list: /api/v1.0/notification/notificationByIdList
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + notificationServicePrefix + NotificationDeleteByIdListResourcePrefix, NotificationByIdListResource.class);
 		
 		/** -------------------- APIs for letter module -------------- **/
 		String letterServicePrefix = "/letter";

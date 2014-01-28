@@ -140,8 +140,8 @@ public class NotificationDaoService{
 		}
 		return notification;
 
-	}	
-
+	}
+	
 	public static ArrayList<Notification> sortNotifications(ArrayList<Notification> list){
 		Collections.sort(list, new Comparator<Notification>() {
 			@Override public int compare(final Notification n1, final Notification n2) {
@@ -150,5 +150,18 @@ public class NotificationDaoService{
 		});
 		return list;
 	}
+	
+	
+	/**
+	 * weak checking, not strong guarantee
+	 */
+	public static void checkNotification(ArrayList<Integer> idList, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException{
+		CarpoolDaoNotification.checkNotificationByIdList(idList, userId);
+	}
+	
+	public static void deleteNotification(ArrayList<Integer> idList, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException{
+		CarpoolDaoNotification.deleteNotificationByIdList(idList, userId);
+	}
+
 
 }

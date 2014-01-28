@@ -95,6 +95,19 @@ public class Constants {
             return map[n];
         }
     }
+    
+    public static enum NotificationStateChangeActon{
+        check(0), delete(1);
+        public int code;
+        NotificationStateChangeActon(int code){
+            this.code = code;
+        }
+        private final static NotificationStateChangeActon[] map = NotificationStateChangeActon.values();
+        public static NotificationStateChangeActon fromInt(int n){
+            return map[n];
+        }
+    }
+    
 
 
     //states of the user account, more states reserved for future uses
