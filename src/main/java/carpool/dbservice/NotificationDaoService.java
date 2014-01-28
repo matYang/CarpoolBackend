@@ -156,11 +156,11 @@ public class NotificationDaoService{
 	 * weak checking, not strong guarantee
 	 */
 	public static void checkNotification(ArrayList<Integer> idList, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException{
-		CarpoolDaoNotification.checkNotificationByIdList(idList, userId);
+		CarpoolDaoNotification.modifyNotificationByIdList(idList, userId,"check");
 	}
 	
 	public static void deleteNotification(ArrayList<Integer> idList, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException{
-		CarpoolDaoNotification.deleteNotificationByIdList(idList, userId);
+		CarpoolDaoNotification.modifyNotificationByIdList(idList, userId,"delete");
 	}
 
 

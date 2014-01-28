@@ -11,6 +11,7 @@ import java.util.HashMap;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.Constants;
+import carpool.constants.Constants.NotificationState;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.notification.NotificationNotFoundException;
@@ -315,16 +316,79 @@ public class CarpoolDaoNotification {
 
 		return map;
 	}
-	
-	
-	public static void checkNotificationByIdList(ArrayList<Integer> idList, int userId){
-		//TODO
+
+
+	public static void modifyNotificationByIdList(ArrayList<Integer> idList, int userId,String operation) throws NotificationNotFoundException{
+		String query;
+		PreparedStatement stmt = null;
+		Connection conn = null;
+
+		if(idList.size()<=0)return;
+
+		if(operation.equals("check")){
+			query = "UPDATE carpoolDAONotification SET notificationState = ? where (target_UserId = ? and notification_Id = ?)";
+		}else if(operation.equals("delete")){
+			query = "DELETE from carpoolDAONotification  where (target_UserId = ? and notification_Id = ?) ";
+		}else return;
+
+		for(int i = 1;i < idList.size();i++){
+			query += " or (target_UserId = ? and notification_Id = ?)";
+		}
+
+		if(operation.equals("check")){
+			try {		
+				conn = CarpoolDaoBasic.getSQLConnection();
+				stmt = conn.prepareStatement(query);
+				stmt.setInt(1, NotificationState.read.code);
+				for(int k = 0;k < idList.size()*2;k += 2){
+					stmt.setInt(k+2, userId);
+					stmt.setInt(k+3, idList.get(k/2));
+				}
+				int recordsAffected = stmt.executeUpdate();
+				if(recordsAffected==0){
+					throw new NotificationNotFoundException();
+				} 
+			} catch (SQLException e) {				
+				e.printStackTrace();
+				DebugLog.d(e);
+			}finally  {
+				try{
+					if (stmt != null)  stmt.close();  
+					if (conn != null)  conn.close(); 				
+				} catch (SQLException e){
+					DebugLog.d("Exception when closing stmt, rs and conn");
+					DebugLog.d(e);
+				}
+			} 
+
+		}else{
+			try {		
+				conn = CarpoolDaoBasic.getSQLConnection();
+				stmt = conn.prepareStatement(query);				
+				for(int k = 0;k < idList.size()*2;k += 2){
+					stmt.setInt(k+1, userId);
+					stmt.setInt(k+2, idList.get(k/2));
+				}
+				int recordsAffected = stmt.executeUpdate();
+				if(recordsAffected==0){
+					throw new NotificationNotFoundException();
+				} 
+			} catch (SQLException e) {				
+				e.printStackTrace();
+				DebugLog.d(e);
+			}finally  {
+				try{
+					if (stmt != null)  stmt.close();  
+					if (conn != null)  conn.close(); 				
+				} catch (SQLException e){
+					DebugLog.d("Exception when closing stmt, rs and conn");
+					DebugLog.d(e);
+				}
+			} 
+		}
+
 	}
-	
-	public static void deleteNotificationByIdList(ArrayList<Integer> idList, int userId){
-		//TODO
-	}
-	
+
 	private static ArrayList<Integer> addIds(ArrayList<Integer> ilist, int id) {		
 		if(id !=-1 && !ilist.contains(id)){
 			ilist.add(id);

@@ -29,7 +29,7 @@ public class LetterDaoService{
 	}
 
 
-	public static ArrayList<Letter> getUserLetters(int curUserId, int targetUserId, LetterType type, LetterDirection direction) throws UserNotFoundException, LocationNotFoundException{
+	public static ArrayList<Letter> getUserLetters(int curUserId, int targetUserId, LetterType type, LetterDirection direction) throws UserNotFoundException, LocationNotFoundException, LetterNotFoundException{
 		ArrayList<Letter> letters = CarpoolDaoLetter.getUserLetters(curUserId, targetUserId, type, direction);
 		checkLetter(curUserId, targetUserId);
 		return letters;

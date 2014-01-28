@@ -535,5 +535,87 @@ public class CarpoolNotificationTest {
 		}
 	}
 
+	@Test
+	public void testModifyNotificationsByTargetUserId() throws NotificationNotFoundException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException{
+		CarpoolDaoBasic.clearBothDatabase();
+		long departure_Id = 1;
+		long arrival_Id = 2;
+		String province = "Ontario";		
+		String city1 = "Toronto";
+		String city2 = "Waterloo";
+		String region1 = "Downtown";
+		String region2 = "Downtown UW"; 
+		Double lat1 = 32.123212;
+		Double lat2 = 23.132123;
+		Double lng1 = 34.341232;
+		Double lng2 = 34.123112;
+		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+
+		try {
+			CarpoolDaoUser.addUserToDatabase(user);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}
+		User user2 =  new User("chenmoling", "chenmolingjb",arrivalLocation, gender.both);
+
+		try {
+			CarpoolDaoUser.addUserToDatabase(user2);
+		} catch (ValidationException e) {			
+			e.printStackTrace();
+		}	
+		NotificationEvent nt = Constants.NotificationEvent.transactionInit;
+		int targetUserId = user.getUserId();
+		Notification notification = new Notification(nt,targetUserId);
+		notification.setState(NotificationState.unread);
+		notification.setInitUser(user2);//user2 send to user
+		notification = CarpoolDaoNotification.addNotificationToDatabase(notification);
+		NotificationEvent nt2 = Constants.NotificationEvent.transactionInit;
+		int targetUserId2 = user2.getUserId();
+		Notification notification2 = new Notification(nt2,targetUserId2);	
+		notification2.setState(NotificationState.unread);
+		notification2 = CarpoolDaoNotification.addNotificationToDatabase(notification2);
+		notification2.setInitUser(user);//user send to user2
+
+		ArrayList<Integer> idList = new ArrayList<Integer>();
+		idList.add(notification.getNotificationId());
+		idList.add(notification2.getNotificationId());
+
+		//Test check
+		CarpoolDaoNotification.modifyNotificationByIdList(idList, targetUserId2, "check");
+		notification = CarpoolDaoNotification.getNotificationById(notification.getNotificationId());
+		if(notification.getState().equals(NotificationState.read)){
+			fail();			
+		}else{
+			//Passed;
+		}
+
+		CarpoolDaoNotification.modifyNotificationByIdList(idList, targetUserId, "check");
+		notification = CarpoolDaoNotification.getNotificationById(notification.getNotificationId());
+		if(notification.getState().equals(NotificationState.read)){
+			//Passed;			
+		}else{
+			fail();
+		}
+
+		//Test delete
+		ArrayList<Notification> nlist = new ArrayList<Notification>();
+		CarpoolDaoNotification.modifyNotificationByIdList(idList, targetUserId, "delete");
+		nlist = CarpoolDaoNotification.getAllNotifications();		
+		if(nlist.size()==1&&nlist.get(0).getNotificationId()==notification2.getNotificationId()){
+			//Passed;			
+		}else{
+			fail();
+		}
+
+		CarpoolDaoNotification.modifyNotificationByIdList(idList, targetUserId2, "delete");
+		nlist = CarpoolDaoNotification.getAllNotifications();
+		if(nlist.size()==0){
+			//Passed;			
+		}else{
+			fail();
+		}
+	}
 
 }

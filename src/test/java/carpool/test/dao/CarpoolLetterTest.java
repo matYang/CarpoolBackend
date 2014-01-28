@@ -30,19 +30,19 @@ public class CarpoolLetterTest {
 			if(l1.getFrom_user()==null&&l1.getTo_user()!=null){
 				return  l1.getFrom_userId() == l2.getFrom_userId() && l1.getTo_userId() == l2.getTo_userId() &&
 						l1.getType().code == l2.getType().code && l2.getFrom_user()==null && l1.getTo_user().equals(l2.getTo_user()) && 
-						l1.getContent().equals(l2.getContent()) && l1.getState().code == l2.getState().code && l1.isHistoryDeleted() == l2.isHistoryDeleted() &&
+						l1.getContent().equals(l2.getContent()) && l1.getState().code == LetterState.read.code && l1.isHistoryDeleted() == l2.isHistoryDeleted() &&
 						l1.getSend_time().getTime().toString().equals(l2.getSend_time().getTime().toString()) &&
 						l1.getCheck_time().getTime().toString().equals(l2.getCheck_time().getTime().toString());
 			}else if(l1.getFrom_user()!=null&&l1.getTo_user()!=null){
 				return  l1.getFrom_userId() == l2.getFrom_userId() && l1.getTo_userId() == l2.getTo_userId() &&
 						l1.getType().code == l2.getType().code && l1.getFrom_user().equals(l2.getFrom_user()) && l1.getTo_user().equals(l2.getTo_user()) && 
-						l1.getContent().equals(l2.getContent()) && l1.getState().code == l2.getState().code && l1.isHistoryDeleted() == l2.isHistoryDeleted() &&
+						l1.getContent().equals(l2.getContent()) && l1.getState().code == LetterState.read.code && l1.isHistoryDeleted() == l2.isHistoryDeleted() &&
 						l1.getSend_time().getTime().toString().equals(l2.getSend_time().getTime().toString()) &&
 						l1.getCheck_time().getTime().toString().equals(l2.getCheck_time().getTime().toString());
 			}else if(l1.getFrom_user()!=null&&l1.getTo_user()==null){
 				return  l1.getFrom_userId() == l2.getFrom_userId() && l1.getTo_userId() == l2.getTo_userId() &&
 						l1.getType().code == l2.getType().code && l1.getFrom_user().equals(l2.getFrom_user()) && l2.getTo_user()==null && 
-						l1.getContent().equals(l2.getContent()) && l1.getState().code == l2.getState().code && l1.isHistoryDeleted() == l2.isHistoryDeleted() &&
+						l1.getContent().equals(l2.getContent()) && l1.getState().code == LetterState.read.code && l1.isHistoryDeleted() == l2.isHistoryDeleted() &&
 						l1.getSend_time().getTime().toString().equals(l2.getSend_time().getTime().toString()) &&
 						l1.getCheck_time().getTime().toString().equals(l2.getCheck_time().getTime().toString());
 			}else{

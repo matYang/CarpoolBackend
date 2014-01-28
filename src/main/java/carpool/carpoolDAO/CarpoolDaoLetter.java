@@ -202,7 +202,7 @@ public class CarpoolDaoLetter {
 		return list;
 	}
 
-	public static  ArrayList<Letter> getUserLetters(int curUserId, int targetUserId, LetterType type, LetterDirection direction) throws UserNotFoundException, LocationNotFoundException{		
+	public static  ArrayList<Letter> getUserLetters(int curUserId, int targetUserId, LetterType type, LetterDirection direction) throws UserNotFoundException, LocationNotFoundException, LetterNotFoundException{		
 		ArrayList<Letter> list = new ArrayList<Letter>();
 		if((curUserId<=0 && targetUserId<=0)||(curUserId<-1 || targetUserId<-1)||curUserId==0||targetUserId==0){
 			return list;
@@ -240,6 +240,7 @@ public class CarpoolDaoLetter {
 							list.add(createLettersByResultSetList(rs));
 						}
 						list =  getUsersForLetters(ilist, list);
+						setLettersRead(list,stmt,conn);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}finally  {
@@ -269,6 +270,7 @@ public class CarpoolDaoLetter {
 							list.add(createLettersByResultSetList(rs));
 						}
 						list = getUsersForLetters(ilist, list);
+						setLettersRead(list,stmt,conn);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}finally  {
@@ -301,6 +303,7 @@ public class CarpoolDaoLetter {
 							list.add(createLettersByResultSetList(rs));
 						}
 						list = getUsersForLetters(ilist, list);
+						setLettersRead(list,stmt,conn);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}finally  {
@@ -331,6 +334,7 @@ public class CarpoolDaoLetter {
 							list.add(createLettersByResultSetList(rs));
 						}
 						list = getUsersForLetters(ilist, list);
+						setLettersRead(list,stmt,conn);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}finally  {
@@ -364,6 +368,7 @@ public class CarpoolDaoLetter {
 						list.add(createLettersByResultSetList(rs));
 					}
 					list = getUsersForLetters(ilist, list);
+					setLettersRead(list,stmt,conn);
 				}catch(SQLException e){
 					DebugLog.d(e);
 				}finally  {
@@ -400,6 +405,7 @@ public class CarpoolDaoLetter {
 							list.add(createLettersByResultSetList(rs));
 						}
 						list = getUsersForLetters(ilist, list);
+						setLettersRead(list,stmt,conn);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}finally  {
@@ -430,6 +436,7 @@ public class CarpoolDaoLetter {
 							list.add(createLettersByResultSetList(rs));
 						}
 						list = getUsersForLetters(ilist, list);
+						setLettersRead(list,stmt,conn);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}finally  {
@@ -460,6 +467,7 @@ public class CarpoolDaoLetter {
 							list.add(createLettersByResultSetList(rs));
 						}
 						list = getUsersForLetters(ilist, list);
+						setLettersRead(list,stmt,conn);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}finally  {
@@ -494,6 +502,7 @@ public class CarpoolDaoLetter {
 							list.add(createLettersByResultSetList(rs));
 						}
 						list = getUsersForLetters(ilist, list);
+						setLettersRead(list,stmt,conn);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}finally  {
@@ -524,6 +533,7 @@ public class CarpoolDaoLetter {
 							list.add(createLettersByResultSetList(rs));
 						}
 						list = getUsersForLetters(ilist, list);
+						setLettersRead(list,stmt,conn);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}finally  {
@@ -554,6 +564,7 @@ public class CarpoolDaoLetter {
 							list.add(createLettersByResultSetList(rs));
 						}
 						list = getUsersForLetters(ilist, list);
+						setLettersRead(list,stmt,conn);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}finally  {
@@ -591,6 +602,7 @@ public class CarpoolDaoLetter {
 							list.add(createLettersByResultSetList(rs));
 						}
 						list = getUsersForLetters(ilist, list);
+						setLettersRead(list,stmt,conn);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}finally  {
@@ -622,6 +634,7 @@ public class CarpoolDaoLetter {
 							list.add(createLettersByResultSetList(rs));
 						}
 						list = getUsersForLetters(ilist, list);
+						setLettersRead(list,stmt,conn);
 					}catch(SQLException e){
 						DebugLog.d(e);
 					}finally  {
@@ -919,6 +932,23 @@ public class CarpoolDaoLetter {
 			}
 		} 
 		return list;
+	}
+
+	public static void setLettersRead(ArrayList<Letter>list,PreparedStatement stmt,Connection conn) throws SQLException, LetterNotFoundException{	
+
+		String query = "UPDATE CarpoolDAOLetter SET letterState = ? where letter_Id=? ";
+		stmt = conn.prepareStatement(query);
+		for(int i=0;i<list.size();i++){
+			list.get(i).setState(LetterState.read);
+			stmt.setInt(1,LetterState.read.code);
+			stmt.setInt(2, list.get(i).getLetterId());
+			stmt.execute();
+			int recordsAffected = stmt.executeUpdate();
+			if(recordsAffected==0){
+				throw new LetterNotFoundException();
+			}
+		}
+
 	}
 
 }
