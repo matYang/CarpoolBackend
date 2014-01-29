@@ -12,6 +12,7 @@ import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.constants.Constants;
 import carpool.constants.Constants.NotificationEvent;
 import carpool.constants.Constants.NotificationState;
+import carpool.constants.Constants.NotificationStateChangeActon;
 import carpool.constants.Constants.gender;
 import carpool.dbservice.NotificationDaoService;
 import carpool.exception.location.LocationNotFoundException;
@@ -583,7 +584,7 @@ public class CarpoolNotificationTest {
 		idList.add(notification2.getNotificationId());
 
 		//Test check
-		CarpoolDaoNotification.modifyNotificationByIdList(idList, targetUserId2, "check");
+		CarpoolDaoNotification.modifyNotificationByIdList(idList, targetUserId2, NotificationStateChangeActon.check);
 		notification = CarpoolDaoNotification.getNotificationById(notification.getNotificationId());
 		if(notification.getState().equals(NotificationState.read)){
 			fail();			
@@ -591,7 +592,7 @@ public class CarpoolNotificationTest {
 			//Passed;
 		}
 
-		CarpoolDaoNotification.modifyNotificationByIdList(idList, targetUserId, "check");
+		CarpoolDaoNotification.modifyNotificationByIdList(idList, targetUserId, NotificationStateChangeActon.check);
 		notification = CarpoolDaoNotification.getNotificationById(notification.getNotificationId());
 		if(notification.getState().equals(NotificationState.read)){
 			//Passed;			
@@ -601,7 +602,7 @@ public class CarpoolNotificationTest {
 
 		//Test delete
 		ArrayList<Notification> nlist = new ArrayList<Notification>();
-		CarpoolDaoNotification.modifyNotificationByIdList(idList, targetUserId, "delete");
+		CarpoolDaoNotification.modifyNotificationByIdList(idList, targetUserId, NotificationStateChangeActon.delete);
 		nlist = CarpoolDaoNotification.getAllNotifications();		
 		if(nlist.size()==1&&nlist.get(0).getNotificationId()==notification2.getNotificationId()){
 			//Passed;			
@@ -609,7 +610,7 @@ public class CarpoolNotificationTest {
 			fail();
 		}
 
-		CarpoolDaoNotification.modifyNotificationByIdList(idList, targetUserId2, "delete");
+		CarpoolDaoNotification.modifyNotificationByIdList(idList, targetUserId2, NotificationStateChangeActon.delete);
 		nlist = CarpoolDaoNotification.getAllNotifications();
 		if(nlist.size()==0){
 			//Passed;			

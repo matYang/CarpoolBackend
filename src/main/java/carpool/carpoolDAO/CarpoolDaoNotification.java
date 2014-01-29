@@ -12,6 +12,7 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.Constants;
 import carpool.constants.Constants.NotificationState;
+import carpool.constants.Constants.NotificationStateChangeActon;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.notification.NotificationNotFoundException;
@@ -318,16 +319,16 @@ public class CarpoolDaoNotification {
 	}
 
 
-	public static void modifyNotificationByIdList(ArrayList<Integer> idList, int userId,String operation) throws NotificationNotFoundException{
+	public static void modifyNotificationByIdList(ArrayList<Integer> idList, int userId, NotificationStateChangeActon action) throws NotificationNotFoundException{
 		String query;
 		PreparedStatement stmt = null;
 		Connection conn = null;
 
 		if(idList.size()<=0)return;
 
-		if(operation.equals("check")){
+		if(action == NotificationStateChangeActon.check){
 			query = "UPDATE carpoolDAONotification SET notificationState = ? where (target_UserId = ? and notification_Id = ?)";
-		}else if(operation.equals("delete")){
+		}else if(action == NotificationStateChangeActon.delete){
 			query = "DELETE from carpoolDAONotification  where (target_UserId = ? and notification_Id = ?) ";
 		}else return;
 
@@ -335,7 +336,7 @@ public class CarpoolDaoNotification {
 			query += " or (target_UserId = ? and notification_Id = ?)";
 		}
 
-		if(operation.equals("check")){
+		if(action == NotificationStateChangeActon.check){
 			try {		
 				conn = CarpoolDaoBasic.getSQLConnection();
 				stmt = conn.prepareStatement(query);

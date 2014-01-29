@@ -13,6 +13,7 @@ import carpool.carpoolDAO.CarpoolDaoNotification;
 import carpool.common.*;
 import carpool.constants.Constants.EmailEvent;
 import carpool.constants.Constants.NotificationState;
+import carpool.constants.Constants.NotificationStateChangeActon;
 import carpool.exception.PseudoException;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
@@ -156,11 +157,11 @@ public class NotificationDaoService{
 	 * weak checking, not strong guarantee
 	 */
 	public static void checkNotification(ArrayList<Integer> idList, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException{
-		CarpoolDaoNotification.modifyNotificationByIdList(idList, userId,"check");
+		CarpoolDaoNotification.modifyNotificationByIdList(idList, userId, NotificationStateChangeActon.check);
 	}
 	
 	public static void deleteNotification(ArrayList<Integer> idList, int userId) throws NotificationNotFoundException, NotificationOwnerNotMatchException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException{
-		CarpoolDaoNotification.modifyNotificationByIdList(idList, userId,"delete");
+		CarpoolDaoNotification.modifyNotificationByIdList(idList, userId, NotificationStateChangeActon.delete);
 	}
 
 
