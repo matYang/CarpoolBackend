@@ -30,7 +30,7 @@ public class SESRelayTask implements PseudoAsyncTask{
 			throw new RuntimeException();
 		}
 		this.subject = entry.getKey();
-		this.body = entry.getValue().replaceAll(CarpoolConfig.htmlTemplateTarget, payload);
+		this.body = entry.getValue().replaceAll(CarpoolConfig.htmlTemplateURLTarget, payload);
 	}
 
 	public boolean execute(){

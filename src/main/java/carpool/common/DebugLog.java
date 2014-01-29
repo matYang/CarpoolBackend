@@ -44,6 +44,7 @@ public class DebugLog {
 		//if not accessible, do:  right click on project -> configure build path -> remove JRE system library -> add Library -> JRE System Library (Default) -> OK, clean & recompile
 		String caller = sun.reflect.Reflection.getCallerClass(2).getName();
 		logger.info(caller + " got Exception! ",e);			
+		e.printStackTrace();
 	}
 
 	public static void d(String message){
