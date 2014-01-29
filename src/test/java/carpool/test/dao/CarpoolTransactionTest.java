@@ -16,11 +16,11 @@ import carpool.common.DateUtility;
 import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.TransactionType;
-import carpool.constants.Constants.gender;
-import carpool.constants.Constants.messageState;
-import carpool.constants.Constants.messageType;
-import carpool.constants.Constants.paymentMethod;
-import carpool.constants.Constants.transactionState;
+import carpool.constants.Constants.Gender;
+import carpool.constants.Constants.MessageState;
+import carpool.constants.Constants.MessageType;
+import carpool.constants.Constants.PaymentMethod;
+import carpool.constants.Constants.TransactionState;
 import carpool.dbservice.TransactionDaoService;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.validation.ValidationException;
@@ -48,14 +48,14 @@ public class CarpoolTransactionTest {
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		//Users
-		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca",departureLocation, gender.both);
+		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca",departureLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(provider);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		User customer =  new User("fangyuan", "fangyuanlucky", arrivalLocation, gender.both);
+		User customer =  new User("fangyuan", "fangyuanlucky", arrivalLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);
@@ -65,10 +65,10 @@ public class CarpoolTransactionTest {
 		Calendar time = DateUtility.DateToCalendar(new Date(0));
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
-		paymentMethod paymentMethod =null;
+		PaymentMethod paymentMethod =null;
 		paymentMethod = paymentMethod.fromInt(0);
-		messageType type = messageType.fromInt(0);
-		gender genderRequirement = gender.fromInt(0);		
+		MessageType type = MessageType.fromInt(0);
+		Gender genderRequirement = Gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
 		TransactionType transactiontype = TransactionType.fromInt(0);
 
@@ -107,14 +107,14 @@ public class CarpoolTransactionTest {
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		//Users
-		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new Location(departureLocation), gender.both);
+		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new Location(departureLocation), Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(provider);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		User customer =  new User("fangyuan", "fangyuanlucky", new Location(arrivalLocation), gender.both);
+		User customer =  new User("fangyuan", "fangyuanlucky", new Location(arrivalLocation), Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);
@@ -128,9 +128,9 @@ public class CarpoolTransactionTest {
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
-		paymentMethod p =Constants.paymentMethod.fromInt(0);
-		messageType type = messageType.fromInt(0);
-		gender genderRequirement = gender.fromInt(0);		
+		PaymentMethod p =Constants.PaymentMethod.fromInt(0);
+		MessageType type = MessageType.fromInt(0);
+		Gender genderRequirement = Gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
 
 
@@ -249,14 +249,14 @@ public class CarpoolTransactionTest {
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		//Users
-		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(provider);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		User customer =  new User("fangyuan", "fangyuanlucky", arrivalLocation, gender.both);
+		User customer =  new User("fangyuan", "fangyuanlucky", arrivalLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);
@@ -270,9 +270,9 @@ public class CarpoolTransactionTest {
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
-		paymentMethod p =Constants.paymentMethod.fromInt(0);
-		messageType type = messageType.fromInt(0);
-		gender genderRequirement = gender.fromInt(0);		
+		PaymentMethod p =Constants.PaymentMethod.fromInt(0);
+		MessageType type = MessageType.fromInt(0);
+		Gender genderRequirement = Gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
 		ArrayList<Integer> alist = new ArrayList<Integer>();
 		alist.add(10);	
@@ -333,14 +333,14 @@ public class CarpoolTransactionTest {
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		//Users
-		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(provider);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		User customer =  new User("fangyuan", "fangyuanlucky", arrivalLocation, gender.both);
+		User customer =  new User("fangyuan", "fangyuanlucky", arrivalLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);
@@ -366,9 +366,9 @@ public class CarpoolTransactionTest {
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
-		paymentMethod p =Constants.paymentMethod.fromInt(0);
-		messageType type = messageType.fromInt(0);
-		gender genderRequirement = gender.fromInt(0);		
+		PaymentMethod p =Constants.PaymentMethod.fromInt(0);
+		MessageType type = MessageType.fromInt(0);
+		Gender genderRequirement = Gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
 		ArrayList<Integer> alist = new ArrayList<Integer>();
 		alist.add(10);
@@ -395,25 +395,25 @@ public class CarpoolTransactionTest {
 
 		TransactionType ttype = TransactionType.departure;
 		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction.setState(transactionState.init);// This should pass the test(aboutToStart)
+		transaction.setState(TransactionState.init);// This should pass the test(aboutToStart)
 		Transaction transaction2 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction2.setState(transactionState.init);
+		transaction2.setState(TransactionState.init);
 		Transaction transaction3 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction3.setState(transactionState.finished);
+		transaction3.setState(TransactionState.finished);
 		Transaction transaction4 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction4.setState(transactionState.aboutToStart);// This should pass the test(finished)
+		transaction4.setState(TransactionState.aboutToStart);// This should pass the test(finished)
 		Transaction transaction5 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction5.setState(transactionState.init);
+		transaction5.setState(TransactionState.init);
 		Transaction transaction6 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction6.setState(transactionState.aboutToStart);// This should pass the test(finished)
+		transaction6.setState(TransactionState.aboutToStart);// This should pass the test(finished)
 		Transaction transaction7 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote", null,timeSlot,dseats,ttype);
-		transaction7.setState(transactionState.aboutToStart);// This should pass the test(finished)
+		transaction7.setState(TransactionState.aboutToStart);// This should pass the test(finished)
 		Transaction transaction8 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction8.setState(transactionState.finished);
+		transaction8.setState(TransactionState.finished);
 		Transaction transaction9 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction9.setState(transactionState.init);
+		transaction9.setState(TransactionState.init);
 		Transaction transaction10 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction10.setState(transactionState.finished);
+		transaction10.setState(TransactionState.finished);
 
 		try{
 			CarpoolDaoTransaction.addTransactionToDatabase(transaction);
@@ -428,7 +428,7 @@ public class CarpoolTransactionTest {
 			CarpoolDaoTransaction.addTransactionToDatabase(transaction10);
 			//Test
 			TransactionCleaner.Clean();
-			ArrayList<transactionState> list = new ArrayList<transactionState>();
+			ArrayList<TransactionState> list = new ArrayList<TransactionState>();
 			list.add(CarpoolDaoTransaction.getTransactionById(transaction.getTransactionId()).getState());
 			list.add(CarpoolDaoTransaction.getTransactionById(transaction2.getTransactionId()).getState());
 			list.add(CarpoolDaoTransaction.getTransactionById(transaction3.getTransactionId()).getState());
@@ -439,7 +439,7 @@ public class CarpoolTransactionTest {
 			list.add(CarpoolDaoTransaction.getTransactionById(transaction8.getTransactionId()).getState());
 			list.add(CarpoolDaoTransaction.getTransactionById(transaction9.getTransactionId()).getState());
 			list.add(CarpoolDaoTransaction.getTransactionById(transaction10.getTransactionId()).getState());
-			if(list !=null && list.size()==10 && list.get(0)==transactionState.aboutToStart && list.get(1)==transactionState.init &&list.get(2)==transactionState.finished && list.get(3)==transactionState.finished && list.get(4)==transactionState.init && list.get(5)==transactionState.finished && list.get(6)==transactionState.finished&& list.get(7)==transactionState.finished && list.get(8)==transactionState.init&&list.get(9)==transactionState.finished){
+			if(list !=null && list.size()==10 && list.get(0)==TransactionState.aboutToStart && list.get(1)==TransactionState.init &&list.get(2)==TransactionState.finished && list.get(3)==TransactionState.finished && list.get(4)==TransactionState.init && list.get(5)==TransactionState.finished && list.get(6)==TransactionState.finished&& list.get(7)==TransactionState.finished && list.get(8)==TransactionState.init&&list.get(9)==TransactionState.finished){
 				//Passed;				
 			}else{				
 				fail();					
@@ -469,14 +469,14 @@ public class CarpoolTransactionTest {
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		//Users
-		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(provider);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		User customer =  new User("fangyuan", "fangyuanlucky", arrivalLocation, gender.both);
+		User customer =  new User("fangyuan", "fangyuanlucky", arrivalLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);
@@ -500,9 +500,9 @@ public class CarpoolTransactionTest {
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
-		paymentMethod p =Constants.paymentMethod.fromInt(0);
-		messageType type = messageType.fromInt(0);
-		gender genderRequirement = gender.fromInt(0);		
+		PaymentMethod p =Constants.PaymentMethod.fromInt(0);
+		MessageType type = MessageType.fromInt(0);
+		Gender genderRequirement = Gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
 		ArrayList<Integer> alist = new ArrayList<Integer>();
 		alist.add(10);
@@ -529,25 +529,25 @@ public class CarpoolTransactionTest {
 
 		TransactionType ttype = TransactionType.departure;
 		Transaction transaction = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction.setState(transactionState.init);
+		transaction.setState(TransactionState.init);
 		Transaction transaction2 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction2.setState(transactionState.init);
+		transaction2.setState(TransactionState.init);
 		Transaction transaction3 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction3.setState(transactionState.finished);
+		transaction3.setState(TransactionState.finished);
 		Transaction transaction4 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction4.setState(transactionState.aboutToStart);
+		transaction4.setState(TransactionState.aboutToStart);
 		Transaction transaction5 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction5.setState(transactionState.init);
+		transaction5.setState(TransactionState.init);
 		Transaction transaction6 = new Transaction(provider.getUserId(),customer.getUserId(),message3.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction6.setState(transactionState.aboutToStart);
+		transaction6.setState(TransactionState.aboutToStart);
 		Transaction transaction7 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote", null,timeSlot,dseats,ttype);
-		transaction7.setState(transactionState.aboutToStart);
+		transaction7.setState(TransactionState.aboutToStart);
 		Transaction transaction8 = new Transaction(provider.getUserId(),customer.getUserId(),message.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction8.setState(transactionState.finished);
+		transaction8.setState(TransactionState.finished);
 		Transaction transaction9 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction9.setState(transactionState.init);
+		transaction9.setState(TransactionState.init);
 		Transaction transaction10 = new Transaction(provider.getUserId(),customer.getUserId(),message2.getMessageId(),p,"cNote","pNote",null,timeSlot,dseats,ttype);
-		transaction10.setState(transactionState.finished);
+		transaction10.setState(TransactionState.finished);
 		
 		ArrayList<Transaction> testResult = new ArrayList<Transaction>();
 		ArrayList<Transaction> tlist = new ArrayList<Transaction>();

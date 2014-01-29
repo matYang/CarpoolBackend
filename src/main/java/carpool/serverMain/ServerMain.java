@@ -9,7 +9,7 @@ import org.restlet.data.Protocol;
 
 import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants.gender;
+import carpool.constants.Constants.Gender;
 import carpool.dbservice.LocationDaoService;
 import carpool.factory.JSONFactory;
 import carpool.service.*;

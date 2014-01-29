@@ -16,9 +16,9 @@ import carpool.common.DateUtility;
 import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.TransactionType;
-import carpool.constants.Constants.gender;
-import carpool.constants.Constants.messageType;
-import carpool.constants.Constants.paymentMethod;
+import carpool.constants.Constants.Gender;
+import carpool.constants.Constants.MessageType;
+import carpool.constants.Constants.PaymentMethod;
 import carpool.dbservice.MessageDaoService;
 import carpool.dbservice.TransactionDaoService;
 import carpool.dbservice.UserDaoService;
@@ -48,14 +48,14 @@ public class TransactionDaoServiceTest {
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		//Users
-        User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new Location(departureLocation), gender.both);
+        User provider =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new Location(departureLocation), Gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(provider);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		User customer =  new User("fangyuan", "fangyuanlucky", new Location(arrivalLocation), gender.both);
+		User customer =  new User("fangyuan", "fangyuanlucky", new Location(arrivalLocation), Gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(customer);
@@ -65,10 +65,10 @@ public class TransactionDaoServiceTest {
 		Calendar time = DateUtility.DateToCalendar(new Date(0));
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
-		paymentMethod paymentMethod =null;
+		PaymentMethod paymentMethod =null;
 		paymentMethod = paymentMethod.fromInt(0);
-		messageType type = messageType.fromInt(0);
-		gender genderRequirement = gender.fromInt(0);		
+		MessageType type = MessageType.fromInt(0);
+		Gender genderRequirement = Gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
 		
 				

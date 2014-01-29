@@ -25,9 +25,9 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants.DayTimeSlot;
-import carpool.constants.Constants.gender;
-import carpool.constants.Constants.messageType;
-import carpool.constants.Constants.paymentMethod;
+import carpool.constants.Constants.Gender;
+import carpool.constants.Constants.MessageType;
+import carpool.constants.Constants.PaymentMethod;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.validation.ValidationException;
 import carpool.model.Location;
@@ -80,7 +80,7 @@ public class AwsS3Test {
 		long dm2 = departureLocation2.getMatch();
 		long am2 = arrivalLocation2.getMatch();
 
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -98,10 +98,10 @@ public class AwsS3Test {
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
-		paymentMethod paymentMethod =null;
+		PaymentMethod paymentMethod =null;
 		paymentMethod = paymentMethod.fromInt(0);
-		messageType type = messageType.fromInt(0);			
-		gender genderRequirement = gender.fromInt(0);		
+		MessageType type = MessageType.fromInt(0);			
+		Gender genderRequirement = Gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);	
 		DayTimeSlot timeSlot2 = DayTimeSlot.fromInt(1);
 		DayTimeSlot timeSlot3 = DayTimeSlot.fromInt(2);
@@ -213,7 +213,7 @@ public class AwsS3Test {
 		long am = arrivalLocation.getMatch();
 		long dm2 = departureLocation2.getMatch();
 		long am2 = arrivalLocation2.getMatch();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -231,10 +231,10 @@ public class AwsS3Test {
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
-		paymentMethod paymentMethod =null;
+		PaymentMethod paymentMethod =null;
 		paymentMethod = paymentMethod.fromInt(0);
-		messageType type = messageType.fromInt(0);			
-		gender genderRequirement = gender.fromInt(0);		
+		MessageType type = MessageType.fromInt(0);			
+		Gender genderRequirement = Gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);	
 		DayTimeSlot timeSlot2 = DayTimeSlot.fromInt(1);
 		DayTimeSlot timeSlot3 = DayTimeSlot.fromInt(2);
@@ -312,8 +312,8 @@ public class AwsS3Test {
 		long am = arrivalLocation.getMatch();
 		long dm2 = departureLocation2.getMatch();
 		long am2 = arrivalLocation2.getMatch();
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
-		User user2 =  new User("fruitJ", "xiongchuhanplace@hotmail.com", departureLocation, gender.female);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
+		User user2 =  new User("fruitJ", "xiongchuhanplace@hotmail.com", departureLocation, Gender.female);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -332,10 +332,10 @@ public class AwsS3Test {
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
-		paymentMethod paymentMethod =null;
+		PaymentMethod paymentMethod =null;
 		paymentMethod = paymentMethod.fromInt(0);
-		messageType type = messageType.fromInt(0);			
-		gender genderRequirement = gender.fromInt(0);		
+		MessageType type = MessageType.fromInt(0);			
+		Gender genderRequirement = Gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);	
 		DayTimeSlot timeSlot2 = DayTimeSlot.fromInt(1);
 		DayTimeSlot timeSlot3 = DayTimeSlot.fromInt(2);

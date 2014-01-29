@@ -14,9 +14,9 @@ import carpool.common.HelperOperator;
 import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.TransactionType;
-import carpool.constants.Constants.messageState;
-import carpool.constants.Constants.paymentMethod;
-import carpool.constants.Constants.transactionState;
+import carpool.constants.Constants.MessageState;
+import carpool.constants.Constants.PaymentMethod;
+import carpool.constants.Constants.TransactionState;
 import carpool.exception.validation.ValidationException;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoValidatable;
@@ -37,7 +37,7 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 	private User customer;
 	private Message message;
 	
-	private paymentMethod paymentMethod;
+	private PaymentMethod paymentMethod;
 	private String customerNote;
 	private String providerNote;
 	private int customerEvaluation;
@@ -56,7 +56,7 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 	
 	private TransactionType type;
 	private int totalPrice;
-	private transactionState state;
+	private TransactionState state;
 	
 	private Calendar creationTime;
 	private boolean historyDeleted;
@@ -66,7 +66,7 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 	private Transaction(){}
 	
 	//this constructor is used for transaction initialization
-	public Transaction(int providerId, int customerId, int messageId, paymentMethod p, String cNote, String pNote,Calendar d_t, DayTimeSlot d_ts, int d_seats, TransactionType type){
+	public Transaction(int providerId, int customerId, int messageId, PaymentMethod p, String cNote, String pNote,Calendar d_t, DayTimeSlot d_ts, int d_seats, TransactionType type){
 		super();
 		this.providerId = providerId;
 		this.customerId = customerId;
@@ -89,7 +89,7 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		
 		this.type = type;
 		this.totalPrice = 0;
-		this.state = transactionState.init;
+		this.state = TransactionState.init;
 		this.creationTime = DateUtility.getCurTimeInstance();
 		this.historyDeleted = false;
 	}
@@ -98,13 +98,13 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 	
 	public Transaction(int transactionId, int providerId, int customerId,
 			int messageId,
-			carpool.constants.Constants.paymentMethod paymentMethod,
+			carpool.constants.Constants.PaymentMethod paymentMethod,
 			String customerNote, String providerNote, int customerEvaluation,
 			int providerEvaluation, Location departure_location,
 			Location arrival_location, Calendar departure_time,
 			DayTimeSlot departure_timeSlot, int departure_seatsBooked,
 			ArrayList<Integer> departure_priceList, TransactionType type,
-			int totalPrice, transactionState state, Calendar creationTime,
+			int totalPrice, TransactionState state, Calendar creationTime,
 			boolean historyDeleted) {
 		super();
 		this.transactionId = transactionId;
@@ -213,11 +213,11 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		this.message = message;
 	}
 
-	public paymentMethod getPaymentMethod() {
+	public PaymentMethod getPaymentMethod() {
 		return paymentMethod;
 	}
 
-	public void setPaymentMethod(paymentMethod paymentMethod) {
+	public void setPaymentMethod(PaymentMethod paymentMethod) {
 		this.paymentMethod = paymentMethod;
 	}
 
@@ -309,11 +309,11 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 		this.totalPrice = totalPrice;
 	}
 
-	public transactionState getState() {
+	public TransactionState getState() {
 		return state;
 	}
 
-	public void setState(transactionState state) {
+	public void setState(TransactionState state) {
 		this.state = state;
 	}
 

@@ -7,7 +7,7 @@ import carpool.aws.AwsMain;
 import carpool.common.*;
 import carpool.constants.Constants;
 import carpool.constants.Constants.NotificationEvent;
-import carpool.constants.Constants.gender;
+import carpool.constants.Constants.Gender;
 import carpool.carpoolDAO.*;
 import carpool.exception.PseudoException;
 import carpool.exception.validation.ValidationException;

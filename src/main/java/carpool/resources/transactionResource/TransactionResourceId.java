@@ -20,8 +20,8 @@ import org.json.JSONObject;
 
 import carpool.common.DebugLog;
 import carpool.constants.Constants;
-import carpool.constants.Constants.messageState;
-import carpool.constants.Constants.transactionStateChangeAction;
+import carpool.constants.Constants.MessageState;
+import carpool.constants.Constants.TransactionStateChangeAction;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
@@ -94,7 +94,7 @@ public class TransactionResourceId extends PseudoResource{
 			
 			this.validateAuthentication(userId);
 			
-			transactionStateChangeAction stateChangeAction = transactionStateChangeAction.fromInt(stateIndex);
+			TransactionStateChangeAction stateChangeAction = TransactionStateChangeAction.fromInt(stateIndex);
 			
 	        if (stateChangeAction != null){
 	        	switch(stateChangeAction){

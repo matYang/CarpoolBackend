@@ -11,10 +11,10 @@ import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.common.DateUtility;
 import carpool.constants.Constants.DayTimeSlot;
-import carpool.constants.Constants.gender;
-import carpool.constants.Constants.messageState;
-import carpool.constants.Constants.messageType;
-import carpool.constants.Constants.paymentMethod;
+import carpool.constants.Constants.Gender;
+import carpool.constants.Constants.MessageState;
+import carpool.constants.Constants.MessageType;
+import carpool.constants.Constants.PaymentMethod;
 import carpool.exception.validation.ValidationException;
 import carpool.model.Location;
 import carpool.model.User;
@@ -41,14 +41,14 @@ public class SRStorageTest {
 		long dm = departureLocation.getMatch();
 		long am = arrivalLocation.getMatch();
 		//Users
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new Location(departureLocation), gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new Location(departureLocation), Gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-	   User user2 =  new User("fangyuan&lucyWang", "xiongchuhan@hotmail.com", new Location(arrivalLocation), gender.both);
+	   User user2 =  new User("fangyuan&lucyWang", "xiongchuhan@hotmail.com", new Location(arrivalLocation), Gender.both);
 		
 		try {
 			CarpoolDaoUser.addUserToDatabase(user2);
@@ -64,7 +64,7 @@ public class SRStorageTest {
 		Calendar dt2 = DateUtility.getCurTimeInstance();	
 		dt2.add(Calendar.DAY_OF_YEAR, -2);	
 				
-		messageType type = messageType.fromInt(0);	
+		MessageType type = MessageType.fromInt(0);	
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);	
 		//SRs
 		SearchRepresentation sr = new SearchRepresentation(false,dm,am,dt,at,type,timeSlot,timeSlot);

@@ -46,7 +46,7 @@ public class UserContactResource extends PseudoResource{
 			String birthday = jsonContact.getString("birthday");
 			Location location = new Location(jsonContact.getJSONObject("location"));
 			//no DB interaction here
-			if (!(Validator.isNameFormatValid(name) && Constants.gender.values()[gender] != null && Validator.isPhoneFormatValid(phone) && Validator.isQqFormatValid(qq))){
+			if (!(Validator.isNameFormatValid(name) && Constants.Gender.values()[gender] != null && Validator.isPhoneFormatValid(phone) && Validator.isQqFormatValid(qq))){
 				return null;
 			}
 			else{
@@ -81,7 +81,7 @@ public class UserContactResource extends PseudoResource{
 			if (contact != null){
 				User user = UserDaoService.getUserById(userId);
 				user.setName(contact.getString("name"));
-				user.setGender(Constants.gender.values()[contact.getInt("gender")]);
+				user.setGender(Constants.Gender.values()[contact.getInt("gender")]);
 				user.setPhone(contact.getString("phone"));
 				user.setQq(contact.getString("qq"));
 				user.setBirthday(DateUtility.castFromAPIFormat(contact.getString("birthday")));

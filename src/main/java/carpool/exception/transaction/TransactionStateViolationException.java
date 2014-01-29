@@ -1,24 +1,24 @@
 package carpool.exception.transaction;
 
-import carpool.constants.Constants.transactionState;
+import carpool.constants.Constants.TransactionState;
 import carpool.exception.PseudoException;
 
 public class TransactionStateViolationException extends PseudoException {
 
 	private static final long serialVersionUID = 1L;
 	
-	private transactionState curState;
-	private transactionState expectedState;
+	private TransactionState curState;
+	private TransactionState expectedState;
 	
 	protected String exceptionType = "TransactionStateViolation";
 	
-	public TransactionStateViolationException(transactionState curState, transactionState expectedState){
+	public TransactionStateViolationException(TransactionState curState, TransactionState expectedState){
         super("交易状态冲突，当前交易状态： " + curState.toString() + ", 预期交易状态: " + expectedState.toString());
         this.curState = curState;
         this.expectedState = expectedState;
     }
 	
-	public TransactionStateViolationException(transactionState curState, transactionState expectedState, String exceptionText){
+	public TransactionStateViolationException(TransactionState curState, TransactionState expectedState, String exceptionText){
         super(exceptionText);
         this.curState = curState;
         this.expectedState = expectedState;
@@ -29,11 +29,11 @@ public class TransactionStateViolationException extends PseudoException {
         return 7;
     }
     
-    public transactionState getCurState(){
+    public TransactionState getCurState(){
     	return curState;
     }
     
-    public transactionState getExpectedState(){
+    public TransactionState getExpectedState(){
     	return expectedState;
     }
 

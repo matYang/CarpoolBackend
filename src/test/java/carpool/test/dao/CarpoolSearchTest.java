@@ -14,10 +14,10 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants.DayTimeSlot;
-import carpool.constants.Constants.gender;
-import carpool.constants.Constants.messageState;
-import carpool.constants.Constants.messageType;
-import carpool.constants.Constants.paymentMethod;
+import carpool.constants.Constants.Gender;
+import carpool.constants.Constants.MessageState;
+import carpool.constants.Constants.MessageType;
+import carpool.constants.Constants.PaymentMethod;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.validation.ValidationException;
 import carpool.model.Location;
@@ -44,7 +44,7 @@ public class CarpoolSearchTest {
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		
-		User user = new User("lol@me.com", "32121", departureLocation, gender.both);
+		User user = new User("lol@me.com", "32121", departureLocation, Gender.both);
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e1) {
@@ -78,11 +78,11 @@ public class CarpoolSearchTest {
 		
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(new Integer(1));
-		paymentMethod p =null;
-		p = paymentMethod.fromInt(0);
-		messageType type = messageType.fromInt(0);
-		gender genderRequirement = gender.fromInt(0);
-		messageState state = messageState.fromInt(0);
+		PaymentMethod p =null;
+		p = PaymentMethod.fromInt(0);
+		MessageType type = MessageType.fromInt(0);
+		Gender genderRequirement = Gender.fromInt(0);
+		MessageState state = MessageState.fromInt(0);
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
 		int userId = 1;
 

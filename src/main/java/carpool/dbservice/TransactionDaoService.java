@@ -99,8 +99,8 @@ public class TransactionDaoService{
 		Transaction t = CarpoolDaoTransaction.getTransactionById(transactionId);
 
 		if(t.getProviderId() == userId || t.getCustomerId() == userId){
-			if(t.getState() != Constants.transactionState.init){
-				throw new TransactionStateViolationException(t.getState(), Constants.transactionState.init);
+			if(t.getState() != Constants.TransactionState.init){
+				throw new TransactionStateViolationException(t.getState(), Constants.TransactionState.init);
 			}
 
 			Message base = CarpoolDaoMessage.getMessageById(t.getMessageId());
@@ -113,7 +113,7 @@ public class TransactionDaoService{
 				throw new ValidationException("交易取消失败，涉及座位数不匹配");
 			}
 
-			t.setState(Constants.transactionState.cancelled);
+			t.setState(Constants.TransactionState.cancelled);
 			CarpoolDaoTransaction.updateTransactionInDatabase(t);
 			CarpoolDaoMessage.UpdateMessageInDatabase(base);
 			//send notifications
@@ -141,10 +141,10 @@ public class TransactionDaoService{
 		Transaction t = CarpoolDaoTransaction.getTransactionById(transactionId);
 
 		if(t.getProviderId() == userId || t.getCustomerId() == userId){
-			if(t.getState() != Constants.transactionState.finished){
-				throw new TransactionStateViolationException(t.getState(), Constants.transactionState.finished);
+			if(t.getState() != Constants.TransactionState.finished){
+				throw new TransactionStateViolationException(t.getState(), Constants.TransactionState.finished);
 			}else{
-				t.setState(Constants.transactionState.underInvestigation);
+				t.setState(Constants.TransactionState.underInvestigation);
 				CarpoolDaoTransaction.updateTransactionInDatabase(t);
 				//send notifications
 				ArrayList<Notification> ns = new ArrayList<Notification>();
@@ -170,8 +170,8 @@ public class TransactionDaoService{
 	 */
 	public static Transaction evaluateTransaction(int transactionId, int userId, int score) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionAccessViolationException, TransactionStateViolationException, MessageNotFoundException, UserNotFoundException, ValidationException, LocationNotFoundException{
 		Transaction t = CarpoolDaoTransaction.getTransactionById(transactionId);
-		if(t.getState() != Constants.transactionState.finished){
-			throw new TransactionStateViolationException(t.getState(), Constants.transactionState.finished);
+		if(t.getState() != Constants.TransactionState.finished){
+			throw new TransactionStateViolationException(t.getState(), Constants.TransactionState.finished);
 		}else{
 			try {
 				if(userId == t.getProviderId()){

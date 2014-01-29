@@ -9,10 +9,10 @@ import carpool.common.HelperOperator;
 import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
-import carpool.constants.Constants.gender;
-import carpool.constants.Constants.messageState;
-import carpool.constants.Constants.messageType;
-import carpool.constants.Constants.paymentMethod;
+import carpool.constants.Constants.Gender;
+import carpool.constants.Constants.MessageState;
+import carpool.constants.Constants.MessageType;
+import carpool.constants.Constants.PaymentMethod;
 import carpool.factory.JSONFactory;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoValidatable;
@@ -58,11 +58,11 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	/*****
 	 * message details
 	 *****/
-	private paymentMethod paymentMethod;   //refer to common.Constants, though for now we'll be using offline only, it will be guaranteed on API level, allow flexibility in underlying logic
+	private PaymentMethod paymentMethod;   //refer to common.Constants, though for now we'll be using offline only, it will be guaranteed on API level, allow flexibility in underlying logic
 	private String note;
-	private messageType type;
-	private gender genderRequirement;
-	private messageState state;
+	private MessageType type;
+	private Gender genderRequirement;
+	private MessageState state;
 
 	private Calendar creationTime;
 	private Calendar editTime;
@@ -81,7 +81,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 			int departure_seatsNumber, ArrayList<Integer> departure_priceList,
 			Location arrival_Location, Calendar arrival_time, DayTimeSlot arrival_timeSlot,
 			int arrival_seatsNumber, ArrayList<Integer> arrival_priceList,
-			paymentMethod paymentMethod, String note, messageType type, gender genderRequirement) {
+			PaymentMethod paymentMethod, String note, MessageType type, Gender genderRequirement) {
 		super();
 		this.messageId = -1;
 		this.ownerId = ownerId;
@@ -111,7 +111,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 		this.departure_seatsBooked = 0;
 		this.arrival_seatsBooked = 0;
 
-		this.state = Constants.messageState.open;
+		this.state = Constants.MessageState.open;
 		this.creationTime = DateUtility.getCurTimeInstance();
 		this.editTime = DateUtility.getCurTimeInstance();
 		this.historyDeleted = false;
@@ -130,8 +130,8 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 			Location arrival_Location, Calendar arrival_time, DayTimeSlot arrival_timeSlot,
 			int arrival_seatsNumber, int arrival_seatsBooked,
 			ArrayList<Integer> arrival_priceList,
-			paymentMethod paymentMethod, String note, messageType type, gender genderRequirement,
-			messageState state, Calendar creationTime, Calendar editTime, boolean historyDeleted) {
+			PaymentMethod paymentMethod, String note, MessageType type, Gender genderRequirement,
+			MessageState state, Calendar creationTime, Calendar editTime, boolean historyDeleted) {
 		super();
 		this.messageId = messageId;
 		this.ownerId = ownerId;
@@ -336,12 +336,12 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	}
 
 
-	public paymentMethod getPaymentMethod() {
+	public PaymentMethod getPaymentMethod() {
 		return paymentMethod;
 	}
 
 
-	public void setPaymentMethod(paymentMethod paymentMethod) {
+	public void setPaymentMethod(PaymentMethod paymentMethod) {
 		this.paymentMethod = paymentMethod;
 	}
 
@@ -356,32 +356,32 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 	}
 
 
-	public messageType getType() {
+	public MessageType getType() {
 		return type;
 	}
 
 
-	public void setType(messageType type) {
+	public void setType(MessageType type) {
 		this.type = type;
 	}
 
 
-	public gender getGenderRequirement() {
+	public Gender getGenderRequirement() {
 		return genderRequirement;
 	}
 
 
-	public void setGenderRequirement(gender genderRequirement) {
+	public void setGenderRequirement(Gender genderRequirement) {
 		this.genderRequirement = genderRequirement;
 	}
 
 
-	public messageState getState() {
+	public MessageState getState() {
 		return state;
 	}
 
 
-	public void setState(messageState state) {
+	public void setState(MessageState state) {
 		this.state = state;
 	}
 
@@ -560,7 +560,7 @@ public class Message implements PseudoModel, PseudoValidatable, Comparable<Messa
 
 	public boolean isOpen(){
 		Calendar curTimeInstance = DateUtility.getCurTimeInstance();
-		if (this.state == messageState.open){
+		if (this.state == MessageState.open){
 			if (DateUtility.compareday(curTimeInstance, this.departure_time) < 0){
 				return true;
 			}

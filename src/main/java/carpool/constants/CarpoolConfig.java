@@ -10,7 +10,7 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.Constants.DayTimeSlot;
 import carpool.constants.Constants.EmailEvent;
-import carpool.constants.Constants.messageType;
+import carpool.constants.Constants.MessageType;
 import carpool.model.Location;
 import carpool.model.representation.SearchRepresentation;
 

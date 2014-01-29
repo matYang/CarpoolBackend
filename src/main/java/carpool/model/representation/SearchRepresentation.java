@@ -10,7 +10,7 @@ import carpool.common.DateUtility;
 import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
-import carpool.constants.Constants.messageType;
+import carpool.constants.Constants.MessageType;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoRepresentation;
 import carpool.model.Location;
@@ -22,7 +22,7 @@ public class SearchRepresentation implements PseudoRepresentation{
 	private long arrivalMatch_Id;
 	private Calendar departureDate;
 	private Calendar arrivalDate;
-	private messageType targetType;
+	private MessageType targetType;
 	private DayTimeSlot departureTimeSlot;
 	private DayTimeSlot arrivalTimeSlot;
 	private Calendar timeStamp;
@@ -32,7 +32,7 @@ public class SearchRepresentation implements PseudoRepresentation{
 	
 	public SearchRepresentation(boolean isRoundTrip,
 			long departureMatch_Id,long arrivalMatch_Id,
-			Calendar departureDate,	Calendar arrivalDate, messageType targetType,
+			Calendar departureDate,	Calendar arrivalDate, MessageType targetType,
 			DayTimeSlot departureTimeSlot, DayTimeSlot arrivalTimeSlot) {
 		super();
 		this.isRoundTrip = isRoundTrip;
@@ -55,7 +55,7 @@ public class SearchRepresentation implements PseudoRepresentation{
 		this.arrivalMatch_Id = Long.parseLong(representationArray[2],10);
 		this.departureDate = DateUtility.castFromAPIFormat(representationArray[3]);
 		this.arrivalDate = DateUtility.castFromAPIFormat(representationArray[4]);
-		this.targetType = Constants.messageType.values()[Integer.parseInt(representationArray[5])];
+		this.targetType = Constants.MessageType.values()[Integer.parseInt(representationArray[5])];
 		this.departureTimeSlot = Constants.DayTimeSlot.values()[Integer.parseInt(representationArray[6])];
 		this.arrivalTimeSlot = Constants.DayTimeSlot.values()[Integer.parseInt(representationArray[7])];
 		this.timeStamp = DateUtility.castFromAPIFormat(representationArray[8]);
@@ -67,7 +67,7 @@ public class SearchRepresentation implements PseudoRepresentation{
 		this.departureMatch_Id = jsonSearchRepresentation.getLong("arrivalMatch_Id");
 		this.departureDate = DateUtility.castFromAPIFormat(jsonSearchRepresentation.getString("departureDate"));
 		this.arrivalDate = DateUtility.castFromAPIFormat(jsonSearchRepresentation.getString("arrivalDate"));
-		this.targetType = Constants.messageType.values()[jsonSearchRepresentation.getInt("targetType")];
+		this.targetType = Constants.MessageType.values()[jsonSearchRepresentation.getInt("targetType")];
 		this.departureTimeSlot = Constants.DayTimeSlot.values()[jsonSearchRepresentation.getInt("departureTimeSlot")];
 		this.arrivalTimeSlot = Constants.DayTimeSlot.values()[jsonSearchRepresentation.getInt("arrivalTimeSlot")];
 		this.timeStamp = DateUtility.castFromAPIFormat(jsonSearchRepresentation.getString("timeStamp"));
@@ -118,11 +118,11 @@ public class SearchRepresentation implements PseudoRepresentation{
 		this.arrivalDate = arrivalDate;
 	}
 
-	public messageType getTargetType() {
+	public MessageType getTargetType() {
 		return targetType;
 	}
 
-	public void setTargetType(messageType targetType) {
+	public void setTargetType(MessageType targetType) {
 		this.targetType = targetType;
 	}
 

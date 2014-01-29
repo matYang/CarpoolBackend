@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoUser;
-import carpool.constants.Constants.gender;
+import carpool.constants.Constants.Gender;
 import carpool.dbservice.EmailDaoService;
 import carpool.exception.user.UserNotFoundException;
 import carpool.exception.validation.ValidationException;
@@ -32,7 +32,7 @@ public class SESRelayTaskTest {
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);		
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);		
 		String email = "xiongchuhan@hotmail.com";
 		user.setEmail(email);
 		try {
@@ -70,7 +70,7 @@ public class SESRelayTaskTest {
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);		
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);		
 		String email = "xiongchuhan@hotmail.com";
 		user.setEmail(email);
 		try {

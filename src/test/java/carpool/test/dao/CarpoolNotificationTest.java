@@ -13,7 +13,7 @@ import carpool.constants.Constants;
 import carpool.constants.Constants.NotificationEvent;
 import carpool.constants.Constants.NotificationState;
 import carpool.constants.Constants.NotificationStateChangeActon;
-import carpool.constants.Constants.gender;
+import carpool.constants.Constants.Gender;
 import carpool.dbservice.NotificationDaoService;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
@@ -43,7 +43,7 @@ public class CarpoolNotificationTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -85,7 +85,7 @@ public class CarpoolNotificationTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", arrivalLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", arrivalLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -139,14 +139,14 @@ public class CarpoolNotificationTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}
-		User user2 =  new User("chenmoling", "chenmolingjb", arrivalLocation, gender.both);
+		User user2 =  new User("chenmoling", "chenmolingjb", arrivalLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user2);
@@ -222,14 +222,14 @@ public class CarpoolNotificationTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}
-		User user2 =  new User("chenmoling", "chenmolingjb", arrivalLocation, gender.both);
+		User user2 =  new User("chenmoling", "chenmolingjb", arrivalLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user2);
@@ -292,14 +292,14 @@ public class CarpoolNotificationTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}
-		User user2 =  new User("chenmoling", "chenmolingjb", arrivalLocation, gender.both);
+		User user2 =  new User("chenmoling", "chenmolingjb", arrivalLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user2);
@@ -368,14 +368,14 @@ public class CarpoolNotificationTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}
-		User user2 =  new User("chenmoling", "chenmolingjb",arrivalLocation, gender.both);
+		User user2 =  new User("chenmoling", "chenmolingjb",arrivalLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user2);
@@ -431,14 +431,14 @@ public class CarpoolNotificationTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}
-		User user2 =  new User("chenmoling", "chenmolingjb",arrivalLocation, gender.both);
+		User user2 =  new User("chenmoling", "chenmolingjb",arrivalLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user2);
@@ -499,14 +499,14 @@ public class CarpoolNotificationTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}
-		User user2 =  new User("chenmoling", "chenmolingjb",arrivalLocation, gender.both);
+		User user2 =  new User("chenmoling", "chenmolingjb",arrivalLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user2);
@@ -552,14 +552,14 @@ public class CarpoolNotificationTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}
-		User user2 =  new User("chenmoling", "chenmolingjb",arrivalLocation, gender.both);
+		User user2 =  new User("chenmoling", "chenmolingjb",arrivalLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user2);

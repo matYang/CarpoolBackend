@@ -17,9 +17,9 @@ import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.common.DebugLog;
 import carpool.constants.Constants.DayTimeSlot;
-import carpool.constants.Constants.gender;
-import carpool.constants.Constants.messageType;
-import carpool.constants.Constants.paymentMethod;
+import carpool.constants.Constants.Gender;
+import carpool.constants.Constants.MessageType;
+import carpool.constants.Constants.PaymentMethod;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.validation.ValidationException;
 import carpool.model.Location;
@@ -74,7 +74,7 @@ public class MultiThreadsHandlingTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);		
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", arrivalLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", arrivalLocation, Gender.both);
 
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -83,11 +83,11 @@ public class MultiThreadsHandlingTest {
 		}
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
-		paymentMethod paymentMethod =null;
+		PaymentMethod paymentMethod =null;
 		paymentMethod = paymentMethod.fromInt(0);
-		messageType type = messageType.fromInt(0);		
-		messageType type2 = messageType.fromInt(2);
-		gender genderRequirement = gender.fromInt(0);		
+		MessageType type = MessageType.fromInt(0);		
+		MessageType type2 = MessageType.fromInt(2);
+		Gender genderRequirement = Gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);		
 		int userId=user.getUserId();
 		//These messages should pass the search	

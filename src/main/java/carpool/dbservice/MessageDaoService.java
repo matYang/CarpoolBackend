@@ -8,7 +8,7 @@ import carpool.aws.AwsMain;
 import carpool.carpoolDAO.*;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.constants.Constants.messageState;
+import carpool.constants.Constants.MessageState;
 import carpool.exception.PseudoException;
 
 import carpool.exception.validation.ValidationException;
@@ -82,7 +82,7 @@ public class MessageDaoService{
 //		if(oldMessage.getOwnerId()!=ownerId){
 //			throw new MessageOwnerNotMatchException();
 //		}
-		oldMessage.setState(messageState.closed);
+		oldMessage.setState(MessageState.closed);
 		CarpoolDaoMessage.UpdateMessageInDatabase(oldMessage);
 		return true;
 	}
@@ -97,7 +97,7 @@ public class MessageDaoService{
 //		if(oldMessage.getOwnerId()!=ownerId){
 //			throw new MessageOwnerNotMatchException();
 //		}
-		oldMessage.setState(messageState.deleted);
+		oldMessage.setState(MessageState.deleted);
 		CarpoolDaoMessage.UpdateMessageInDatabase(oldMessage);
 		return true;
 	}
@@ -120,7 +120,7 @@ public class MessageDaoService{
 		Message targetMessage = CarpoolDaoMessage.getMessageById(curMsgId);
 		SearchRepresentation sr = new SearchRepresentation(targetMessage.isRoundTrip(), targetMessage.getDeparture_Id(),
                        targetMessage.getArrival_Id(), targetMessage.getDeparture_time(), targetMessage.getArrival_time(),
-			targetMessage.getType() == Constants.messageType.ask ? Constants.messageType.help : Constants.messageType.ask,
+			targetMessage.getType() == Constants.MessageType.ask ? Constants.MessageType.help : Constants.MessageType.ask,
                         targetMessage.getDeparture_timeSlot(), targetMessage.getArrival_timeSlot());
                 
 		//use unlogged in state to avoid automatching being recorded in search history   

@@ -38,8 +38,8 @@ public class DMResourceId extends PseudoResource{
 					jsonMessage.getInt("departure_seatsNumber"), Parser.parseIntegerList(jsonMessage.getJSONArray("departure_priceList")),
 					new Location(jsonMessage.getJSONObject("arrival_location")), DateUtility.castFromAPIFormat(jsonMessage.getString("arrival_time")), Constants.DayTimeSlot.values()[jsonMessage.getInt("arrival_timeSlot")],
 					jsonMessage.getInt("arrival_seatsNumber"), Parser.parseIntegerList(jsonMessage.getJSONArray("arrival_priceList")),
-					Constants.paymentMethod.values()[jsonMessage.getInt("paymentMethod")],
-					jsonMessage.getString("note"), Constants.messageType.values()[jsonMessage.getInt("type")], Constants.gender.values()[jsonMessage.getInt("genderRequirement")]);
+					Constants.PaymentMethod.values()[jsonMessage.getInt("paymentMethod")],
+					jsonMessage.getString("note"), Constants.MessageType.values()[jsonMessage.getInt("type")], Constants.Gender.values()[jsonMessage.getInt("genderRequirement")]);
 			message.setMessageId(messageId);
 		
 		} catch (Exception e){

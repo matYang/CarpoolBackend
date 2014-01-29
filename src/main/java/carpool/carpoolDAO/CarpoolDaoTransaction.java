@@ -238,9 +238,9 @@ public class CarpoolDaoTransaction {
 		Location arrival_location = msg.getArrival_Location();		
 		Transaction transaction = null;
 		transaction = new Transaction(rs.getInt("transaction_Id"),rs.getInt("provider_Id"),rs.getInt("customer_Id"),rs.getInt("message_Id"),
-				Constants.paymentMethod.fromInt(rs.getInt("paymentMethod")),rs.getString("customerNote"),rs.getString("providerNote"),
+				Constants.PaymentMethod.fromInt(rs.getInt("paymentMethod")),rs.getString("customerNote"),rs.getString("providerNote"),
 				rs.getInt("customerEvaluation"),rs.getInt("providerEvaluation"),departure_location,arrival_location,DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("departure_timeSlot")),rs.getInt("departure_seatsBooked"),
-				(ArrayList<Integer>)Parser.stringToList(rs.getString("departure_priceList"), new Integer(0)),Constants.TransactionType.fromInt(rs.getInt("transactionType")),rs.getInt("totalPrice"),Constants.transactionState.fromInt(rs.getInt("transactionState")),
+				(ArrayList<Integer>)Parser.stringToList(rs.getString("departure_priceList"), new Integer(0)),Constants.TransactionType.fromInt(rs.getInt("transactionType")),rs.getInt("totalPrice"),Constants.TransactionState.fromInt(rs.getInt("transactionState")),
 				DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),rs.getBoolean("historyDeleted"));
 		transaction.setProvider(provider);
 		transaction.setCustomer(customer);
@@ -290,9 +290,9 @@ public class CarpoolDaoTransaction {
 		Location departure_location = CarpoolDaoLocation.getLocationById(rs.getLong("departure_Id"));
 		Location arrival_location = CarpoolDaoLocation.getLocationById(rs.getLong("arrival_Id"));
 		return new Transaction(rs.getInt("transaction_Id"),rs.getInt("provider_Id"),rs.getInt("customer_Id"),rs.getInt("message_Id"),
-				Constants.paymentMethod.fromInt(rs.getInt("paymentMethod")),rs.getString("customerNote"),rs.getString("providerNote"),
+				Constants.PaymentMethod.fromInt(rs.getInt("paymentMethod")),rs.getString("customerNote"),rs.getString("providerNote"),
 				rs.getInt("customerEvaluation"),rs.getInt("providerEvaluation"),departure_location,arrival_location,DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("departure_timeSlot")),rs.getInt("departure_seatsBooked"),
-				(ArrayList<Integer>)Parser.stringToList(rs.getString("departure_priceList"), new Integer(0)),Constants.TransactionType.fromInt(rs.getInt("transactionType")),rs.getInt("totalPrice"),Constants.transactionState.fromInt(rs.getInt("transactionState")),
+				(ArrayList<Integer>)Parser.stringToList(rs.getString("departure_priceList"), new Integer(0)),Constants.TransactionType.fromInt(rs.getInt("transactionType")),rs.getInt("totalPrice"),Constants.TransactionState.fromInt(rs.getInt("transactionState")),
 				DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),rs.getBoolean("historyDeleted"));
 
 	}

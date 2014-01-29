@@ -19,7 +19,7 @@ import org.json.JSONObject;
 
 import carpool.common.DebugLog;
 import carpool.constants.Constants;
-import carpool.constants.Constants.gender;
+import carpool.constants.Constants.Gender;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
@@ -61,7 +61,7 @@ public class SessionRedirect extends PseudoResource{
 				Double lat = 32.123212;
 				Double lng = 23.132123;				
 				Location defaultLocation= new Location(province,city,region,"Test1","Test11",lat,lng,arrival_Id);				
-				jsonObject = JSONFactory.toJSON(new User("","",defaultLocation, gender.both));
+				jsonObject = JSONFactory.toJSON(new User("","",defaultLocation, Gender.both));
 			}
 		
 		}  catch (PseudoException e){

@@ -15,9 +15,9 @@ import carpool.common.HelperOperator;
 import carpool.common.Validator;
 import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants;
-import carpool.constants.Constants.gender;
-import carpool.constants.Constants.userSearchState;
-import carpool.constants.Constants.userState;
+import carpool.constants.Constants.Gender;
+import carpool.constants.Constants.UserSearchState;
+import carpool.constants.Constants.UserState;
 import carpool.exception.validation.ValidationException;
 import carpool.factory.JSONFactory;
 import carpool.interfaces.PseudoModel;
@@ -36,7 +36,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     private String email;
     private String phone;
     private String qq;
-    private gender gender;
+    private Gender gender;
     private Calendar birthday;
     private String imgPath;
     private long location_Id;
@@ -62,7 +62,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     private boolean phoneActivated;
     private boolean emailNotice;
     private boolean phoneNotice;
-    private userState state;
+    private UserState state;
     private SearchRepresentation searchRepresentation;
 
     
@@ -104,7 +104,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     /*****
      * Constructor for user registration
 	 *****/
-	public User(String password, String email, Location location, gender g) {
+	public User(String password, String email, Location location, Gender g) {
 		super();
 		this.userId = -1;
 		this.password = password;
@@ -133,7 +133,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	    this.phoneActivated = false;
 	    this.emailNotice = false;
 	    this.phoneNotice = false;
-	    this.state = Constants.userState.normal;
+	    this.state = Constants.UserState.normal;
 	    this.searchRepresentation = CarpoolConfig.getDefaultSearchRepresentation();
 	    
 	    this.level = 0;
@@ -161,11 +161,11 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	 * full constructor used for SQL retrieval
 	 *****/
 	public User(int userId, String password, String name, String email,
-			String phone, String qq, carpool.constants.Constants.gender gender, Calendar birthday,
+			String phone, String qq, carpool.constants.Constants.Gender gender, Calendar birthday,
 			String imgPath, Location location, Calendar lastLogin,
 			Calendar creationTime, ArrayList<String> verifications, boolean emailActivated,
 			boolean phoneActivated, boolean emailNotice, boolean phoneNotice,
-			userState state, SearchRepresentation searchRepresentation, int level,
+			UserState state, SearchRepresentation searchRepresentation, int level,
 			int averageScore, int totalTranscations, String googleToken,
 			String facebookToken, String twitterToken, String paypalToken,
 			String id_docType, String id_docNum, String id_path,
@@ -275,12 +275,12 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	}
 
 
-	public gender getGender() {
+	public Gender getGender() {
 		return gender;
 	}
 
 
-	public void setGender(gender gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 
@@ -429,12 +429,12 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	}
 
 
-	public userState getState() {
+	public UserState getState() {
 		return state;
 	}
 
 
-	public void setState(userState state) {
+	public void setState(UserState state) {
 		this.state = state;
 	}
 
@@ -634,7 +634,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
      * Precondition: email has been activated, and state is in normal
      */
     public boolean isAbleToLogin(){
-        return this.isEmailActivated() && this.state == Constants.userState.normal;
+        return this.isEmailActivated() && this.state == Constants.UserState.normal;
     }
 
 

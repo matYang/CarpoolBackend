@@ -23,8 +23,8 @@ import carpool.common.DebugLog;
 import carpool.common.Parser;
 import carpool.constants.Constants;
 import carpool.constants.Constants.DayTimeSlot;
-import carpool.constants.Constants.gender;
-import carpool.constants.Constants.messageType;
+import carpool.constants.Constants.Gender;
+import carpool.constants.Constants.MessageType;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.location.LocationNotFoundException;
@@ -48,8 +48,8 @@ public class DMResource extends PseudoResource{
 					jsonMessage.getInt("departure_seatsNumber"), Parser.parseIntegerList(jsonMessage.getJSONArray("departure_priceList")),
 					new Location(jsonMessage.getJSONObject("arrival_location")), DateUtility.castFromAPIFormat(jsonMessage.getString("arrival_time")), Constants.DayTimeSlot.values()[jsonMessage.getInt("arrival_timeSlot")],
 					jsonMessage.getInt("arrival_seatsNumber"), Parser.parseIntegerList(jsonMessage.getJSONArray("arrival_priceList")),
-					Constants.paymentMethod.values()[jsonMessage.getInt("paymentMethod")],
-					jsonMessage.getString("note"), Constants.messageType.values()[jsonMessage.getInt("type")], Constants.gender.values()[jsonMessage.getInt("genderRequirement")]);
+					Constants.PaymentMethod.values()[jsonMessage.getInt("paymentMethod")],
+					jsonMessage.getString("note"), Constants.MessageType.values()[jsonMessage.getInt("type")], Constants.Gender.values()[jsonMessage.getInt("genderRequirement")]);
 		
 		} catch (Exception e) {
 			e.printStackTrace();

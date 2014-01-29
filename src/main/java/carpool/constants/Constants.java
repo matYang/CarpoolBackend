@@ -11,62 +11,62 @@ public class Constants {
     public static final long A_WEEK = 604800000l; //miliSec in a week
 
 
-    public static enum messageType{
+    public static enum MessageType{
     	ask(0),help(1), both(2);
         public int code;
-        messageType(int code){
+        MessageType(int code){
             this.code = code;
         }
-        private final static messageType[] map = messageType.values();
-        public static messageType fromInt(int n){
+        private final static MessageType[] map = MessageType.values();
+        public static MessageType fromInt(int n){
             return map[n];
         }
     }
-    public static enum gender{
+    public static enum Gender{
         male(0),female(1),both(2);
         public int code;
-        gender(int code){
+        Gender(int code){
             this.code = code;
         }
-        private final static gender[] map = gender.values();
-        public static gender fromInt(int n){
+        private final static Gender[] map = Gender.values();
+        public static Gender fromInt(int n){
             return map[n];
         }
     }
 
-    public static enum paymentMethod{
+    public static enum PaymentMethod{
         offline(0),paypal(1),all(2);
         public int code;
-        paymentMethod(int code){
+        PaymentMethod(int code){
             this.code = code;
         }
-        private final static paymentMethod[] map = paymentMethod.values();
-        public static paymentMethod fromInt(int n){
+        private final static PaymentMethod[] map = PaymentMethod.values();
+        public static PaymentMethod fromInt(int n){
             return map[n];
         }
     }
 
     //notifications and transactions are more time-sensitive, their states are more related to time and user interactions, event states will be used for their states
-    public static enum transactionState{
+    public static enum TransactionState{
         init(0), cancelled(1), aboutToStart(2), finished(3), underInvestigation(4), invalid(5);
         public int code;
-        transactionState(int code){
+        TransactionState(int code){
             this.code = code;
         }
-        private final static transactionState[] map = transactionState.values();
-        public static transactionState fromInt(int n){
+        private final static TransactionState[] map = TransactionState.values();
+        public static TransactionState fromInt(int n){
             return map[n];
         }
     }
 
-    public static enum transactionStateChangeAction{
+    public static enum TransactionStateChangeAction{
     	init(0), cancel(1), report(2), evaluate(3);
         public int code;
-        transactionStateChangeAction(int code){
+        TransactionStateChangeAction(int code){
             this.code = code;
         }
-        private final static transactionStateChangeAction[] map = transactionStateChangeAction.values();
-        public static transactionStateChangeAction fromInt(int n){
+        private final static TransactionStateChangeAction[] map = TransactionStateChangeAction.values();
+        public static TransactionStateChangeAction fromInt(int n){
             return map[n];
         }
     }
@@ -111,38 +111,38 @@ public class Constants {
 
 
     //states of the user account, more states reserved for future uses
-    public static enum userState{
+    public static enum UserState{
     	normal(0);
         public int code;
-        userState(int code){
+        UserState(int code){
             this.code = code;
         }
-        private final static userState[] map = userState.values();
-        public static userState fromInt(int n){
+        private final static UserState[] map = UserState.values();
+        public static UserState fromInt(int n){
             return map[n];
         }
     }
 
-    public static enum userSearchState{
+    public static enum UserSearchState{
         universityAsk(0), universityHelp(1), regionAsk(2), regionHelp(3), universityGroupAsk(4), universityGroupHelp(5);
         public int code;
-        userSearchState(int code){
+        UserSearchState(int code){
             this.code = code;
         }
-        private final static userSearchState[] map = userSearchState.values();
-        public static userSearchState fromInt(int n){
+        private final static UserSearchState[] map = UserSearchState.values();
+        public static UserSearchState fromInt(int n){
             return map[n];
         }
     }
     //states of the message, more states reserved for future uses
-    public static enum messageState{
+    public static enum MessageState{
     	deleted(0),closed(1),open(2);
         public int code;
-        messageState(int code){
+        MessageState(int code){
             this.code = code;
         }
-        private final static messageState[] map = messageState.values();
-        public static messageState fromInt(int n){
+        private final static MessageState[] map = MessageState.values();
+        public static MessageState fromInt(int n){
             return map[n];
         }
     }

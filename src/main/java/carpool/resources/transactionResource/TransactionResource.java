@@ -45,7 +45,7 @@ public class TransactionResource extends PseudoResource{
 
 		Transaction transaction = null;
 		try {
-			transaction = new Transaction(jsonTransaction.getInt("providerId"), jsonTransaction.getInt("customerId"), jsonTransaction.getInt("messageId"), Constants.paymentMethod.values()[jsonTransaction.getInt("paymentMethod")], 
+			transaction = new Transaction(jsonTransaction.getInt("providerId"), jsonTransaction.getInt("customerId"), jsonTransaction.getInt("messageId"), Constants.PaymentMethod.values()[jsonTransaction.getInt("paymentMethod")], 
 					jsonTransaction.getString("customerNote"), jsonTransaction.getString("providerNote"),DateUtility.castFromAPIFormat(jsonTransaction.getString("departure_time")), Constants.DayTimeSlot.values()[jsonTransaction.getInt("departure_timeSlot")], jsonTransaction.getInt("departure_seatsBooked"),
 					Constants.TransactionType.values()[jsonTransaction.getInt("transactionType")]);
 		} catch (Exception e) {

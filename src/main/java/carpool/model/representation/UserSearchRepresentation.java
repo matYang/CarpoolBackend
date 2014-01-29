@@ -1,18 +1,18 @@
 package carpool.model.representation;
 
 import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants.gender;
+import carpool.constants.Constants.Gender;
 import carpool.model.Location;
 
 
 public class UserSearchRepresentation {
 
 	private String name;
-	private gender gender;
+	private Gender gender;
 	private long location_Id;
 	
 	
-	public UserSearchRepresentation(String name, gender g,long l){
+	public UserSearchRepresentation(String name, Gender g,long l){
 		this.name = name;
 		this.gender = g;
 		this.location_Id = l;
@@ -21,7 +21,7 @@ public class UserSearchRepresentation {
 	public	UserSearchRepresentation(String serializedUSR){
 		String[] strs = serializedUSR.split(CarpoolConfig.urlSeperatorRegx);
 		this.name = strs[0];
-		this.gender = carpool.constants.Constants.gender.fromInt(Integer.parseInt(strs[1]));
+		this.gender = carpool.constants.Constants.Gender.fromInt(Integer.parseInt(strs[1]));
 		this.location_Id =Long.parseLong(strs[2]);
 	}
 	
@@ -30,7 +30,7 @@ public class UserSearchRepresentation {
 		
 	}
 	
-	public gender getGender(){
+	public Gender getGender(){
 		return this.gender;
 	}
 	public long getLocationId(){

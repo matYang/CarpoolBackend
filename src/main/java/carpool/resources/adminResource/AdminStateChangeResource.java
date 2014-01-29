@@ -20,10 +20,10 @@ import org.json.JSONObject;
 
 import carpool.common.Validator;
 import carpool.constants.Constants;
-import carpool.constants.Constants.messageState;
-import carpool.constants.Constants.transactionState;
-import carpool.constants.Constants.transactionStateChangeAction;
-import carpool.constants.Constants.userState;
+import carpool.constants.Constants.MessageState;
+import carpool.constants.Constants.TransactionState;
+import carpool.constants.Constants.TransactionStateChangeAction;
+import carpool.constants.Constants.UserState;
 import carpool.dbservice.*;
 import carpool.dbservice.admin.AdminService;
 import carpool.exception.PseudoException;
@@ -67,13 +67,13 @@ public class AdminStateChangeResource extends PseudoResource{
 			}
 			
 			if (moduleName.equalsIgnoreCase("user")){
-				AdminService.changeUserState(id, userState.fromInt(stateIndex));
+				AdminService.changeUserState(id, UserState.fromInt(stateIndex));
 			}
 			else if (moduleName.equalsIgnoreCase("message")){
-				AdminService.changeMessageState(id, messageState.fromInt(stateIndex));
+				AdminService.changeMessageState(id, MessageState.fromInt(stateIndex));
 			}
 			else if (moduleName.equalsIgnoreCase("transaction")){
-				AdminService.changeTransactionState(id, transactionState.fromInt(stateIndex));
+				AdminService.changeTransactionState(id, TransactionState.fromInt(stateIndex));
 			}
 			
 		} catch (PseudoException e){

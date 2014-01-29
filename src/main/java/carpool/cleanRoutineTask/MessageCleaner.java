@@ -9,7 +9,7 @@ import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.constants.Constants;
-import carpool.constants.Constants.messageType;
+import carpool.constants.Constants.MessageType;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -34,7 +34,7 @@ public class MessageCleaner extends CarpoolDaoMessage {
 		ResultSet rs = stmt.executeQuery();			
 			while(rs.next()){	
 				Message msg = CarpoolDaoMessage.createMessageByResultSet(rs, false);
-			    msg.setState(Constants.messageState.fromInt(1));
+			    msg.setState(Constants.MessageState.fromInt(1));
 			    CarpoolDaoMessage.UpdateMessageInDatabase(msg);
 				}			
 	} catch (SQLException e) {

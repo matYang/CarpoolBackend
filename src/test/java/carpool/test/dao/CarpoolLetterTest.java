@@ -13,7 +13,7 @@ import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.common.DebugLog;
 import carpool.constants.Constants;
 import carpool.constants.Constants.LetterState;
-import carpool.constants.Constants.gender;
+import carpool.constants.Constants.Gender;
 import carpool.dbservice.LetterDaoService;
 import carpool.exception.letter.LetterNotFoundException;
 import carpool.exception.location.LocationNotFoundException;
@@ -70,9 +70,9 @@ public class CarpoolLetterTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, Gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
 		try{
@@ -104,9 +104,9 @@ public class CarpoolLetterTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca",departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca",departureLocation, Gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, Gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
 
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
@@ -151,9 +151,9 @@ public class CarpoolLetterTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com",arrivalLocation, gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com",arrivalLocation, Gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
 
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
@@ -206,9 +206,9 @@ public class CarpoolLetterTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, Gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
 
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
@@ -254,9 +254,9 @@ public class CarpoolLetterTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, Gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
 
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
@@ -308,11 +308,11 @@ public class CarpoolLetterTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, Gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
-		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation, gender.female);
+		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation, Gender.female);
 		CarpoolDaoUser.addUserToDatabase(user3);
 
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
@@ -549,13 +549,13 @@ public class CarpoolLetterTest {
 		Location arrivalLocation1 = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		Location departureLocation2= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation2 = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation1, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation1, Gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation1, gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation1, Gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
-		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation2, gender.female);
+		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation2, Gender.female);
 		CarpoolDaoUser.addUserToDatabase(user3);
-		User user4 =  new User("sdfsdfdsfhgfg", "sdfojods@hotmail.com", arrivalLocation2, gender.both);
+		User user4 =  new User("sdfsdfdsfhgfg", "sdfojods@hotmail.com", arrivalLocation2, Gender.both);
 		CarpoolDaoUser.addUserToDatabase(user4);
 
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
@@ -642,11 +642,11 @@ public class CarpoolLetterTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, Gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
-		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation, gender.female);
+		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation, Gender.female);
 		CarpoolDaoUser.addUserToDatabase(user3);
 
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
@@ -757,11 +757,11 @@ public class CarpoolLetterTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, Gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
-		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation, gender.female);
+		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation, Gender.female);
 		CarpoolDaoUser.addUserToDatabase(user3);
 
 		ArrayList<Letter> list = new ArrayList<Letter>();
@@ -835,11 +835,11 @@ public class CarpoolLetterTest {
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, gender.both);
+		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 		CarpoolDaoUser.addUserToDatabase(user);
-		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, gender.male);
+		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, Gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
-		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation, gender.female);
+		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation, Gender.female);
 		CarpoolDaoUser.addUserToDatabase(user3);
 
 		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");

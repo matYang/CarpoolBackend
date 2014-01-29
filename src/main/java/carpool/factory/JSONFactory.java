@@ -8,9 +8,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DebugLog;
-import carpool.constants.Constants.gender;
-import carpool.constants.Constants.paymentMethod;
-import carpool.constants.Constants.userState;
+import carpool.constants.Constants.Gender;
+import carpool.constants.Constants.PaymentMethod;
+import carpool.constants.Constants.UserState;
 import carpool.interfaces.*;
 import carpool.model.Letter;
 import carpool.model.Location;
@@ -82,7 +82,7 @@ public class JSONFactory {
 		return json;
 	}
 	
-	public static JSONObject toJSON(gender g){
+	public static JSONObject toJSON(Gender g){
 		JSONObject json = new JSONObject();
 		try {
 			json.put("val", g);
@@ -93,7 +93,7 @@ public class JSONFactory {
 	}
 	
 	
-	public static JSONObject toJSON(paymentMethod p){
+	public static JSONObject toJSON(PaymentMethod p){
 		JSONObject json = new JSONObject();
 		try {
 			json.put("val", p);

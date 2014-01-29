@@ -14,7 +14,7 @@ import org.restlet.resource.Put;
 
 import carpool.constants.Constants.LetterDirection;
 import carpool.constants.Constants.LetterType;
-import carpool.constants.Constants.transactionStateChangeAction;
+import carpool.constants.Constants.TransactionStateChangeAction;
 import carpool.dbservice.LetterDaoService;
 import carpool.dbservice.MessageDaoService;
 import carpool.dbservice.TransactionDaoService;
