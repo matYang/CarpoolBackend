@@ -214,12 +214,12 @@
 		<version>4.2.3</version>
 	</dependency>
 	
-	<!-- Bouncy castle provider -->
+	<!-- Bouncy castle provider 
 	<dependency>
 		<groupId>org.bouncycastle</groupId>
 		<artifactId>bcpkix-jdk15on</artifactId>
 		<version>1.48</version>
-	</dependency>
+	</dependency> -->
 	
 	<!-- JACKSON dependencies -->
 	<dependency>
@@ -286,6 +286,7 @@
 	    <scope>system</scope>
 	    <systemPath>${project.basedir}/lib/aws/aws-java-sdk-flow-build-tools-1.6.3.jar</systemPath>
 	</dependency>
+	
 	<dependency>
 		<groupId>org.aspectj</groupId>
 		<artifactId>aspectjrt</artifactId>

@@ -1,6 +1,73 @@
 package carpool.encryption;
 
+import sun.misc.*;
+import java.security.Key;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
+import carpool.common.DebugLog;
+
+
+public class EmailCrypto {
+	
+	
+	private static final String filter = "-----##@@%%IDAUTH%%@@##-----";
+    private static final String algorithm = "AES";
+    private static final String plusSignPlaceHolder = "-----KINGofASEWOME---MONTEACHESYOUDECODINGISBAD-----";
+	
+    
+    private static byte[] keyValue = "S1789JAD254BSHJ6".getBytes();
+
+    public static String i_encrypt(String plainText) throws Exception {
+            Key key = generateKey();
+            Cipher chiper = Cipher.getInstance(algorithm);
+            chiper.init(Cipher.ENCRYPT_MODE, key);
+            byte[] encVal = chiper.doFinal(plainText.getBytes());
+            String encryptedValue = new BASE64Encoder().encode(encVal);
+            return encryptedValue;
+    }
+
+    public static String i_decrypt(String encryptedText) throws Exception{
+    		// generate key 
+            Key key = generateKey();
+            Cipher chiper = Cipher.getInstance(algorithm);
+            chiper.init(Cipher.DECRYPT_MODE, key);
+            byte[] decordedValue = new BASE64Decoder().decodeBuffer(encryptedText);
+            byte[] decValue = chiper.doFinal(decordedValue);
+            String decryptedValue = new String(decValue);
+            return decryptedValue;
+    	
+    }
+
+    private static Key generateKey() throws Exception {
+            Key key = new SecretKeySpec(keyValue, algorithm);
+            return key;
+    }
+    
+    
+    public static String encrypt(int id, String authCode){
+    	try{
+    		String encrypted = i_encrypt(id + filter + authCode);
+        	//+ is reserved in regex, using \\ to escape it
+        	return encrypted.replace("+", plusSignPlaceHolder);
+    	} catch (Exception e){
+    		DebugLog.d(e);
+    		return null;
+    	}
+    }
+    
+    public static String[] decrypt(String encryptedEmailKey){
+    	try{
+    		return i_decrypt(encryptedEmailKey.replace(plusSignPlaceHolder, "+")).split(filter);
+    	} catch (Exception e){
+    		DebugLog.d(e);
+    		return null;
+    	}
+    }
+	
+}
+
+/**
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.salt.FixedStringSaltGenerator;
@@ -53,3 +120,4 @@ public class EmailCrypto {
     }
     
 }
+*/
