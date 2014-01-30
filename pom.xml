@@ -214,13 +214,11 @@
 		<version>4.2.3</version>
 	</dependency>
 	
-	<!-- Local Dependency -->
+	<!-- Bouncy castle provider -->
 	<dependency>
-	    <groupId>bcprov</groupId>
-	    <artifactId>bcprov-ext-jdk15on</artifactId>
-	    <version>148</version>
-	    <scope>system</scope>
-	    <systemPath>${project.basedir}/lib/bcprov-ext-jdk15on-148.jar</systemPath>
+		<groupId>org.bouncycastle</groupId>
+		<artifactId>bcpkix-jdk15on</artifactId>
+		<version>1.48</version>
 	</dependency>
 	
 	<!-- JACKSON dependencies -->

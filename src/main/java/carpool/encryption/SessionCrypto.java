@@ -36,14 +36,6 @@ public class SessionCrypto{
 	   }
 	
 	
-//	
-//	   public SessionCrypto() throws NoSuchAlgorithmException, NoSuchPaddingException{
-//	        cipher = Cipher.getInstance("AES/CBC/PKCS5Padding"); 
-//	        keySpec = new SecretKeySpec(keyBytes, "AES"); 
-//	        ivSpec = new IvParameterSpec(ivBytes);
-//	   }
-//	
-	
 	   public static String encrypt(String plainText) throws NoSuchAlgorithmException, InvalidKeyException, NoSuchPaddingException, InvalidAlgorithmParameterException, ShortBufferException, IllegalBlockSizeException, BadPaddingException,UnsupportedEncodingException{
 		   	
 		   	Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding"); 
