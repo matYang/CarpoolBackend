@@ -48,9 +48,15 @@ public class LetterDaoService{
 
 
 	public static Letter sendLetter(Letter letter) throws UserNotFoundException, LocationNotFoundException{
-		LetterRelayTask lTask = new LetterRelayTask(letter);
-		ExecutorProvider.executeRelay(lTask);
-		return CarpoolDaoLetter.addLetterToDatabases(letter);
+		Letter createdLetter = CarpoolDaoLetter.addLetterToDatabases(letter);
+		if (createdLetter != null){
+			LetterRelayTask lTask = new LetterRelayTask(letter);
+			ExecutorProvider.executeRelay(lTask);
+			//TODO
+			//new notificaiton
+			//notificationDaoService send notification
+		}
+		return createdLetter;
 	}
 
 

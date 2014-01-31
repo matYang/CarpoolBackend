@@ -143,7 +143,7 @@ public class RoutingService extends Application {
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + ChangePasswordResourcePrefix + "/{id}", ChangePasswordResource.class);
 		String ContactInfoResourcePrefix = "/contactInfo";
 		//	API for user changing the contact information:  /api/v1.0/users/contactInfo/:id
-		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + ContactInfoResourcePrefix + "/{id}", UserContactResource.class);
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + ContactInfoResourcePrefix + "/{id}", UserChangeContactInfoResource.class);
 		String SingleLocationResourcePrefix = "/singleLocation";
 		//	API for user changing the single location:  /api/v1.0/users/singleLocation/:id
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + SingleLocationResourcePrefix + "/{id}", UserSingleLocationResource.class);
