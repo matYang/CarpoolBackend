@@ -36,7 +36,7 @@ public class DMSearchResource extends PseudoResource{
 		JSONArray response = new JSONArray();
 		
 		try {
-			String srStr = this.getSearchQueryVal("searchRepresentation");
+			String srStr = this.getPlainQueryVal("searchRepresentation");
 			int userId = Integer.parseInt(this.getQueryVal("userId"));
 			
 			DebugLog.d("SearchMessage received searchRepresentation: " + srStr);

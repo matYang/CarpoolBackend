@@ -4,6 +4,7 @@ import sun.misc.*;
 import java.security.Key;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import org.apache.commons.codec.binary.Base64;
 
 import carpool.common.DebugLog;
 
@@ -18,7 +19,7 @@ public class EmailCrypto {
     
     private static byte[] keyValue = "S1789JAD254BSHJ6".getBytes();
 
-    public static String i_encrypt(String plainText) throws Exception {
+    private static String i_encrypt(String plainText) throws Exception {
             Key key = generateKey();
             Cipher chiper = Cipher.getInstance(algorithm);
             chiper.init(Cipher.ENCRYPT_MODE, key);
@@ -27,7 +28,7 @@ public class EmailCrypto {
             return encryptedValue;
     }
 
-    public static String i_decrypt(String encryptedText) throws Exception{
+    private static String i_decrypt(String encryptedText) throws Exception{
     		// generate key 
             Key key = generateKey();
             Cipher chiper = Cipher.getInstance(algorithm);
@@ -44,12 +45,12 @@ public class EmailCrypto {
             return key;
     }
     
-    
     public static String encrypt(int id, String authCode){
     	try{
     		String encrypted = i_encrypt(id + filter + authCode);
         	//+ is reserved in regex, using \\ to escape it
-        	return encrypted.replace("+", plusSignPlaceHolder);
+        	//return encrypted.replace("+", plusSignPlaceHolder);
+    		return java.net.URLEncoder.encode(encrypted, "utf-8");
     	} catch (Exception e){
     		DebugLog.d(e);
     		return null;
@@ -58,6 +59,7 @@ public class EmailCrypto {
     
     public static String[] decrypt(String encryptedEmailKey){
     	try{
+    		encryptedEmailKey = java.net.URLDecoder.decode(encryptedEmailKey, "utf-8");
     		return i_decrypt(encryptedEmailKey.replace(plusSignPlaceHolder, "+")).split(filter);
     	} catch (Exception e){
     		DebugLog.d(e);

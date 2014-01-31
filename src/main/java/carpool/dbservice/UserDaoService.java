@@ -82,7 +82,7 @@ public class UserDaoService{
 	public static boolean resetUserPassword(int userId, String newPassword) throws UserNotFoundException{
 		try {
 			User user = CarpoolDaoUser.getUserById(userId);
-			user.setPassword("dontcare", newPassword);
+			user.setPassword(user.getPassword(), newPassword);
 			CarpoolDaoUser.UpdateUserInDatabase(user);
 			user = CarpoolDaoUser.getUserById(userId);
 			if(user.isPasswordCorrect(newPassword)){
