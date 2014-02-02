@@ -107,7 +107,7 @@ public class PseudoResource extends ServerResource{
 		return val;
 	}
 	
-	public String getFromUtf(String var) throws UnsupportedEncodingException{
+	public String getToUtf(String var) throws UnsupportedEncodingException{
 		return java.net.URLEncoder.encode(var, "utf-8");
 	}
 	

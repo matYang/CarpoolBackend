@@ -3,6 +3,7 @@ package carpool.resources.userResource;
 
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
@@ -36,12 +37,22 @@ public class UserChangeContactInfoResource extends PseudoResource{
 			return null;
 		}
 		
-		String name = jsonContact.getString("name");
+		String name = null;
+		try {
+			name = java.net.URLDecoder.decode(jsonContact.getString("name"), "utf-8");
+		} catch (UnsupportedEncodingException | JSONException e) {
+			DebugLog.d(e);
+			throw new ValidationException("姓名格式不正确");
+		}
 		int gender = jsonContact.getInt("gender");
 		String birthday = jsonContact.getString("birthday");
 		
-		if (!(Validator.isNameFormatValid(name) && Constants.Gender.values()[gender] != null && birthday != null && jsonContact.getJSONObject("location") != null)){
+		if (!(name != null && Constants.Gender.values()[gender] != null && birthday != null && jsonContact.getJSONObject("location") != null)){
 			throw new ValidationException("必填数据不能为空");
+		}
+		
+		if (!(Validator.isNameFormatValid(name))){
+			throw new ValidationException("姓名格式不正确");
 		}
 		
 		String phone = jsonContact.getString("phone");
