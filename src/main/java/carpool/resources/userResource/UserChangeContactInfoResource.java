@@ -1,20 +1,15 @@
 package carpool.resources.userResource;
 
+
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.*;
-import org.restlet.util.Series;
-import org.restlet.engine.header.Header;
 import org.restlet.data.Status;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,42 +18,58 @@ import carpool.common.DebugLog;
 import carpool.common.Validator;
 import carpool.constants.Constants;
 import carpool.dbservice.*;
-import carpool.exception.auth.DuplicateSessionCookieException;
-import carpool.exception.auth.SessionEncodingException;
 import carpool.exception.user.UserNotFoundException;
+import carpool.exception.validation.ValidationException;
 import carpool.factory.JSONFactory;
 import carpool.model.*;
 import carpool.resources.PseudoResource;
 
 
-public class UserContactResource extends PseudoResource{
+public class UserChangeContactInfoResource extends PseudoResource{
 
-	protected JSONObject parseJSON(Representation entity){
+	protected JSONObject parseJSON(Representation entity) throws ValidationException{
 		JSONObject jsonContact = null;
-		
+
 		try {
 			jsonContact = (new JsonRepresentation(entity)).getJsonObject();
-			
-			String name = jsonContact.getString("name");
-			int gender = jsonContact.getInt("gender");
-			String phone = jsonContact.getString("phone");
-			String qq = jsonContact.getString("qq");
-			String birthday = jsonContact.getString("birthday");
-			Location location = new Location(jsonContact.getJSONObject("location"));
-			//no DB interaction here
-			if (!(Validator.isNameFormatValid(name) && Constants.Gender.values()[gender] != null && Validator.isPhoneFormatValid(phone) && Validator.isQqFormatValid(qq))){
-				return null;
-			}
-			else{
-				return jsonContact;
-			}
-			
-		} catch (Exception e){
-			e.printStackTrace();
-			DebugLog.d("UserContactResource:: parseJSON error, likely invalid format");
+		} catch (JSONException | IOException e) {
+			DebugLog.d(e);
+			return null;
 		}
-
-		return null;
+		
+		String name = null;
+		try {
+			name = java.net.URLDecoder.decode(jsonContact.getString("name"), "utf-8");
+		} catch (UnsupportedEncodingException | JSONException e) {
+			DebugLog.d(e);
+			throw new ValidationException("姓名格式不正确");
+		}
+		int gender = jsonContact.getInt("gender");
+		String birthday = jsonContact.getString("birthday");
+		
+		if (!(name != null && Constants.Gender.values()[gender] != null && birthday != null && jsonContact.getJSONObject("location") != null)){
+			throw new ValidationException("必填数据不能为空");
+		}
+		
+		if (!(Validator.isNameFormatValid(name))){
+			throw new ValidationException("姓名格式不正确");
+		}
+		
+		String phone = jsonContact.getString("phone");
+		if (phone != null && phone.length() > 0){
+			if (!Validator.isPhoneFormatValid(phone)){
+				throw new ValidationException("电话格式不正确");
+			}
+		}
+		String qq = jsonContact.getString("qq");
+		if (qq != null && qq.length() > 0){
+			if (!Validator.isQqFormatValid(qq)){
+				throw new ValidationException("QQ格式不正确");
+			}
+		}
+		
+		return jsonContact;
+		
 	}
 	
 
@@ -79,6 +90,7 @@ public class UserContactResource extends PseudoResource{
 			
 			contact = parseJSON(entity);
 			if (contact != null){
+				
 				User user = UserDaoService.getUserById(userId);
 				user.setName(contact.getString("name"));
 				user.setGender(Constants.Gender.values()[contact.getInt("gender")]);
@@ -93,8 +105,7 @@ public class UserContactResource extends PseudoResource{
 				setStatus(Status.SUCCESS_OK);
 			}
 			else{
-				DebugLog.d("ChangeContactInfo:: parsed contact is null");
-				setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+				throw new ValidationException("数据格式不正确");
 			}
 
 		} catch (UserNotFoundException e){

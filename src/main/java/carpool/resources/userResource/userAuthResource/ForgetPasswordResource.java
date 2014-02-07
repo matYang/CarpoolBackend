@@ -101,6 +101,7 @@ public class ForgetPasswordResource extends PseudoResource{
 			jsonString = (new JsonRepresentation(entity)).getJsonObject();
 			
 			String key = jsonString.getString("key");
+			key = java.net.URLEncoder.encode(key, "utf-8");
 			String[] keys = EmailCrypto.decrypt(key);
 			userId = Integer.parseInt(keys[0]);
 			authCode = keys[1];

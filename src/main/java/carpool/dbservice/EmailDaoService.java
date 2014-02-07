@@ -122,7 +122,7 @@ public class EmailDaoService {
 			String authCode = AuthFactory.forgetPassword_setAuthCode(userId);
 			
 			String encryptedEmailKey = EmailCrypto.encrypt(userId, authCode);
-			SESRelayTask eTask = new SESRelayTask(email, EmailEvent.forgotPassword, CarpoolConfig.domainName+"/forgetPassword?key="+encryptedEmailKey);
+			SESRelayTask eTask = new SESRelayTask(email, EmailEvent.forgotPassword, CarpoolConfig.domainName+"/#forgetPassword/"+encryptedEmailKey);
 			ExecutorProvider.executeRelay(eTask);
 			return true;
 		} catch (Exception e) {

@@ -58,8 +58,7 @@ public class UserResourceId extends PseudoResource{
         return result;
     }
 
-    
-    //now front end sending delete must expose authCode as a parameter, must not equal to initial authCode -1
+    //should not be exposed to frontend for now
     @Delete
     public Representation deleteUser() {
     	

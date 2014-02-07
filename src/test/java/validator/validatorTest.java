@@ -174,6 +174,13 @@ public class validatorTest {
 			fail();
 		}
 		
+		myemail = "uwse@me.com";
+		if(Validator.isEmailFormatValid(myemail)){
+			//Passed;
+		}else{
+			fail();
+		}
+		
 	}
 	
 	@Test

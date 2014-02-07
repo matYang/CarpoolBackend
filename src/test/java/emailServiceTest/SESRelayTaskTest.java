@@ -32,8 +32,8 @@ public class SESRelayTaskTest {
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);		
-		String email = "xiongchuhan@hotmail.com";
+		User user =  new User("xch93318yeah", "uwse@me.com", departureLocation, Gender.both);		
+		String email = "uwse@me.com";
 		user.setEmail(email);
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -41,10 +41,10 @@ public class SESRelayTaskTest {
 			fail();
 			e.printStackTrace();
 		}
-		String newEmail = "xiongchuhanplace@hotmail.com";
+		String newEmail = "uwse@me.com";
 		if(EmailDaoService.sendActivationEmail(user.getUserId(), newEmail)){
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(5000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -70,8 +70,8 @@ public class SESRelayTaskTest {
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
 		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
 		
-		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);		
-		String email = "xiongchuhan@hotmail.com";
+		User user =  new User("xch93318yeah", "lifecentric.o2o@gmail.com", departureLocation, Gender.both);		
+		String email = "lifecentric.o2o@gmail.com";
 		user.setEmail(email);
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
@@ -83,7 +83,7 @@ public class SESRelayTaskTest {
 		try {
 			if(EmailDaoService.sendForgotPasswordEmail(email)){
 				try {
-					Thread.sleep(3000);
+					Thread.sleep(5000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

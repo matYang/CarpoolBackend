@@ -839,10 +839,12 @@ public class CarpoolDaoLetter {
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 
+			//TODO
 			stmt.setInt(1, LetterState.read.code);
 			stmt.setInt(2, userId);
 			stmt.setInt(3, targetUserId);
 			stmt.setInt(4, targetUserId);
+			
 			stmt.setInt(5, targetUserId);
 			stmt.setInt(6, userId);
 			stmt.setInt(7, userId);

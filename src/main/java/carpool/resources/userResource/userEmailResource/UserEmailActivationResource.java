@@ -45,7 +45,8 @@ public class UserEmailActivationResource extends PseudoResource{
 
         
         try {
-        	String encryptedKey = this.getQueryVal("key");
+        	String encryptedKey = this.getPlainQueryVal("key");
+        	encryptedKey = java.net.URLEncoder.encode(encryptedKey, "utf-8");
         	String[] decodedKey = EmailCrypto.decrypt(encryptedKey);
         	
         	userId = Integer.parseInt(decodedKey[0]);

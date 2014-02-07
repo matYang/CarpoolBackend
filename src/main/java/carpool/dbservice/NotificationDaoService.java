@@ -39,6 +39,8 @@ public class NotificationDaoService{
 
 	public static void sendNotification(ArrayList<Notification> ns){
 		NotificationRelayTask nTask = new NotificationRelayTask(ns);
+		
+		//save to sql
 		createNewNotification(ns);
 		ExecutorProvider.executeRelay(nTask);
 
@@ -49,6 +51,7 @@ public class NotificationDaoService{
 			try {
 				User user = UserDaoService.getUserById(entry.getKey());
 				if (user.isEmailNotice()){
+					//TODO
 					SESRelayTask eTask = new SESRelayTask(user.getEmail(), EmailEvent.notification, JSONFactory.toJSON(entry.getValue()).toString());
 					ExecutorProvider.executeRelay(eTask);
 				}

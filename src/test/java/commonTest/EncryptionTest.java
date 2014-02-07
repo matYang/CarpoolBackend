@@ -23,7 +23,7 @@ public class EncryptionTest {
 	public void emailCryptoTest(){
 		CarpoolDaoBasic.clearBothDatabase();
 		int id = 213213;
-		String authCode = "%few%#gHUIBHFJ&^NFJHGFHJ%";
+		String authCode = "%few%#gHUIBHFJ&^NFgdfgdJHGFHJ%";
 		
 		String encryptedString = EmailCrypto.encrypt(id, authCode);
 		String[] decryptedStrings = EmailCrypto.decrypt(encryptedString);
