@@ -256,8 +256,9 @@ public class AwsMain {
 		AmazonS3Client s3Client = new AmazonS3Client(myCredentials);		
 		URL s = null;
 		try{
-			s3Client.putObject(new PutObjectRequest(bucketName,getUserImageKey(userId, imgName),file).withCannedAcl(CannedAccessControlList.PublicRead));
-			s = s3Client.getUrl(bucketName, getUserImageKey(userId, imgName));			
+			String tempImageKey = getUserImageKey(userId, imgName);
+			s3Client.putObject(new PutObjectRequest(bucketName,tempImageKey,file).withCannedAcl(CannedAccessControlList.PublicRead));
+			s = s3Client.getUrl(bucketName, tempImageKey);			
 		} catch(AmazonS3Exception e){
 			e.printStackTrace();
 			DebugLog.d(e);
@@ -269,7 +270,7 @@ public class AwsMain {
 			if (shouldDelete){
 				file.delete();
 			}
-		}
+		}		
 		return  s == null ? null : s.toString();	
 
 	}
@@ -302,7 +303,7 @@ public class AwsMain {
 	}
 	
 	private static String getUserImageKey(int userId, String imageName){
-		long msec = DateUtility.getCurTime();
+		long msec = DateUtility.getCurTime();		
 		return userId + "/" + imageName + "-" + msec + ".png";
 	}
 	

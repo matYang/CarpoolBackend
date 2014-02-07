@@ -11,8 +11,8 @@ public class AwsSESTest {
 	public void testSend(){
 		CarpoolDaoBasic.clearBothDatabase();
 		try{
-			String From = "lifecentric.o2o@gmail.com";
-			String To = "lifecentric.o2o@gmail.com";
+			String From = "info@routea.ca";
+			String To = "xiongchuhanplace@hotmail.com";
 			String Body = "This email was sent through the Amazon SES SMTP interface by using Java.";
 			String Subject = "Test1";
 			AwsSES.sendEmail(From,To,Body,Subject,"plain");			
