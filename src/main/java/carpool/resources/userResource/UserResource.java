@@ -45,6 +45,7 @@ public class UserResource extends PseudoResource{
 			Location location = new Location(jsonUser.getJSONObject("location"));
 			Gender g = Constants.Gender.fromInt(jsonUser.getInt("gender"));
 			Calendar birthday = DateUtility.castFromAPIFormat(jsonUser.getString("birthday"));
+			String name = jsonUser.getString("name");
 			
 			
 			//if email is used, do not register
@@ -54,6 +55,7 @@ public class UserResource extends PseudoResource{
 			
 			user = new User(password, email, location, g);
 			user.setBirthday(birthday);
+			user.setName(name);
 		} catch (JSONException|IOException e) {
 			throw new ValidationException("无效数据格式");
 		}

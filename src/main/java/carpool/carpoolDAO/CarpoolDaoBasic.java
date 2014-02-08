@@ -71,6 +71,17 @@ public class CarpoolDaoBasic {
 
     }
     
+    public static void closeResource( Connection conn, PreparedStatement stmt, ResultSet rs){
+		try{
+			if (stmt != null)  stmt.close();  
+			if (conn != null)  conn.close(); 
+			if (rs != null) rs.close();
+		} catch (SQLException e){
+			DebugLog.d("Exception when closing stmt, rs and conn");
+			DebugLog.d(e);
+		}
+    }
+    
 
     public static void clearBothDatabase(){
     	Jedis jedis = getJedis();
