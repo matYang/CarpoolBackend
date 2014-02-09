@@ -120,7 +120,7 @@ public class ImgResource extends PseudoResource{
             
             bufferedImage = cropImageToRatio(bufferedImage);
             DebugLog.d("stream connected, starting to rescale");	
-            bufferedImage = Scalr.resize(bufferedImage, Scalr.Method.SPEED, Scalr.Mode.FIT_TO_WIDTH, 128, 128, Scalr.OP_ANTIALIAS);
+            bufferedImage = Scalr.resize(bufferedImage, Scalr.Method.SPEED, Scalr.Mode.FIT_TO_WIDTH, 200, 200, Scalr.OP_ANTIALIAS);
             DebugLog.d("img rescale completed into buffer");
             
     		String userProfile = CarpoolConfig.profileImgPrefix;
