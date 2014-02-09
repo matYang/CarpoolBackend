@@ -219,434 +219,154 @@ public class CarpoolDaoLetter {
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
+		int set1=-1;
+		int set2=-1;
+		int set3=-1;
+		int set4=-1;
+		int set5=-1;
+		int set6=-1;
+		int set7=-1;
+		boolean both = false;
+		boolean utu = false;
+		boolean bothu = false;
 		//System
-		if(type.equals(Constants.LetterType.system)){	
-			if(direction.equals(LetterDirection.inbound)){
-				if(curUserId>0){
-					//User send to System
-					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query1)){		
-					try{
-						conn = CarpoolDaoBasic.getSQLConnection();
-						stmt = conn.prepareStatement(query1);	
-
-						stmt.setInt(1, curUserId);
-						stmt.setInt(2, type.code);
-						stmt.setInt(3, curUserId);
-						rs = stmt.executeQuery();
-						while(rs.next()){							
-							fromUserId = rs.getInt("from_UserId");
-							toUserId = rs.getInt("to_UserId");	
-							ilist = addIds(ilist,fromUserId,toUserId);													
-							list.add(createLettersByResultSetList(rs));
-						}
-						list =  getUsersForLetters(ilist, list);
-						setLettersRead(list,stmt,conn);
-					}catch(SQLException e){
-						DebugLog.d(e);
-					}finally  {
-						try{
-							if (stmt != null)  stmt.close();  
-							if (conn != null)  conn.close(); 
-							if (rs != null) rs.close();
-						} catch (SQLException e){
-							DebugLog.d("Exception when closing stmt, rs and conn");
-							DebugLog.d(e);
-						}
-					} 
-				}else{//System send to User
-					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){		
-					try{
-						conn = CarpoolDaoBasic.getSQLConnection();
-						stmt = conn.prepareStatement(query);
-
-						stmt.setInt(1, targetUserId);
-						stmt.setInt(2, type.code);
-						stmt.setInt(3, curUserId);
-						rs = stmt.executeQuery();
-						while(rs.next()){							
-							fromUserId = rs.getInt("from_UserId");
-							toUserId = rs.getInt("to_UserId");	
-							ilist = addIds(ilist,fromUserId,toUserId);													
-							list.add(createLettersByResultSetList(rs));
-						}
-						list = getUsersForLetters(ilist, list);
-						setLettersRead(list,stmt,conn);
-					}catch(SQLException e){
-						DebugLog.d(e);
-					}finally  {
-						try{
-							if (stmt != null)  stmt.close();  
-							if (conn != null)  conn.close(); 
-							if (rs != null) rs.close();
-						} catch (SQLException e){
-							DebugLog.d("Exception when closing stmt, rs and conn");
-							DebugLog.d(e);
-						}
-					} 
-				}
-			}else if(direction.equals(LetterDirection.outbound)){
-				if(curUserId>0){
-					//System to User
-					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){		
-					try{
-						conn = CarpoolDaoBasic.getSQLConnection();
-						stmt = conn.prepareStatement(query);
-
-						stmt.setInt(1, curUserId);
-						stmt.setInt(2, type.code);
-						stmt.setInt(3, curUserId);
-						rs = stmt.executeQuery();
-						while(rs.next()){							
-							fromUserId = rs.getInt("from_UserId");
-							toUserId = rs.getInt("to_UserId");	
-							ilist = addIds(ilist,fromUserId,toUserId);													
-							list.add(createLettersByResultSetList(rs));
-						}
-						list = getUsersForLetters(ilist, list);
-						setLettersRead(list,stmt,conn);
-					}catch(SQLException e){
-						DebugLog.d(e);
-					}finally  {
-						try{
-							if (stmt != null)  stmt.close();  
-							if (conn != null)  conn.close(); 
-							if (rs != null) rs.close();
-						} catch (SQLException e){
-							DebugLog.d("Exception when closing stmt, rs and conn");
-							DebugLog.d(e);
-						}
-					} 
-				}
-				else{//User to System
-					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query1)){		
-					try{
-						conn = CarpoolDaoBasic.getSQLConnection();
-						stmt = conn.prepareStatement(query1);
-
-						stmt.setInt(1, targetUserId);
-						stmt.setInt(2, type.code);
-						stmt.setInt(3, curUserId);
-						rs = stmt.executeQuery();
-						while(rs.next()){							
-							fromUserId = rs.getInt("from_UserId");
-							toUserId = rs.getInt("to_UserId");	
-							ilist = addIds(ilist,fromUserId,toUserId);												
-							list.add(createLettersByResultSetList(rs));
-						}
-						list = getUsersForLetters(ilist, list);
-						setLettersRead(list,stmt,conn);
-					}catch(SQLException e){
-						DebugLog.d(e);
-					}finally  {
-						try{
-							if (stmt != null)  stmt.close();  
-							if (conn != null)  conn.close(); 
-							if (rs != null) rs.close();
-						} catch (SQLException e){
-							DebugLog.d("Exception when closing stmt, rs and conn");
-							DebugLog.d(e);
-						}
-					} 
-				}
-
-			}else{
-				//Both
-				//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query0)){		
-				try{
-					conn = CarpoolDaoBasic.getSQLConnection();
+		if(type.equals(Constants.LetterType.system)){
+			try{
+				conn = CarpoolDaoBasic.getSQLConnection();		
+				set1 = curUserId > 0 ? curUserId : targetUserId;
+				set2 = type.code;
+				set3 = curUserId;
+				if((direction.equals(LetterDirection.inbound)&&curUserId>0)
+						||(direction.equals(LetterDirection.outbound)&&curUserId<=0)){
+					//inbound and User send to System or outbound and User send to System														
+					stmt = conn.prepareStatement(query1);
+				}else if((direction.equals(LetterDirection.inbound)&&curUserId<=0)
+						||(direction.equals(LetterDirection.outbound)&&curUserId>0)){
+					//inbound and System send to User or outbound and System send to User
+					stmt = conn.prepareStatement(query);													
+				}else {
+					//both
 					stmt = conn.prepareStatement(query0);
+					both = true;
+					set2 = set1;
+					set3 = type.code;
+					set4 = curUserId;
+				}					
 
-					stmt.setInt(1, curUserId > 0 ? curUserId : targetUserId);
-					stmt.setInt(2, curUserId > 0 ? curUserId : targetUserId);
-					stmt.setInt(3, type.code);
-					stmt.setInt(4, curUserId);
-					rs = stmt.executeQuery();
-					while(rs.next()){							
-						fromUserId = rs.getInt("from_UserId");
-						toUserId = rs.getInt("to_UserId");	
-						ilist = addIds(ilist,fromUserId,toUserId);												
-						list.add(createLettersByResultSetList(rs));
-					}
-					list = getUsersForLetters(ilist, list);
-					setLettersRead(list,stmt,conn);
-				}catch(SQLException e){
+				stmt.setInt(1, set1);
+				stmt.setInt(2, set2);
+				stmt.setInt(3, set3);
+				if(both){
+					stmt.setInt(4, set4);
+				}
+				rs = stmt.executeQuery();
+				while(rs.next()){							
+					fromUserId = rs.getInt("from_UserId");
+					toUserId = rs.getInt("to_UserId");	
+					ilist = addIds(ilist,fromUserId,toUserId);													
+					list.add(createLettersByResultSetList(rs));
+				}
+				list =  getUsersForLetters(ilist, list);
+				setLettersRead(list,stmt,conn);
+			}catch(SQLException e){
+				DebugLog.d(e);
+			}finally  {
+				try{
+					if (stmt != null)  stmt.close();  
+					if (conn != null)  conn.close(); 
+					if (rs != null) rs.close();
+				} catch (SQLException e){
+					DebugLog.d("Exception when closing stmt, rs and conn");
 					DebugLog.d(e);
-				}finally  {
-					try{
-						if (stmt != null)  stmt.close();  
-						if (conn != null)  conn.close(); 
-						if (rs != null) rs.close();
-					} catch (SQLException e){
-						DebugLog.d("Exception when closing stmt, rs and conn");
-						DebugLog.d(e);
-					}
-				} 
-			}
+				}
+			} 
 		}
 		else{
 			//User
-			if(direction.equals(Constants.LetterDirection.inbound)){
-				if(curUserId>0 && targetUserId>0){
-					//User to User
-					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query2)){
-					try{
-						conn = CarpoolDaoBasic.getSQLConnection();
-						stmt = conn.prepareStatement(query2);
-
-						stmt.setInt(1, curUserId);
-						stmt.setInt(2, targetUserId);
-						stmt.setInt(3, type.code);
-						stmt.setInt(4, curUserId);
-						rs = stmt.executeQuery();
-						while(rs.next()){							
-							fromUserId = rs.getInt("from_UserId");
-							toUserId = rs.getInt("to_UserId");	
-							ilist = addIds(ilist,fromUserId,toUserId);									
-							list.add(createLettersByResultSetList(rs));
-						}
-						list = getUsersForLetters(ilist, list);
-						setLettersRead(list,stmt,conn);
-					}catch(SQLException e){
-						DebugLog.d(e);
-					}finally  {
-						try{
-							if (stmt != null)  stmt.close();  
-							if (conn != null)  conn.close(); 
-							if (rs != null) rs.close();
-						} catch (SQLException e){
-							DebugLog.d("Exception when closing stmt, rs and conn");
-							DebugLog.d(e);
-						}
-					} 
-				}else if(curUserId<=0){
-					//Users to User
-					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){						
-					try{
-						conn = CarpoolDaoBasic.getSQLConnection();
-						stmt = conn.prepareStatement(query);
-
-						stmt.setInt(1, targetUserId);
-						stmt.setInt(2, type.code);
-						stmt.setInt(3, targetUserId);
-						rs = stmt.executeQuery();
-						while(rs.next()){							
-							fromUserId = rs.getInt("from_UserId");
-							toUserId = rs.getInt("to_UserId");	
-							ilist = addIds(ilist,fromUserId,toUserId);												
-							list.add(createLettersByResultSetList(rs));
-						}
-						list = getUsersForLetters(ilist, list);
-						setLettersRead(list,stmt,conn);
-					}catch(SQLException e){
-						DebugLog.d(e);
-					}finally  {
-						try{
-							if (stmt != null)  stmt.close();  
-							if (conn != null)  conn.close(); 
-							if (rs != null) rs.close();
-						} catch (SQLException e){
-							DebugLog.d("Exception when closing stmt, rs and conn");
-							DebugLog.d(e);
-						}
-					} 
+			try{
+				conn = CarpoolDaoBasic.getSQLConnection();
+				if((direction.equals(Constants.LetterDirection.inbound)
+						||(direction.equals(Constants.LetterDirection.outbound)))
+						&&curUserId>0 && targetUserId>0){
+					//inbound User to User or outbound User to User
+					stmt = conn.prepareStatement(query2);
+					set1 = direction.equals(Constants.LetterDirection.inbound) ? curUserId : targetUserId;
+					set2 =direction.equals(Constants.LetterDirection.inbound) ? targetUserId : curUserId;
+					set3 = type.code;
+					set4 = curUserId;	
+					utu = true;
+				}else if((direction.equals(Constants.LetterDirection.inbound)&&curUserId<=0)
+						||(direction.equals(Constants.LetterDirection.outbound)&&curUserId>0)){
+					//inbound Users to User or outbound Users to User
+					stmt = conn.prepareStatement(query);
+					set1 = direction.equals(Constants.LetterDirection.inbound) ? targetUserId : curUserId;
+					set2 = type.code;
+					set3 = set1;							
+				}else if(direction.equals(Constants.LetterDirection.inbound)
+						||direction.equals(Constants.LetterDirection.outbound)){
+					//inbound User to Users or outbound User to Users
+					stmt = conn.prepareStatement(query1);
+					set1 = direction.equals(Constants.LetterDirection.inbound) ? curUserId : targetUserId;
+					set2 = type.code;
+					set3 = set1;
 				}else{
-					//User to Users
-					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query1)){						
-					try{
-						conn = CarpoolDaoBasic.getSQLConnection();
-						stmt = conn.prepareStatement(query1);
-
-						stmt.setInt(1, curUserId);
-						stmt.setInt(2, type.code);
-						stmt.setInt(3, curUserId);
-						rs = stmt.executeQuery();
-						while(rs.next()){							
-							fromUserId = rs.getInt("from_UserId");
-							toUserId = rs.getInt("to_UserId");	
-							ilist = addIds(ilist,fromUserId,toUserId);												
-							list.add(createLettersByResultSetList(rs));
-						}
-						list = getUsersForLetters(ilist, list);
-						setLettersRead(list,stmt,conn);
-					}catch(SQLException e){
-						DebugLog.d(e);
-					}finally  {
-						try{
-							if (stmt != null)  stmt.close();  
-							if (conn != null)  conn.close(); 
-							if (rs != null) rs.close();
-						} catch (SQLException e){
-							DebugLog.d("Exception when closing stmt, rs and conn");
-							DebugLog.d(e);
-						}
-					} 
-				}
-
-			}else if(direction.equals(Constants.LetterDirection.outbound)){
-				if(curUserId>0 && targetUserId>0){
-					//User to User
-					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query2)){
-					try{
-						conn = CarpoolDaoBasic.getSQLConnection();
-						stmt = conn.prepareStatement(query2);
-
-						stmt.setInt(1, targetUserId);
-						stmt.setInt(2, curUserId);
-						stmt.setInt(3, type.code);
-						stmt.setInt(4, curUserId);
-						rs = stmt.executeQuery();
-						while(rs.next()){							
-							fromUserId = rs.getInt("from_UserId");
-							toUserId = rs.getInt("to_UserId");	
-							ilist = addIds(ilist,fromUserId,toUserId);												
-							list.add(createLettersByResultSetList(rs));
-						}
-						list = getUsersForLetters(ilist, list);
-						setLettersRead(list,stmt,conn);
-					}catch(SQLException e){
-						DebugLog.d(e);
-					}finally  {
-						try{
-							if (stmt != null)  stmt.close();  
-							if (conn != null)  conn.close(); 
-							if (rs != null) rs.close();
-						} catch (SQLException e){
-							DebugLog.d("Exception when closing stmt, rs and conn");
-							DebugLog.d(e);
-						}
-					} 
-				}else if(curUserId>0){
-					//Users to User
-					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){						
-					try{
-						conn = CarpoolDaoBasic.getSQLConnection();
-						stmt = conn.prepareStatement(query);
-
-						stmt.setInt(1, curUserId);
-						stmt.setInt(2, type.code);
-						stmt.setInt(3, curUserId);
-						rs = stmt.executeQuery();
-						while(rs.next()){							
-							fromUserId = rs.getInt("from_UserId");
-							toUserId = rs.getInt("to_UserId");	
-							ilist = addIds(ilist,fromUserId,toUserId);										
-							list.add(createLettersByResultSetList(rs));
-						}
-						list = getUsersForLetters(ilist, list);
-						setLettersRead(list,stmt,conn);
-					}catch(SQLException e){
-						DebugLog.d(e);
-					}finally  {
-						try{
-							if (stmt != null)  stmt.close();  
-							if (conn != null)  conn.close(); 
-							if (rs != null) rs.close();
-						} catch (SQLException e){
-							DebugLog.d("Exception when closing stmt, rs and conn");
-							DebugLog.d(e);
-						}
-					} 
-				}else{
-					//User to Users
-					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query1)){						
-					try{
-						conn = CarpoolDaoBasic.getSQLConnection();
-						stmt = conn.prepareStatement(query1);
-
-						stmt.setInt(1, targetUserId);
-						stmt.setInt(2, type.code);
-						stmt.setInt(3, targetUserId);
-						rs = stmt.executeQuery();
-						while(rs.next()){							
-							fromUserId = rs.getInt("from_UserId");
-							toUserId = rs.getInt("to_UserId");	
-							ilist = addIds(ilist,fromUserId,toUserId);									
-							list.add(createLettersByResultSetList(rs));
-						}
-						list = getUsersForLetters(ilist, list);
-						setLettersRead(list,stmt,conn);
-					}catch(SQLException e){
-						DebugLog.d(e);
-					}finally  {
-						try{
-							if (stmt != null)  stmt.close();  
-							if (conn != null)  conn.close(); 
-							if (rs != null) rs.close();
-						} catch (SQLException e){
-							DebugLog.d("Exception when closing stmt, rs and conn");
-							DebugLog.d(e);
-						}
-					} 
-				}
-			}else{
-				//Both
-				if(curUserId>0&&targetUserId>0){
-					//User to User
-					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query3)){
-					try{
-						conn = CarpoolDaoBasic.getSQLConnection();
+					//Both
+					both = true;
+					if(curUserId>0&&targetUserId>0){
+						//User to User
 						stmt = conn.prepareStatement(query3);
-
-						stmt.setInt(1, curUserId);
-						stmt.setInt(2, targetUserId);
-						stmt.setInt(3, curUserId);
-						stmt.setInt(4, targetUserId);
-						stmt.setInt(5, curUserId);
-						stmt.setInt(6, targetUserId);
-						stmt.setInt(7, type.code);						
-						rs = stmt.executeQuery();
-						while(rs.next()){							
-							fromUserId = rs.getInt("from_UserId");
-							toUserId = rs.getInt("to_UserId");	
-							ilist = addIds(ilist,fromUserId,toUserId);											
-							list.add(createLettersByResultSetList(rs));
-						}
-						list = getUsersForLetters(ilist, list);
-						setLettersRead(list,stmt,conn);
-					}catch(SQLException e){
-						DebugLog.d(e);
-					}finally  {
-						try{
-							if (stmt != null)  stmt.close();  
-							if (conn != null)  conn.close(); 
-							if (rs != null) rs.close();
-						} catch (SQLException e){
-							DebugLog.d("Exception when closing stmt, rs and conn");
-							DebugLog.d(e);
-						}
-					} 
-				}else{
-					//Users to User or User to Users
-					//try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query0)){
-					try{
-						conn = CarpoolDaoBasic.getSQLConnection();
+						set1 = curUserId;
+						set2 = targetUserId;
+						set3 = set1;
+						set4 = set2;
+						set5 = set1;
+						set6 = set2;
+						set7 = type.code;
+						bothu = true;
+					}else{
+						//Users to User or User to Users
 						stmt = conn.prepareStatement(query0);
+						set1 = curUserId > 0 ? curUserId : targetUserId;
+						set2 = set1;					
+						set3 = type.code;
+						set4 = set2;
 
-						stmt.setInt(1, curUserId > 0 ? curUserId : targetUserId);
-						stmt.setInt(2, curUserId > 0 ? curUserId : targetUserId);						
-						stmt.setInt(3, type.code);
-						stmt.setInt(4, curUserId > 0 ? curUserId : targetUserId);
-						rs = stmt.executeQuery();
-						while(rs.next()){							
-							fromUserId = rs.getInt("from_UserId");
-							toUserId = rs.getInt("to_UserId");	
-							ilist = addIds(ilist,fromUserId,toUserId);
-							list.add(createLettersByResultSetList(rs));
-						}
-						list = getUsersForLetters(ilist, list);
-						setLettersRead(list,stmt,conn);
-					}catch(SQLException e){
-						DebugLog.d(e);
-					}finally  {
-						try{
-							if (stmt != null)  stmt.close();  
-							if (conn != null)  conn.close(); 
-							if (rs != null) rs.close();
-						} catch (SQLException e){
-							DebugLog.d("Exception when closing stmt, rs and conn");
-							DebugLog.d(e);
-						}
-					} 
+					}
+				}				
+
+				stmt.setInt(1, set1);
+				stmt.setInt(2, set2);
+				stmt.setInt(3, set3);
+				if(utu){
+					stmt.setInt(4, set4);
+				}
+				if(both){
+					stmt.setInt(4, set4);
+					if(bothu){
+						stmt.setInt(5, set5);
+						stmt.setInt(6, set6);
+						stmt.setInt(7, set7);
+					}
+				}
+				rs = stmt.executeQuery();
+				while(rs.next()){							
+					fromUserId = rs.getInt("from_UserId");
+					toUserId = rs.getInt("to_UserId");	
+					ilist = addIds(ilist,fromUserId,toUserId);									
+					list.add(createLettersByResultSetList(rs));
+				}
+				list = getUsersForLetters(ilist, list);
+				setLettersRead(list,stmt,conn);
+			}catch(SQLException e){
+				DebugLog.d(e);
+			}finally  {
+				try{
+					if (stmt != null)  stmt.close();  
+					if (conn != null)  conn.close(); 
+					if (rs != null) rs.close();
+				} catch (SQLException e){
+					DebugLog.d("Exception when closing stmt, rs and conn");
+					DebugLog.d(e);
 				}
 			}
 		}
@@ -844,7 +564,7 @@ public class CarpoolDaoLetter {
 			stmt.setInt(2, userId);
 			stmt.setInt(3, targetUserId);
 			stmt.setInt(4, targetUserId);
-			
+
 			stmt.setInt(5, targetUserId);
 			stmt.setInt(6, userId);
 			stmt.setInt(7, userId);
