@@ -52,27 +52,22 @@ public class CarpoolDaoUser {
 			stmt.setLong(3, location_Id);
 			rs = stmt.executeQuery();			
 			while(rs.next()){									
-				ulist.add(createUserByResultSet(rs));
+				ulist.add(createUserByResultSet(rs,conn));
 			}			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DebugLog.d(e);
 		} finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (rs != null)  rs.close();  
-				if (conn != null)  conn.close(); 
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
 		} 
 		return ulist;
 
 	}
 
 	public static User addUserToDatabase(User user) throws ValidationException{	
-		user.setLocation(CarpoolDaoLocation.addLocationToDatabases(user.getLocation()));
+		Connection conn = CarpoolDaoBasic.getSQLConnection();
+		
+		user.setLocation(CarpoolDaoLocation.addLocationToDatabases(user.getLocation(),conn));
 		user.setLocation_Id(user.getLocation().getId());
 		String query = "INSERT INTO carpoolDAOUser (password,name,email,phone,qq,gender,birthday,"+
 				"imgPath,location_Id,lastLogin,creationTime,"+
@@ -81,12 +76,10 @@ public class CarpoolDaoUser {
 				"paypalToken,id_docType,id_docNum,id_path,id_vehicleImgPath,accountId,accountPass,accountToken,accountValue,match_Id)"+
 				" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
 
-		PreparedStatement stmt = null;
-		Connection conn = null;
+		PreparedStatement stmt = null;	
 		ResultSet rs = null;
 
-		try{
-			conn = CarpoolDaoBasic.getSQLConnection();
+		try{			
 			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
 			stmt.setString(1, SessionCrypto.encrypt(user.getPassword()));
@@ -139,14 +132,7 @@ public class CarpoolDaoUser {
 			DebugLog.d(e);
 			throw new ValidationException("创建用户失败，账户信息错误");
 		} finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (rs != null)  rs.close();  
-				if (conn != null)  conn.close(); 
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
 		} 
 		return user;
 	}
@@ -157,7 +143,7 @@ public class CarpoolDaoUser {
 		String query3 = "DELETE from carpoolDAOMessage where ownerId = '" + id +"'";
 		String query4 = "DELETE from SocialList where mainUser = '" + id +"'";
 		String query5 = "DELETE FROM carpoolDAOTransaction WHERE provider_Id="+id+" OR customer_Id = "+id;
-		//Adding by Matthew
+
 		Statement stmt = null;
 		Connection conn = null;
 		try{
@@ -175,28 +161,24 @@ public class CarpoolDaoUser {
 		} catch(SQLException e){
 			DebugLog.d(e);
 		} finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, null,true);
 		} 
 	}
 
 	public static void UpdateUserInDatabase(User user) throws UserNotFoundException, ValidationException{
-		user.setLocation(CarpoolDaoLocation.addLocationToDatabases(user.getLocation()));
+		Connection conn = CarpoolDaoBasic.getSQLConnection();
+
+		user.setLocation(CarpoolDaoLocation.addLocationToDatabases(user.getLocation(),conn));
 		user.setLocation_Id(user.getLocation().getId());
 		String query = "UPDATE carpoolDAOUser SET password=?,name=?,email=?,phone=?,qq=?,gender=?,birthday=?," +
 				"imgPath=?,location_Id=?,lastLogin=?,"+
 				"creationTime=?,emailActivated = ?,phoneActivated = ?,emailNotice = ?,phoneNotice = ?,state = ?,searchRepresentation = ?," +
 				"level=?,averageScore=?,totalTranscations=?,verifications=?,googleToken=?,facebookToken=?,twitterToken=?,paypalToken=?,"+
 				"id_docType=?,id_docNum=?,id_path=?,id_vehicleImgPath=?,accountId=?,accountPass=?,accountToken=?,accountValue=?,match_Id=? WHERE userId = ?";
+
 		PreparedStatement stmt = null;
-		Connection conn = null;
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-			conn = CarpoolDaoBasic.getSQLConnection();
+
+		try{			
 			stmt = conn.prepareStatement(query);
 
 			stmt.setString(1, SessionCrypto.encrypt(user.getPassword()));
@@ -243,13 +225,7 @@ public class CarpoolDaoUser {
 		} catch (Exception e) {
 			throw new ValidationException("更改用户信息失败，账户信息错误");
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, null,true);
 		}  	
 	}
 
@@ -260,58 +236,43 @@ public class CarpoolDaoUser {
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 
 			rs = stmt.executeQuery();
 			while(rs.next()){
-				users.add(createUserByResultSet(rs));
+				users.add(createUserByResultSet(rs,conn));
 			}
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-				if (rs != null) rs.close();
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
 		} 
 		return users;
 	}
 
 
-	public static User getUserById(int id) throws UserNotFoundException, LocationNotFoundException{
+	public static User getUserById(int id,Connection...connections) throws UserNotFoundException, LocationNotFoundException{
 		String query = "SELECT * FROM carpoolDAOUser WHERE userId = ?";
 		User user = null;
 		PreparedStatement stmt = null;
-		Connection conn = null;
+		Connection conn = CarpoolDaoBasic.getConnection(connections);
 		ResultSet rs = null;
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-			conn = CarpoolDaoBasic.getSQLConnection();
+		try{		
 			stmt = conn.prepareStatement(query);
 
 			stmt.setInt(1, id);
 			rs = stmt.executeQuery();
 			if(rs.next()){
-				user = createUserByResultSet(rs);
+				user = createUserByResultSet(rs,conn);
 			}else{
 				throw new UserNotFoundException();
 			}
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-				if (rs != null) rs.close();
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs,connections==null ? true : false);
 		} 
 
 		return user;
@@ -324,28 +285,21 @@ public class CarpoolDaoUser {
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 
 			stmt.setString(1, email);
 			rs = stmt.executeQuery();
 			if(rs.next()){
-				user = createUserByResultSet(rs);
+				user = createUserByResultSet(rs,conn);
 			}else{
 				throw new UserNotFoundException();
 			}
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-				if (rs != null) rs.close();
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
 		} 
 
 		return user;
@@ -359,33 +313,26 @@ public class CarpoolDaoUser {
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 
 			stmt.setInt(1, userId);
 			rs = stmt.executeQuery();
 			while(rs.next()){
-				users.add(createUserByResultSet(rs));
+				users.add(createUserByResultSet(rs,conn));
 			}
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-				if (rs != null) rs.close();
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
 		} 
 		return users;
 	}
 
-	protected static User createUserByResultSet(ResultSet rs) throws SQLException, LocationNotFoundException {
+	protected static User createUserByResultSet(ResultSet rs,Connection...connections) throws SQLException, LocationNotFoundException {
 		User user = null;
-		Location location = CarpoolDaoLocation.getLocationById(rs.getLong("location_Id"));
+		Location location = CarpoolDaoLocation.getLocationById(rs.getLong("location_Id"),connections);
 		try {
 			user = new User(rs.getInt("userId"),SessionCrypto.decrypt(rs.getString("password")), rs.getString("name"),
 					rs.getString("email"),rs.getString("phone"),rs.getString("qq"),Constants.Gender.fromInt(rs.getInt("gender")),
@@ -432,13 +379,13 @@ public class CarpoolDaoUser {
 	//	}
 
 
-	public static boolean hasUserInSocialList(int mainUser, int subUser){
+	public static boolean hasUserInSocialList(int mainUser, int subUser,Connection...connections){
 		String query = "SELECT COUNT(*) AS total FROM SocialList WHERE mainUser =" +mainUser+ " AND subUser ="+subUser+";";
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-			conn = CarpoolDaoBasic.getSQLConnection();
+		try{
+			conn = CarpoolDaoBasic.getConnection(connections);
 			stmt = conn.prepareStatement(query);
 
 			rs = stmt.executeQuery();
@@ -452,26 +399,19 @@ public class CarpoolDaoUser {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-				if (rs != null) rs.close();
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs,connections==null ? true : false);
 		} 
 		return false;
 	}
 
 
 	public static void addToSocialList(int user,int subUser) {
+		Connection conn = CarpoolDaoBasic.getSQLConnection();
+		
 		String query = "SET foreign_key_checks = 0;INSERT INTO SocialList (mainUser,subUser) VALUES(?,?);SET foreign_key_checks = 1;";
-		if(!hasUserInSocialList(user,subUser)){
-			PreparedStatement stmt = null;
-			Connection conn = null;
-			try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-				conn = CarpoolDaoBasic.getSQLConnection();
+		if(!hasUserInSocialList(user,subUser,conn)){
+			PreparedStatement stmt = null;			
+			try{
 				stmt = conn.prepareStatement(query);
 
 				stmt.setInt(1, user);
@@ -480,24 +420,17 @@ public class CarpoolDaoUser {
 			}catch(SQLException e){
 				DebugLog.d(e);
 			}finally  {
-				try{
-					if (stmt != null)  stmt.close();  
-					if (conn != null)  conn.close(); 					
-				} catch (SQLException e){
-					DebugLog.d("Exception when closing stmt, rs and conn");
-					DebugLog.d(e);
-				}
+				CarpoolDaoBasic.CloseResources(conn, stmt, null,true);
 			} 
 		}
 	}	
 
 	public static void deleteFromSocialList(int user,int subUser){
 		String query = "SET foreign_key_checks = 0;DELETE FROM SocialList WHERE mainUser =? AND subUser = ?;SET foreign_key_checks = 1;";
-		if(hasUserInSocialList(user,subUser)){
-			PreparedStatement stmt = null;
-			Connection conn = null;
-			try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-				conn = CarpoolDaoBasic.getSQLConnection();
+		Connection conn = CarpoolDaoBasic.getSQLConnection();
+		if(hasUserInSocialList(user,subUser,conn)){
+			PreparedStatement stmt = null;			
+			try{				
 				stmt = conn.prepareStatement(query);
 				stmt.setInt(1, user);
 				stmt.setInt(2, subUser);
@@ -506,13 +439,7 @@ public class CarpoolDaoUser {
 			}catch(SQLException e){
 				DebugLog.d(e);
 			}finally  {
-				try{
-					if (stmt != null)  stmt.close();  
-					if (conn != null)  conn.close(); 					
-				} catch (SQLException e){
-					DebugLog.d("Exception when closing stmt, rs and conn");
-					DebugLog.d(e);
-				}
+				CarpoolDaoBasic.CloseResources(conn, stmt, null,true);
 			} 
 
 		}
@@ -526,26 +453,19 @@ public class CarpoolDaoUser {
 		PreparedStatement stmt = null;
 		Connection conn = null; 
 		ResultSet rs = null;
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 
 			stmt.setInt(1, user);
 			rs = stmt.executeQuery();
 			while(rs.next()){
-				slist.add(CarpoolDaoUser.createUserByResultSet(rs));
+				slist.add(CarpoolDaoUser.createUserByResultSet(rs,conn));
 			}
 		} catch (SQLException e) {
 			DebugLog.d(e);
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-				if (rs != null) rs.close();
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
 		} 
 		return slist;
 	}
@@ -559,7 +479,7 @@ public class CarpoolDaoUser {
 		PreparedStatement stmt = null;
 		Connection conn = null; 
 		ResultSet rs = null;
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 
@@ -567,20 +487,13 @@ public class CarpoolDaoUser {
 			rs = stmt.executeQuery();
 			while(rs.next()){
 				ilist = CarpoolDaoMessage.addIds(ilist,rs.getInt("ownerId"));
-				mlist.add(CarpoolDaoMessage.createMessagesByResultSetList(rs));
+				mlist.add(CarpoolDaoMessage.createMessagesByResultSetList(rs,conn));
 			}
-			mlist = CarpoolDaoMessage.getUsersForMessages(ilist, mlist);
+			mlist = CarpoolDaoMessage.getUsersForMessages(ilist, mlist,conn);
 		} catch (SQLException e) {
 			DebugLog.d(e);
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-				if (rs != null) rs.close();
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
 		} 
 		return mlist;
 	}
