@@ -117,8 +117,10 @@ public class ImgResource extends PseudoResource{
 			*/
 //			InputStream inputStream = entity.getStream();
             BufferedImage bufferedImage = ImageIO.read(items.get(0).getInputStream());
-            DebugLog.d("stream connected, starting to rescale");
-            bufferedImage = Scalr.resize(bufferedImage, Scalr.Method.SPEED, Scalr.Mode.FIT_TO_WIDTH, 128, 128, Scalr.OP_ANTIALIAS);
+            
+            bufferedImage = cropImageToRatio(bufferedImage);
+            DebugLog.d("stream connected, starting to rescale");	
+            bufferedImage = Scalr.resize(bufferedImage, Scalr.Method.SPEED, Scalr.Mode.FIT_TO_WIDTH, 200, 200, Scalr.OP_ANTIALIAS);
             DebugLog.d("img rescale completed into buffer");
             
     		String userProfile = CarpoolConfig.profileImgPrefix;
@@ -159,6 +161,17 @@ public class ImgResource extends PseudoResource{
         return result;
 	}
 
+	private BufferedImage cropImageToRatio(BufferedImage src){
+		int height = src.getHeight();
+		int width = src.getWidth();
+		BufferedImage dest;
+		if (height<width){
+			dest = src.getSubimage((width-height)/2, 0, height, height);
+		} else {
+			dest = src.getSubimage(0, (height-width)/2, width, width);
+		}
+		return dest;
+	}
 	
 }
 
