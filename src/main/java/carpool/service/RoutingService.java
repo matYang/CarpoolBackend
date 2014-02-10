@@ -9,12 +9,8 @@ import org.restlet.routing.Router;
 import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
 import carpool.resources.adminResource.AdminRoutineResource;
-import carpool.resources.adminResource.AdminStatDatabasesArrivalResource;
-import carpool.resources.adminResource.AdminStatDatabasesDepartureResource;
-import carpool.resources.adminResource.AdminStatUserSRArrivalResource;
-import carpool.resources.adminResource.AdminStatUserSRDepartureResource;
 import carpool.resources.adminResource.AdminStateChangeResource;
-import carpool.resources.adminResource.AdminStatGetAllResource;
+import carpool.resources.adminResource.AdminStatResource;
 import carpool.resources.dianmingResource.*;
 import carpool.resources.generalResource.*;
 import carpool.resources.letterResource.LetterResource;
@@ -222,25 +218,9 @@ public class RoutingService extends Application {
 		String RoutineResourcePrefix = "/routine";
 		//	API for admin to force routine tasks to take place: /api/v1.0/admin/routine
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + RoutineResourcePrefix, AdminRoutineResource.class);
-
 		String StatAnalysisPrefix = "/stat";
-		//	API for admin to analyze statistic of data service: /api/v1.0/admin/stat
-
-		String StatGetAllPrefix = "/all";
-		//	API for admin stat to get the entire map of Location Data Statistics
-		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + StatAnalysisPrefix + StatGetAllPrefix, AdminStatGetAllResource.class);
-		String StatGetUserSRDeparturePrefix = "/usrd";
-		//	API for admin stat to get the user search history departure location data statistics
-		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + StatAnalysisPrefix + StatGetUserSRDeparturePrefix, AdminStatUserSRDepartureResource.class);
-		String StatGetUserSRArrivalPrefix = "/usra";
-		//		API for admin stat to get the user search history arrival location data statistics
-		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + StatAnalysisPrefix + StatGetUserSRArrivalPrefix, AdminStatUserSRArrivalResource.class);
-		String StatGetDatabasesDeparturePrefix = "/databasesdeparture";
-		//		API for admin stat to get the databases departure location data statistics
-		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + StatAnalysisPrefix + StatGetDatabasesDeparturePrefix, AdminStatDatabasesDepartureResource.class);
-		String StatGetDatabasesArrivalPrefix = "/databasesarrival";
-		//		API for admin stat to get the user databases arrival location data statistics
-		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + StatAnalysisPrefix + StatGetDatabasesArrivalPrefix, AdminStatDatabasesArrivalResource.class);
+		//	API for admin to analyze statistic of data service: /api/v1.0/admin/stat		
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + StatAnalysisPrefix + "/{type}", AdminStatResource.class);
 
 		return router;
 	}
