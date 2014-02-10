@@ -20,7 +20,7 @@ import carpool.model.representation.SearchRepresentation;
 
 public class StatisticAnalysisOfDataService {	
 
-	public static HashMap<String,ArrayList> GetTheEntireMap(){
+	public static HashMap<String,ArrayList<Entry<Long,Integer>>> GetTheEntireMap(){
 		HashMap<String,HashMap> BigMap = new HashMap<String,HashMap>();
 		HashMap<Long,Integer> UserSRDeparture = new HashMap<Long,Integer>();
 		HashMap<Long,Integer> UserSRArrival = new HashMap<Long,Integer>();
@@ -33,29 +33,22 @@ public class StatisticAnalysisOfDataService {
 		BigMap.put(CarpoolConfig.DatabasesArrival, DatabasesArrival);
 		//UserSR
 		int total =0;
-		String query = "SELECT MAX(userId) FROM carpoolDAOUser";
+		String query = "SELECT COUNT(*) AS total FROM carpoolDAOUser";
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){			
+		try{		
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 			rs = stmt.executeQuery();			
 			if(rs.next()){									
-				total = rs.getInt(1);
+				total = rs.getInt("total");
 			}			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-				if (rs != null) rs.close();
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs, false);
 		}
 		ArrayList<SearchRepresentation> srlist = new ArrayList<SearchRepresentation>();
 		while(total>0){
@@ -65,8 +58,7 @@ public class StatisticAnalysisOfDataService {
 		}
 		//Databases
 		String query2 = "SELECT * from carpoolDAOMessage";
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query2)){
-			conn = CarpoolDaoBasic.getSQLConnection();
+		try{			
 			stmt = conn.prepareStatement(query2);
 			rs = stmt.executeQuery();			
 			while(rs.next()){
@@ -76,14 +68,7 @@ public class StatisticAnalysisOfDataService {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-				if (rs != null) rs.close();
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs, true);
 		}
 		ArrayList<Entry<Long,Integer>> UserSRDepartureList = new ArrayList<Entry<Long,Integer>>();
 		ArrayList<Entry<Long,Integer>> UserSRArrivalList = new ArrayList<Entry<Long,Integer>>();
@@ -94,7 +79,7 @@ public class StatisticAnalysisOfDataService {
 		DatabasesDepartureList = sortMap(BigMap.get(CarpoolConfig.DatabasesDeparture));
 		DatabasesArrivalList = sortMap(BigMap.get(CarpoolConfig.DatabasesArrival));
 
-		HashMap<String,ArrayList> newMap = new HashMap<String,ArrayList>();
+		HashMap<String,ArrayList<Entry<Long,Integer>>> newMap = new HashMap<String,ArrayList<Entry<Long,Integer>>>();
 		newMap.put(CarpoolConfig.UserSRDeparture, UserSRDepartureList);
 		newMap.put(CarpoolConfig.UserSRArrival, UserSRArrivalList);
 		newMap.put(CarpoolConfig.DatabasesDeparture, DatabasesDepartureList);
@@ -120,26 +105,19 @@ public class StatisticAnalysisOfDataService {
 
 		if(str.equals(CarpoolConfig.UserSRDeparture)||str.equals(CarpoolConfig.UserSRArrival)){
 			int total =0;
-			String query = "SELECT MAX(userId) FROM carpoolDAOUser";
-			try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){			
+			String query = "SELECT COUNT(*) AS total FROM carpoolDAOUser";
+			try{	
 				conn = CarpoolDaoBasic.getSQLConnection();
 				stmt = conn.prepareStatement(query);
 				rs = stmt.executeQuery();			
 				if(rs.next()){									
-					total = rs.getInt(1);
+					total = rs.getInt("total");
 				}			
 			} catch (SQLException e) {
 				e.printStackTrace();
 				DebugLog.d(e);
 			}finally  {
-				try{
-					if (stmt != null)  stmt.close();  
-					if (conn != null)  conn.close(); 
-					if (rs != null) rs.close();
-				} catch (SQLException e){
-					DebugLog.d("Exception when closing stmt, rs and conn");
-					DebugLog.d(e);
-				}
+				CarpoolDaoBasic.CloseResources(conn, stmt, rs, true);
 			}
 			ArrayList<SearchRepresentation> srlist = new ArrayList<SearchRepresentation>();
 			while(total>0){
@@ -159,7 +137,7 @@ public class StatisticAnalysisOfDataService {
 
 		}else if(str.equals(CarpoolConfig.DatabasesDeparture)||str.equals(CarpoolConfig.DatabasesArrival)){
 			String query2 = "SELECT * from carpoolDAOMessage";
-			try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query2)){
+			try{
 				conn = CarpoolDaoBasic.getSQLConnection();
 				stmt = conn.prepareStatement(query2);
 				rs = stmt.executeQuery();
@@ -170,14 +148,7 @@ public class StatisticAnalysisOfDataService {
 				e.printStackTrace();
 				DebugLog.d(e);
 			}finally  {
-				try{
-					if (stmt != null)  stmt.close();  
-					if (conn != null)  conn.close(); 
-					if (rs != null) rs.close();
-				} catch (SQLException e){
-					DebugLog.d("Exception when closing stmt, rs and conn");
-					DebugLog.d(e);
-				}
+				CarpoolDaoBasic.CloseResources(conn, stmt, rs, true);
 			}
 			if(str.equals(CarpoolConfig.DatabasesDeparture)){
 				ArrayList<Entry<Long,Integer>> DatabasesDepartureList = new ArrayList<Entry<Long,Integer>>();
@@ -301,29 +272,22 @@ public class StatisticAnalysisOfDataService {
 
 	public static ArrayList<SearchRepresentation> getUserSRsBasedOnTimeStamps(Calendar low, Calendar high){
 		int total =0;
-		String query = "SELECT MAX(userId) FROM carpoolDAOUser";
+		String query = "SELECT COUNT(*) AS total FROM carpoolDAOUser";
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){			
+		try{		
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 			rs = stmt.executeQuery();			
 			if(rs.next()){									
-				total = rs.getInt(1);
+				total = rs.getInt("total");
 			}			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-				if (rs != null) rs.close();
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs, true);
 		}
 		ArrayList<SearchRepresentation> srlist = new ArrayList<SearchRepresentation>();
 		ArrayList<SearchRepresentation> finallist = new ArrayList<SearchRepresentation>();

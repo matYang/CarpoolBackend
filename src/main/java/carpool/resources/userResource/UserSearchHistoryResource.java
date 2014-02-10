@@ -16,8 +16,7 @@ public class UserSearchHistoryResource extends PseudoResource{
 	public Representation getUserSearchHistory(){
 		int userId = -1;
 		ArrayList<SearchRepresentation> searchHistory = new ArrayList<SearchRepresentation>();
-		JSONArray resultArr = new JSONArray();
-
+		JSONArray resultArr = new JSONArray();		
 		try{
 			userId = Integer.parseInt(this.getAttribute("id"));			
 			searchHistory = AwsMain.getUserSearchHistory(userId);

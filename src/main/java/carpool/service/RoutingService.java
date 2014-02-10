@@ -9,8 +9,12 @@ import org.restlet.routing.Router;
 import carpool.common.DebugLog;
 import carpool.constants.CarpoolConfig;
 import carpool.resources.adminResource.AdminRoutineResource;
+import carpool.resources.adminResource.AdminStatDatabasesArrivalResource;
+import carpool.resources.adminResource.AdminStatDatabasesDepartureResource;
+import carpool.resources.adminResource.AdminStatUserSRArrivalResource;
+import carpool.resources.adminResource.AdminStatUserSRDepartureResource;
 import carpool.resources.adminResource.AdminStateChangeResource;
-import carpool.resources.adminResource.AdminStateResource;
+import carpool.resources.adminResource.AdminStatGetAllResource;
 import carpool.resources.dianmingResource.*;
 import carpool.resources.generalResource.*;
 import carpool.resources.letterResource.LetterResource;
@@ -34,7 +38,7 @@ import carpool.resources.userResource.userEmailResource.UserEmailResource;
  * This class is the collection of our routes, it is the only Application attached to the default host
  * **/
 public class RoutingService extends Application {
-	
+
 	public RoutingService() {
 		super();
 	}
@@ -42,16 +46,16 @@ public class RoutingService extends Application {
 	public RoutingService(Context context) {
 		super(context);
 	}
-	
+
 	//@Override
 	public synchronized Restlet createInboundRoot(){
 		DebugLog.d("initiaing router::RoutingService");
 		Router router = new Router(getContext());
-		
+
 		/** -------------------- APIs for dianming module -------------- **/
 		String dMServicePrefix = "/dianming";
 		//  API for dianming messages:  /api/v1.0/dianming/*
-		
+
 		String DMResourcePrefix = "/dianming";
 		//	API for Get/Post dianming messages: /api/v1.0/dianming/dianming
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + dMServicePrefix + DMResourcePrefix, DMResource.class);
@@ -69,24 +73,24 @@ public class RoutingService extends Application {
 		String DMAutoMatchResourcePrefix = "/autoMatch";
 		//	API for DM message auto-matching : /api/v1.0/dianming/autoMatch/:id
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + dMServicePrefix + DMAutoMatchResourcePrefix + "/{id}", DMAutoMatchResource.class);
-		
-		
+
+
 		/** -------------------- APIs for transaction module -------------- **/
 		String transactionServicePrefix = "/transaction";
 		//  API for transaction:  /api/v1.0/transaction/*
-		
+
 		String TransactionResourcePrefix = "/transaction";
 		//	API for Get/Post transactions: /api/v1.0/transaction/transaction
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + transactionServicePrefix + TransactionResourcePrefix, TransactionResource.class);
 		//	API for Get/Put/Delete transactions: /api/v1.0/transaction/transaction/:id
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + transactionServicePrefix + TransactionResourcePrefix + "/{id}", TransactionResourceId.class);
 
-		
-		
+
+
 		/** -------------------- APIs for notification module -------------- **/
 		String notificationServicePrefix = "/notification";
 		//  API for transaction:  /api/v1.0/notification/*
-		
+
 		String NotificationResourcePrefix = "/notification";
 		//	API for Get notifications: /api/v1.0/notification/notification
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + notificationServicePrefix + NotificationResourcePrefix, NotificationResource.class);
@@ -95,11 +99,11 @@ public class RoutingService extends Application {
 		String NotificationDeleteByIdListResourcePrefix = "/notificationByIdList";
 		//	API for Check/Delete notification by an id list: /api/v1.0/notification/notificationByIdList
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + notificationServicePrefix + NotificationDeleteByIdListResourcePrefix, NotificationByIdListResource.class);
-		
+
 		/** -------------------- APIs for letter module -------------- **/
 		String letterServicePrefix = "/letter";
 		//  API for transaction:  /api/v1.0/letter/*
-		
+
 		String LetterResourcePrefix = "/letter";
 		//	API for Get letters: /api/v1.0/letter/letter
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + letterServicePrefix + LetterResourcePrefix, LetterResource.class);
@@ -108,17 +112,17 @@ public class RoutingService extends Application {
 		String LetterUserResourcePrefix = "/user";
 		//	API for Get users in chat history: /api/v1.0/letter/user/:id
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + letterServicePrefix + LetterUserResourcePrefix + "/{id}", LetterUserResource.class);
-		
-		
+
+
 		/** -------------------- APIs for user module ------------------ **/
 		String userServicePrefix = "/users";
 		//  API for users:  /api/v1.0/users/*
-		
+
 		String SessionRedirectPrefix = "/findSession";
 		//	API for session redirection upon non-session pages: /api/v1.0/users/findSession
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + SessionRedirectPrefix, SessionRedirect.class);
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + SessionRedirectPrefix + "/{id}", SessionRedirect.class);
-		
+
 		String UserResourcePrefix = "/user";
 		//  API for Get/Post user:  /api/v1.0/users/user
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserResourcePrefix, UserResource.class);
@@ -186,44 +190,60 @@ public class RoutingService extends Application {
 		String UserSearchHistoryResourcePrefix = "/searchHistory";
 		// API for user getting history messages: /api/v1.0/users/searchHistory/:id
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + userServicePrefix + UserSearchHistoryResourcePrefix + "/{id}", UserSearchHistoryResource.class);
-		
-		
-		
+
+
+
 		/** --------------------- APIs for general module (legacy from v0.9) ------------------ **/
 		String generalServicePrefix = "/general";
 		//   API for feedback module:  /api/v1.0/general/*
-		
+
 		String feedBackResourcePrefix = "/feedBack";
 		//	 API for feed back: /api/v1.0/general/feedBack
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + generalServicePrefix + feedBackResourcePrefix, FeedBackResource.class);
-		
-		
+
+
 		/** APIs for location module**/
 		String locationServicePrefix = "/location";
 		//   API for location module:  /api/v1.0/location/*
-				
+
 		String locationDefaultResourcePrefix = "/default";
 		//	 API for location default resources: /api/v1.0/location/default
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + locationServicePrefix + locationDefaultResourcePrefix, LocationDefaultResource.class);
-		
-		
-		
+
+
+
 		/** --------------------- APIs for Administrator ------------------ **/
 		String adminServicePrefix = "/admin";
 		//   API for single messages:  /api/v1.0/admin/*
-		
+
 		String StateChangeResourcePrefix = "/stateChange";
 		//	API for admin state changes actions on user/message/transaction: /api/v1.0/admin/stateChange
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + StateChangeResourcePrefix, AdminStateChangeResource.class);
 		String RoutineResourcePrefix = "/routine";
 		//	API for admin to force routine tasks to take place: /api/v1.0/admin/routine
 		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + RoutineResourcePrefix, AdminRoutineResource.class);
-		String StateResourcePrefix = "/state";
-		//	API for admin to force routine tasks to take place: /api/v1.0/admin/state
-		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + StateResourcePrefix, AdminStateResource.class);
-		
+
+		String StatAnalysisPrefix = "/stat";
+		//	API for admin to analyze statistic of data service: /api/v1.0/admin/stat
+
+		String StatGetAllPrefix = "/all";
+		//	API for admin stat to get the entire map of Location Data Statistics
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + StatAnalysisPrefix + StatGetAllPrefix, AdminStatGetAllResource.class);
+		String StatGetUserSRDeparturePrefix = "/usrd";
+		//	API for admin stat to get the user search history departure location data statistics
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + StatAnalysisPrefix + StatGetUserSRDeparturePrefix, AdminStatUserSRDepartureResource.class);
+		String StatGetUserSRArrivalPrefix = "/usra";
+		//		API for admin stat to get the user search history arrival location data statistics
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + StatAnalysisPrefix + StatGetUserSRArrivalPrefix, AdminStatUserSRArrivalResource.class);
+		String StatGetDatabasesDeparturePrefix = "/databasesdeparture";
+		//		API for admin stat to get the databases departure location data statistics
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + StatAnalysisPrefix + StatGetDatabasesDeparturePrefix, AdminStatDatabasesDepartureResource.class);
+		String StatGetDatabasesArrivalPrefix = "/databasesarrival";
+		//		API for admin stat to get the user databases arrival location data statistics
+		router.attach(CarpoolConfig.applicationPrefix + CarpoolConfig.versionPrefix + adminServicePrefix + StatAnalysisPrefix + StatGetDatabasesArrivalPrefix, AdminStatDatabasesArrivalResource.class);
+
 		return router;
 	}
-	
-	
+
+
 }
