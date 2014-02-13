@@ -76,6 +76,7 @@ public class PseudoResource extends ServerResource{
 	public void addAuthenticationSession(int userId) throws PseudoException{
 		Series<CookieSetting> cookieSettings = this.getResponse().getCookieSettings(); 
 		CookieSetting newCookie = UserAuthenticationResource.openCookieSession(userId);
+		cookieSettings.clear();
 		cookieSettings.add(newCookie);
 		this.setCookieSettings(cookieSettings);
 	}
@@ -83,6 +84,9 @@ public class PseudoResource extends ServerResource{
 	public void closeAuthenticationSession(int userId) throws PseudoException{
 		Series<Cookie> cookies = this.getRequest().getCookies();
 		UserAuthenticationResource.closeCookieSession(cookies);
+		Series<CookieSetting> cookieSettings = this.getResponse().getCookieSettings(); 
+		cookieSettings.clear();
+		this.setCookieSettings(cookieSettings);
 	}
 	
 	
