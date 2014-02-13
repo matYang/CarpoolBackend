@@ -56,7 +56,7 @@ public class VaragrsTest {
 		}
 		
 		
-		CarpoolDaoBasic.closeResource(conns.length == 0 ? conn : null, null, null);
+		CarpoolDaoBasic.closeResources(conns.length == 0 ? conn : null, null, null, true);
 	}
 	
 }

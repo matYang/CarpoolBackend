@@ -100,7 +100,7 @@ public class CarpoolDaoTransaction {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
 		} 
 		return transaction;
 
@@ -176,7 +176,7 @@ public class CarpoolDaoTransaction {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, null,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, null,true);
 		} 
 	}	
 
@@ -203,7 +203,7 @@ public class CarpoolDaoTransaction {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs,connections==null ? true : false);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,connections==null ? true : false);
 		} 
 		return transaction;
 	}
@@ -252,7 +252,7 @@ public class CarpoolDaoTransaction {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
 		} 
 		return tlist;
 	}
@@ -281,7 +281,7 @@ public class CarpoolDaoTransaction {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, null,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, null,true);
 		} 
 	}
 
@@ -313,7 +313,7 @@ public class CarpoolDaoTransaction {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
 		} 
 		return tlist;	  
 	}
@@ -345,7 +345,7 @@ public class CarpoolDaoTransaction {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
 		} 
 		return tlist;
 	}
@@ -413,7 +413,7 @@ public class CarpoolDaoTransaction {
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs,connections==null ? true : false);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,connections==null ? true : false);
 		} 
 
 		return map;
@@ -457,7 +457,7 @@ public class CarpoolDaoTransaction {
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs,connections==null ? true : false);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,connections==null ? true : false);
 		} 
 
 		return map;

@@ -79,7 +79,7 @@ public class CarpoolDaoBasic {
     	}else return null;
     }
     
-    public static void CloseResources(Connection conn, PreparedStatement stmt, ResultSet rs,boolean closeconn){
+    public static void closeResources(Connection conn, PreparedStatement stmt, ResultSet rs,boolean closeconn){
     	try{
 			if (stmt != null)  stmt.close();  
 			if (conn != null &&closeconn)  conn.close(); 
@@ -90,7 +90,7 @@ public class CarpoolDaoBasic {
 		}
     }
     
-    public static void CloseResources(Connection conn, Statement stmt, ResultSet rs,boolean closeconn){
+    public static void closeResources(Connection conn, Statement stmt, ResultSet rs,boolean closeconn){
     	try{
 			if (stmt != null)  stmt.close();  
 			if (conn != null && closeconn)  conn.close(); 
