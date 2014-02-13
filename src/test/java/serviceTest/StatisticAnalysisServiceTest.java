@@ -219,7 +219,7 @@ public class StatisticAnalysisServiceTest {
 		message9.setDeparture_seatsBooked(11);
 		CarpoolDaoMessage.addMessageToDatabase(message9);
 		
-		HashMap<String,ArrayList>map = new HashMap<String,ArrayList>();
+		HashMap<String,ArrayList<Entry<Long,Integer>>>map = new HashMap<String,ArrayList<Entry<Long,Integer>>>();
 		map = StatisticAnalysisOfDataService.GetTheEntireMap();
 		//UserSRDeparture
 		ArrayList<Entry<Long,Integer>>list1 = new ArrayList<Entry<Long,Integer>>();

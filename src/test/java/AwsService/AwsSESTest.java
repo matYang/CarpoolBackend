@@ -12,9 +12,9 @@ public class AwsSESTest {
 		CarpoolDaoBasic.clearBothDatabase();
 		try{
 			String From = "info@routea.ca";
-			String To = "xiongchuhanplace@hotmail.com";
+			String To = "xiongchuhan@hotmail.com";
 			String Body = "This email was sent through the Amazon SES SMTP interface by using Java.";
-			String Subject = "Test1";
+			String Subject = "assignment";
 			AwsSES.sendEmail(From,To,Body,Subject,"plain");			
 			//Passed;			
 		}catch(Exception e){

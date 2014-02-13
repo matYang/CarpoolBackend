@@ -30,7 +30,7 @@ public class CarpoolDaoNotification {
 		Connection conn = null;
 		ResultSet rs = null;
 		String query="INSERT INTO carpoolDAONotification(target_UserId,origin_UserId,origin_MessageId,origin_TransactionId,notificationState,historyDeleted,creationTime,notificationEvent)values(?,?,?,?,?,?,?,?)";
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
@@ -51,14 +51,7 @@ public class CarpoolDaoNotification {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-				if (rs != null) rs.close();
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
 		} 
 		return notification;
 	}
@@ -68,7 +61,7 @@ public class CarpoolDaoNotification {
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
+		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
@@ -91,14 +84,7 @@ public class CarpoolDaoNotification {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-				if (rs != null) rs.close();
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
 		} 
 		return notifications;
 
@@ -108,7 +94,7 @@ public class CarpoolDaoNotification {
 		PreparedStatement stmt = null;
 		Connection conn = null;
 
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){	
+		try{	
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 
@@ -131,13 +117,7 @@ public class CarpoolDaoNotification {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close();				
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, null,true);
 		} 		
 
 	}
@@ -148,26 +128,19 @@ public class CarpoolDaoNotification {
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 
 			stmt.setInt(1, notificationId);
 			rs = stmt.executeQuery();
 			if(rs.next()){
-				notification = createNotificationByResultSet(rs,"ForOneNotification");
+				notification = createNotificationByResultSet(rs,"ForOneNotification",conn);
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-				if (rs != null) rs.close();
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
 		} 
 		return notification;
 	}
@@ -177,7 +150,7 @@ public class CarpoolDaoNotification {
 		PreparedStatement stmt = null;
 		Connection conn = null;
 
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){				
+		try{			
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 
@@ -192,18 +165,13 @@ public class CarpoolDaoNotification {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}	finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 				
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, null,true);
 		} 
 
 	}
 
-	public static ArrayList<Notification> getAllNotifications() throws MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException{
+	public static ArrayList<Notification> getAllNotifications() throws MessageNotFoundException, UserNotFoundException, 
+	TransactionNotFoundException, LocationNotFoundException{
 		ArrayList<Notification> list = new ArrayList<Notification>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		ArrayList<Integer> milist = new ArrayList<Integer>();
@@ -213,7 +181,7 @@ public class CarpoolDaoNotification {
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 
@@ -224,18 +192,11 @@ public class CarpoolDaoNotification {
 				tlist = addIds(tlist,rs.getInt("origin_TransactionId"));
 				list.add(createNotificationByResultSet(rs));
 			}
-			list = FillNotification(ilist,milist,tlist,list);
+			list = FillNotification(ilist,milist,tlist,list,conn);
 		}catch(SQLException e){
 			e.printStackTrace();
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-				if (rs != null) rs.close();
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
 		} 
 
 		return list;	
@@ -243,21 +204,21 @@ public class CarpoolDaoNotification {
 
 	private static ArrayList<Notification> FillNotification(
 			ArrayList<Integer> ilist, ArrayList<Integer> milist,
-			ArrayList<Integer> tlist, ArrayList<Notification> list) throws LocationNotFoundException {
+			ArrayList<Integer> tlist, ArrayList<Notification> list,Connection...connections) throws LocationNotFoundException {
 		HashMap<Integer,User> userMap = new HashMap<Integer,User>();
 		HashMap<Integer,Message> msgMap = new HashMap<Integer,Message>();
 		HashMap<Integer,Transaction> tranMap = new HashMap<Integer,Transaction>();
 
 		if(ilist.size()>0){
-			userMap = CarpoolDaoTransaction.getUsersHashMap(ilist);
+			userMap = CarpoolDaoTransaction.getUsersHashMap(ilist,connections);
 		}
 
 		if(milist.size()>0){
-			msgMap = CarpoolDaoTransaction.getMsgHashMap(milist);
+			msgMap = CarpoolDaoTransaction.getMsgHashMap(milist,connections);
 		}		
 
 		if(tlist.size()>0){
-			tranMap = getTranMap(tlist);
+			tranMap = getTranMap(tlist,connections);
 		}
 
 		for(int i=0;i<list.size();i++){
@@ -269,7 +230,7 @@ public class CarpoolDaoNotification {
 
 	}	
 
-	private static HashMap<Integer,Transaction> getTranMap(ArrayList<Integer> list) throws LocationNotFoundException{
+	private static HashMap<Integer,Transaction> getTranMap(ArrayList<Integer> list,Connection...connections) throws LocationNotFoundException{
 		HashMap<Integer,Transaction> map = new HashMap<Integer,Transaction>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		ArrayList<Integer> milist = new ArrayList<Integer>();
@@ -283,8 +244,8 @@ public class CarpoolDaoNotification {
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-			conn = CarpoolDaoBasic.getSQLConnection();
+		try{
+			conn = CarpoolDaoBasic.getConnection(connections);
 			stmt = conn.prepareStatement(query);
 
 			for(int i=0;i<list.size();i++){
@@ -295,9 +256,9 @@ public class CarpoolDaoNotification {
 			while(rs.next()){
 				ilist = addIds(ilist,rs.getInt("provider_Id"));
 				milist = addIds(milist,rs.getInt("customer_Id"));
-				tlist.add(CarpoolDaoTransaction.createTransactionByResultSet(rs));
+				tlist.add(CarpoolDaoTransaction.createTransactionByResultSet(rs,conn));
 			}
-			CarpoolDaoTransaction.fillTransactions(ilist, milist, tlist);
+			CarpoolDaoTransaction.fillTransactions(ilist, milist, tlist,conn);
 			int ind=0;
 			while(ind<tlist.size()){
 				map.put(tlist.get(ind).getTransactionId(), tlist.get(ind));
@@ -305,14 +266,7 @@ public class CarpoolDaoNotification {
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-				if (rs != null) rs.close();
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs,connections==null ? true : false);
 		} 
 
 		return map;
@@ -353,13 +307,7 @@ public class CarpoolDaoNotification {
 				e.printStackTrace();
 				DebugLog.d(e);
 			}finally  {
-				try{
-					if (stmt != null)  stmt.close();  
-					if (conn != null)  conn.close(); 				
-				} catch (SQLException e){
-					DebugLog.d("Exception when closing stmt, rs and conn");
-					DebugLog.d(e);
-				}
+				CarpoolDaoBasic.CloseResources(conn, stmt, null,true);
 			} 
 
 		}else{
@@ -378,13 +326,7 @@ public class CarpoolDaoNotification {
 				e.printStackTrace();
 				DebugLog.d(e);
 			}finally  {
-				try{
-					if (stmt != null)  stmt.close();  
-					if (conn != null)  conn.close(); 				
-				} catch (SQLException e){
-					DebugLog.d("Exception when closing stmt, rs and conn");
-					DebugLog.d(e);
-				}
+				CarpoolDaoBasic.CloseResources(conn, stmt, null,true);
 			} 
 		}
 
@@ -407,7 +349,7 @@ public class CarpoolDaoNotification {
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
-		try{//(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1,userId);
@@ -419,28 +361,21 @@ public class CarpoolDaoNotification {
 				list.add(createNotificationByResultSet(rs));
 			}
 
-			list = FillNotification(ilist,milist,tlist,list);
+			list = FillNotification(ilist,milist,tlist,list,conn);
 
 		}catch(SQLException e){
 			e.printStackTrace();
 		}finally  {
-			try{
-				if (stmt != null)  stmt.close();  
-				if (conn != null)  conn.close(); 
-				if (rs != null) rs.close();
-			} catch (SQLException e){
-				DebugLog.d("Exception when closing stmt, rs and conn");
-				DebugLog.d(e);
-			}
+			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
 		} 
 		return list;
 
 	}
 
-	private static Notification createNotificationByResultSet(ResultSet rs,String str) throws SQLException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException {
-		User origin = rs.getInt("origin_UserId")==-1 ? null : CarpoolDaoUser.getUserById(rs.getInt("origin_UserId"));
-		Message msg = rs.getInt("origin_MessageId")==-1 ? null : CarpoolDaoMessage.getMessageById(rs.getInt("origin_MessageId"));
-		Transaction transaction = rs.getInt("origin_TransactionId")==-1 ? null : CarpoolDaoTransaction.getTransactionById(rs.getInt("origin_TransactionId"));
+	private static Notification createNotificationByResultSet(ResultSet rs,String str,Connection...connections) throws SQLException, MessageNotFoundException, UserNotFoundException, TransactionNotFoundException, LocationNotFoundException {
+		User origin = rs.getInt("origin_UserId")==-1 ? null : CarpoolDaoUser.getUserById(rs.getInt("origin_UserId"),connections);
+		Message msg = rs.getInt("origin_MessageId")==-1 ? null : CarpoolDaoMessage.getMessageById(rs.getInt("origin_MessageId"),connections);
+		Transaction transaction = rs.getInt("origin_TransactionId")==-1 ? null : CarpoolDaoTransaction.getTransactionById(rs.getInt("origin_TransactionId"),connections);
 		Notification notification = null;
 		notification = new Notification(rs.getInt("notification_Id"), Constants.NotificationEvent.fromInt(rs.getInt("notificationEvent")),rs.getInt("target_UserId"),
 				rs.getInt("origin_UserId"),rs.getInt("origin_MessageId"),rs.getInt("origin_TransactionId"),Constants.NotificationState.fromInt(rs.getInt("notificationState")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),rs.getBoolean("historyDeleted"));

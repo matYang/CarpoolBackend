@@ -71,10 +71,29 @@ public class CarpoolDaoBasic {
 
     }
     
-    public static void closeResource( Connection conn, PreparedStatement stmt, ResultSet rs){
-		try{
+    public static Connection getConnection(Connection...connections){
+    	if(connections.length==0){
+    		return getSQLConnection();
+    	}else if(connections.length==1&& connections[0] instanceof java.sql.Connection){
+    		return connections[0];
+    	}else return null;
+    }
+    
+    public static void CloseResources(Connection conn, PreparedStatement stmt, ResultSet rs,boolean closeconn){
+    	try{
 			if (stmt != null)  stmt.close();  
-			if (conn != null)  conn.close(); 
+			if (conn != null &&closeconn)  conn.close(); 
+			if (rs != null) rs.close();
+		} catch (SQLException e){
+			DebugLog.d("Exception when closing stmt, rs and conn");
+			DebugLog.d(e);
+		}
+    }
+    
+    public static void CloseResources(Connection conn, Statement stmt, ResultSet rs,boolean closeconn){
+    	try{
+			if (stmt != null)  stmt.close();  
+			if (conn != null && closeconn)  conn.close(); 
 			if (rs != null) rs.close();
 		} catch (SQLException e){
 			DebugLog.d("Exception when closing stmt, rs and conn");

@@ -2,12 +2,15 @@ package carpool.factory;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DebugLog;
+import carpool.constants.CarpoolConfig;
 import carpool.constants.Constants.Gender;
 import carpool.constants.Constants.PaymentMethod;
 import carpool.constants.Constants.UserState;
@@ -26,7 +29,7 @@ import carpool.model.representation.SearchRepresentation;
 //a class that will make JSONObject or JSONArray based on given classes
 //serves as the converter on API data return
 public class JSONFactory {
-	
+
 	public static JSONObject toJSON(PseudoModel obj){
 		if (obj == null){
 			DebugLog.d("JSONFactory::toJSON_Model receving null obj");
@@ -59,9 +62,9 @@ public class JSONFactory {
 		else{
 			return new JSONObject();
 		}
-		
+
 	}
-	
+
 	public static JSONObject toJSON(String s){
 		JSONObject json = new JSONObject();
 		try {
@@ -71,7 +74,7 @@ public class JSONFactory {
 		}
 		return json;
 	}
-	
+
 	public static JSONObject toJSON(boolean b){
 		JSONObject json = new JSONObject();
 		try {
@@ -81,7 +84,7 @@ public class JSONFactory {
 		}
 		return json;
 	}
-	
+
 	public static JSONObject toJSON(Gender g){
 		JSONObject json = new JSONObject();
 		try {
@@ -91,8 +94,8 @@ public class JSONFactory {
 		}
 		return json;
 	}
-	
-	
+
+
 	public static JSONObject toJSON(PaymentMethod p){
 		JSONObject json = new JSONObject();
 		try {
@@ -102,7 +105,7 @@ public class JSONFactory {
 		}
 		return json;
 	}
-	
+
 	public static JSONObject toJSON(int i){
 		JSONObject json = new JSONObject();
 		try {
@@ -112,7 +115,7 @@ public class JSONFactory {
 		}
 		return json;
 	}
-	
+
 	public static JSONObject toJSON(long i){
 		JSONObject json = new JSONObject();
 		try {
@@ -122,7 +125,19 @@ public class JSONFactory {
 		}
 		return json;
 	}
-	
+
+	public static JSONObject toJSON(Entry<Long, Integer> entry) {
+		JSONObject json = new JSONObject();
+		try {
+			json.put("searchNum", entry.getValue());
+			json.put("Default Location Id", entry.getKey());
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return json;
+	}
+
 	public static JSONArray toJSON(ArrayList<? extends PseudoModel> objs){
 		ArrayList<JSONObject> temps = new ArrayList<JSONObject>();
 		if (objs == null){
@@ -133,11 +148,54 @@ public class JSONFactory {
 			if (objs.get(i) != null){
 				JSONObject jsonResult = toJSON(objs.get(i));
 				temps.add(jsonResult);
-				
+
 			}
 		}
 		return new JSONArray(temps);
 	}
-	
+
+	public static JSONArray toJSON(HashMap<String, ArrayList<Entry<Long,Integer>>> entireMap) {		
+		ArrayList<JSONArray> array = new ArrayList<JSONArray>();
+		if (entireMap == null){
+			DebugLog.d("JSONFactory::toJSON_ArrayList receving null objs");
+			return new JSONArray();
+		}
+
+		if (entireMap.get(CarpoolConfig.UserSRDeparture) != null){
+			JSONArray jsonArray = toJSONArray(entireMap.get(CarpoolConfig.UserSRDeparture));
+			array.add(jsonArray);				
+		}
+		if (entireMap.get(CarpoolConfig.UserSRArrival) != null){
+			JSONArray jsonArray = toJSONArray(entireMap.get(CarpoolConfig.UserSRArrival));
+			array.add(jsonArray);				
+		}
+		if (entireMap.get(CarpoolConfig.DatabasesDeparture) != null){
+			JSONArray jsonArray = toJSONArray(entireMap.get(CarpoolConfig.DatabasesDeparture));
+			array.add(jsonArray);				
+		}
+		if (entireMap.get(CarpoolConfig.DatabasesArrival) != null){
+			JSONArray jsonArray = toJSONArray(entireMap.get(CarpoolConfig.DatabasesArrival));
+			array.add(jsonArray);				
+		}
+
+		return new JSONArray(array);
+	}
+
+	public static JSONArray toJSONArray(ArrayList<Entry<Long, Integer>> arrayList) {
+		ArrayList<JSONObject> temps = new ArrayList<JSONObject>();
+		if (arrayList == null){
+			DebugLog.d("JSONFactory::toJSON_ArrayList receving null objs");
+			return new JSONArray();
+		}
+		for (int i = 0; i < arrayList.size(); i++){
+			if (arrayList.get(i) != null){
+				JSONObject jsonResult = toJSON(arrayList.get(i));
+				temps.add(jsonResult);
+
+			}
+		}
+		return new JSONArray(temps);
+	}	
+
 
 }
