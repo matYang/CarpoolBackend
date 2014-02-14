@@ -1,5 +1,6 @@
 package carpool.asyncTask.relayTask;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Properties;
 
@@ -11,6 +12,7 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 
 import carpool.common.DebugLog;
 import carpool.interfaces.PseudoAsyncTask;
@@ -60,7 +62,7 @@ public class EmailRelayTask implements PseudoAsyncTask{
 				
 				msg.setFrom(new InternetAddress(sender));
 				msg.setRecipients(Message.RecipientType.TO,InternetAddress.parse(receiver, false));
-				msg.setSubject(subject);
+				msg.setSubject(MimeUtility.encodeText(subject, "utf-8", "B"));
 				msg.setText(body);
 				msg.setHeader("X-Mailer", "LOTONtechEmail");
 				msg.setSentDate(new Date());
@@ -81,6 +83,9 @@ public class EmailRelayTask implements PseudoAsyncTask{
 				e.printStackTrace();
 				DebugLog.d(e);
 				return false;
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+				DebugLog.d(e);
 			} 
 			
 			return true;
