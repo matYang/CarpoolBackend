@@ -52,9 +52,13 @@ public class Validator {
 
 	public static boolean isNameFormatValid(String userName){
 		Pattern NamePattern = Pattern.compile(CarpoolConfig.RegexNamePattern);
+		Pattern WhiteSpacePattern = Pattern.compile(CarpoolConfig.RegexNameWhiteSpacePattern);
 		if (userName == null || userName.length() == 0 || userName.length() > CarpoolConfig.maxUserNameLength){
 			return false;
-		}	   
+		}	
+		if(WhiteSpacePattern.matcher(userName).matches()){
+			userName = userName.replaceAll("\\s+", "");
+		}
 		if (NamePattern.matcher(userName).matches()){
 			return true;
 		}

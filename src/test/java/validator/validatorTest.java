@@ -271,6 +271,20 @@ public class validatorTest {
 		}else{
 			fail();
 		}
+		
+		name="Harry Xiong";
+		if(Validator.isNameFormatValid(name)){
+			//Passed;
+		}else{
+			fail();
+		}
+		
+		name="Harry X iong";
+		if(!Validator.isNameFormatValid(name)){
+			//Passed;
+		}else{
+			fail();
+		}
 	}
 	
 	@Test
