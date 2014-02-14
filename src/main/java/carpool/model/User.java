@@ -118,7 +118,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.qq = "";
 	    this.gender = g;
 	    this.birthday = DateUtility.getCurTimeInstance();
-	    this.imgPath = "res/personal/default-avatar.jpg";
+	    this.imgPath = g == Gender.female ? CarpoolConfig.img_default_avatar_female : CarpoolConfig.img_default_avatar_male;
 	    this.lastLogin = DateUtility.getCurTimeInstance();
 	    this.creationTime = DateUtility.getCurTimeInstance();
 	    

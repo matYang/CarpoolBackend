@@ -48,7 +48,7 @@ public class StatisticAnalysisOfDataService {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs, false);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs, false);
 		}
 		ArrayList<SearchRepresentation> srlist = new ArrayList<SearchRepresentation>();
 		while(total>0){
@@ -68,7 +68,7 @@ public class StatisticAnalysisOfDataService {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs, true);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs, true);
 		}
 		ArrayList<Entry<Long,Integer>> UserSRDepartureList = new ArrayList<Entry<Long,Integer>>();
 		ArrayList<Entry<Long,Integer>> UserSRArrivalList = new ArrayList<Entry<Long,Integer>>();
@@ -117,7 +117,7 @@ public class StatisticAnalysisOfDataService {
 				e.printStackTrace();
 				DebugLog.d(e);
 			}finally  {
-				CarpoolDaoBasic.CloseResources(conn, stmt, rs, true);
+				CarpoolDaoBasic.closeResources(conn, stmt, rs, true);
 			}
 			ArrayList<SearchRepresentation> srlist = new ArrayList<SearchRepresentation>();
 			while(total>0){
@@ -148,7 +148,7 @@ public class StatisticAnalysisOfDataService {
 				e.printStackTrace();
 				DebugLog.d(e);
 			}finally  {
-				CarpoolDaoBasic.CloseResources(conn, stmt, rs, true);
+				CarpoolDaoBasic.closeResources(conn, stmt, rs, true);
 			}
 			if(str.equals(CarpoolConfig.DatabasesDeparture)){
 				ArrayList<Entry<Long,Integer>> DatabasesDepartureList = new ArrayList<Entry<Long,Integer>>();
@@ -287,7 +287,7 @@ public class StatisticAnalysisOfDataService {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs, true);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs, true);
 		}
 		ArrayList<SearchRepresentation> srlist = new ArrayList<SearchRepresentation>();
 		ArrayList<SearchRepresentation> finallist = new ArrayList<SearchRepresentation>();

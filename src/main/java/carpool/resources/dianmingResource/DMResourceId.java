@@ -63,9 +63,9 @@ public class DMResourceId extends PseudoResource{
         
         try {
         	messageId = Integer.parseInt(this.getReqAttr("id"));
-			id = Integer.parseInt(this.getQueryVal("userId"));
+			//id = Integer.parseInt(this.getQueryVal("userId"));
 			
-			this.validateAuthentication(id);
+			//this.validateAuthentication(id);
 			
         	Message message = MessageDaoService.getMessageById(messageId);
         	if (message != null){

@@ -58,7 +58,7 @@ public class CarpoolDaoUser {
 			e.printStackTrace();
 			DebugLog.d(e);
 		} finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
 		} 
 		return ulist;
 
@@ -132,7 +132,7 @@ public class CarpoolDaoUser {
 			DebugLog.d(e);
 			throw new ValidationException("创建用户失败，账户信息错误");
 		} finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
 		} 
 		return user;
 	}
@@ -161,7 +161,7 @@ public class CarpoolDaoUser {
 		} catch(SQLException e){
 			DebugLog.d(e);
 		} finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, null,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, null,true);
 		} 
 	}
 
@@ -225,7 +225,7 @@ public class CarpoolDaoUser {
 		} catch (Exception e) {
 			throw new ValidationException("更改用户信息失败，账户信息错误");
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, null,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, null,true);
 		}  	
 	}
 
@@ -247,7 +247,7 @@ public class CarpoolDaoUser {
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
 		} 
 		return users;
 	}
@@ -272,7 +272,7 @@ public class CarpoolDaoUser {
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs,connections==null ? true : false);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,connections==null ? true : false);
 		} 
 
 		return user;
@@ -299,7 +299,7 @@ public class CarpoolDaoUser {
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
 		} 
 
 		return user;
@@ -325,7 +325,7 @@ public class CarpoolDaoUser {
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
 		} 
 		return users;
 	}
@@ -399,7 +399,7 @@ public class CarpoolDaoUser {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs,connections==null ? true : false);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,connections==null ? true : false);
 		} 
 		return false;
 	}
@@ -420,7 +420,7 @@ public class CarpoolDaoUser {
 			}catch(SQLException e){
 				DebugLog.d(e);
 			}finally  {
-				CarpoolDaoBasic.CloseResources(conn, stmt, null,true);
+				CarpoolDaoBasic.closeResources(conn, stmt, null,true);
 			} 
 		}
 	}	
@@ -439,7 +439,7 @@ public class CarpoolDaoUser {
 			}catch(SQLException e){
 				DebugLog.d(e);
 			}finally  {
-				CarpoolDaoBasic.CloseResources(conn, stmt, null,true);
+				CarpoolDaoBasic.closeResources(conn, stmt, null,true);
 			} 
 
 		}
@@ -465,7 +465,7 @@ public class CarpoolDaoUser {
 		} catch (SQLException e) {
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
 		} 
 		return slist;
 	}
@@ -493,7 +493,7 @@ public class CarpoolDaoUser {
 		} catch (SQLException e) {
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.CloseResources(conn, stmt, rs,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
 		} 
 		return mlist;
 	}
