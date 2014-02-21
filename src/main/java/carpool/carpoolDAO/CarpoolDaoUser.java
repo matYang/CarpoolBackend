@@ -66,7 +66,7 @@ public class CarpoolDaoUser {
 
 	public static User addUserToDatabase(User user) throws ValidationException{	
 		Connection conn = CarpoolDaoBasic.getSQLConnection();
-		
+
 		user.setLocation(CarpoolDaoLocation.addLocationToDatabases(user.getLocation(),conn));
 		user.setLocation_Id(user.getLocation().getId());
 		String query = "INSERT INTO carpoolDAOUser (password,name,email,phone,qq,gender,birthday,"+
@@ -272,7 +272,7 @@ public class CarpoolDaoUser {
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.closeResources(conn, stmt, rs,connections==null ? true : false);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,CarpoolDaoBasic.shouldConnectionClose(connections));
 		} 
 
 		return user;
@@ -399,7 +399,7 @@ public class CarpoolDaoUser {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally  {
-			CarpoolDaoBasic.closeResources(conn, stmt, rs,connections==null ? true : false);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,CarpoolDaoBasic.shouldConnectionClose(connections));
 		} 
 		return false;
 	}
@@ -407,10 +407,9 @@ public class CarpoolDaoUser {
 
 	public static void addToSocialList(int user,int subUser) {
 		Connection conn = CarpoolDaoBasic.getSQLConnection();
-		
+		PreparedStatement stmt = null;	
 		String query = "SET foreign_key_checks = 0;INSERT INTO SocialList (mainUser,subUser) VALUES(?,?);SET foreign_key_checks = 1;";
-		if(!hasUserInSocialList(user,subUser,conn)){
-			PreparedStatement stmt = null;			
+		if(!hasUserInSocialList(user,subUser,conn)){						
 			try{
 				stmt = conn.prepareStatement(query);
 
@@ -423,13 +422,14 @@ public class CarpoolDaoUser {
 				CarpoolDaoBasic.closeResources(conn, stmt, null,true);
 			} 
 		}
+		CarpoolDaoBasic.closeResources(conn, stmt, null,true);
 	}	
 
 	public static void deleteFromSocialList(int user,int subUser){
 		String query = "SET foreign_key_checks = 0;DELETE FROM SocialList WHERE mainUser =? AND subUser = ?;SET foreign_key_checks = 1;";
 		Connection conn = CarpoolDaoBasic.getSQLConnection();
-		if(hasUserInSocialList(user,subUser,conn)){
-			PreparedStatement stmt = null;			
+		PreparedStatement stmt = null;	
+		if(hasUserInSocialList(user,subUser,conn)){					
 			try{				
 				stmt = conn.prepareStatement(query);
 				stmt.setInt(1, user);
@@ -443,6 +443,7 @@ public class CarpoolDaoUser {
 			} 
 
 		}
+		CarpoolDaoBasic.closeResources(conn, stmt, null,true);
 
 	}
 

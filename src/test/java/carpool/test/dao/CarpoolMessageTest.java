@@ -666,15 +666,22 @@ public class CarpoolMessageTest {
 		MessageCleaner.Clean();
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		String query = "SELECT * from carpoolDAOMessage WHERE ownerId = ?";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, message.getOwnerId());
-			ResultSet rs = stmt.executeQuery();			
+			rs = stmt.executeQuery();			
 			while(rs.next()){	
 				list.add(rs.getInt("messageState"));
 			}			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DebugLog.d(e);
+		}finally{
+			CarpoolDaoBasic.closeResources(conn, stmt, rs, true);
 		}
 
 		if(list !=null && list.size()==8 && list.get(0)==2&&list.get(1)==1&& list.get(2)==2&&list.get(3)==2&& list.get(4)==1&&list.get(5)==2&& list.get(6)==1&&list.get(7)==0){

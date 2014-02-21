@@ -106,11 +106,11 @@ public class CarpoolDaoTransaction {
 
 	}
 
-	public static void updateTransactionInDatabase(Transaction transaction) throws TransactionNotFoundException, MessageNotFoundException, UserNotFoundException, LocationNotFoundException{
+	public static void updateTransactionInDatabase(Transaction transaction,Connection...connections) throws TransactionNotFoundException, MessageNotFoundException, UserNotFoundException, LocationNotFoundException{
 		String query="UPDATE carpoolDAOTransaction SET departure_priceList=?,departure_Time=?,"+
 				"departure_Id=?,arrival_Id=?,departure_seatsBooked=?,totalPrice=?,"+
 				"transactionState=?,departure_timeSlot=?,creationTime=?,historyDeleted=?,paymentMethod=?,customerNote=?,providerNote=?,customerEvaluation=?,providerEvaluation=?, transactionType=? where transaction_Id=?";
-		Connection conn = CarpoolDaoBasic.getSQLConnection();
+		Connection conn = CarpoolDaoBasic.getConnection(connections);
 		Message msg = null;
 		if(transaction.getMessage()==null){
 			msg = CarpoolDaoMessage.getMessageById(transaction.getMessageId(),conn);
@@ -176,7 +176,7 @@ public class CarpoolDaoTransaction {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.closeResources(conn, stmt, null,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, null,CarpoolDaoBasic.shouldConnectionClose(connections));
 		} 
 	}	
 
@@ -203,7 +203,7 @@ public class CarpoolDaoTransaction {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.closeResources(conn, stmt, rs,connections==null ? true : false);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,CarpoolDaoBasic.shouldConnectionClose(connections));
 		} 
 		return transaction;
 	}
@@ -413,7 +413,7 @@ public class CarpoolDaoTransaction {
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.closeResources(conn, stmt, rs,connections==null ? true : false);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,CarpoolDaoBasic.shouldConnectionClose(connections));
 		} 
 
 		return map;
@@ -457,7 +457,7 @@ public class CarpoolDaoTransaction {
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.closeResources(conn, stmt, rs,connections==null ? true : false);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,CarpoolDaoBasic.shouldConnectionClose(connections));
 		} 
 
 		return map;

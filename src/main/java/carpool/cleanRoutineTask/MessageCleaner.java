@@ -1,4 +1,5 @@
 package carpool.cleanRoutineTask;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,17 +26,22 @@ public class MessageCleaner extends CarpoolDaoMessage {
     String ct=DateUtility.toSQLDateTime(currentDate);
     
 	String query = "SELECT * from carpoolDAOMessage WHERE((isRoundTrip LIKE ? AND arrival_Time < ?) OR(isRoundTrip LIKE ? AND departure_Time < ?))AND messageState LIKE ?;";
-	try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+	Connection conn = null;
+	PreparedStatement stmt = null;
+	ResultSet rs = null;
+	try{
+		conn = CarpoolDaoBasic.getSQLConnection();
+		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, 1);			
 		stmt.setString(2, ct);							
 		stmt.setInt(3, 0);	
 		stmt.setString(4, ct);
 		stmt.setInt(5, 2);			
-		ResultSet rs = stmt.executeQuery();			
+		rs = stmt.executeQuery();			
 			while(rs.next()){	
-				Message msg = CarpoolDaoMessage.createMessageByResultSet(rs, false);
+				Message msg = CarpoolDaoMessage.createMessageByResultSet(rs, false,conn);
 			    msg.setState(Constants.MessageState.fromInt(1));
-			    CarpoolDaoMessage.UpdateMessageInDatabase(msg);
+			    CarpoolDaoMessage.UpdateMessageInDatabase(msg,conn);
 				}			
 	} catch (SQLException e) {
 		e.printStackTrace();
@@ -44,6 +50,8 @@ public class MessageCleaner extends CarpoolDaoMessage {
 		e.printStackTrace();
 	} catch (MessageNotFoundException e) {		
 		e.printStackTrace();
+	} finally{
+		CarpoolDaoBasic.closeResources(conn, stmt, rs, true);
 	}
   }
 	

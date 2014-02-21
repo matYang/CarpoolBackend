@@ -20,9 +20,12 @@ import carpool.model.Message;
 import carpool.model.Notification;
 import carpool.model.Transaction;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+
 public class TransactionCleaner extends CarpoolDaoTransaction {
 
 	public static void Clean() throws LocationNotFoundException{
@@ -43,17 +46,21 @@ public class TransactionCleaner extends CarpoolDaoTransaction {
 		ArrayList<Transaction> tlist = new ArrayList<Transaction>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
 		ArrayList<Integer> milist = new ArrayList<Integer>();
-
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 		String query = "SELECT * FROM carpoolDAOTransaction where (transactionState = ? AND departure_Time > ? AND departure_Time <= ?) OR(transactionState = ? AND departure_Time >= ?);";
-		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, Constants.TransactionState.init.code);			
 			stmt.setString(2, ct);							
 			stmt.setString(3, late);	
 			stmt.setInt(4, Constants.TransactionState.aboutToStart.code);
 			stmt.setString(5, yesterday);			
-			ResultSet rs = stmt.executeQuery();			
+			rs = stmt.executeQuery();			
 			while(rs.next()){	
-				Transaction transaction = CarpoolDaoTransaction.createTransactionByResultSet(rs);					
+				Transaction transaction = CarpoolDaoTransaction.createTransactionByResultSet(rs,conn);					
 				if(transaction.getState() == Constants.TransactionState.init){				    	
 					transaction.setState(TransactionState.aboutToStart);				    	
 				}else if(transaction.getState() == Constants.TransactionState.aboutToStart){				    	
@@ -64,16 +71,16 @@ public class TransactionCleaner extends CarpoolDaoTransaction {
 				ilist = CarpoolDaoTransaction.addIds(ilist, transaction.getCustomerId());
 				milist = CarpoolDaoTransaction.addIds(milist, transaction.getMessageId());
 			}
-			tlist = CarpoolDaoTransaction.fillTransactions(ilist, milist, tlist);
+			tlist = CarpoolDaoTransaction.fillTransactions(ilist, milist, tlist,conn);
 			Transaction transaction = null;
 			for(int i=0;i<tlist.size();i++){
 				transaction = tlist.get(i);
-				CarpoolDaoTransaction.updateTransactionInDatabase(transaction);
+				CarpoolDaoTransaction.updateTransactionInDatabase(transaction,conn);
 				//use the queue from notification service here
 				notificationQueue.add(new Notification(Constants.NotificationEvent.transactionAboutToStart, transaction.getProviderId(), transaction.getCustomerId(), transaction.getMessageId(), transaction.getTransactionId()));
 				notificationQueue.add(new Notification(Constants.NotificationEvent.transactionAboutToStart, transaction.getCustomerId(), transaction.getProviderId(), transaction.getMessageId(), transaction.getTransactionId()));
 			}
-			NotificationDaoService.sendNotification(notificationQueue);
+			NotificationDaoService.sendNotification(notificationQueue,conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			DebugLog.d(e);
@@ -83,6 +90,8 @@ public class TransactionCleaner extends CarpoolDaoTransaction {
 			e.printStackTrace();
 		} catch (TransactionNotFoundException e) {		
 			e.printStackTrace();
+		} finally{
+			CarpoolDaoBasic.closeResources(conn, stmt, rs, true);
 		}
 	}
 

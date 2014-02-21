@@ -229,8 +229,8 @@ public class CarpoolDaoMessage{
 		} 
 	}
 
-	public static void UpdateMessageInDatabase(Message msg) throws MessageNotFoundException{
-		Connection conn = CarpoolDaoBasic.getSQLConnection();
+	public static void UpdateMessageInDatabase(Message msg,Connection...connections) throws MessageNotFoundException{
+		Connection conn = CarpoolDaoBasic.getConnection(connections);
 
 		msg.setDeparture_Location(CarpoolDaoLocation.addLocationToDatabases(msg.getDeparture_Location(),conn));
 		msg.setArrival_Location(CarpoolDaoLocation.addLocationToDatabases(msg.getArrival_Location(),conn));
@@ -276,7 +276,7 @@ public class CarpoolDaoMessage{
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.closeResources(conn, stmt, null,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, null,CarpoolDaoBasic.shouldConnectionClose(connections));
 		} 
 	}
 
@@ -377,7 +377,7 @@ public class CarpoolDaoMessage{
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.closeResources(conn, stmt, rs,connections==null ? true : false);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,CarpoolDaoBasic.shouldConnectionClose(connections));
 		} 
 		return message;
 	}
@@ -478,7 +478,7 @@ public class CarpoolDaoMessage{
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.closeResources(conn, stmt, rs,connections==null ? true : false);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,CarpoolDaoBasic.shouldConnectionClose(connections));
 		} 
 
 		return map;

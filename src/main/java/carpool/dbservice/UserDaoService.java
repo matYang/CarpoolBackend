@@ -1,5 +1,6 @@
 package carpool.dbservice;
 
+import java.sql.Connection;
 import java.util.*;
 
 
@@ -32,8 +33,8 @@ public class UserDaoService{
 		return CarpoolDaoUser.getAllUsers();
 	}
 
-	public static User getUserById(int id) throws UserNotFoundException, LocationNotFoundException{
-		return CarpoolDaoUser.getUserById(id);
+	public static User getUserById(int id,Connection...connections) throws UserNotFoundException, LocationNotFoundException{
+		return CarpoolDaoUser.getUserById(id,connections);
 	}
 
 

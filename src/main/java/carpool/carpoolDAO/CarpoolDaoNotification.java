@@ -56,13 +56,13 @@ public class CarpoolDaoNotification {
 		return notification;
 	}
 
-	public static ArrayList<Notification> addNotificationsToDatabase(ArrayList<Notification> notifications){
+	public static ArrayList<Notification> addNotificationsToDatabase(ArrayList<Notification> notifications,Connection...connections){
 		String query="INSERT INTO carpoolDAONotification(target_UserId,origin_UserId,origin_MessageId,origin_TransactionId,notificationState,historyDeleted,creationTime,notificationEvent)values(?,?,?,?,?,?,?,?)";
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
 		try{
-			conn = CarpoolDaoBasic.getSQLConnection();
+			conn = CarpoolDaoBasic.getConnection(connections);
 			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
 			for(Notification n:notifications){
@@ -84,7 +84,7 @@ public class CarpoolDaoNotification {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,CarpoolDaoBasic.shouldConnectionClose(connections));
 		} 
 		return notifications;
 
@@ -266,7 +266,7 @@ public class CarpoolDaoNotification {
 		}catch(SQLException e){
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.closeResources(conn, stmt, rs,connections==null ? true : false);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,CarpoolDaoBasic.shouldConnectionClose(connections));
 		} 
 
 		return map;

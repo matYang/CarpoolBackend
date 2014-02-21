@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import org.json.JSONObject;
 
+import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoLocation;
 import carpool.constants.CarpoolConfig;
 import carpool.exception.location.LocationException;

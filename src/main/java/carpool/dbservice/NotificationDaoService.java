@@ -1,5 +1,6 @@
 package carpool.dbservice;
 
+import java.sql.Connection;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -37,11 +38,11 @@ public class NotificationDaoService{
 		sendNotification(ns);
 	}
 
-	public static void sendNotification(ArrayList<Notification> ns){
+	public static void sendNotification(ArrayList<Notification> ns,Connection...connections){
 		NotificationRelayTask nTask = new NotificationRelayTask(ns);
 		
 		//save to sql
-		createNewNotification(ns);
+		createNewNotification(ns,connections);
 		ExecutorProvider.executeRelay(nTask);
 
 
@@ -49,7 +50,7 @@ public class NotificationDaoService{
 		Map<Integer, ArrayList<Notification>> bufferMap = emailRelayBufferMapMaker(ns);
 		for (Entry<Integer, ArrayList<Notification>> entry : bufferMap.entrySet()){
 			try {
-				User user = UserDaoService.getUserById(entry.getKey());
+				User user = UserDaoService.getUserById(entry.getKey(),connections);
 				if (user.isEmailNotice()){
 					//TODO
 					SESRelayTask eTask = new SESRelayTask(user.getEmail(), EmailEvent.notification, JSONFactory.toJSON(entry.getValue()).toString());
@@ -103,9 +104,9 @@ public class NotificationDaoService{
 	 * created new notifications in SQL, note all of these notification will be different
 	 * @Return the notifications just stored, with the notificationIds
 	 */
-	public static ArrayList<Notification> createNewNotification(ArrayList<Notification> newNotifications){
+	public static ArrayList<Notification> createNewNotification(ArrayList<Notification> newNotifications,Connection...connections){
 
-		return CarpoolDaoNotification.addNotificationsToDatabase(newNotifications);
+		return CarpoolDaoNotification.addNotificationsToDatabase(newNotifications,connections);
 	}
 
 
