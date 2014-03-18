@@ -20,7 +20,7 @@ public abstract class IdentityVerification {
 	private Calendar expireDate;
 	private VerificationState state;
 	
-	private Calendar reviewDateDate;
+	private Calendar reviewDate;
 	private int reviewerId;
 	private int recommenderId;
 	
@@ -42,7 +42,7 @@ public abstract class IdentityVerification {
 		this.submissionDate = submissionDate;
 		this.expireDate = expireDate;
 		this.state = state;
-		this.reviewDateDate = reviewDateDate;
+		this.reviewDate = reviewDateDate;
 		this.reviewerId = reviewerId;
 		this.recommenderId = recommenderId;
 	}
@@ -93,10 +93,10 @@ public abstract class IdentityVerification {
 		this.state = state;
 	}
 	public Calendar getReviewDateDate() {
-		return reviewDateDate;
+		return reviewDate;
 	}
 	public void setReviewDateDate(Calendar reviewDateDate) {
-		this.reviewDateDate = reviewDateDate;
+		this.reviewDate = reviewDateDate;
 	}
 	public int getReviewerId() {
 		return reviewerId;
