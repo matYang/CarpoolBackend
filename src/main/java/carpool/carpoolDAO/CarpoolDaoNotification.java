@@ -262,6 +262,7 @@ public class CarpoolDaoNotification {
 			int ind=0;
 			while(ind<tlist.size()){
 				map.put(tlist.get(ind).getTransactionId(), tlist.get(ind));
+				ind++;
 			}
 		}catch(SQLException e){
 			DebugLog.d(e);
