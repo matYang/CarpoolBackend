@@ -8,7 +8,7 @@ import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoTransaction;
 import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.common.*;
-import carpool.constants.Constants;
+import carpool.configurations.EnumConfig;
 import carpool.exception.PseudoException;
 import carpool.exception.validation.ValidationException;
 import carpool.exception.location.LocationNotFoundException;
@@ -70,7 +70,7 @@ public class TransactionDaoService{
 		Transaction t = newTransaction;
 
 		Message base = CarpoolDaoMessage.getMessageById(t.getMessageId());
-		if (t.getType() == Constants.TransactionType.departure){
+		if (t.getType() == EnumConfig.TransactionType.departure){
 			base.setDeparture_seatsBooked(base.getDeparture_seatsBooked() + t.getDeparture_seatsBooked());
 		} else{
 			base.setArrival_seatsBooked(base.getArrival_seatsBooked() + t.getDeparture_seatsBooked());
@@ -83,7 +83,7 @@ public class TransactionDaoService{
 		CarpoolDaoMessage.UpdateMessageInDatabase(base);
 
 		//currently transactions are customer -> provider only
-		Notification n = new Notification(Constants.NotificationEvent.transactionInit, newTransaction.getProviderId(), t.getCustomerId(), t.getMessageId(), t.getTransactionId());
+		Notification n = new Notification(EnumConfig.NotificationEvent.transactionInit, newTransaction.getProviderId(), t.getCustomerId(), t.getMessageId(), t.getTransactionId());
 		NotificationDaoService.sendNotification(n);
 		return t;
 	}
@@ -99,12 +99,12 @@ public class TransactionDaoService{
 		Transaction t = CarpoolDaoTransaction.getTransactionById(transactionId);
 
 		if(t.getProviderId() == userId || t.getCustomerId() == userId){
-			if(t.getState() != Constants.TransactionState.init){
-				throw new TransactionStateViolationException(t.getState(), Constants.TransactionState.init);
+			if(t.getState() != EnumConfig.TransactionState.init){
+				throw new TransactionStateViolationException(t.getState(), EnumConfig.TransactionState.init);
 			}
 
 			Message base = CarpoolDaoMessage.getMessageById(t.getMessageId());
-			if (t.getType() == Constants.TransactionType.departure){
+			if (t.getType() == EnumConfig.TransactionType.departure){
 				base.setDeparture_seatsBooked(base.getDeparture_seatsBooked() - t.getDeparture_seatsBooked());
 			} else{
 				base.setArrival_seatsBooked(base.getArrival_seatsBooked() - t.getDeparture_seatsBooked());
@@ -113,13 +113,13 @@ public class TransactionDaoService{
 				throw new ValidationException("交易取消失败，涉及座位数不匹配");
 			}
 
-			t.setState(Constants.TransactionState.cancelled);
+			t.setState(EnumConfig.TransactionState.cancelled);
 			CarpoolDaoTransaction.updateTransactionInDatabase(t);
 			CarpoolDaoMessage.UpdateMessageInDatabase(base);
 			//send notifications
 			ArrayList<Notification> ns = new ArrayList<Notification>();
-			ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, t.getProviderId(), t.getCustomerId(), t.getMessageId(), t.getTransactionId()));
-			ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, t.getCustomerId(), t.getProviderId(), t.getMessageId(), t.getTransactionId()));
+			ns.add(new Notification(EnumConfig.NotificationEvent.transactionCancelled, t.getProviderId(), t.getCustomerId(), t.getMessageId(), t.getTransactionId()));
+			ns.add(new Notification(EnumConfig.NotificationEvent.transactionCancelled, t.getCustomerId(), t.getProviderId(), t.getMessageId(), t.getTransactionId()));
 			NotificationDaoService.sendNotification(ns);
 
 		}else{
@@ -141,15 +141,15 @@ public class TransactionDaoService{
 		Transaction t = CarpoolDaoTransaction.getTransactionById(transactionId);
 
 		if(t.getProviderId() == userId || t.getCustomerId() == userId){
-			if(t.getState() != Constants.TransactionState.finished){
-				throw new TransactionStateViolationException(t.getState(), Constants.TransactionState.finished);
+			if(t.getState() != EnumConfig.TransactionState.finished){
+				throw new TransactionStateViolationException(t.getState(), EnumConfig.TransactionState.finished);
 			}else{
-				t.setState(Constants.TransactionState.underInvestigation);
+				t.setState(EnumConfig.TransactionState.underInvestigation);
 				CarpoolDaoTransaction.updateTransactionInDatabase(t);
 				//send notifications
 				ArrayList<Notification> ns = new ArrayList<Notification>();
-				ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, t.getProviderId(), t.getCustomerId(), t.getMessageId(), t.getTransactionId()));
-				ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, t.getCustomerId(), t.getProviderId(), t.getMessageId(), t.getTransactionId()));
+				ns.add(new Notification(EnumConfig.NotificationEvent.transactionCancelled, t.getProviderId(), t.getCustomerId(), t.getMessageId(), t.getTransactionId()));
+				ns.add(new Notification(EnumConfig.NotificationEvent.transactionCancelled, t.getCustomerId(), t.getProviderId(), t.getMessageId(), t.getTransactionId()));
 				NotificationDaoService.sendNotification(ns);
 			}
 		}else{
@@ -170,8 +170,8 @@ public class TransactionDaoService{
 	 */
 	public static Transaction evaluateTransaction(int transactionId, int userId, int score) throws TransactionNotFoundException, TransactionOwnerNotMatchException, TransactionAccessViolationException, TransactionStateViolationException, MessageNotFoundException, UserNotFoundException, ValidationException, LocationNotFoundException{
 		Transaction t = CarpoolDaoTransaction.getTransactionById(transactionId);
-		if(t.getState() != Constants.TransactionState.finished){
-			throw new TransactionStateViolationException(t.getState(), Constants.TransactionState.finished);
+		if(t.getState() != EnumConfig.TransactionState.finished){
+			throw new TransactionStateViolationException(t.getState(), EnumConfig.TransactionState.finished);
 		}else{
 			try {
 				if(userId == t.getProviderId()){
@@ -201,8 +201,8 @@ public class TransactionDaoService{
 					throw new TransactionOwnerNotMatchException();
 				}
 				ArrayList<Notification> ns = new ArrayList<Notification>();
-				ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, t.getProviderId(), t.getCustomerId(), t.getMessageId(), t.getTransactionId()));
-				ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, t.getCustomerId(), t.getProviderId(), t.getMessageId(), t.getTransactionId()));
+				ns.add(new Notification(EnumConfig.NotificationEvent.transactionCancelled, t.getProviderId(), t.getCustomerId(), t.getMessageId(), t.getTransactionId()));
+				ns.add(new Notification(EnumConfig.NotificationEvent.transactionCancelled, t.getCustomerId(), t.getProviderId(), t.getMessageId(), t.getTransactionId()));
 				NotificationDaoService.sendNotification(ns);
 			} catch (UserNotFoundException e) {
 				e.printStackTrace();

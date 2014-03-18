@@ -8,7 +8,8 @@ import carpool.aws.AwsMain;
 import carpool.carpoolDAO.*;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.constants.Constants.MessageState;
+import carpool.configurations.*;
+import carpool.configurations.EnumConfig.MessageState;
 import carpool.exception.PseudoException;
 
 import carpool.exception.validation.ValidationException;
@@ -23,7 +24,6 @@ import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
 import carpool.model.representation.SearchRepresentation;
-import carpool.constants.*;
 
 
 public class MessageDaoService{
@@ -120,7 +120,7 @@ public class MessageDaoService{
 		Message targetMessage = CarpoolDaoMessage.getMessageById(curMsgId);
 		SearchRepresentation sr = new SearchRepresentation(targetMessage.isRoundTrip(), targetMessage.getDeparture_Id(),
                        targetMessage.getArrival_Id(), targetMessage.getDeparture_time(), targetMessage.getArrival_time(),
-			targetMessage.getType() == Constants.MessageType.ask ? Constants.MessageType.help : Constants.MessageType.ask,
+			targetMessage.getType() == EnumConfig.MessageType.ask ? EnumConfig.MessageType.help : EnumConfig.MessageType.ask,
                         targetMessage.getDeparture_timeSlot(), targetMessage.getArrival_timeSlot());
                 
 		//use unlogged in state to avoid automatching being recorded in search history   

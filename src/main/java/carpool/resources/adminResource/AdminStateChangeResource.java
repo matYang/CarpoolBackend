@@ -19,11 +19,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.Validator;
-import carpool.constants.Constants;
-import carpool.constants.Constants.MessageState;
-import carpool.constants.Constants.TransactionState;
-import carpool.constants.Constants.TransactionStateChangeAction;
-import carpool.constants.Constants.UserState;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.MessageState;
+import carpool.configurations.EnumConfig.TransactionState;
+import carpool.configurations.EnumConfig.TransactionStateChangeAction;
+import carpool.configurations.EnumConfig.UserState;
 import carpool.dbservice.*;
 import carpool.dbservice.admin.AdminService;
 import carpool.exception.PseudoException;
@@ -59,7 +59,7 @@ public class AdminStateChangeResource extends PseudoResource{
 			id = Integer.parseInt(this.getQueryVal("id"));
 			stateIndex = Integer.parseInt(this.getQueryVal("stateIndex"));
 			
-			if (!access_admin.equals(Constants.access_admin)){
+			if (!access_admin.equals(EnumConfig.access_admin)){
 				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
 				this.addCORSHeader();
 		        return this.buildQuickResponse("invalid authorization value");

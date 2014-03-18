@@ -6,8 +6,8 @@ import org.junit.Test;
 
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoUser;
-import carpool.constants.Constants;
-import carpool.constants.Constants.Gender;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.Gender;
 import carpool.dbservice.LetterDaoService;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -38,7 +38,7 @@ public class LetterDaoServiceTest {
 		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, Gender.male);
 		CarpoolDaoUser.addUserToDatabase(user);
 		CarpoolDaoUser.addUserToDatabase(user2);
-		Letter letter = new Letter(1,1,Constants.LetterType.user,"Test");
+		Letter letter = new Letter(1,1,EnumConfig.LetterType.user,"Test");
 		
 		try {
 			LetterDaoService.sendLetter(letter);

@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.Validator;
-import carpool.constants.Constants;
+import carpool.configurations.EnumConfig;
 import carpool.dbservice.*;
 import carpool.exception.user.UserNotFoundException;
 import carpool.exception.validation.ValidationException;
@@ -47,7 +47,7 @@ public class UserChangeContactInfoResource extends PseudoResource{
 		int gender = jsonContact.getInt("gender");
 		String birthday = jsonContact.getString("birthday");
 		
-		if (!(name != null && Constants.Gender.values()[gender] != null && birthday != null && jsonContact.getJSONObject("location") != null)){
+		if (!(name != null && EnumConfig.Gender.values()[gender] != null && birthday != null && jsonContact.getJSONObject("location") != null)){
 			throw new ValidationException("必填数据不能为空");
 		}
 		
@@ -93,7 +93,7 @@ public class UserChangeContactInfoResource extends PseudoResource{
 				
 				User user = UserDaoService.getUserById(userId);
 				user.setName(contact.getString("name"));
-				user.setGender(Constants.Gender.values()[contact.getInt("gender")]);
+				user.setGender(EnumConfig.Gender.values()[contact.getInt("gender")]);
 				user.setPhone(contact.getString("phone"));
 				user.setQq(contact.getString("qq"));
 				user.setBirthday(DateUtility.castFromAPIFormat(contact.getString("birthday")));

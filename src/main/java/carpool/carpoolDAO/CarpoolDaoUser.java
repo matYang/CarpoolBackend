@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.Parser;
-import carpool.constants.Constants;
-import carpool.constants.Constants.Gender;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.Gender;
 import carpool.encryption.SessionCrypto;
 
 import carpool.exception.validation.ValidationException;
@@ -335,12 +335,12 @@ public class CarpoolDaoUser {
 		Location location = CarpoolDaoLocation.getLocationById(rs.getLong("location_Id"),connections);
 		try {
 			user = new User(rs.getInt("userId"),SessionCrypto.decrypt(rs.getString("password")), rs.getString("name"),
-					rs.getString("email"),rs.getString("phone"),rs.getString("qq"),Constants.Gender.fromInt(rs.getInt("gender")),
+					rs.getString("email"),rs.getString("phone"),rs.getString("qq"),EnumConfig.Gender.fromInt(rs.getInt("gender")),
 					DateUtility.DateToCalendar(rs.getTimestamp("birthday")),rs.getString("imgPath"),location,
 					DateUtility.DateToCalendar(rs.getTimestamp("lastLogin")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
 					(ArrayList<String>)Parser.stringToList(rs.getString("verifications"),new String("")),
 					rs.getBoolean("emailActivated"),rs.getBoolean("phoneActivated"),rs.getBoolean("emailNotice"),rs.getBoolean("phoneNotice"),
-					Constants.UserState.fromInt(rs.getInt("state")),new SearchRepresentation(rs.getString("searchRepresentation")),
+					EnumConfig.UserState.fromInt(rs.getInt("state")),new SearchRepresentation(rs.getString("searchRepresentation")),
 					rs.getInt("level"),rs.getInt("averageScore"),rs.getInt("totalTranscations"),
 					rs.getString("googleToken"),rs.getString("facebookToken"),rs.getString("twitterToken"),rs.getString("paypalToken"),
 					rs.getString("id_docType"),rs.getString("id_docNum"),rs.getString("id_path"),rs.getString("id_vehicleImgPath"),

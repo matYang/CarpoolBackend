@@ -10,9 +10,9 @@ import java.util.HashMap;
 
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.constants.Constants;
-import carpool.constants.Constants.NotificationState;
-import carpool.constants.Constants.NotificationStateChangeActon;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.NotificationState;
+import carpool.configurations.EnumConfig.NotificationStateChangeActon;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
 import carpool.exception.notification.NotificationNotFoundException;
@@ -377,8 +377,8 @@ public class CarpoolDaoNotification {
 		Message msg = rs.getInt("origin_MessageId")==-1 ? null : CarpoolDaoMessage.getMessageById(rs.getInt("origin_MessageId"),connections);
 		Transaction transaction = rs.getInt("origin_TransactionId")==-1 ? null : CarpoolDaoTransaction.getTransactionById(rs.getInt("origin_TransactionId"),connections);
 		Notification notification = null;
-		notification = new Notification(rs.getInt("notification_Id"), Constants.NotificationEvent.fromInt(rs.getInt("notificationEvent")),rs.getInt("target_UserId"),
-				rs.getInt("origin_UserId"),rs.getInt("origin_MessageId"),rs.getInt("origin_TransactionId"),Constants.NotificationState.fromInt(rs.getInt("notificationState")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),rs.getBoolean("historyDeleted"));
+		notification = new Notification(rs.getInt("notification_Id"), EnumConfig.NotificationEvent.fromInt(rs.getInt("notificationEvent")),rs.getInt("target_UserId"),
+				rs.getInt("origin_UserId"),rs.getInt("origin_MessageId"),rs.getInt("origin_TransactionId"),EnumConfig.NotificationState.fromInt(rs.getInt("notificationState")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),rs.getBoolean("historyDeleted"));
 		notification.setInitUser(origin);
 		notification.setMessage(msg);
 		notification.setTransaction(transaction);
@@ -386,8 +386,8 @@ public class CarpoolDaoNotification {
 	}
 
 	private static Notification createNotificationByResultSet(ResultSet rs) throws SQLException{
-		return new Notification(rs.getInt("notification_Id"), Constants.NotificationEvent.fromInt(rs.getInt("notificationEvent")),rs.getInt("target_UserId"),
-				rs.getInt("origin_UserId"),rs.getInt("origin_MessageId"),rs.getInt("origin_TransactionId"),Constants.NotificationState.fromInt(rs.getInt("notificationState")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),rs.getBoolean("historyDeleted"));
+		return new Notification(rs.getInt("notification_Id"), EnumConfig.NotificationEvent.fromInt(rs.getInt("notificationEvent")),rs.getInt("target_UserId"),
+				rs.getInt("origin_UserId"),rs.getInt("origin_MessageId"),rs.getInt("origin_TransactionId"),EnumConfig.NotificationState.fromInt(rs.getInt("notificationState")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),rs.getBoolean("historyDeleted"));
 
 	}
 

@@ -12,7 +12,7 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 
 import carpool.common.DebugLog;
-import carpool.constants.Constants;
+import carpool.configurations.EnumConfig;
 import carpool.dbservice.LetterDaoService;
 import carpool.exception.PseudoException;
 import carpool.exception.location.LocationNotFoundException;
@@ -33,7 +33,7 @@ public class LetterResource extends PseudoResource{
 			jsonLetter = (new JsonRepresentation(entity)).getJsonObject();
 			DebugLog.d("@Post::receive jsonLetter: " +  jsonLetter.toString());
 			
-			letter = new Letter(jsonLetter.getInt("from_userId"), jsonLetter.getInt("to_userId"), Constants.LetterType.fromInt(jsonLetter.getInt("type")) ,jsonLetter.getString("content"));
+			letter = new Letter(jsonLetter.getInt("from_userId"), jsonLetter.getInt("to_userId"), EnumConfig.LetterType.fromInt(jsonLetter.getInt("type")) ,jsonLetter.getString("content"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

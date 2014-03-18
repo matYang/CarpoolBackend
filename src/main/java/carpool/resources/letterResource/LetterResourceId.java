@@ -12,9 +12,9 @@ import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 import org.restlet.resource.Put;
 
-import carpool.constants.Constants.LetterDirection;
-import carpool.constants.Constants.LetterType;
-import carpool.constants.Constants.TransactionStateChangeAction;
+import carpool.configurations.EnumConfig.LetterDirection;
+import carpool.configurations.EnumConfig.LetterType;
+import carpool.configurations.EnumConfig.TransactionStateChangeAction;
 import carpool.dbservice.LetterDaoService;
 import carpool.dbservice.MessageDaoService;
 import carpool.dbservice.TransactionDaoService;

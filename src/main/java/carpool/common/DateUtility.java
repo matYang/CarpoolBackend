@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import carpool.constants.CarpoolConfig;
+import carpool.configurations.CarpoolConfig;
 
 public class DateUtility {
 	

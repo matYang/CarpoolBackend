@@ -7,7 +7,7 @@ import org.restlet.Restlet;
 import org.restlet.routing.Router;
 
 import carpool.common.DebugLog;
-import carpool.constants.CarpoolConfig;
+import carpool.configurations.CarpoolConfig;
 import carpool.resources.adminResource.AdminRoutineResource;
 import carpool.resources.adminResource.AdminStateChangeResource;
 import carpool.resources.adminResource.AdminStatResource;

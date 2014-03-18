@@ -19,9 +19,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DebugLog;
-import carpool.constants.Constants;
-import carpool.constants.Constants.MessageState;
-import carpool.constants.Constants.TransactionStateChangeAction;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.MessageState;
+import carpool.configurations.EnumConfig.TransactionStateChangeAction;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;

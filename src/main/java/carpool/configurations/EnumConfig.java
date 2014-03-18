@@ -1,15 +1,11 @@
-package carpool.constants;
+package carpool.configurations;
 
 import java.util.Calendar;
 
 import carpool.common.DateUtility;
 
 
-
-public class Constants {
-
-    public static final long A_WEEK = 604800000l; //miliSec in a week
-
+public class EnumConfig {
 
     public static enum MessageType{
     	ask(0),help(1), both(2);
@@ -222,6 +218,59 @@ public class Constants {
     		return map[n];
     	}
     }
+    
+    public static enum LicenseType{
+    	idCard(0), driverLisence_a(1), driverLisence_b(2), driverLisence_c(3);
+    	public int code;
+    	LicenseType(int code){
+    		this.code = code;
+    	}
+    	private final static LicenseType[] map = LicenseType.values();
+    	public static LicenseType fromInt(int n){
+    		return map[n];
+    	}
+    }
+    
+    
+    public static enum VerificationType{
+    	driver(0), passenger(1);
+    	public int code;
+    	VerificationType(int code){
+    		this.code = code;
+    	}
+    	private final static VerificationType[] map = VerificationType.values();
+    	public static VerificationType fromInt(int n){
+    		return map[n];
+    	}
+    }
+    
+    public static enum VerificationState{
+    	pending(0), rejected(1), verified(2), expired(3);
+    	public int code;
+    	VerificationState(int code){
+    		this.code = code;
+    	}
+    	private final static VerificationState[] map = VerificationState.values();
+    	public static VerificationState fromInt(int n){
+    		return map[n];
+    	}
+    }
+    
+    
+    public static enum PassengerVerificationOrigin{
+    	passenger(0), driver(1);
+    	public int code;
+    	PassengerVerificationOrigin(int code){
+    		this.code = code;
+    	}
+    	private final static PassengerVerificationOrigin[] map = PassengerVerificationOrigin.values();
+    	public static PassengerVerificationOrigin frontInt(int n){
+    		return map[n];
+    	}
+    	
+    }
+    
+    
 
     /** -------------------Administrator-------------------**/
     //the temporary admin access code, admin access will be checked against this code instead of user cookies

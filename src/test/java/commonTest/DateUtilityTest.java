@@ -7,7 +7,7 @@ import java.util.Calendar;
 import org.junit.Test;
 
 import carpool.common.DateUtility;
-import carpool.constants.Constants.DayTimeSlot;
+import carpool.configurations.EnumConfig.DayTimeSlot;
 
 public class DateUtilityTest {
 

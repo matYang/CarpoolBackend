@@ -1,4 +1,4 @@
-package carpool.constants;
+package carpool.configurations;
 
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
@@ -8,9 +8,9 @@ import java.util.Map.Entry;
 
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.constants.Constants.DayTimeSlot;
-import carpool.constants.Constants.EmailEvent;
-import carpool.constants.Constants.MessageType;
+import carpool.configurations.EnumConfig.DayTimeSlot;
+import carpool.configurations.EnumConfig.EmailEvent;
+import carpool.configurations.EnumConfig.MessageType;
 import carpool.model.Location;
 import carpool.model.representation.SearchRepresentation;
 

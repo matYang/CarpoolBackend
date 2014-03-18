@@ -31,7 +31,7 @@ import redis.clients.jedis.Jedis;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.constants.CarpoolConfig;
+import carpool.configurations.CarpoolConfig;
 import carpool.model.representation.SearchRepresentation;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;

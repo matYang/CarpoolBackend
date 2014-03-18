@@ -16,9 +16,9 @@ import org.json.JSONArray;
 
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants;
-import carpool.constants.Constants.UserSearchState;
+import carpool.configurations.CarpoolConfig;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.UserSearchState;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.AccountAuthenticationException;

@@ -10,7 +10,7 @@ import java.sql.Statement;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import carpool.constants.CarpoolConfig;
+import carpool.configurations.CarpoolConfig;
 import carpool.common.DebugLog;
 import carpool.dbservice.LocationDaoService;
 import carpool.exception.location.LocationException;

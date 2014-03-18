@@ -8,7 +8,7 @@ import org.junit.Test;
 import redis.clients.jedis.Jedis;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.common.DateUtility;
-import carpool.constants.CarpoolConfig;
+import carpool.configurations.CarpoolConfig;
 import carpool.cleanRoutineTask.*;
 
 public class RedisCleanTaskTest {

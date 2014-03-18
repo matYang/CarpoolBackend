@@ -13,10 +13,10 @@ import java.util.HashMap;
 
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.constants.Constants;
-import carpool.constants.Constants.LetterDirection;
-import carpool.constants.Constants.LetterState;
-import carpool.constants.Constants.LetterType;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.LetterDirection;
+import carpool.configurations.EnumConfig.LetterState;
+import carpool.configurations.EnumConfig.LetterType;
 import carpool.exception.letter.LetterNotFoundException;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.user.UserNotFoundException;
@@ -201,7 +201,7 @@ public class CarpoolDaoLetter {
 		boolean utu = false;
 		boolean bothu = false;
 		//System
-		if(type.equals(Constants.LetterType.system)){
+		if(type.equals(EnumConfig.LetterType.system)){
 			try{
 				conn = CarpoolDaoBasic.getSQLConnection();		
 				set1 = curUserId > 0 ? curUserId : targetUserId;
@@ -249,28 +249,28 @@ public class CarpoolDaoLetter {
 			//User
 			try{
 				conn = CarpoolDaoBasic.getSQLConnection();
-				if((direction.equals(Constants.LetterDirection.inbound)
-						||(direction.equals(Constants.LetterDirection.outbound)))
+				if((direction.equals(EnumConfig.LetterDirection.inbound)
+						||(direction.equals(EnumConfig.LetterDirection.outbound)))
 						&&curUserId>0 && targetUserId>0){
 					//inbound User to User or outbound User to User
 					stmt = conn.prepareStatement(query2);
-					set1 = direction.equals(Constants.LetterDirection.inbound) ? curUserId : targetUserId;
-					set2 =direction.equals(Constants.LetterDirection.inbound) ? targetUserId : curUserId;
+					set1 = direction.equals(EnumConfig.LetterDirection.inbound) ? curUserId : targetUserId;
+					set2 =direction.equals(EnumConfig.LetterDirection.inbound) ? targetUserId : curUserId;
 					set3 = type.code;
 					set4 = curUserId;	
 					utu = true;
-				}else if((direction.equals(Constants.LetterDirection.inbound)&&curUserId<=0)
-						||(direction.equals(Constants.LetterDirection.outbound)&&curUserId>0)){
+				}else if((direction.equals(EnumConfig.LetterDirection.inbound)&&curUserId<=0)
+						||(direction.equals(EnumConfig.LetterDirection.outbound)&&curUserId>0)){
 					//inbound Users to User or outbound Users to User
 					stmt = conn.prepareStatement(query);
-					set1 = direction.equals(Constants.LetterDirection.inbound) ? targetUserId : curUserId;
+					set1 = direction.equals(EnumConfig.LetterDirection.inbound) ? targetUserId : curUserId;
 					set2 = type.code;
 					set3 = set1;							
-				}else if(direction.equals(Constants.LetterDirection.inbound)
-						||direction.equals(Constants.LetterDirection.outbound)){
+				}else if(direction.equals(EnumConfig.LetterDirection.inbound)
+						||direction.equals(EnumConfig.LetterDirection.outbound)){
 					//inbound User to Users or outbound User to Users
 					stmt = conn.prepareStatement(query1);
-					set1 = direction.equals(Constants.LetterDirection.inbound) ? curUserId : targetUserId;
+					set1 = direction.equals(EnumConfig.LetterDirection.inbound) ? curUserId : targetUserId;
 					set2 = type.code;
 					set3 = set1;
 				}else{
@@ -360,7 +360,7 @@ public class CarpoolDaoLetter {
 	private static Letter createLettersByResultSetList(ResultSet rs) throws SQLException {
 		return 	 new Letter(rs.getInt("letter_Id"),rs.getInt("from_UserId"),rs.getInt("to_UserId"),LetterType.fromInt(rs.getInt("letterType")),null,null,
 				rs.getString("content"),DateUtility.DateToCalendar(rs.getTimestamp("send_Time")),DateUtility.DateToCalendar(rs.getTimestamp("check_Time")),
-				Constants.LetterState.fromInt(rs.getInt("letterState")),rs.getBoolean("historyDeleted"),rs.getInt("ownerId"));
+				EnumConfig.LetterState.fromInt(rs.getInt("letterState")),rs.getBoolean("historyDeleted"),rs.getInt("ownerId"));
 
 
 	}
@@ -397,7 +397,7 @@ public class CarpoolDaoLetter {
 
 		Letter letter = new Letter(rs.getInt("letter_Id"),rs.getInt("from_UserId"),rs.getInt("to_UserId"),LetterType.fromInt(rs.getInt("letterType")),fromUser,toUser,
 				rs.getString("content"),DateUtility.DateToCalendar(rs.getTimestamp("send_Time")),DateUtility.DateToCalendar(rs.getTimestamp("check_Time")),
-				Constants.LetterState.fromInt(rs.getInt("letterState")),rs.getBoolean("historyDeleted"),rs.getInt("ownerId"));
+				EnumConfig.LetterState.fromInt(rs.getInt("letterState")),rs.getBoolean("historyDeleted"),rs.getInt("ownerId"));
 		return letter;
 	}
 

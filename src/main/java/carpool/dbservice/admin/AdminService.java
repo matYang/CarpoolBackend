@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import carpool.carpoolDAO.*;
 import carpool.cleanRoutineTask.MessageCleaner;
 import carpool.cleanRoutineTask.TransactionCleaner;
-import carpool.constants.Constants;
-import carpool.constants.Constants.MessageState;
-import carpool.constants.Constants.TransactionState;
-import carpool.constants.Constants.UserState;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.MessageState;
+import carpool.configurations.EnumConfig.TransactionState;
+import carpool.configurations.EnumConfig.UserState;
 import carpool.dbservice.NotificationDaoService;
 import carpool.exception.*;
 import carpool.exception.location.LocationException;
@@ -37,8 +37,8 @@ public class AdminService {
 
 		//send notifications
 		ArrayList<Notification> ns = new ArrayList<Notification>();
-		ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, transaction.getProviderId(), transaction.getCustomerId(), transaction.getMessageId(), transaction.getTransactionId()));
-		ns.add(new Notification(Constants.NotificationEvent.transactionCancelled, transaction.getCustomerId(), transaction.getProviderId(), transaction.getMessageId(), transaction.getTransactionId()));
+		ns.add(new Notification(EnumConfig.NotificationEvent.transactionCancelled, transaction.getProviderId(), transaction.getCustomerId(), transaction.getMessageId(), transaction.getTransactionId()));
+		ns.add(new Notification(EnumConfig.NotificationEvent.transactionCancelled, transaction.getCustomerId(), transaction.getProviderId(), transaction.getMessageId(), transaction.getTransactionId()));
 		NotificationDaoService.sendNotification(ns);
 	}
 

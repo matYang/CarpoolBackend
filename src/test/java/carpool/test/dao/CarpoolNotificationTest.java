@@ -9,11 +9,11 @@ import org.junit.Test;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoNotification;
 import carpool.carpoolDAO.CarpoolDaoUser;
-import carpool.constants.Constants;
-import carpool.constants.Constants.NotificationEvent;
-import carpool.constants.Constants.NotificationState;
-import carpool.constants.Constants.NotificationStateChangeActon;
-import carpool.constants.Constants.Gender;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.Gender;
+import carpool.configurations.EnumConfig.NotificationEvent;
+import carpool.configurations.EnumConfig.NotificationState;
+import carpool.configurations.EnumConfig.NotificationStateChangeActon;
 import carpool.dbservice.NotificationDaoService;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
@@ -50,7 +50,7 @@ public class CarpoolNotificationTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		NotificationEvent nt = Constants.NotificationEvent.transactionInit;
+		NotificationEvent nt = EnumConfig.NotificationEvent.transactionInit;
 		int targetUserId = user.getUserId();
 		Notification notification = new Notification(nt,targetUserId);
 		//Test
@@ -95,17 +95,17 @@ public class CarpoolNotificationTest {
 
 		int targetUserId = user.getUserId();
 		ArrayList<Notification> list = new ArrayList<Notification>();
-		Notification notification = new Notification(Constants.NotificationEvent.tranasctionUnderInvestigation,targetUserId);			 
+		Notification notification = new Notification(EnumConfig.NotificationEvent.tranasctionUnderInvestigation,targetUserId);			 
 		list.add(notification);
-		Notification notification2 = new Notification(Constants.NotificationEvent.transactionAboutToStart,targetUserId);			 
+		Notification notification2 = new Notification(EnumConfig.NotificationEvent.transactionAboutToStart,targetUserId);			 
 		list.add(notification2);
-		Notification notification3 = new Notification(Constants.NotificationEvent.transactionCancelled,targetUserId);			 
+		Notification notification3 = new Notification(EnumConfig.NotificationEvent.transactionCancelled,targetUserId);			 
 		list.add(notification3);
-		Notification notification4 = new Notification(Constants.NotificationEvent.transactionEvaluated,targetUserId);			 
+		Notification notification4 = new Notification(EnumConfig.NotificationEvent.transactionEvaluated,targetUserId);			 
 		list.add(notification4);
-		Notification notification5 = new Notification(Constants.NotificationEvent.transactionInit,targetUserId);			 
+		Notification notification5 = new Notification(EnumConfig.NotificationEvent.transactionInit,targetUserId);			 
 		list.add(notification5);
-		Notification notification6 = new Notification(Constants.NotificationEvent.transactionReleased,targetUserId);			 
+		Notification notification6 = new Notification(EnumConfig.NotificationEvent.transactionReleased,targetUserId);			 
 		list.add(notification6);
 		//Test
 		try{
@@ -153,11 +153,11 @@ public class CarpoolNotificationTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		NotificationEvent nt = Constants.NotificationEvent.transactionInit;
+		NotificationEvent nt = EnumConfig.NotificationEvent.transactionInit;
 		int targetUserId = user.getUserId();
 		Notification notification = new Notification(nt,targetUserId);			 
 		CarpoolDaoNotification.addNotificationToDatabase(notification);
-		NotificationEvent nt2 = Constants.NotificationEvent.transactionInit;
+		NotificationEvent nt2 = EnumConfig.NotificationEvent.transactionInit;
 		int targetUserId2 = user2.getUserId();
 		Notification notification2 = new Notification(nt2,targetUserId2);			 
 		CarpoolDaoNotification.addNotificationToDatabase(notification2);	 
@@ -236,11 +236,11 @@ public class CarpoolNotificationTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		NotificationEvent nt = Constants.NotificationEvent.transactionInit;
+		NotificationEvent nt = EnumConfig.NotificationEvent.transactionInit;
 		int targetUserId = user.getUserId();
 		Notification notification = new Notification(nt,targetUserId);			 
 		CarpoolDaoNotification.addNotificationToDatabase(notification);
-		NotificationEvent nt2 = Constants.NotificationEvent.transactionInit;
+		NotificationEvent nt2 = EnumConfig.NotificationEvent.transactionInit;
 		int targetUserId2 = user2.getUserId();
 		Notification notification2 = new Notification(nt2,targetUserId2);			 
 		CarpoolDaoNotification.addNotificationToDatabase(notification2);	
@@ -306,11 +306,11 @@ public class CarpoolNotificationTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		NotificationEvent nt = Constants.NotificationEvent.transactionInit;
+		NotificationEvent nt = EnumConfig.NotificationEvent.transactionInit;
 		int targetUserId = user.getUserId();
 		Notification notification = new Notification(nt,targetUserId);			 
 		CarpoolDaoNotification.addNotificationToDatabase(notification);
-		NotificationEvent nt2 = Constants.NotificationEvent.transactionInit;
+		NotificationEvent nt2 = EnumConfig.NotificationEvent.transactionInit;
 		int targetUserId2 = user2.getUserId();
 		Notification notification2 = new Notification(nt2,targetUserId2);			 
 		CarpoolDaoNotification.addNotificationToDatabase(notification2);
@@ -382,11 +382,11 @@ public class CarpoolNotificationTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		NotificationEvent nt = Constants.NotificationEvent.transactionInit;
+		NotificationEvent nt = EnumConfig.NotificationEvent.transactionInit;
 		int targetUserId = user.getUserId();
 		Notification notification = new Notification(nt,targetUserId);			 
 		CarpoolDaoNotification.addNotificationToDatabase(notification);
-		NotificationEvent nt2 = Constants.NotificationEvent.transactionInit;
+		NotificationEvent nt2 = EnumConfig.NotificationEvent.transactionInit;
 		int targetUserId2 = user2.getUserId();
 		Notification notification2 = new Notification(nt2,targetUserId2);			 
 		CarpoolDaoNotification.addNotificationToDatabase(notification2);
@@ -445,12 +445,12 @@ public class CarpoolNotificationTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		NotificationEvent nt = Constants.NotificationEvent.transactionInit;
+		NotificationEvent nt = EnumConfig.NotificationEvent.transactionInit;
 		int targetUserId = user.getUserId();
 		Notification notification = new Notification(nt,targetUserId);
 		notification.setState(NotificationState.unread);
 		CarpoolDaoNotification.addNotificationToDatabase(notification);
-		NotificationEvent nt2 = Constants.NotificationEvent.transactionInit;
+		NotificationEvent nt2 = EnumConfig.NotificationEvent.transactionInit;
 		int targetUserId2 = user2.getUserId();
 		Notification notification2 = new Notification(nt2,targetUserId2);			 
 		CarpoolDaoNotification.addNotificationToDatabase(notification2);
@@ -513,13 +513,13 @@ public class CarpoolNotificationTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		NotificationEvent nt = Constants.NotificationEvent.transactionInit;
+		NotificationEvent nt = EnumConfig.NotificationEvent.transactionInit;
 		int targetUserId = user.getUserId();
 		Notification notification = new Notification(nt,targetUserId);		
 
 		Thread.sleep(1000);
 
-		NotificationEvent nt2 = Constants.NotificationEvent.transactionInit;
+		NotificationEvent nt2 = EnumConfig.NotificationEvent.transactionInit;
 		int targetUserId2 = user2.getUserId();
 		Notification notification2 = new Notification(nt2,targetUserId2);	
 
@@ -566,13 +566,13 @@ public class CarpoolNotificationTest {
 		} catch (ValidationException e) {			
 			e.printStackTrace();
 		}	
-		NotificationEvent nt = Constants.NotificationEvent.transactionInit;
+		NotificationEvent nt = EnumConfig.NotificationEvent.transactionInit;
 		int targetUserId = user.getUserId();
 		Notification notification = new Notification(nt,targetUserId);
 		notification.setState(NotificationState.unread);
 		notification.setInitUser(user2);//user2 send to user
 		notification = CarpoolDaoNotification.addNotificationToDatabase(notification);
-		NotificationEvent nt2 = Constants.NotificationEvent.transactionInit;
+		NotificationEvent nt2 = EnumConfig.NotificationEvent.transactionInit;
 		int targetUserId2 = user2.getUserId();
 		Notification notification2 = new Notification(nt2,targetUserId2);	
 		notification2.setState(NotificationState.unread);

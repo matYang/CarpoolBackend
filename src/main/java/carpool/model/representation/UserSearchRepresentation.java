@@ -1,7 +1,7 @@
 package carpool.model.representation;
 
-import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants.Gender;
+import carpool.configurations.CarpoolConfig;
+import carpool.configurations.EnumConfig.Gender;
 import carpool.model.Location;
 
 
@@ -21,7 +21,7 @@ public class UserSearchRepresentation {
 	public	UserSearchRepresentation(String serializedUSR){
 		String[] strs = serializedUSR.split(CarpoolConfig.urlSeperatorRegx);
 		this.name = strs[0];
-		this.gender = carpool.constants.Constants.Gender.fromInt(Integer.parseInt(strs[1]));
+		this.gender = carpool.configurations.EnumConfig.Gender.fromInt(Integer.parseInt(strs[1]));
 		this.location_Id =Long.parseLong(strs[2]);
 	}
 	

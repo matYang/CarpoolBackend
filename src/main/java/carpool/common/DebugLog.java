@@ -14,7 +14,7 @@ import org.apache.log4j.RollingFileAppender;
 import org.json.JSONObject;
 
 import carpool.aws.AwsMain;
-import carpool.constants.CarpoolConfig;
+import carpool.configurations.CarpoolConfig;
 import carpool.factory.JSONFactory;
 import carpool.interfaces.PseudoModel;
 import carpool.log4j.log4j;

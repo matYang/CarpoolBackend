@@ -13,14 +13,14 @@ import carpool.carpoolDAO.CarpoolDaoTransaction;
 import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.cleanRoutineTask.TransactionCleaner;
 import carpool.common.DateUtility;
-import carpool.constants.Constants;
-import carpool.constants.Constants.DayTimeSlot;
-import carpool.constants.Constants.TransactionType;
-import carpool.constants.Constants.Gender;
-import carpool.constants.Constants.MessageState;
-import carpool.constants.Constants.MessageType;
-import carpool.constants.Constants.PaymentMethod;
-import carpool.constants.Constants.TransactionState;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.DayTimeSlot;
+import carpool.configurations.EnumConfig.Gender;
+import carpool.configurations.EnumConfig.MessageState;
+import carpool.configurations.EnumConfig.MessageType;
+import carpool.configurations.EnumConfig.PaymentMethod;
+import carpool.configurations.EnumConfig.TransactionState;
+import carpool.configurations.EnumConfig.TransactionType;
 import carpool.dbservice.TransactionDaoService;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.validation.ValidationException;
@@ -128,7 +128,7 @@ public class CarpoolTransactionTest {
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
-		PaymentMethod p =Constants.PaymentMethod.fromInt(0);
+		PaymentMethod p =EnumConfig.PaymentMethod.fromInt(0);
 		MessageType type = MessageType.fromInt(0);
 		Gender genderRequirement = Gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
@@ -270,7 +270,7 @@ public class CarpoolTransactionTest {
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
-		PaymentMethod p =Constants.PaymentMethod.fromInt(0);
+		PaymentMethod p =EnumConfig.PaymentMethod.fromInt(0);
 		MessageType type = MessageType.fromInt(0);
 		Gender genderRequirement = Gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
@@ -366,7 +366,7 @@ public class CarpoolTransactionTest {
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
-		PaymentMethod p =Constants.PaymentMethod.fromInt(0);
+		PaymentMethod p =EnumConfig.PaymentMethod.fromInt(0);
 		MessageType type = MessageType.fromInt(0);
 		Gender genderRequirement = Gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);
@@ -500,7 +500,7 @@ public class CarpoolTransactionTest {
 
 		ArrayList<Integer> priceList = new ArrayList<Integer>();
 		priceList.add(1);
-		PaymentMethod p =Constants.PaymentMethod.fromInt(0);
+		PaymentMethod p =EnumConfig.PaymentMethod.fromInt(0);
 		MessageType type = MessageType.fromInt(0);
 		Gender genderRequirement = Gender.fromInt(0);		
 		DayTimeSlot timeSlot = DayTimeSlot.fromInt(0);

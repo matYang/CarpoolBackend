@@ -8,8 +8,8 @@ import org.restlet.Server;
 import org.restlet.data.Protocol;
 
 import carpool.common.DebugLog;
-import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants.Gender;
+import carpool.configurations.CarpoolConfig;
+import carpool.configurations.EnumConfig.Gender;
 import carpool.dbservice.LocationDaoService;
 import carpool.factory.JSONFactory;
 import carpool.service.*;

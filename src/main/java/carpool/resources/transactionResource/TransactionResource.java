@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.constants.Constants;
+import carpool.configurations.EnumConfig;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;
@@ -45,9 +45,9 @@ public class TransactionResource extends PseudoResource{
 
 		Transaction transaction = null;
 		try {
-			transaction = new Transaction(jsonTransaction.getInt("providerId"), jsonTransaction.getInt("customerId"), jsonTransaction.getInt("messageId"), Constants.PaymentMethod.values()[jsonTransaction.getInt("paymentMethod")], 
-					jsonTransaction.getString("customerNote"), jsonTransaction.getString("providerNote"),DateUtility.castFromAPIFormat(jsonTransaction.getString("departure_time")), Constants.DayTimeSlot.values()[jsonTransaction.getInt("departure_timeSlot")], jsonTransaction.getInt("departure_seatsBooked"),
-					Constants.TransactionType.values()[jsonTransaction.getInt("transactionType")]);
+			transaction = new Transaction(jsonTransaction.getInt("providerId"), jsonTransaction.getInt("customerId"), jsonTransaction.getInt("messageId"), EnumConfig.PaymentMethod.values()[jsonTransaction.getInt("paymentMethod")], 
+					jsonTransaction.getString("customerNote"), jsonTransaction.getString("providerNote"),DateUtility.castFromAPIFormat(jsonTransaction.getString("departure_time")), EnumConfig.DayTimeSlot.values()[jsonTransaction.getInt("departure_timeSlot")], jsonTransaction.getInt("departure_seatsBooked"),
+					EnumConfig.TransactionType.values()[jsonTransaction.getInt("transactionType")]);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

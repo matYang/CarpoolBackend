@@ -6,8 +6,8 @@ import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 
-import carpool.constants.Constants;
-import carpool.constants.Constants.AdminRoutineAction;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.AdminRoutineAction;
 import carpool.dbservice.admin.AdminService;
 import carpool.resources.PseudoResource;
 
@@ -23,7 +23,7 @@ public class AdminRoutineResource extends PseudoResource{
 			access_admin = this.getQueryVal("access_admin");
 			actionIndex = Integer.parseInt(this.getQueryVal("actionIndex"));
 			
-			if (!access_admin.equals(Constants.access_admin)){
+			if (!access_admin.equals(EnumConfig.access_admin)){
 				setStatus(Status.CLIENT_ERROR_UNAUTHORIZED);
 				this.addCORSHeader();
 		        return this.buildQuickResponse("invalid authorization value");

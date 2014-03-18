@@ -10,10 +10,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DebugLog;
-import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants.Gender;
-import carpool.constants.Constants.PaymentMethod;
-import carpool.constants.Constants.UserState;
+import carpool.configurations.CarpoolConfig;
+import carpool.configurations.EnumConfig.Gender;
+import carpool.configurations.EnumConfig.PaymentMethod;
+import carpool.configurations.EnumConfig.UserState;
 import carpool.interfaces.*;
 import carpool.model.Letter;
 import carpool.model.Location;

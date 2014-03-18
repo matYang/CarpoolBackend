@@ -12,7 +12,7 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 
 import carpool.common.DebugLog;
-import carpool.constants.Constants;
+import carpool.configurations.EnumConfig;
 import carpool.dbservice.LetterDaoService;
 import carpool.exception.PseudoException;
 import carpool.exception.message.MessageNotFoundException;

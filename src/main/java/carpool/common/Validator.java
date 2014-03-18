@@ -3,7 +3,7 @@ package carpool.common;
 
 import java.util.regex.*;
 
-import carpool.constants.CarpoolConfig;
+import carpool.configurations.CarpoolConfig;
 
 
 public class Validator {

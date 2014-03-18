@@ -13,7 +13,7 @@ import org.restlet.engine.header.Header;
 import org.restlet.data.Status;
 
 import carpool.common.DebugLog;
-import carpool.constants.CarpoolConfig;
+import carpool.configurations.CarpoolConfig;
 import carpool.resources.PseudoResource;
 import carpool.resources.userResource.UserResource;
 

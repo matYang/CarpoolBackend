@@ -9,8 +9,8 @@ import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoTransaction;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.constants.Constants;
-import carpool.constants.Constants.TransactionState;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.TransactionState;
 import carpool.dbservice.NotificationDaoService;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.message.MessageNotFoundException;
@@ -53,17 +53,17 @@ public class TransactionCleaner extends CarpoolDaoTransaction {
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
-			stmt.setInt(1, Constants.TransactionState.init.code);			
+			stmt.setInt(1, EnumConfig.TransactionState.init.code);			
 			stmt.setString(2, ct);							
 			stmt.setString(3, late);	
-			stmt.setInt(4, Constants.TransactionState.aboutToStart.code);
+			stmt.setInt(4, EnumConfig.TransactionState.aboutToStart.code);
 			stmt.setString(5, yesterday);			
 			rs = stmt.executeQuery();			
 			while(rs.next()){	
 				Transaction transaction = CarpoolDaoTransaction.createTransactionByResultSet(rs,conn);					
-				if(transaction.getState() == Constants.TransactionState.init){				    	
+				if(transaction.getState() == EnumConfig.TransactionState.init){				    	
 					transaction.setState(TransactionState.aboutToStart);				    	
-				}else if(transaction.getState() == Constants.TransactionState.aboutToStart){				    	
+				}else if(transaction.getState() == EnumConfig.TransactionState.aboutToStart){				    	
 					transaction.setState(TransactionState.finished);				    	
 				}
 				tlist.add(transaction);
@@ -77,8 +77,8 @@ public class TransactionCleaner extends CarpoolDaoTransaction {
 				transaction = tlist.get(i);
 				CarpoolDaoTransaction.updateTransactionInDatabase(transaction,conn);
 				//use the queue from notification service here
-				notificationQueue.add(new Notification(Constants.NotificationEvent.transactionAboutToStart, transaction.getProviderId(), transaction.getCustomerId(), transaction.getMessageId(), transaction.getTransactionId()));
-				notificationQueue.add(new Notification(Constants.NotificationEvent.transactionAboutToStart, transaction.getCustomerId(), transaction.getProviderId(), transaction.getMessageId(), transaction.getTransactionId()));
+				notificationQueue.add(new Notification(EnumConfig.NotificationEvent.transactionAboutToStart, transaction.getProviderId(), transaction.getCustomerId(), transaction.getMessageId(), transaction.getTransactionId()));
+				notificationQueue.add(new Notification(EnumConfig.NotificationEvent.transactionAboutToStart, transaction.getCustomerId(), transaction.getProviderId(), transaction.getMessageId(), transaction.getTransactionId()));
 			}
 			NotificationDaoService.sendNotification(notificationQueue,conn);
 		} catch (SQLException e) {

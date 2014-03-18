@@ -18,8 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DebugLog;
-import carpool.constants.Constants;
-import carpool.constants.Constants.Gender;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.Gender;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.auth.DuplicateSessionCookieException;

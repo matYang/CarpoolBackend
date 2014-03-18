@@ -19,8 +19,8 @@ import org.json.JSONObject;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.Validator;
-import carpool.constants.Constants;
-import carpool.constants.Constants.Gender;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.Gender;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.exception.location.LocationNotFoundException;
@@ -43,7 +43,7 @@ public class UserResource extends PseudoResource{
 			String password = jsonUser.getString("password");
 			String email = jsonUser.getString("email");
 			Location location = new Location(jsonUser.getJSONObject("location"));
-			Gender g = Constants.Gender.fromInt(jsonUser.getInt("gender"));
+			Gender g = EnumConfig.Gender.fromInt(jsonUser.getInt("gender"));
 			Calendar birthday = DateUtility.castFromAPIFormat(jsonUser.getString("birthday"));
 			String name = jsonUser.getString("name");
 			

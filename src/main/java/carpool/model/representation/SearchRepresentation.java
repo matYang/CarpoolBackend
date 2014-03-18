@@ -7,10 +7,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DateUtility;
-import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants;
-import carpool.constants.Constants.DayTimeSlot;
-import carpool.constants.Constants.MessageType;
+import carpool.configurations.CarpoolConfig;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.DayTimeSlot;
+import carpool.configurations.EnumConfig.MessageType;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoRepresentation;
 import carpool.model.Location;
@@ -55,9 +55,9 @@ public class SearchRepresentation implements PseudoRepresentation{
 		this.arrivalMatch_Id = Long.parseLong(representationArray[2],10);
 		this.departureDate = DateUtility.castFromAPIFormat(representationArray[3]);
 		this.arrivalDate = DateUtility.castFromAPIFormat(representationArray[4]);
-		this.targetType = Constants.MessageType.values()[Integer.parseInt(representationArray[5])];
-		this.departureTimeSlot = Constants.DayTimeSlot.values()[Integer.parseInt(representationArray[6])];
-		this.arrivalTimeSlot = Constants.DayTimeSlot.values()[Integer.parseInt(representationArray[7])];
+		this.targetType = EnumConfig.MessageType.values()[Integer.parseInt(representationArray[5])];
+		this.departureTimeSlot = EnumConfig.DayTimeSlot.values()[Integer.parseInt(representationArray[6])];
+		this.arrivalTimeSlot = EnumConfig.DayTimeSlot.values()[Integer.parseInt(representationArray[7])];
 		this.timeStamp = DateUtility.castFromAPIFormat(representationArray[8]);
 	}
 	
@@ -67,9 +67,9 @@ public class SearchRepresentation implements PseudoRepresentation{
 		this.departureMatch_Id = jsonSearchRepresentation.getLong("arrivalMatch_Id");
 		this.departureDate = DateUtility.castFromAPIFormat(jsonSearchRepresentation.getString("departureDate"));
 		this.arrivalDate = DateUtility.castFromAPIFormat(jsonSearchRepresentation.getString("arrivalDate"));
-		this.targetType = Constants.MessageType.values()[jsonSearchRepresentation.getInt("targetType")];
-		this.departureTimeSlot = Constants.DayTimeSlot.values()[jsonSearchRepresentation.getInt("departureTimeSlot")];
-		this.arrivalTimeSlot = Constants.DayTimeSlot.values()[jsonSearchRepresentation.getInt("arrivalTimeSlot")];
+		this.targetType = EnumConfig.MessageType.values()[jsonSearchRepresentation.getInt("targetType")];
+		this.departureTimeSlot = EnumConfig.DayTimeSlot.values()[jsonSearchRepresentation.getInt("departureTimeSlot")];
+		this.arrivalTimeSlot = EnumConfig.DayTimeSlot.values()[jsonSearchRepresentation.getInt("arrivalTimeSlot")];
 		this.timeStamp = DateUtility.castFromAPIFormat(jsonSearchRepresentation.getString("timeStamp"));
 	}
 	

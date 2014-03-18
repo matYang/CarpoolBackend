@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 import carpool.common.DebugLog;
 import carpool.common.Parser;
-import carpool.constants.Constants.NotificationStateChangeActon;
+import carpool.configurations.EnumConfig.NotificationStateChangeActon;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.factory.JSONFactory;

@@ -13,11 +13,11 @@ import org.json.JSONObject;
 import carpool.common.DateUtility;
 import carpool.common.HelperOperator;
 import carpool.common.Validator;
-import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants;
-import carpool.constants.Constants.Gender;
-import carpool.constants.Constants.UserSearchState;
-import carpool.constants.Constants.UserState;
+import carpool.configurations.CarpoolConfig;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.Gender;
+import carpool.configurations.EnumConfig.UserSearchState;
+import carpool.configurations.EnumConfig.UserState;
 import carpool.exception.validation.ValidationException;
 import carpool.factory.JSONFactory;
 import carpool.interfaces.PseudoModel;
@@ -133,7 +133,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	    this.phoneActivated = false;
 	    this.emailNotice = false;
 	    this.phoneNotice = false;
-	    this.state = Constants.UserState.normal;
+	    this.state = EnumConfig.UserState.normal;
 	    this.searchRepresentation = CarpoolConfig.getDefaultSearchRepresentation();
 	    
 	    this.level = 0;
@@ -161,7 +161,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	 * full constructor used for SQL retrieval
 	 *****/
 	public User(int userId, String password, String name, String email,
-			String phone, String qq, carpool.constants.Constants.Gender gender, Calendar birthday,
+			String phone, String qq, carpool.configurations.EnumConfig.Gender gender, Calendar birthday,
 			String imgPath, Location location, Calendar lastLogin,
 			Calendar creationTime, ArrayList<String> verifications, boolean emailActivated,
 			boolean phoneActivated, boolean emailNotice, boolean phoneNotice,
@@ -634,7 +634,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
      * Precondition: email has been activated, and state is in normal
      */
     public boolean isAbleToLogin(){
-        return this.isEmailActivated() && this.state == Constants.UserState.normal;
+        return this.isEmailActivated() && this.state == EnumConfig.UserState.normal;
     }
 
 

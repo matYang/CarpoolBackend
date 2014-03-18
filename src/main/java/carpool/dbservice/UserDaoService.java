@@ -6,9 +6,9 @@ import java.util.*;
 
 import carpool.aws.AwsMain;
 import carpool.common.*;
-import carpool.constants.Constants;
-import carpool.constants.Constants.NotificationEvent;
-import carpool.constants.Constants.Gender;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.Gender;
+import carpool.configurations.EnumConfig.NotificationEvent;
 import carpool.carpoolDAO.*;
 import carpool.exception.PseudoException;
 import carpool.exception.validation.ValidationException;
@@ -105,7 +105,7 @@ public class UserDaoService{
 		try {
 			CarpoolDaoUser.addToSocialList(userId, targetUserId);
 			//send followed Notification
-			Notification n = new Notification(Constants.NotificationEvent.watched, targetUserId);
+			Notification n = new Notification(EnumConfig.NotificationEvent.watched, targetUserId);
 			n.setInitUserId(userId);
 			NotificationDaoService.sendNotification(n);
 

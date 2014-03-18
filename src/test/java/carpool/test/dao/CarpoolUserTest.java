@@ -33,13 +33,13 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.HelperOperator;
 import carpool.common.Parser;
-import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants;
-import carpool.constants.Constants.DayTimeSlot;
-import carpool.constants.Constants.Gender;
-import carpool.constants.Constants.MessageState;
-import carpool.constants.Constants.MessageType;
-import carpool.constants.Constants.PaymentMethod;
+import carpool.configurations.CarpoolConfig;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.DayTimeSlot;
+import carpool.configurations.EnumConfig.Gender;
+import carpool.configurations.EnumConfig.MessageState;
+import carpool.configurations.EnumConfig.MessageType;
+import carpool.configurations.EnumConfig.PaymentMethod;
 import carpool.dbservice.*;
 
 import carpool.encryption.SessionCrypto;
@@ -531,7 +531,7 @@ public class CarpoolUserTest {
     	//Users
 		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", departureLocation, Gender.both);
 		user.setName("Harry Xiong");
-		user.setGender(Constants.Gender.fromInt(0));
+		user.setGender(EnumConfig.Gender.fromInt(0));
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);
 		} catch (ValidationException e) {			
@@ -539,7 +539,7 @@ public class CarpoolUserTest {
 		}	
        User user2 =  new User("yuanFang91", "yuanyuanyuan",arrivalLocation, Gender.both);
         user2.setName("Yuan Fang");
-		user2.setGender(Constants.Gender.fromInt(1));
+		user2.setGender(EnumConfig.Gender.fromInt(1));
 		try {
 			CarpoolDaoUser.addUserToDatabase(user2);
 		} catch (ValidationException e) {			
@@ -547,7 +547,7 @@ public class CarpoolUserTest {
 		}
        User user3 =  new User("xchxchxch", "xiongchuhan@hotmail.com", new Location(departureLocation), Gender.both);
         user3.setName("Harry Xiong");
-		user3.setGender(Constants.Gender.fromInt(0));
+		user3.setGender(EnumConfig.Gender.fromInt(0));
 		try {
 			CarpoolDaoUser.addUserToDatabase(user3);
 		} catch (ValidationException e) {			
@@ -555,7 +555,7 @@ public class CarpoolUserTest {
 		}	
        User user4 =  new User("Yuan", "FangFangFang", new Location(arrivalLocation), Gender.both);
         user4.setName("Yuan Fang");
-		user4.setGender(Constants.Gender.fromInt(1));
+		user4.setGender(EnumConfig.Gender.fromInt(1));
 		try {
 			CarpoolDaoUser.addUserToDatabase(user4);
 		} catch (ValidationException e) {			
@@ -563,7 +563,7 @@ public class CarpoolUserTest {
 		}
 		User user5 =  new User("Matthew", "YangYangYang", new Location(departureLocation), Gender.both);
         user5.setName("Yuan Fang");
-		user5.setGender(Constants.Gender.fromInt(0));
+		user5.setGender(EnumConfig.Gender.fromInt(0));
 		try {
 			CarpoolDaoUser.addUserToDatabase(user5);
 		} catch (ValidationException e) {			
@@ -571,7 +571,7 @@ public class CarpoolUserTest {
 		}
 		User user6 =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new Location(departureLocation), Gender.both);
 		user6.setName("Chuhan Xiong");
-		user6.setGender(Constants.Gender.fromInt(0));
+		user6.setGender(EnumConfig.Gender.fromInt(0));
 		try {
 			CarpoolDaoUser.addUserToDatabase(user6);
 		} catch (ValidationException e) {			
@@ -579,7 +579,7 @@ public class CarpoolUserTest {
 		}
 		User user7 =  new User("Matthew", "YangYangYang", new Location(arrivalLocation), Gender.both);
         user7.setName("Cristina Fang");
-		user7.setGender(Constants.Gender.fromInt(1));
+		user7.setGender(EnumConfig.Gender.fromInt(1));
 		try {
 			CarpoolDaoUser.addUserToDatabase(user7);
 		} catch (ValidationException e) {			
@@ -587,7 +587,7 @@ public class CarpoolUserTest {
 		}
 		User user8 =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", new Location(departureLocation), Gender.both);
 		user8.setName("han");
-		user8.setGender(Constants.Gender.fromInt(0));
+		user8.setGender(EnumConfig.Gender.fromInt(0));
 		try {
 			CarpoolDaoUser.addUserToDatabase(user8);
 		} catch (ValidationException e) {			
@@ -595,7 +595,7 @@ public class CarpoolUserTest {
 		}
 		User user9 =  new User("Matthew", "YangYangYang", new Location(arrivalLocation), Gender.both);
         user9.setName("ang");
-		user9.setGender(Constants.Gender.fromInt(1));
+		user9.setGender(EnumConfig.Gender.fromInt(1));
 		try {
 			CarpoolDaoUser.addUserToDatabase(user9);
 		} catch (ValidationException e) {			
@@ -603,7 +603,7 @@ public class CarpoolUserTest {
 		}
 		User user10 =  new User("Matthew", "YangYangYang", new Location(departureLocation), Gender.both);
         user10.setName("g");
-		user10.setGender(Constants.Gender.fromInt(1));
+		user10.setGender(EnumConfig.Gender.fromInt(1));
 		try {
 			CarpoolDaoUser.addUserToDatabase(user10);
 		} catch (ValidationException e) {			
@@ -613,8 +613,8 @@ public class CarpoolUserTest {
 		//USRs
 		UserSearchRepresentation usr = new UserSearchRepresentation("Xiong",user.getGender(),user.getLocation().getMatch());
 		UserSearchRepresentation usr2 = new UserSearchRepresentation("Fang",user2.getGender(),user2.getLocation().getMatch());
-		UserSearchRepresentation usr3 = new UserSearchRepresentation("Matthew",Constants.Gender.fromInt(1),user5.getLocation().getMatch());
-		UserSearchRepresentation usr4 = new UserSearchRepresentation("g",Constants.Gender.fromInt(1),user7.getLocation().getMatch());
+		UserSearchRepresentation usr3 = new UserSearchRepresentation("Matthew",EnumConfig.Gender.fromInt(1),user5.getLocation().getMatch());
+		UserSearchRepresentation usr4 = new UserSearchRepresentation("g",EnumConfig.Gender.fromInt(1),user7.getLocation().getMatch());
 		//Test
 		ArrayList<User> ulist = new ArrayList<User>();
 		try{

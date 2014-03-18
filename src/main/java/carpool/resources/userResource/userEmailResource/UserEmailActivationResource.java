@@ -21,7 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DebugLog;
-import carpool.constants.Constants;
+import carpool.configurations.EnumConfig;
 import carpool.dbservice.*;
 import carpool.encryption.EmailCrypto;
 import carpool.exception.auth.DuplicateSessionCookieException;

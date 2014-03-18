@@ -43,8 +43,8 @@ import org.imgscalr.Scalr;
 
 import carpool.common.DebugLog;
 import carpool.common.HelperOperator;
-import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants;
+import carpool.configurations.CarpoolConfig;
+import carpool.configurations.EnumConfig;
 import carpool.dbservice.*;
 import carpool.encryption.ImgCrypto;
 import carpool.exception.PseudoException;

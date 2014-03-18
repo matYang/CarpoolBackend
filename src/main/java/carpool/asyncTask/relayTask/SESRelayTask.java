@@ -10,8 +10,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import carpool.common.DebugLog;
-import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants.EmailEvent;
+import carpool.configurations.CarpoolConfig;
+import carpool.configurations.EnumConfig.EmailEvent;
 import carpool.interfaces.PseudoAsyncTask;
 
 

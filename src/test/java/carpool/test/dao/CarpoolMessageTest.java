@@ -24,12 +24,12 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.HelperOperator;
 import carpool.common.Parser;
-import carpool.constants.Constants;
-import carpool.constants.Constants.DayTimeSlot;
-import carpool.constants.Constants.Gender;
-import carpool.constants.Constants.MessageState;
-import carpool.constants.Constants.MessageType;
-import carpool.constants.Constants.PaymentMethod;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.DayTimeSlot;
+import carpool.configurations.EnumConfig.Gender;
+import carpool.configurations.EnumConfig.MessageState;
+import carpool.configurations.EnumConfig.MessageType;
+import carpool.configurations.EnumConfig.PaymentMethod;
 import carpool.dbservice.*;
 import carpool.exception.validation.ValidationException;
 import carpool.exception.location.LocationNotFoundException;
@@ -655,13 +655,13 @@ public class CarpoolMessageTest {
 				, arrivalLocation,dt3,timeSlot,1 , priceList,arrivalLocation,
 				at3, timeSlot,1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
-		message7.setState(Constants.MessageState.fromInt(1));
+		message7.setState(EnumConfig.MessageState.fromInt(1));
 		CarpoolDaoMessage.addMessageToDatabase(message7);
 		Message message8=new Message(user.getUserId(),true
 				, departureLocation,dt3,timeSlot,1 , priceList,arrivalLocation,
 				at3, timeSlot,1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
-		message8.setState(Constants.MessageState.fromInt(0));
+		message8.setState(EnumConfig.MessageState.fromInt(0));
 		CarpoolDaoMessage.addMessageToDatabase(message8);
 		MessageCleaner.Clean();
 		ArrayList<Integer> list = new ArrayList<Integer>();
@@ -772,24 +772,24 @@ public class CarpoolMessageTest {
 				, arrivalLocation,dt3,timeSlot,1 , priceList,arrivalLocation,
 				at3, timeSlot,1,priceList,paymentMethod,
 				"test",  type, genderRequirement);
-		message7.setState(Constants.MessageState.fromInt(1));
+		message7.setState(EnumConfig.MessageState.fromInt(1));
 		CarpoolDaoMessage.addMessageToDatabase(message7);
 		
 		//
 		//Set Message states and Dt
-		message.setState(carpool.constants.Constants.MessageState.closed);
-		message2.setState(carpool.constants.Constants.MessageState.deleted);
-		message3.setState(carpool.constants.Constants.MessageState.open);
+		message.setState(carpool.configurations.EnumConfig.MessageState.closed);
+		message2.setState(carpool.configurations.EnumConfig.MessageState.deleted);
+		message3.setState(carpool.configurations.EnumConfig.MessageState.open);
 		message3.setDeparture_time(DateUtility.getCurTimeInstance());
 		//This will pass
-		message4.setState(carpool.constants.Constants.MessageState.open);
+		message4.setState(carpool.configurations.EnumConfig.MessageState.open);
 		message4.setDeparture_time(dt3);
 		//Set Message states and Dt
-		message5.setState(carpool.constants.Constants.MessageState.open);
+		message5.setState(carpool.configurations.EnumConfig.MessageState.open);
 		message5.setDeparture_time(dt2);
-		message6.setState(carpool.constants.Constants.MessageState.deleted);
+		message6.setState(carpool.configurations.EnumConfig.MessageState.deleted);
 		message6.setDeparture_time(DateUtility.getCurTimeInstance());
-		message7.setState(carpool.constants.Constants.MessageState.closed);
+		message7.setState(carpool.configurations.EnumConfig.MessageState.closed);
 		message7.setDeparture_time(DateUtility.getCurTimeInstance());
 		
 		if(CarpoolDaoMessage.isOpen(message)||CarpoolDaoMessage.isOpen(message2)||CarpoolDaoMessage.isOpen(message3)||CarpoolDaoMessage.isOpen(message5)||CarpoolDaoMessage.isOpen(message6)||CarpoolDaoMessage.isOpen(message7)){

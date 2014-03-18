@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoUser;
-import carpool.constants.Constants.Gender;
+import carpool.configurations.EnumConfig.Gender;
 import carpool.dbservice.EmailDaoService;
 import carpool.exception.user.UserNotFoundException;
 import carpool.exception.validation.ValidationException;

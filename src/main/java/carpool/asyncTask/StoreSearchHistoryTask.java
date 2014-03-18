@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import carpool.common.DebugLog;
-import carpool.constants.CarpoolConfig;
+import carpool.configurations.CarpoolConfig;
 import carpool.dbservice.FileService;
 import carpool.interfaces.PseudoAsyncTask;
 import carpool.model.representation.SearchRepresentation;

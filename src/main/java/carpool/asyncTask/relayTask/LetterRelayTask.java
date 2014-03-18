@@ -13,7 +13,7 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
 import carpool.common.DebugLog;
-import carpool.constants.CarpoolConfig;
+import carpool.configurations.CarpoolConfig;
 import carpool.factory.JSONFactory;
 import carpool.interfaces.PseudoAsyncTask;
 import carpool.model.Letter;

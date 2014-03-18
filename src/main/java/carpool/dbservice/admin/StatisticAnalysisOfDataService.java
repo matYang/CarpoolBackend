@@ -15,7 +15,7 @@ import carpool.aws.AwsMain;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.constants.CarpoolConfig;
+import carpool.configurations.CarpoolConfig;
 import carpool.model.representation.SearchRepresentation;
 
 public class StatisticAnalysisOfDataService {	

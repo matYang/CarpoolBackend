@@ -10,7 +10,7 @@ import org.restlet.engine.header.Header;
 import org.restlet.data.Status;
 
 import carpool.common.DebugLog;
-import carpool.constants.CarpoolConfig;
+import carpool.configurations.CarpoolConfig;
 import carpool.dbservice.*;
 import carpool.encryption.SessionCrypto;
 import carpool.exception.PseudoException;

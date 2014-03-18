@@ -9,7 +9,7 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 
-import carpool.constants.CarpoolConfig;
+import carpool.configurations.CarpoolConfig;
 import carpool.dbservice.LocationDaoService;
 import carpool.dbservice.MessageDaoService;
 import carpool.dbservice.UserDaoService;

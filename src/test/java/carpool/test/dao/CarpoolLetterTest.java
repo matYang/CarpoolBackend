@@ -11,9 +11,9 @@ import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoLetter;
 import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.common.DebugLog;
-import carpool.constants.Constants;
-import carpool.constants.Constants.LetterState;
-import carpool.constants.Constants.Gender;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.Gender;
+import carpool.configurations.EnumConfig.LetterState;
 import carpool.dbservice.LetterDaoService;
 import carpool.exception.letter.LetterNotFoundException;
 import carpool.exception.location.LocationNotFoundException;
@@ -74,10 +74,10 @@ public class CarpoolLetterTest {
 		CarpoolDaoUser.addUserToDatabase(user);
 		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, Gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
-		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
+		Letter letter = new Letter(user.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test");
 		try{
 			letter = CarpoolDaoLetter.addLetterToDatabases(letter);
-			if(letter.getFrom_userId()==1 && letter.getOwnder_id()==2 && letter.getTo_userId()==2 && letter.getType()==Constants.LetterType.user && letter.getContent().equals("Test")){
+			if(letter.getFrom_userId()==1 && letter.getOwnder_id()==2 && letter.getTo_userId()==2 && letter.getType()==EnumConfig.LetterType.user && letter.getContent().equals("Test")){
 				//Passed;
 			}else{
 				fail();
@@ -109,8 +109,8 @@ public class CarpoolLetterTest {
 		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, Gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
 
-		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
-		Letter letter2 =  new Letter(user2.getUserId(),user2.getUserId(),Constants.LetterType.system,"Test2");
+		Letter letter = new Letter(user.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test");
+		Letter letter2 =  new Letter(user2.getUserId(),user2.getUserId(),EnumConfig.LetterType.system,"Test2");
 		letter = CarpoolDaoLetter.addLetterToDatabases(letter);
 		letter2 = CarpoolDaoLetter.addLetterToDatabases(letter2);
 
@@ -156,13 +156,13 @@ public class CarpoolLetterTest {
 		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com",arrivalLocation, Gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
 
-		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
-		Letter letter2 =  new Letter(user2.getUserId(),user2.getUserId(),Constants.LetterType.system,"Test2");
+		Letter letter = new Letter(user.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test");
+		Letter letter2 =  new Letter(user2.getUserId(),user2.getUserId(),EnumConfig.LetterType.system,"Test2");
 		letter = CarpoolDaoLetter.addLetterToDatabases(letter);
 		letter2 = CarpoolDaoLetter.addLetterToDatabases(letter2);
 
 		letter.setTo_userId(user.getUserId());
-		letter.setType(Constants.LetterType.system);
+		letter.setType(EnumConfig.LetterType.system);
 		letter.setContent("Test2");
 		try{
 			CarpoolDaoLetter.updateLetterInDatabases(letter);
@@ -170,7 +170,7 @@ public class CarpoolLetterTest {
 			e.printStackTrace();
 		}
 		letter2.setFrom_userId(user.getUserId());
-		letter2.setType(Constants.LetterType.user);
+		letter2.setType(EnumConfig.LetterType.user);
 		letter2.setContent("Test");
 		try{
 			CarpoolDaoLetter.updateLetterInDatabases(letter2);
@@ -183,7 +183,7 @@ public class CarpoolLetterTest {
 		}else{
 			fail();
 		}
-		if(letter.getType().equals(Constants.LetterType.system)&&letter2.getType().equals(Constants.LetterType.user)&&letter.getContent().equals("Test2")&&letter2.getContent().equals("Test")){
+		if(letter.getType().equals(EnumConfig.LetterType.system)&&letter2.getType().equals(EnumConfig.LetterType.user)&&letter.getContent().equals("Test2")&&letter2.getContent().equals("Test")){
 			//Passed;
 		}else{
 			fail();
@@ -211,8 +211,8 @@ public class CarpoolLetterTest {
 		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, Gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
 
-		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
-		Letter letter2 =  new Letter(user2.getUserId(),user2.getUserId(),Constants.LetterType.system,"Test2");
+		Letter letter = new Letter(user.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test");
+		Letter letter2 =  new Letter(user2.getUserId(),user2.getUserId(),EnumConfig.LetterType.system,"Test2");
 		letter = CarpoolDaoLetter.addLetterToDatabases(letter);
 		letter2 = CarpoolDaoLetter.addLetterToDatabases(letter2);
 
@@ -259,8 +259,8 @@ public class CarpoolLetterTest {
 		User user2 =  new User("xchplace", "xiongchuhanplace@hotmail.com", arrivalLocation, Gender.male);
 		CarpoolDaoUser.addUserToDatabase(user2);
 
-		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
-		Letter letter2 =  new Letter(user2.getUserId(),user2.getUserId(),Constants.LetterType.system,"Test2");
+		Letter letter = new Letter(user.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test");
+		Letter letter2 =  new Letter(user2.getUserId(),user2.getUserId(),EnumConfig.LetterType.system,"Test2");
 		letter = CarpoolDaoLetter.addLetterToDatabases(letter);
 		letter2 = CarpoolDaoLetter.addLetterToDatabases(letter2);
 
@@ -315,16 +315,16 @@ public class CarpoolLetterTest {
 		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation, Gender.female);
 		CarpoolDaoUser.addUserToDatabase(user3);
 
-		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
-		Letter letter2 =  new Letter(user2.getUserId(),user.getUserId(),Constants.LetterType.user,"Test2");
-		Letter letter3 =  new Letter(user3.getUserId(),user.getUserId(),Constants.LetterType.user,"Test3");
-		Letter letter4 =  new Letter(-1,user.getUserId(),Constants.LetterType.system,"Test4");
-		Letter letter5 =  new Letter(user.getUserId(),user.getUserId(),Constants.LetterType.user,"Test5");
-		Letter letter6 =  new Letter(user2.getUserId(),user3.getUserId(),Constants.LetterType.user,"Test6");
-		Letter letter7 =  new Letter(user3.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test7");
-		Letter letter8 =  new Letter(-1,user3.getUserId(),Constants.LetterType.system,"Test8");
-		Letter letter9 =  new Letter(-1,user2.getUserId(),Constants.LetterType.system,"Test9");
-		Letter letter0 =  new Letter(user.getUserId(),-1,Constants.LetterType.system,"Test0");
+		Letter letter = new Letter(user.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test");
+		Letter letter2 =  new Letter(user2.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test2");
+		Letter letter3 =  new Letter(user3.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test3");
+		Letter letter4 =  new Letter(-1,user.getUserId(),EnumConfig.LetterType.system,"Test4");
+		Letter letter5 =  new Letter(user.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test5");
+		Letter letter6 =  new Letter(user2.getUserId(),user3.getUserId(),EnumConfig.LetterType.user,"Test6");
+		Letter letter7 =  new Letter(user3.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test7");
+		Letter letter8 =  new Letter(-1,user3.getUserId(),EnumConfig.LetterType.system,"Test8");
+		Letter letter9 =  new Letter(-1,user2.getUserId(),EnumConfig.LetterType.system,"Test9");
+		Letter letter0 =  new Letter(user.getUserId(),-1,EnumConfig.LetterType.system,"Test0");
 		try{
 			letter = CarpoolDaoLetter.addLetterToDatabases(letter);
 			letter2 = CarpoolDaoLetter.addLetterToDatabases(letter2);
@@ -343,7 +343,7 @@ public class CarpoolLetterTest {
 		ArrayList<Letter> list = new ArrayList<Letter>();
 
 		try{
-			list = CarpoolDaoLetter.getUserLetters(user.getUserId(), user2.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
+			list = CarpoolDaoLetter.getUserLetters(user.getUserId(), user2.getUserId(), EnumConfig.LetterType.user, EnumConfig.LetterDirection.inbound);
 			if(list.size()==1 && letterEquals(list.get(0),letter)){
 				//Passed;
 			}else{
@@ -354,7 +354,7 @@ public class CarpoolLetterTest {
 		}
 
 		try{
-			list = CarpoolDaoLetter.getUserLetters(user2.getUserId(), user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
+			list = CarpoolDaoLetter.getUserLetters(user2.getUserId(), user.getUserId(), EnumConfig.LetterType.user, EnumConfig.LetterDirection.inbound);
 			if(list.size()==1 && letterEquals(list.get(0),letter2)){
 				//Passed;
 			}else{
@@ -365,7 +365,7 @@ public class CarpoolLetterTest {
 		}
 
 		try{
-			list = CarpoolDaoLetter.getUserLetters(user.getUserId(), user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
+			list = CarpoolDaoLetter.getUserLetters(user.getUserId(), user.getUserId(), EnumConfig.LetterType.user, EnumConfig.LetterDirection.inbound);
 			if(list.size()==1 && letterEquals(list.get(0),letter5)){
 				//Passed;
 			}else{
@@ -376,7 +376,7 @@ public class CarpoolLetterTest {
 		}
 
 		try{
-			list = CarpoolDaoLetter.getUserLetters(user2.getUserId(), user3.getUserId(), Constants.LetterType.user, Constants.LetterDirection.outbound);
+			list = CarpoolDaoLetter.getUserLetters(user2.getUserId(), user3.getUserId(), EnumConfig.LetterType.user, EnumConfig.LetterDirection.outbound);
 			if(list.size()==1 && letterEquals(list.get(0),letter7)){
 				//Passed;
 			}else{
@@ -387,7 +387,7 @@ public class CarpoolLetterTest {
 		}
 
 		try{
-			list = CarpoolDaoLetter.getUserLetters(user3.getUserId(),user2.getUserId(), Constants.LetterType.user, Constants.LetterDirection.both);
+			list = CarpoolDaoLetter.getUserLetters(user3.getUserId(),user2.getUserId(), EnumConfig.LetterType.user, EnumConfig.LetterDirection.both);
 			if(list.size()==2 && letterEquals(list.get(0),letter6) && letterEquals(list.get(1),letter7)){
 				//Passed;
 			}else{
@@ -398,7 +398,7 @@ public class CarpoolLetterTest {
 		}
 
 		try{
-			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.system, Constants.LetterDirection.both);
+			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), EnumConfig.LetterType.system, EnumConfig.LetterDirection.both);
 			if(list.size()==2 && letterEquals(list.get(0),letter4)&&letterEquals(list.get(1),letter0)){
 				//Passed;
 			}else{
@@ -409,7 +409,7 @@ public class CarpoolLetterTest {
 		}
 
 		try{
-			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.system, Constants.LetterDirection.outbound);
+			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), EnumConfig.LetterType.system, EnumConfig.LetterDirection.outbound);
 			if(list.size()==1 && letterEquals(list.get(0),letter0)){
 				//Passed;
 			}else{
@@ -420,7 +420,7 @@ public class CarpoolLetterTest {
 		}
 
 		try{
-			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.system, Constants.LetterDirection.inbound);
+			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), EnumConfig.LetterType.system, EnumConfig.LetterDirection.inbound);
 			if(list.size()==1 && letterEquals(list.get(0),letter4)){
 				//Passed;
 			}else{
@@ -431,7 +431,7 @@ public class CarpoolLetterTest {
 		}
 
 		try{
-			list = CarpoolDaoLetter.getUserLetters(-1, user2.getUserId(), Constants.LetterType.system, Constants.LetterDirection.outbound);
+			list = CarpoolDaoLetter.getUserLetters(-1, user2.getUserId(), EnumConfig.LetterType.system, EnumConfig.LetterDirection.outbound);
 			if(list.size()==0){
 				//Passed;
 			}else{
@@ -442,7 +442,7 @@ public class CarpoolLetterTest {
 		}
 
 		try{
-			list = CarpoolDaoLetter.getUserLetters(-1, user3.getUserId(), Constants.LetterType.system, Constants.LetterDirection.both);
+			list = CarpoolDaoLetter.getUserLetters(-1, user3.getUserId(), EnumConfig.LetterType.system, EnumConfig.LetterDirection.both);
 			if(list.size()==1 && letterEquals(list.get(0),letter8)){
 				//Passed;
 			}else{
@@ -452,9 +452,9 @@ public class CarpoolLetterTest {
 			e.printStackTrace();
 		}
 
-		Letter letter10 = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test10");
-		Letter letter11 =  new Letter(user3.getUserId(),user.getUserId(),Constants.LetterType.user,"Test11");
-		Letter letter12 =  new Letter(user2.getUserId(),user.getUserId(),Constants.LetterType.user,"Test12");
+		Letter letter10 = new Letter(user.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test10");
+		Letter letter11 =  new Letter(user3.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test11");
+		Letter letter12 =  new Letter(user2.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test12");
 
 		try{
 			letter10 = CarpoolDaoLetter.addLetterToDatabases(letter10);
@@ -465,7 +465,7 @@ public class CarpoolLetterTest {
 		}
 
 		try{
-			list = CarpoolDaoLetter.getUserLetters(user.getUserId(), user2.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
+			list = CarpoolDaoLetter.getUserLetters(user.getUserId(), user2.getUserId(), EnumConfig.LetterType.user, EnumConfig.LetterDirection.inbound);
 			if(list.size()==2 && letterEquals(list.get(0),letter)&&letterEquals(list.get(1),letter10)){
 				//Passed;
 			}else{
@@ -476,7 +476,7 @@ public class CarpoolLetterTest {
 		}
 
 		try{
-			list = CarpoolDaoLetter.getUserLetters(user3.getUserId(), user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
+			list = CarpoolDaoLetter.getUserLetters(user3.getUserId(), user.getUserId(), EnumConfig.LetterType.user, EnumConfig.LetterDirection.inbound);
 			if(list.size()==2 && letterEquals(list.get(0),letter3)&&letterEquals(list.get(1),letter11)){
 				//Passed;
 			}else{
@@ -487,7 +487,7 @@ public class CarpoolLetterTest {
 		}
 
 		try{
-			list = CarpoolDaoLetter.getUserLetters(user2.getUserId(), user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
+			list = CarpoolDaoLetter.getUserLetters(user2.getUserId(), user.getUserId(), EnumConfig.LetterType.user, EnumConfig.LetterDirection.inbound);
 			if(list.size()==2 && letterEquals(list.get(0),letter2)&&letterEquals(list.get(1),letter12)){
 				//Passed;
 			}else{
@@ -498,7 +498,7 @@ public class CarpoolLetterTest {
 		}
 
 		try{
-			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.inbound);
+			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), EnumConfig.LetterType.user, EnumConfig.LetterDirection.inbound);
 			if(list.size()==5 && letterEquals(list.get(0),letter2)&&letterEquals(list.get(1),letter3)&&letterEquals(list.get(2),letter5)&&letterEquals(list.get(3),letter11)&&letterEquals(list.get(4),letter12)){
 				//Passed;
 			}else{
@@ -509,7 +509,7 @@ public class CarpoolLetterTest {
 		}
 
 		try{
-			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.outbound);
+			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), EnumConfig.LetterType.user, EnumConfig.LetterDirection.outbound);
 			if(list.size()==3 &&letterEquals(list.get(0),letter)&&letterEquals(list.get(1),letter5)&&letterEquals(list.get(2),letter10)){
 				//Passed;
 			}else{
@@ -520,7 +520,7 @@ public class CarpoolLetterTest {
 		}
 
 		try{
-			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), Constants.LetterType.user, Constants.LetterDirection.both);
+			list = CarpoolDaoLetter.getUserLetters(-1, user.getUserId(), EnumConfig.LetterType.user, EnumConfig.LetterDirection.both);
 			if(list.size()==7 && letterEquals(list.get(0),letter)&&letterEquals(list.get(1),letter2)&&letterEquals(list.get(2),letter3)&&letterEquals(list.get(3),letter5)&&letterEquals(list.get(4),letter10)&&letterEquals(list.get(5),letter11)&&letterEquals(list.get(6),letter12)){
 				//Passed;
 			}else{
@@ -558,19 +558,19 @@ public class CarpoolLetterTest {
 		User user4 =  new User("sdfsdfdsfhgfg", "sdfojods@hotmail.com", arrivalLocation2, Gender.both);
 		CarpoolDaoUser.addUserToDatabase(user4);
 
-		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
-		Letter letter2 =  new Letter(user2.getUserId(),user.getUserId(),Constants.LetterType.user,"Test2");
-		Letter letter3 =  new Letter(user3.getUserId(),user.getUserId(),Constants.LetterType.user,"Test3");
-		Letter letter4 =  new Letter(-1,user.getUserId(),Constants.LetterType.system,"Test4");
-		Letter letter5 =  new Letter(user.getUserId(),user.getUserId(),Constants.LetterType.user,"Test5");
-		Letter letter6 =  new Letter(user2.getUserId(),user3.getUserId(),Constants.LetterType.user,"Test6");
-		Letter letter7 =  new Letter(user3.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test7");
-		Letter letter8 =  new Letter(-1,user3.getUserId(),Constants.LetterType.system,"Test8");
-		Letter letter9 =  new Letter(-1,user2.getUserId(),Constants.LetterType.system,"Test9");
-		Letter letter10 = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test10");
-		Letter letter11 =  new Letter(user3.getUserId(),user.getUserId(),Constants.LetterType.user,"Test11");
-		Letter letter12 =  new Letter(user2.getUserId(),user.getUserId(),Constants.LetterType.user,"Test12");
-		Letter letter13 =  new Letter(user4.getUserId(),user4.getUserId(),Constants.LetterType.user,"Test13");		
+		Letter letter = new Letter(user.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test");
+		Letter letter2 =  new Letter(user2.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test2");
+		Letter letter3 =  new Letter(user3.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test3");
+		Letter letter4 =  new Letter(-1,user.getUserId(),EnumConfig.LetterType.system,"Test4");
+		Letter letter5 =  new Letter(user.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test5");
+		Letter letter6 =  new Letter(user2.getUserId(),user3.getUserId(),EnumConfig.LetterType.user,"Test6");
+		Letter letter7 =  new Letter(user3.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test7");
+		Letter letter8 =  new Letter(-1,user3.getUserId(),EnumConfig.LetterType.system,"Test8");
+		Letter letter9 =  new Letter(-1,user2.getUserId(),EnumConfig.LetterType.system,"Test9");
+		Letter letter10 = new Letter(user.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test10");
+		Letter letter11 =  new Letter(user3.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test11");
+		Letter letter12 =  new Letter(user2.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test12");
+		Letter letter13 =  new Letter(user4.getUserId(),user4.getUserId(),EnumConfig.LetterType.user,"Test13");		
 		try{
 			letter = CarpoolDaoLetter.addLetterToDatabases(letter);
 			letter2 = CarpoolDaoLetter.addLetterToDatabases(letter2);
@@ -649,18 +649,18 @@ public class CarpoolLetterTest {
 		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation, Gender.female);
 		CarpoolDaoUser.addUserToDatabase(user3);
 
-		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
-		Letter letter2 =  new Letter(user2.getUserId(),user.getUserId(),Constants.LetterType.user,"Test2");
-		Letter letter3 =  new Letter(user3.getUserId(),user.getUserId(),Constants.LetterType.user,"Test3");
-		Letter letter4 =  new Letter(-1,user.getUserId(),Constants.LetterType.system,"Test4");
-		Letter letter5 =  new Letter(user.getUserId(),user3.getUserId(),Constants.LetterType.user,"Test5");
-		Letter letter6 =  new Letter(user2.getUserId(),user3.getUserId(),Constants.LetterType.user,"Test6");
-		Letter letter7 =  new Letter(user3.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test7");
-		Letter letter8 =  new Letter(-1,user3.getUserId(),Constants.LetterType.system,"Test8");
-		Letter letter9 =  new Letter(-1,user2.getUserId(),Constants.LetterType.system,"Test9");
-		Letter letter10 = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test10");
-		Letter letter11 =  new Letter(user3.getUserId(),user.getUserId(),Constants.LetterType.user,"Test11");
-		Letter letter12 =  new Letter(user2.getUserId(),user.getUserId(),Constants.LetterType.user,"Test12");
+		Letter letter = new Letter(user.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test");
+		Letter letter2 =  new Letter(user2.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test2");
+		Letter letter3 =  new Letter(user3.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test3");
+		Letter letter4 =  new Letter(-1,user.getUserId(),EnumConfig.LetterType.system,"Test4");
+		Letter letter5 =  new Letter(user.getUserId(),user3.getUserId(),EnumConfig.LetterType.user,"Test5");
+		Letter letter6 =  new Letter(user2.getUserId(),user3.getUserId(),EnumConfig.LetterType.user,"Test6");
+		Letter letter7 =  new Letter(user3.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test7");
+		Letter letter8 =  new Letter(-1,user3.getUserId(),EnumConfig.LetterType.system,"Test8");
+		Letter letter9 =  new Letter(-1,user2.getUserId(),EnumConfig.LetterType.system,"Test9");
+		Letter letter10 = new Letter(user.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test10");
+		Letter letter11 =  new Letter(user3.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test11");
+		Letter letter12 =  new Letter(user2.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test12");
 		try{
 			letter = CarpoolDaoLetter.addLetterToDatabases(letter);
 			letter2 = CarpoolDaoLetter.addLetterToDatabases(letter2);
@@ -766,17 +766,17 @@ public class CarpoolLetterTest {
 
 		ArrayList<Letter> list = new ArrayList<Letter>();
 
-		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
+		Letter letter = new Letter(user.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test");
 		list.add(letter);
-		Letter letter2 =  new Letter(user2.getUserId(),user.getUserId(),Constants.LetterType.user,"Test2");
+		Letter letter2 =  new Letter(user2.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test2");
 		list.add(letter2);
-		Letter letter3 =  new Letter(user3.getUserId(),user.getUserId(),Constants.LetterType.user,"Test3");
+		Letter letter3 =  new Letter(user3.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test3");
 		list.add(letter3);
-		Letter letter4 =  new Letter(-1,user.getUserId(),Constants.LetterType.system,"Test4");
+		Letter letter4 =  new Letter(-1,user.getUserId(),EnumConfig.LetterType.system,"Test4");
 		list.add(letter4);
-		Letter letter5 =  new Letter(user.getUserId(),user.getUserId(),Constants.LetterType.user,"Test5");
+		Letter letter5 =  new Letter(user.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test5");
 		list.add(letter5);
-		Letter letter6 =  new Letter(user2.getUserId(),user3.getUserId(),Constants.LetterType.user,"Test6");
+		Letter letter6 =  new Letter(user2.getUserId(),user3.getUserId(),EnumConfig.LetterType.user,"Test6");
 		list.add(letter6);
 
 		try{
@@ -842,18 +842,18 @@ public class CarpoolLetterTest {
 		User user3 =  new User("sdfjoisdjfi", "sdfoshdf@hotsldfj.com", departureLocation, Gender.female);
 		CarpoolDaoUser.addUserToDatabase(user3);
 
-		Letter letter = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test");
-		Letter letter2 =  new Letter(user2.getUserId(),user.getUserId(),Constants.LetterType.user,"Test2");
-		Letter letter3 =  new Letter(user3.getUserId(),user.getUserId(),Constants.LetterType.user,"Test3");
-		Letter letter4 =  new Letter(-1,user.getUserId(),Constants.LetterType.system,"Test4");
-		Letter letter5 =  new Letter(user.getUserId(),user.getUserId(),Constants.LetterType.user,"Test5");
-		Letter letter6 =  new Letter(user2.getUserId(),user3.getUserId(),Constants.LetterType.user,"Test6");
-		Letter letter7 =  new Letter(user3.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test7");
-		Letter letter8 =  new Letter(-1,user3.getUserId(),Constants.LetterType.system,"Test8");
-		Letter letter9 =  new Letter(-1,user2.getUserId(),Constants.LetterType.system,"Test9");
-		Letter letter10 = new Letter(user.getUserId(),user2.getUserId(),Constants.LetterType.user,"Test10");
-		Letter letter11 =  new Letter(user3.getUserId(),user.getUserId(),Constants.LetterType.user,"Test11");
-		Letter letter12 =  new Letter(user2.getUserId(),user.getUserId(),Constants.LetterType.user,"Test12");
+		Letter letter = new Letter(user.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test");
+		Letter letter2 =  new Letter(user2.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test2");
+		Letter letter3 =  new Letter(user3.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test3");
+		Letter letter4 =  new Letter(-1,user.getUserId(),EnumConfig.LetterType.system,"Test4");
+		Letter letter5 =  new Letter(user.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test5");
+		Letter letter6 =  new Letter(user2.getUserId(),user3.getUserId(),EnumConfig.LetterType.user,"Test6");
+		Letter letter7 =  new Letter(user3.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test7");
+		Letter letter8 =  new Letter(-1,user3.getUserId(),EnumConfig.LetterType.system,"Test8");
+		Letter letter9 =  new Letter(-1,user2.getUserId(),EnumConfig.LetterType.system,"Test9");
+		Letter letter10 = new Letter(user.getUserId(),user2.getUserId(),EnumConfig.LetterType.user,"Test10");
+		Letter letter11 =  new Letter(user3.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test11");
+		Letter letter12 =  new Letter(user2.getUserId(),user.getUserId(),EnumConfig.LetterType.user,"Test12");
 
 		//user
 		letter2.setState(LetterState.read);

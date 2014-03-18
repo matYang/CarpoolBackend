@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.Parser;
-import carpool.constants.Constants;
+import carpool.configurations.EnumConfig;
 import carpool.dbservice.*;
 import carpool.exception.PseudoException;
 import carpool.factory.JSONFactory;
@@ -34,12 +34,12 @@ public class DMResourceId extends PseudoResource{
 			jsonMessage = (new JsonRepresentation(entity)).getJsonObject();
 			
 			message = new Message(jsonMessage.getInt("ownerId"), jsonMessage.getBoolean("isRoundTrip"),
-					new Location(jsonMessage.getJSONObject("departure_location")), DateUtility.castFromAPIFormat(jsonMessage.getString("departure_time")), Constants.DayTimeSlot.values()[jsonMessage.getInt("departure_timeSlot")],
+					new Location(jsonMessage.getJSONObject("departure_location")), DateUtility.castFromAPIFormat(jsonMessage.getString("departure_time")), EnumConfig.DayTimeSlot.values()[jsonMessage.getInt("departure_timeSlot")],
 					jsonMessage.getInt("departure_seatsNumber"), Parser.parseIntegerList(jsonMessage.getJSONArray("departure_priceList")),
-					new Location(jsonMessage.getJSONObject("arrival_location")), DateUtility.castFromAPIFormat(jsonMessage.getString("arrival_time")), Constants.DayTimeSlot.values()[jsonMessage.getInt("arrival_timeSlot")],
+					new Location(jsonMessage.getJSONObject("arrival_location")), DateUtility.castFromAPIFormat(jsonMessage.getString("arrival_time")), EnumConfig.DayTimeSlot.values()[jsonMessage.getInt("arrival_timeSlot")],
 					jsonMessage.getInt("arrival_seatsNumber"), Parser.parseIntegerList(jsonMessage.getJSONArray("arrival_priceList")),
-					Constants.PaymentMethod.values()[jsonMessage.getInt("paymentMethod")],
-					jsonMessage.getString("note"), Constants.MessageType.values()[jsonMessage.getInt("type")], Constants.Gender.values()[jsonMessage.getInt("genderRequirement")]);
+					EnumConfig.PaymentMethod.values()[jsonMessage.getInt("paymentMethod")],
+					jsonMessage.getString("note"), EnumConfig.MessageType.values()[jsonMessage.getInt("type")], EnumConfig.Gender.values()[jsonMessage.getInt("genderRequirement")]);
 			message.setMessageId(messageId);
 		
 		} catch (Exception e){

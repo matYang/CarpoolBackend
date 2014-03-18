@@ -15,7 +15,7 @@ import org.restlet.data.*;
 import org.json.JSONObject;
 
 import carpool.common.DebugLog;
-import carpool.constants.CarpoolConfig;
+import carpool.configurations.CarpoolConfig;
 import carpool.dbservice.AuthDaoService;
 import carpool.encryption.SessionCrypto;
 import carpool.exception.PseudoException;

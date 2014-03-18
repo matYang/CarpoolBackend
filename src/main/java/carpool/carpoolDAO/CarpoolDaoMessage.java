@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import carpool.common.Parser;
-import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants;
-import carpool.constants.Constants.MessageType;
+import carpool.configurations.CarpoolConfig;
+import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.MessageType;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.exception.location.LocationNotFoundException;
@@ -388,11 +388,11 @@ public class CarpoolDaoMessage{
 		Location departure_Location = CarpoolDaoLocation.getLocationById(rs.getLong("departure_Id"),connections);
 		Location arrival_Location = CarpoolDaoLocation.getLocationById(rs.getLong("arrival_Id"),connections);
 		Message message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),owner,rs.getBoolean("isRoundTrip"),departure_Location,
-				DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("departure_timeSlot")),rs.getInt("departure_seatsNumber"),rs.getInt("departure_seatsBooked"),(ArrayList<Integer>)Parser.stringToList(rs.getString("departure_priceList"),new Integer(0)),
-				arrival_Location,DateUtility.DateToCalendar(rs.getTimestamp("arrival_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("arrival_timeSlot")),rs.getInt("arrival_seatsNumber"),rs.getInt("arrival_seatsBooked"),
-				(ArrayList<Integer>)Parser.stringToList(rs.getString("arrival_priceList"),new Integer(0)),Constants.PaymentMethod.fromInt(rs.getInt("paymentMethod")),rs.getString("note"),
-				Constants.MessageType.fromInt(rs.getInt("messageType")),Constants.Gender.fromInt(rs.getInt("gender")),
-				Constants.MessageState.fromInt(rs.getInt("messageState")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
+				DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),EnumConfig.DayTimeSlot.fromInt(rs.getInt("departure_timeSlot")),rs.getInt("departure_seatsNumber"),rs.getInt("departure_seatsBooked"),(ArrayList<Integer>)Parser.stringToList(rs.getString("departure_priceList"),new Integer(0)),
+				arrival_Location,DateUtility.DateToCalendar(rs.getTimestamp("arrival_Time")),EnumConfig.DayTimeSlot.fromInt(rs.getInt("arrival_timeSlot")),rs.getInt("arrival_seatsNumber"),rs.getInt("arrival_seatsBooked"),
+				(ArrayList<Integer>)Parser.stringToList(rs.getString("arrival_priceList"),new Integer(0)),EnumConfig.PaymentMethod.fromInt(rs.getInt("paymentMethod")),rs.getString("note"),
+				EnumConfig.MessageType.fromInt(rs.getInt("messageType")),EnumConfig.Gender.fromInt(rs.getInt("gender")),
+				EnumConfig.MessageState.fromInt(rs.getInt("messageState")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
 				DateUtility.DateToCalendar(rs.getTimestamp("editTime")),rs.getBoolean("historyDeleted"));
 
 
@@ -403,11 +403,11 @@ public class CarpoolDaoMessage{
 		Location departure_Location = CarpoolDaoLocation.getLocationById(rs.getLong("departure_Id"),connections);
 		Location arrival_Location = CarpoolDaoLocation.getLocationById(rs.getLong("arrival_Id"),connections);
 		Message message = new Message(rs.getInt("messageId"),rs.getInt("ownerId"),null,rs.getBoolean("isRoundTrip"),departure_Location,
-				DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("departure_timeSlot")),rs.getInt("departure_seatsNumber"),rs.getInt("departure_seatsBooked"),(ArrayList<Integer>)Parser.stringToList(rs.getString("departure_priceList"),new Integer(0)),
-				arrival_Location,DateUtility.DateToCalendar(rs.getTimestamp("arrival_Time")),Constants.DayTimeSlot.fromInt(rs.getInt("arrival_timeSlot")),rs.getInt("arrival_seatsNumber"),rs.getInt("arrival_seatsBooked"),
-				(ArrayList<Integer>)Parser.stringToList(rs.getString("arrival_priceList"),new Integer(0)),Constants.PaymentMethod.fromInt(rs.getInt("paymentMethod")),rs.getString("note"),
-				Constants.MessageType.fromInt(rs.getInt("messageType")),Constants.Gender.fromInt(rs.getInt("gender")),
-				Constants.MessageState.fromInt(rs.getInt("messageState")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
+				DateUtility.DateToCalendar(rs.getTimestamp("departure_Time")),EnumConfig.DayTimeSlot.fromInt(rs.getInt("departure_timeSlot")),rs.getInt("departure_seatsNumber"),rs.getInt("departure_seatsBooked"),(ArrayList<Integer>)Parser.stringToList(rs.getString("departure_priceList"),new Integer(0)),
+				arrival_Location,DateUtility.DateToCalendar(rs.getTimestamp("arrival_Time")),EnumConfig.DayTimeSlot.fromInt(rs.getInt("arrival_timeSlot")),rs.getInt("arrival_seatsNumber"),rs.getInt("arrival_seatsBooked"),
+				(ArrayList<Integer>)Parser.stringToList(rs.getString("arrival_priceList"),new Integer(0)),EnumConfig.PaymentMethod.fromInt(rs.getInt("paymentMethod")),rs.getString("note"),
+				EnumConfig.MessageType.fromInt(rs.getInt("messageType")),EnumConfig.Gender.fromInt(rs.getInt("gender")),
+				EnumConfig.MessageState.fromInt(rs.getInt("messageState")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
 				DateUtility.DateToCalendar(rs.getTimestamp("editTime")),rs.getBoolean("historyDeleted"));
 
 
@@ -487,7 +487,7 @@ public class CarpoolDaoMessage{
 	public static boolean isOpen(Message msg){		
 		String ct = DateUtility.toSQLDateTime(DateUtility.getCurTimeInstance());
 		String dt = DateUtility.toSQLDateTime(msg.getDeparture_time());
-		return (msg.getState().code==carpool.constants.Constants.MessageState.open.code && ct.compareTo(dt)<0);
+		return (msg.getState().code==carpool.configurations.EnumConfig.MessageState.open.code && ct.compareTo(dt)<0);
 	}	
 
 }

@@ -11,12 +11,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import carpool.common.DateUtility;
 import carpool.common.HelperOperator;
-import carpool.constants.CarpoolConfig;
-import carpool.constants.Constants.DayTimeSlot;
-import carpool.constants.Constants.TransactionType;
-import carpool.constants.Constants.MessageState;
-import carpool.constants.Constants.PaymentMethod;
-import carpool.constants.Constants.TransactionState;
+import carpool.configurations.CarpoolConfig;
+import carpool.configurations.EnumConfig.DayTimeSlot;
+import carpool.configurations.EnumConfig.MessageState;
+import carpool.configurations.EnumConfig.PaymentMethod;
+import carpool.configurations.EnumConfig.TransactionState;
+import carpool.configurations.EnumConfig.TransactionType;
 import carpool.exception.validation.ValidationException;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoValidatable;
@@ -98,7 +98,7 @@ public class Transaction implements PseudoModel, PseudoValidatable, Comparable<T
 	
 	public Transaction(int transactionId, int providerId, int customerId,
 			int messageId,
-			carpool.constants.Constants.PaymentMethod paymentMethod,
+			carpool.configurations.EnumConfig.PaymentMethod paymentMethod,
 			String customerNote, String providerNote, int customerEvaluation,
 			int providerEvaluation, Location departure_location,
 			Location arrival_location, Calendar departure_time,
