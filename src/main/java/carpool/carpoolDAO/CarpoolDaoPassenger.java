@@ -14,7 +14,35 @@ import carpool.exception.identityVerification.identityVerificationNotFound;
 import carpool.model.identityVerification.PassengerVerification;
 
 public class CarpoolDaoPassenger {
-
+	
+	public ArrayList<PassengerVerification> getPassengerVerificationsByUserId(int userId){
+		
+		ArrayList<PassengerVerification> plist = new ArrayList<PassengerVerification>();
+		
+		Connection conn = null;
+		PreparedStatement stmt = null;	
+		ResultSet rs = null;
+		
+		String query = "SELECT * FROM carpoolDAOPassenger where user_Id = ?";
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, userId);
+			rs = stmt.executeQuery();
+			while(rs.next()){				
+				plist.add(createPassengerVerificationByResultSet(rs));
+			}			
+		}catch(SQLException e){
+			e.printStackTrace();
+			DebugLog.d(e);
+		} finally  {
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
+		}  
+		
+		
+		return plist;
+	}
+	
 	public PassengerVerification addPassengerToDatabases(PassengerVerification passenger){
 
 		Connection conn = null;
@@ -130,7 +158,7 @@ public class CarpoolDaoPassenger {
 		return plist;
 	}
 
-	public static PassengerVerification getPassengerVerificationById(long l) throws identityVerificationNotFound{
+	public static PassengerVerification getPassengerVerificationById(long l,Connection...connections) throws identityVerificationNotFound{
 		String query = "SELECT * FROM carpoolDAOPassenger where v_id";
 		PassengerVerification passenger = null;
 		PreparedStatement stmt = null;
@@ -138,7 +166,7 @@ public class CarpoolDaoPassenger {
 		ResultSet rs = null;
 
 		try{
-			conn = CarpoolDaoBasic.getSQLConnection();
+			conn = CarpoolDaoBasic.getConnection(connections);
 			stmt = conn.prepareStatement(query);
 
 			stmt.setLong(1, l);
@@ -152,7 +180,7 @@ public class CarpoolDaoPassenger {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,CarpoolDaoBasic.shouldConnectionClose(connections));
 		} 
 		return passenger;
 	}

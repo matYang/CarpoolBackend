@@ -14,7 +14,36 @@ import carpool.exception.identityVerification.identityVerificationNotFound;
 import carpool.model.identityVerification.DriverVerification;
 
 
+
 public class CarpoolDaoDriver {
+	
+public ArrayList<DriverVerification> getDriverVerificationsByUserId(int userId){
+		
+		ArrayList<DriverVerification> dlist = new ArrayList<DriverVerification>();
+		
+		Connection conn = null;
+		PreparedStatement stmt = null;	
+		ResultSet rs = null;
+		
+		String query = "SELECT * FROM carpoolDAODriver where user_Id = ?";
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, userId);
+			rs = stmt.executeQuery();
+			while(rs.next()){				
+				dlist.add(createDriverVerificationByResultSet(rs));
+			}			
+		}catch(SQLException e){
+			e.printStackTrace();
+			DebugLog.d(e);
+		} finally  {
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
+		}  
+		
+		
+		return dlist;
+	}
 
 	public DriverVerification addDriverToDatabases(DriverVerification driver){
 
@@ -129,7 +158,7 @@ public class CarpoolDaoDriver {
 		return dlist;
 	}
 
-	public static DriverVerification getDriverVerificationById(long l) throws identityVerificationNotFound{
+	public static DriverVerification getDriverVerificationById(long l,Connection...connections) throws identityVerificationNotFound{
 		String query = "SELECT * FROM carpoolDAODriver where v_id";
 		DriverVerification driver = null;
 		PreparedStatement stmt = null;
@@ -137,7 +166,7 @@ public class CarpoolDaoDriver {
 		ResultSet rs = null;
 
 		try{
-			conn = CarpoolDaoBasic.getSQLConnection();
+			conn = CarpoolDaoBasic.getConnection(connections);
 			stmt = conn.prepareStatement(query);
 
 			stmt.setLong(1, l);
@@ -151,7 +180,7 @@ public class CarpoolDaoDriver {
 			e.printStackTrace();
 			DebugLog.d(e);
 		}finally  {
-			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,CarpoolDaoBasic.shouldConnectionClose(connections));
 		} 
 		return driver;
 	}

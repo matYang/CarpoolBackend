@@ -87,9 +87,8 @@ public class CarpoolUserTest {
 		String query = "INSERT INTO carpoolDAOUser (password,name,email,phone,qq,gender,birthday,"+
 	            "imgPath,location_Id,lastLogin,creationTime,"+
 				"emailActivated,phoneActivated,emailNotice,phoneNotice,state,searchRepresentation,"+
-	            "level,averageScore,totalTranscations,verifications,googleToken,facebookToken,twitterToken,"+
-				"paypalToken,id_docType,id_docNum,id_path,id_vehicleImgPath,accountId,accountPass,accountToken,accountValue,match_Id)"+
-	            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+	            "level,averageScore,totalTranscations,accountId,accountPass,accountToken,accountValue,match_Id,driverVerification_Id,passengerVerification_Id)"+
+	            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
 		
 		Connection connection;
     	try {
@@ -116,21 +115,14 @@ public class CarpoolUserTest {
     			stmt.setString(17, user.getSearchRepresentation().toSerializedString());
     			stmt.setInt(18, user.getLevel());
     			stmt.setInt(19, user.getAverageScore());
-    			stmt.setInt(20, user.getTotalTranscations());
-    			stmt.setString(21, Parser.listToString(user.getVerifications()));
-    			stmt.setString(22,user.getGoogleToken());
-    			stmt.setString(23, user.getFacebookToken());
-    			stmt.setString(24, user.getTwitterToken());
-    			stmt.setString(25,user.getPaypalToken());
-    			stmt.setString(26, user.getId_docType());
-    			stmt.setString(27,user.getId_docNum());
-    			stmt.setString(28, user.getId_path());
-    			stmt.setString(29, user.getId_vehicleImgPath());
-    			stmt.setString(30, user.getAccountId());
-    			stmt.setString(31, user.getAccountPass());
-    			stmt.setString(32, user.getAccountToken());		
-    			stmt.setString(33, user.getAccountValue().toString());
-    			stmt.setLong(34, user.getLocation().getMatch());
+    			stmt.setInt(20, user.getTotalTranscations());    			
+    			stmt.setString(21, user.getAccountId());
+    			stmt.setString(22, user.getAccountPass());
+    			stmt.setString(23, user.getAccountToken());		
+    			stmt.setString(24, user.getAccountValue().toString());
+    			stmt.setLong(25, user.getLocation().getMatch());
+    			stmt.setLong(26, user.getDriverVerificationId());
+    			stmt.setLong(27, user.getPassengerVerificationId());
     			stmt.executeUpdate();
     			ResultSet rs = stmt.getGeneratedKeys();
     			rs.next();
@@ -249,8 +241,7 @@ public class CarpoolUserTest {
 		}
 		user.setEmail("xiongchuhanplace@hotmail.com");
 		user.setLocation(new Location(arrivalLocation));
-		user.setAccountPass("test1");
-		user.setGoogleToken("google");
+		user.setAccountPass("test1");		
 		user.setEmailActivated(true);
 		try {
 			CarpoolDaoUser.UpdateUserInDatabase(user);

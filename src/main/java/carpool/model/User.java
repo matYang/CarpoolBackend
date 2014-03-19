@@ -152,11 +152,11 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	 * full constructor used for SQL retrieval
 	 *****/
 	public User(int userId, String password, String name, String email,
-			String phone, String qq, carpool.configurations.EnumConfig.Gender gender, Calendar birthday,
+			String phone, String qq, EnumConfig.Gender gender, Calendar birthday,
 			String imgPath, Location location, Calendar lastLogin,
 			Calendar creationTime, boolean emailActivated,
 			boolean phoneActivated, boolean emailNotice, boolean phoneNotice,
-			UserState state, SearchRepresentation searchRepresentation,
+			 EnumConfig.UserState state, SearchRepresentation searchRepresentation,
 			int level, int averageScore, int totalTranscations,
 			long passengerVerificationId, long driverVerificationId,
 			PassengerVerification passengerVerification,
