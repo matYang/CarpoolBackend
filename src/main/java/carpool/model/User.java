@@ -22,6 +22,8 @@ import carpool.exception.validation.ValidationException;
 import carpool.factory.JSONFactory;
 import carpool.interfaces.PseudoModel;
 import carpool.interfaces.PseudoValidatable;
+import carpool.model.identityVerification.DriverVerification;
+import carpool.model.identityVerification.PassengerVerification;
 import carpool.model.representation.SearchRepresentation;
 
 
@@ -73,18 +75,12 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     private int averageScore;
     private int totalTranscations;
     
-    /*****
-     * the followings are user's authorizations
-     *****/
-    private ArrayList<String> verifications;
-    private String googleToken;
-    private String facebookToken;
-    private String twitterToken;
-    private String paypalToken;
-    private String id_docType;
-    private String id_docNum;
-    private String id_path;
-    private String id_vehicleImgPath;
+    
+    private long passengerVerificationId;
+    private long driverVerificationId;
+    private PassengerVerification passengerVerification;
+    private DriverVerification driverVerification;
+
     
     /*****
      * the follows are user's account information
@@ -128,7 +124,6 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	    this.transactionList = new ArrayList<Transaction>();
 	    this.notificationList = new ArrayList<Notification>();
   
-	    this.verifications = new ArrayList<String>();
 	    this.emailActivated = false;
 	    this.phoneActivated = false;
 	    this.emailNotice = false;
@@ -140,14 +135,10 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	    this.averageScore = 0;
 	    this.totalTranscations = 0;
 
-	    this.googleToken = "";
-	    this.facebookToken = "";
-	    this.twitterToken = "";
-	    this.paypalToken = "";
-	    this.id_docType = "";
-	    this.id_docNum = "";
-	    this.id_path = "";
-	    this.id_vehicleImgPath = "";
+	    this.passengerVerificationId = -1l;
+	    this.driverVerificationId = -1l;
+	    this.passengerVerification = null;
+	    this.driverVerification = null;
 	    
 	    this.accountId = "";
 	    this.accountPass = "";
@@ -161,16 +152,19 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	 * full constructor used for SQL retrieval
 	 *****/
 	public User(int userId, String password, String name, String email,
-			String phone, String qq, carpool.configurations.EnumConfig.Gender gender, Calendar birthday,
-			String imgPath, Location location, Calendar lastLogin,
-			Calendar creationTime, ArrayList<String> verifications, boolean emailActivated,
+			String phone, String qq, Gender gender, Calendar birthday,
+			String imgPath, long location_Id, Location location, long match_Id,
+			Calendar lastLogin, Calendar creationTime,
+			ArrayList<Message> historyList, ArrayList<Message> watchList,
+			ArrayList<User> socialList, ArrayList<Transaction> transactionList,
+			ArrayList<Notification> notificationList, boolean emailActivated,
 			boolean phoneActivated, boolean emailNotice, boolean phoneNotice,
-			UserState state, SearchRepresentation searchRepresentation, int level,
-			int averageScore, int totalTranscations, String googleToken,
-			String facebookToken, String twitterToken, String paypalToken,
-			String id_docType, String id_docNum, String id_path,
-			String id_vehicleImgPath, String accountId, String accountPass,
-			String accountToken, BigDecimal accountValue,long match_Id) {
+			UserState state, SearchRepresentation searchRepresentation,
+			int level, int averageScore, int totalTranscations,
+			long passengerVerificationId, long driverVerificationId,
+			PassengerVerification passengerVerification,
+			DriverVerification driverVerification, String accountId,
+			String accountPass, String accountToken, BigDecimal accountValue) {
 		super();
 		this.userId = userId;
 		this.password = password;
@@ -181,12 +175,16 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.gender = gender;
 		this.birthday = birthday;
 		this.imgPath = imgPath;
+		this.location_Id = location_Id;
 		this.location = location;
-		this.location_Id = location.getId();
 		this.match_Id = match_Id;
 		this.lastLogin = lastLogin;
 		this.creationTime = creationTime;
-		this.verifications = verifications;
+		this.historyList = historyList;
+		this.watchList = watchList;
+		this.socialList = socialList;
+		this.transactionList = transactionList;
+		this.notificationList = notificationList;
 		this.emailActivated = emailActivated;
 		this.phoneActivated = phoneActivated;
 		this.emailNotice = emailNotice;
@@ -196,27 +194,16 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.level = level;
 		this.averageScore = averageScore;
 		this.totalTranscations = totalTranscations;
-		this.googleToken = googleToken;
-		this.facebookToken = facebookToken;
-		this.twitterToken = twitterToken;
-		this.paypalToken = paypalToken;
-		this.id_docType = id_docType;
-		this.id_docNum = id_docNum;
-		this.id_path = id_path;
-		this.id_vehicleImgPath = id_vehicleImgPath;
+		this.passengerVerificationId = passengerVerificationId;
+		this.driverVerificationId = driverVerificationId;
+		this.passengerVerification = passengerVerification;
+		this.driverVerification = driverVerification;
 		this.accountId = accountId;
 		this.accountPass = accountPass;
 		this.accountToken = accountToken;
 		this.accountValue = accountValue;
-		
-		this.historyList = new ArrayList<Message>();
-	    this.watchList = new ArrayList<Message>();
-	    this.socialList = new ArrayList<User>();
-	    this.transactionList = new ArrayList<Transaction>();
-	    this.notificationList = new ArrayList<Notification>();
 	}
 
-	
 	
 
 	public int getUserId() {
@@ -381,14 +368,6 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	}
 
 	
-	public ArrayList<String> getVerifications(){
-		return this.verifications;
-	}
-	
-	public void setVerifications(ArrayList<String> verifications){
-		this.verifications = verifications;
-	}
-	
 	public boolean isEmailActivated() {
 		return emailActivated;
 	}
@@ -478,84 +457,45 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.totalTranscations = totalTranscations;
 	}
 
+	
 
-	public String getGoogleToken() {
-		return googleToken;
+	public long getPassengerVerificationId() {
+		return passengerVerificationId;
 	}
 
 
-	public void setGoogleToken(String googleToken) {
-		this.googleToken = googleToken;
+	public void setPassengerVerificationId(long passengerVerificationId) {
+		this.passengerVerificationId = passengerVerificationId;
 	}
 
 
-	public String getFacebookToken() {
-		return facebookToken;
+	public long getDriverVerificationId() {
+		return driverVerificationId;
 	}
 
 
-	public void setFacebookToken(String facebookToken) {
-		this.facebookToken = facebookToken;
+	public void setDriverVerificationId(long driverVerificationId) {
+		this.driverVerificationId = driverVerificationId;
 	}
 
 
-	public String getTwitterToken() {
-		return twitterToken;
+	public PassengerVerification getPassengerVerification() {
+		return passengerVerification;
 	}
 
 
-	public void setTwitterToken(String twitterToken) {
-		this.twitterToken = twitterToken;
+	public void setPassengerVerification(PassengerVerification passengerVerification) {
+		this.passengerVerification = passengerVerification;
 	}
 
 
-	public String getPaypalToken() {
-		return paypalToken;
+	public DriverVerification getDriverVerification() {
+		return driverVerification;
 	}
 
 
-	public void setPaypalToken(String paypalToken) {
-		this.paypalToken = paypalToken;
-	}
-
-
-	public String getId_docType() {
-		return id_docType;
-	}
-
-
-	public void setId_docType(String id_docType) {
-		this.id_docType = id_docType;
-	}
-
-
-	public String getId_docNum() {
-		return id_docNum;
-	}
-
-
-	public void setId_docNum(String id_docNum) {
-		this.id_docNum = id_docNum;
-	}
-
-
-	public String getId_path() {
-		return id_path;
-	}
-
-
-	public void setId_path(String id_path) {
-		this.id_path = id_path;
-	}
-
-
-	public String getId_vehicleImgPath() {
-		return id_vehicleImgPath;
-	}
-
-
-	public void setId_vehicleImgPath(String id_vehicleImgPath) {
-		this.id_vehicleImgPath = id_vehicleImgPath;
+	public void setDriverVerification(DriverVerification driverVerification) {
+		this.driverVerification = driverVerification;
 	}
 
 
@@ -662,7 +602,6 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 			jsonUser.put("transactionList", JSONFactory.toJSON(this.getTransactionList()));
 			jsonUser.put("notificationList", JSONFactory.toJSON(this.getNotificationList()));
 			
-			jsonUser.put("verifications", new JSONArray(this.verifications));
 			jsonUser.put("emailActivated", this.isEmailActivated());
 			jsonUser.put("phoneActivated", this.isPhoneActivated());
 			jsonUser.put("emailNotice", this.isEmailNotice());
@@ -674,14 +613,10 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 			jsonUser.put("averageScore", this.getAverageScore());
 			jsonUser.put("totalTranscations", this.getTotalTranscations());
 			
-			jsonUser.put("googleToken", this.getGoogleToken());
-			jsonUser.put("facebookToken", this.getFacebookToken());
-			jsonUser.put("twitterToken", this.getTwitterToken());
-			jsonUser.put("paypalToken", this.getPaypalToken());
-			jsonUser.put("id_docType", this.getId_docType());
-			jsonUser.put("id_docNum", this.getId_docNum());
-			jsonUser.put("id_path", this.getId_path());
-			jsonUser.put("id_vehicleImgPath", this.getId_vehicleImgPath());
+			jsonUser.put("passengerVerificationId", this.getPassengerVerificationId());
+			jsonUser.put("driverVerificationId", this.getDriverVerificationId());
+			jsonUser.put("passengerVerification", this.getPassengerVerification().toJSON());
+			jsonUser.put("driverVerification", this.getDriverVerification().toJSON());
 			
 			jsonUser.put("accountId", this.getAccountId());
 			jsonUser.put("accountPass", this.getAccountPass());
@@ -696,31 +631,34 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	}
 
 
+    
+
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", password=" + password + ", name="
 				+ name + ", email=" + email + ", phone=" + phone + ", qq=" + qq
-				+ ", age=" + this.getAge() + ", gender=" + gender + ", birthday="
-				+ birthday + ", imgPath=" + imgPath + ", location=" + location
+				+ ", gender=" + gender + ", birthday=" + birthday
+				+ ", imgPath=" + imgPath + ", location_Id=" + location_Id
+				+ ", location=" + location + ", match_Id=" + match_Id
 				+ ", lastLogin=" + lastLogin + ", creationTime=" + creationTime
 				+ ", historyList=" + historyList + ", watchList=" + watchList
 				+ ", socialList=" + socialList + ", transactionList="
 				+ transactionList + ", notificationList=" + notificationList
-				+ ", verifications=" + verifications + ", emailActivated="
-				+ emailActivated + ", phoneActivated=" + phoneActivated
-				+ ", emailNotice=" + emailNotice + ", phoneNotice="
-				+ phoneNotice + ", state=" + state + ", searchRepresentation="
-				+ searchRepresentation.toSerializedString() + ", level=" + level + ", averageScore="
-				+ averageScore + ", totalTranscations=" + totalTranscations
-				+ ", googleToken=" + googleToken + ", facebookToken="
-				+ facebookToken + ", twitterToken=" + twitterToken
-				+ ", paypalToken=" + paypalToken + ", id_docType=" + id_docType
-				+ ", id_docNum=" + id_docNum + ", id_path=" + id_path
-				+ ", id_vehicleImgPath=" + id_vehicleImgPath + ", accountId="
+				+ ", emailActivated=" + emailActivated + ", phoneActivated="
+				+ phoneActivated + ", emailNotice=" + emailNotice
+				+ ", phoneNotice=" + phoneNotice + ", state=" + state
+				+ ", searchRepresentation=" + searchRepresentation + ", level="
+				+ level + ", averageScore=" + averageScore
+				+ ", totalTranscations=" + totalTranscations
+				+ ", passengerVerificationId=" + passengerVerificationId
+				+ ", driverVerificationId=" + driverVerificationId
+				+ ", passengerVerification=" + passengerVerification
+				+ ", driverVerification=" + driverVerification + ", accountId="
 				+ accountId + ", accountPass=" + accountPass
 				+ ", accountToken=" + accountToken + ", accountValue="
 				+ accountValue + "]";
 	}
+
 
 	//override Comparator, by default users will be sorted in alphabetical order of their names
 	@Override
@@ -746,25 +684,20 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
     			              && this.averageScore==newUser.getAverageScore()
     			              && this.birthday.getTime().toString().equals(newUser.getBirthday().getTime().toString())
     			              && this.creationTime.getTime().toString().equals(newUser.getCreationTime().getTime().toString())
-    			              && this.facebookToken.equals(newUser.getFacebookToken())
-    			              && this.googleToken.equals(newUser.getGoogleToken())
+    			              && this.passengerVerificationId == newUser.passengerVerificationId
+    			              && this.driverVerificationId == newUser.driverVerificationId
+    			              && this.passengerVerification.equals(newUser.passengerVerification)
+    			              && this.driverVerification.equals(newUser.driverVerification)
     			              && this.gender.code==newUser.getGender().code
     			              && HelperOperator.isArrayListEqual(this.historyList, newUser.getHistoryList())
-    			              && this.id_docNum.equals(newUser.getId_docNum())
-    			              && this.id_docType.equals(newUser.getId_docType())
-    			              && this.id_path.equals(newUser.getId_path())
-    			              && this.id_vehicleImgPath.equals(newUser.getId_vehicleImgPath())
     			              && this.imgPath.equals(newUser.getImgPath())
     			              && this.lastLogin.getTime().toString().equals(newUser.getLastLogin().getTime().toString())
     			              && this.level==newUser.getLevel()
-    			              && this.paypalToken.equals(newUser.getPaypalToken())
     			              && this.phone.equals(newUser.getPhone())
     			              && this.qq.equals(newUser.getQq())
     			              && this.state.code==newUser.getState().code
-    			              && this.twitterToken.equals(newUser.getTwitterToken())
     			              && HelperOperator.isArrayListEqual(this.watchList, newUser.getWatchList())
-    			              && HelperOperator.isArrayListEqual(this.socialList, newUser.getSocialList())
-    			              && HelperOperator.isArrayListEqual(this.verifications, newUser.getVerifications());
+    			              && HelperOperator.isArrayListEqual(this.socialList, newUser.getSocialList());
     	                      
     	
     }

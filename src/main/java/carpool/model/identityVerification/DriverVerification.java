@@ -2,14 +2,17 @@ package carpool.model.identityVerification;
 
 import java.util.Calendar;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import carpool.common.DateUtility;
 import carpool.configurations.EnumConfig.LicenseType;
 import carpool.configurations.EnumConfig.VerificationState;
 import carpool.configurations.EnumConfig.VerificationType;
 import carpool.interfaces.PseudoModel;
+import carpool.model.Letter;
 
-public class DriverVerification extends IdentityVerification implements PseudoModel{
+public class DriverVerification extends IdentityVerification{
 
 	private Calendar licenseIssueDate;
 	private String licenseImgLink;
@@ -24,8 +27,8 @@ public class DriverVerification extends IdentityVerification implements PseudoMo
 
 	public DriverVerification(VerificationType type, long verificationId, int userId, String realName, String licenseNumber,
 			LicenseType licenseType, Calendar submissionDate, Calendar expireDate, VerificationState state,
-			Calendar reviewDateDate, int reviewerId, int recommenderId, Calendar licenseIssueDate, String licenseImgLink) {
-		super(type, verificationId, userId, realName, licenseNumber, licenseType, submissionDate, expireDate, state, reviewDateDate, reviewerId, recommenderId);
+			Calendar reviewDate, int reviewerId, int recommenderId, Calendar licenseIssueDate, String licenseImgLink) {
+		super(type, verificationId, userId, realName, licenseNumber, licenseType, submissionDate, expireDate, state, reviewDate, reviewerId, recommenderId);
 		this.licenseIssueDate = licenseIssueDate;
 		this.licenseImgLink = licenseImgLink;
 	}
@@ -51,15 +54,23 @@ public class DriverVerification extends IdentityVerification implements PseudoMo
 
 
 
-
-
 	@Override
 	public JSONObject toJSON() {
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject jsonVerification = super.toJSON();
+		try {
+			jsonVerification .put("licenseIssueDate", DateUtility.castToAPIFormat(this.getLicenseIssueDate()));
+			jsonVerification .put("licenseImgLink", this.getLicenseImgLink());
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return jsonVerification;
+
 	}
 	
-	
-	
+	public boolean equals(DriverVerification v){
+		return super.equals(v) && this.licenseIssueDate.getTime().toString().equals(v.licenseIssueDate.getTime().toString()) && this.licenseImgLink.equals(v.licenseImgLink);
+	}
 	
 }
