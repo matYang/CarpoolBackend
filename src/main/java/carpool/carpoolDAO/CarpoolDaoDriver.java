@@ -1,0 +1,167 @@
+package carpool.carpoolDAO;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+import carpool.common.DateUtility;
+import carpool.common.DebugLog;
+import carpool.configurations.EnumConfig;
+import carpool.exception.identityVerification.identityVerificationNotFound;
+import carpool.model.identityVerification.DriverVerification;
+
+
+public class CarpoolDaoDriver {
+
+	public DriverVerification addDriverToDatabases(DriverVerification driver){
+
+		Connection conn = null;
+		PreparedStatement stmt = null;	
+		ResultSet rs = null;
+
+		String query = "INSERT INTO carpoolDAODriver(user_Id,realName,licenseNum,licenseType,submissionDate," +
+				"expireDate,v_state,review_Id,recommender_Id,licenseIssueDate,licenseImgLink,verificationType)"+"VALUES(?,?,?,?,?,?,?,?,?,?,?,?);";
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			stmt.setInt(1, driver.getUserId());
+			stmt.setString(2, driver.getRealName());
+			stmt.setString(3, driver.getLicenseNumber());
+			stmt.setInt(4, driver.getLicenseType().code);
+			stmt.setString(5, DateUtility.toSQLDateTime(driver.getSubmissionDate()));
+			stmt.setString(6, DateUtility.toSQLDateTime(driver.getExpireDate()));
+			stmt.setInt(7, driver.getState().code);
+			stmt.setInt(8, driver.getReviewerId());
+			stmt.setInt(9, driver.getRecommenderId());
+			stmt.setString(10, DateUtility.toSQLDateTime(driver.getLicenseIssueDate()));
+			stmt.setString(11, driver.getLicenseImgLink());
+			stmt.setInt(12, driver.getType().code);
+			stmt.executeUpdate();
+			rs = stmt.getGeneratedKeys();
+			rs.next();
+			driver.setVerificationId(rs.getInt(1));
+		} catch(SQLException e){
+			DebugLog.d(e);
+		} finally  {
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
+		} 
+		return driver;
+	}
+
+	public void updateDriverVerificationInDatabases(DriverVerification driver) throws identityVerificationNotFound{
+		Connection conn = null;
+		PreparedStatement stmt = null;	
+		ResultSet rs = null;
+
+		String query = "UPDATE carpoolDAODriver SET user_Id=?,realName=?,licenseNum=?,licenseType=?,submissionDate=?," +
+				"expireDate=?,v_state=?,review_Id=?,recommender_Id=?,licenseIssueDate=?,licenseImgLink=?,verificationType=?"+
+				"where v_Id=?";
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, driver.getUserId());
+			stmt.setString(2, driver.getRealName());
+			stmt.setString(3, driver.getLicenseNumber());
+			stmt.setInt(4, driver.getLicenseType().code);
+			stmt.setString(5, DateUtility.toSQLDateTime(driver.getSubmissionDate()));
+			stmt.setString(6, DateUtility.toSQLDateTime(driver.getExpireDate()));
+			stmt.setInt(7, driver.getState().code);
+			stmt.setInt(8, driver.getReviewerId());
+			stmt.setInt(9, driver.getRecommenderId());
+			stmt.setString(10, DateUtility.toSQLDateTime(driver.getLicenseIssueDate()));
+			stmt.setString(11, driver.getLicenseImgLink());
+			stmt.setInt(12, driver.getType().code);
+			stmt.setLong(13, driver.getVerificationId());
+			int recordsAffected = stmt.executeUpdate();
+			if(recordsAffected==0){
+				throw new identityVerificationNotFound();
+			}
+		}
+		catch(SQLException e){
+			DebugLog.d(e);
+		} finally  {
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
+		} 
+
+	}
+
+	public static void deleteDriverVerificationInDatabase(long v_id){
+		String query = "DELETE from carpoolDAODriver where v_id = ?";
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
+			stmt.setLong(1, v_id);
+			stmt.executeUpdate();	
+		}catch (SQLException e) {
+			DebugLog.d(e);
+		}finally  {
+			CarpoolDaoBasic.closeResources(conn, stmt, null,true);
+		} 
+	}
+
+	public static ArrayList<DriverVerification> getAllDriverVerifications(){
+		String query = "SELECT * FROM carpoolDAODriver;";
+		ArrayList<DriverVerification> dlist = new ArrayList<DriverVerification>();
+
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
+			rs = stmt.executeQuery();
+			while(rs.next()){				
+				dlist.add(createDriverVerificationByResultSet(rs));
+			}			
+		}catch(SQLException e){
+			e.printStackTrace();
+			DebugLog.d(e);
+		} finally  {
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
+		}  
+		return dlist;
+	}
+
+	public static DriverVerification getDriverVerificationById(long l) throws identityVerificationNotFound{
+		String query = "SELECT * FROM carpoolDAODriver where v_id";
+		DriverVerification driver = null;
+		PreparedStatement stmt = null;
+		Connection conn = null;
+		ResultSet rs = null;
+
+		try{
+			conn = CarpoolDaoBasic.getSQLConnection();
+			stmt = conn.prepareStatement(query);
+
+			stmt.setLong(1, l);
+			rs = stmt.executeQuery();
+			if(rs.next()){
+				driver = createDriverVerificationByResultSet(rs);
+			}else{
+				throw new identityVerificationNotFound();
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+			DebugLog.d(e);
+		}finally  {
+			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
+		} 
+		return driver;
+	}
+
+	private static DriverVerification createDriverVerificationByResultSet(ResultSet rs) throws SQLException {
+		return new DriverVerification(EnumConfig.VerificationType.fromInt(rs.getInt("verificationType")),rs.getLong("v_Id"),rs.getInt("user_Id"),
+				rs.getString("realName"),rs.getString("licenseNum"),EnumConfig.LicenseType.fromInt(rs.getInt("licenseType")),
+				DateUtility.DateToCalendar(rs.getTimestamp("submissionDate")),DateUtility.DateToCalendar(rs.getTimestamp("expireDate")),
+				EnumConfig.VerificationState.fromInt(rs.getInt("v_state")),DateUtility.DateToCalendar(rs.getTimestamp("reviewDate")),
+				rs.getInt("reviewer_Id"),rs.getInt("recommender_Id"),DateUtility.DateToCalendar(rs.getTimestamp("licenseIssueDate")),rs.getString("licenseImaLink"));
+	}
+
+}

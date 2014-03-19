@@ -238,7 +238,9 @@ public class CarpoolDaoMessage{
 		msg.setArrvial_Id(msg.getArrival_Location().getId());
 		String query = "UPDATE carpoolDAOMessage SET isRoundTrip=?,departure_Id=?,departure_Time=?," +
 				"departure_seatsNumber=?,departure_seatsBooked=?,departure_priceList=?,arrival_Id=?,arrival_Time=?," +
-				"arrival_seatsNumber=?,arrival_seatsBooked=?,arrival_priceList=?,paymentMethod=?,note=?,messageType=?,gender=?,messageState=?,creationTime=?,editTime=?,historyDeleted=?,departure_timeSlot=?,arrival_timeSlot=?,departureMatch_Id=?,arrivalMatch_Id=? WHERE messageId=?";
+				"arrival_seatsNumber=?,arrival_seatsBooked=?,arrival_priceList=?,paymentMethod=?,note=?,messageType=?," +
+				"gender=?,messageState=?,creationTime=?,editTime=?,historyDeleted=?,departure_timeSlot=?,arrival_timeSlot=?," +
+				"departureMatch_Id=?,arrivalMatch_Id=? WHERE messageId=?";
 
 		PreparedStatement stmt = null;
 

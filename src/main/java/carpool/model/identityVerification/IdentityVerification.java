@@ -16,6 +16,7 @@ public abstract class IdentityVerification {
 	private String licenseNumber;
 	private LicenseType licenseType;
 
+	
 	private Calendar submissionDate;
 	private Calendar expireDate;
 	private VerificationState state;
@@ -112,8 +113,10 @@ public abstract class IdentityVerification {
 	}
 	public long getVerificationId() {
 		return verificationId;
+	}	
+	public void setVerificationId(long verificationId) {
+		this.verificationId = verificationId;
 	}
-	
 	
 
 }

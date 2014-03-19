@@ -124,7 +124,7 @@ public class PseudoResource extends ServerResource{
 	public StringRepresentation doPseudoException(PseudoException e){
 		DebugLog.d(e);
 		switch(e.getCode()){
-			case 1: case 2: case 4: case 8: case 19:
+			case 1: case 2: case 4: case 8: case 19: case 21:
 				//Not Found
 				setStatus(Status.CLIENT_ERROR_NOT_FOUND);
 				break;
