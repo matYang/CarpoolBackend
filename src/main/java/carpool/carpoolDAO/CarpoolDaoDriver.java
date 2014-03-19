@@ -17,7 +17,7 @@ import carpool.model.identityVerification.DriverVerification;
 
 public class CarpoolDaoDriver {
 	
-public ArrayList<DriverVerification> getDriverVerificationsByUserId(int userId){
+public static ArrayList<DriverVerification> getDriverVerificationsByUserId(int userId){
 		
 		ArrayList<DriverVerification> dlist = new ArrayList<DriverVerification>();
 		
@@ -45,14 +45,14 @@ public ArrayList<DriverVerification> getDriverVerificationsByUserId(int userId){
 		return dlist;
 	}
 
-	public DriverVerification addDriverToDatabases(DriverVerification driver){
+	public static DriverVerification addDriverToDatabases(DriverVerification driver){
 
 		Connection conn = null;
 		PreparedStatement stmt = null;	
 		ResultSet rs = null;
 
 		String query = "INSERT INTO carpoolDAODriver(user_Id,realName,licenseNum,licenseType,submissionDate," +
-				"expireDate,v_state,review_Id,recommender_Id,licenseIssueDate,licenseImgLink,verificationType)"+"VALUES(?,?,?,?,?,?,?,?,?,?,?,?);";
+				"expireDate,v_state,reviewer_Id,recommender_Id,licenseIssueDate,licenseImgLink,verificationType)"+"VALUES(?,?,?,?,?,?,?,?,?,?,?,?);";
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -80,14 +80,14 @@ public ArrayList<DriverVerification> getDriverVerificationsByUserId(int userId){
 		return driver;
 	}
 
-	public void updateDriverVerificationInDatabases(DriverVerification driver) throws identityVerificationNotFound{
+	public static void updateDriverVerificationInDatabases(DriverVerification driver) throws identityVerificationNotFound{
 		Connection conn = null;
 		PreparedStatement stmt = null;	
 		ResultSet rs = null;
 
 		String query = "UPDATE carpoolDAODriver SET user_Id=?,realName=?,licenseNum=?,licenseType=?,submissionDate=?," +
-				"expireDate=?,v_state=?,review_Id=?,recommender_Id=?,licenseIssueDate=?,licenseImgLink=?,verificationType=?"+
-				"where v_Id=?";
+				"expireDate=?,v_state=?,reviewer_Id=?,recommender_Id=?,licenseIssueDate=?,licenseImgLink=?,verificationType=?"+
+				" WHERE v_Id = ?";
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
@@ -103,7 +103,7 @@ public ArrayList<DriverVerification> getDriverVerificationsByUserId(int userId){
 			stmt.setString(10, DateUtility.toSQLDateTime(driver.getLicenseIssueDate()));
 			stmt.setString(11, driver.getLicenseImgLink());
 			stmt.setInt(12, driver.getType().code);
-			stmt.setLong(13, driver.getVerificationId());
+			stmt.setInt(13, driver.getVerificationId());
 			int recordsAffected = stmt.executeUpdate();
 			if(recordsAffected==0){
 				throw new identityVerificationNotFound();
@@ -118,7 +118,7 @@ public ArrayList<DriverVerification> getDriverVerificationsByUserId(int userId){
 	}
 
 	public static void deleteDriverVerificationInDatabase(long v_id){
-		String query = "DELETE from carpoolDAODriver where v_id = ?";
+		String query = "DELETE from carpoolDAODriver where v_Id = ?";
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		try{
@@ -135,7 +135,7 @@ public ArrayList<DriverVerification> getDriverVerificationsByUserId(int userId){
 	}
 
 	public static ArrayList<DriverVerification> getAllDriverVerifications(){
-		String query = "SELECT * FROM carpoolDAODriver;";
+		String query = "SELECT * from carpoolDAODriver";
 		ArrayList<DriverVerification> dlist = new ArrayList<DriverVerification>();
 
 		PreparedStatement stmt = null;
@@ -159,7 +159,7 @@ public ArrayList<DriverVerification> getDriverVerificationsByUserId(int userId){
 	}
 
 	public static DriverVerification getDriverVerificationById(long l,Connection...connections) throws identityVerificationNotFound{
-		String query = "SELECT * FROM carpoolDAODriver where v_id";
+		String query = "SELECT * FROM carpoolDAODriver where v_Id = ?";
 		DriverVerification driver = null;
 		PreparedStatement stmt = null;
 		Connection conn = null;
@@ -186,11 +186,11 @@ public ArrayList<DriverVerification> getDriverVerificationsByUserId(int userId){
 	}
 
 	private static DriverVerification createDriverVerificationByResultSet(ResultSet rs) throws SQLException {
-		return new DriverVerification(EnumConfig.VerificationType.fromInt(rs.getInt("verificationType")),rs.getLong("v_Id"),rs.getInt("user_Id"),
+		return new DriverVerification(EnumConfig.VerificationType.fromInt(rs.getInt("verificationType")),rs.getInt("v_Id"),rs.getInt("user_Id"),
 				rs.getString("realName"),rs.getString("licenseNum"),EnumConfig.LicenseType.fromInt(rs.getInt("licenseType")),
 				DateUtility.DateToCalendar(rs.getTimestamp("submissionDate")),DateUtility.DateToCalendar(rs.getTimestamp("expireDate")),
 				EnumConfig.VerificationState.fromInt(rs.getInt("v_state")),DateUtility.DateToCalendar(rs.getTimestamp("reviewDate")),
-				rs.getInt("reviewer_Id"),rs.getInt("recommender_Id"),DateUtility.DateToCalendar(rs.getTimestamp("licenseIssueDate")),rs.getString("licenseImaLink"));
+				rs.getInt("reviewer_Id"),rs.getInt("recommender_Id"),DateUtility.DateToCalendar(rs.getTimestamp("licenseIssueDate")),rs.getString("licenseImgLink"));
 	}
 
 }

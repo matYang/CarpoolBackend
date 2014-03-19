@@ -164,6 +164,7 @@ public class CarpoolUserTest {
 	
 	@Test
 	public void testRead() throws LocationNotFoundException{
+		CarpoolDaoBasic.clearBothDatabase();
 		long departure_Id = 1;
 		long arrival_Id = 2;
 		String province = "Ontario";		
@@ -176,8 +177,7 @@ public class CarpoolUserTest {
 		Double lng1 = 34.341232;
 		Double lng2 = 34.123112;
 		Location departureLocation= new Location(province,city1,region1,"Test1","Test11",lat1,lng1,arrival_Id);
-		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);
-		CarpoolDaoBasic.clearBothDatabase();
+		Location arrivalLocation = new Location(province,city2,region2,"Test2","Test22",lat2,lng2,departure_Id);		
 		User user =  new User("xch93318yeah", "c2xiong@uwaterloo.ca", arrivalLocation, Gender.both);
 		try {
 			CarpoolDaoUser.addUserToDatabase(user);

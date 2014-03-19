@@ -28,7 +28,7 @@ public class PassengerVerification extends IdentityVerification implements Pseud
 	
 	
 	
-	public PassengerVerification(VerificationType type, long verificationId, int userId, String realName, String licenseNumber,
+	public PassengerVerification(VerificationType type, int verificationId, int userId, String realName, String licenseNumber,
 			LicenseType licenseType, Calendar submissionDate, Calendar expireDate, VerificationState state, Calendar reviewDate, 
 			int reviewerId, int recommenderId, String frontImgLink, String backImgLink , PassengerVerificationOrigin origin) {
 		super(type, verificationId, userId, realName, licenseNumber, licenseType, submissionDate, expireDate, state, reviewDate, reviewerId, recommenderId);

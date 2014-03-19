@@ -187,7 +187,7 @@ public class CarpoolDaoUser {
 		String query = "UPDATE carpoolDAOUser SET password=?,name=?,email=?,phone=?,qq=?,gender=?,birthday=?," +
 				"imgPath=?,location_Id=?,lastLogin=?,"+
 				"creationTime=?,emailActivated = ?,phoneActivated = ?,emailNotice = ?,phoneNotice = ?,state = ?,searchRepresentation = ?," +
-				"level=?,averageScore=?,totalTranscations=?,accountId=?,accountPass=?,accountToken=?,accountValue=?,match_Id=?driverVerification_Id=?,passengerVerification_Id=? WHERE userId = ?";
+				"level=?,averageScore=?,totalTranscations=?,accountId=?,accountPass=?,accountToken=?,accountValue=?,match_Id=?,driverVerification_Id=?,passengerVerification_Id=? WHERE userId = ?";
 
 		PreparedStatement stmt = null;
 
@@ -342,8 +342,8 @@ public class CarpoolDaoUser {
 		DriverVerification driver = null;
 		PassengerVerification passenger = null;
 		try{	
-			driver = CarpoolDaoDriver.getDriverVerificationById(rs.getLong("driverVerification_Id"));		
-			passenger = CarpoolDaoPassenger.getPassengerVerificationById(rs.getLong("passengerVerification_Id"));	
+			driver = CarpoolDaoDriver.getDriverVerificationById(rs.getLong("driverVerification_Id"),connections);		
+			passenger = CarpoolDaoPassenger.getPassengerVerificationById(rs.getLong("passengerVerification_Id"),connections);	
 
 		}catch(identityVerificationNotFound ex){}
 		try {

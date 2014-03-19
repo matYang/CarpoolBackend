@@ -30,6 +30,8 @@ public class DateUtility {
 	}
 
 	public static Calendar DateToCalendar(Date date){ 
+		if (date==null)return null;
+		
 		Calendar cal = getCurTimeInstance();
 		cal.setTime(date);
 		return cal;

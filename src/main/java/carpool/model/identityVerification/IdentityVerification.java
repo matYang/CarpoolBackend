@@ -12,28 +12,28 @@ import carpool.configurations.EnumConfig.VerificationType;
 import carpool.interfaces.PseudoModel;
 
 public abstract class IdentityVerification implements PseudoModel, Comparable<IdentityVerification>{
-	
+
 	private VerificationType type;
-	
-	private long verificationId;
+
+	private int verificationId;
 	private int userId;
 	private String realName;
 	private String licenseNumber;
 	private LicenseType licenseType;
 
-	
+
 	private Calendar submissionDate;
 	private Calendar expireDate;
 	private VerificationState state;
-	
+
 	private Calendar reviewDate;
 	private int reviewerId;
 	private int recommenderId;
-	
-	
-	
-	
-	public IdentityVerification(VerificationType type, long verificationId,
+
+
+
+
+	public IdentityVerification(VerificationType type, int verificationId,
 			int userId, String realName, String licenseNumber,
 			LicenseType licenseType, Calendar submissionDate,
 			Calendar expireDate, VerificationState state,
@@ -52,7 +52,7 @@ public abstract class IdentityVerification implements PseudoModel, Comparable<Id
 		this.reviewerId = reviewerId;
 		this.recommenderId = recommenderId;
 	}
-	
+
 	public VerificationType getType(){
 		return this.type;
 	}
@@ -116,13 +116,13 @@ public abstract class IdentityVerification implements PseudoModel, Comparable<Id
 	public void setRecommenderId(int recommenderId) {
 		this.recommenderId = recommenderId;
 	}
-	public long getVerificationId() {
+	public int getVerificationId() {
 		return verificationId;
 	}	
-	public void setVerificationId(long verificationId) {
+	public void setVerificationId(int verificationId) {
 		this.verificationId = verificationId;
 	}
-	
+
 
 	@Override
 	public JSONObject toJSON(){
@@ -147,19 +147,26 @@ public abstract class IdentityVerification implements PseudoModel, Comparable<Id
 
 		return jsonVerification;
 	}
-	
-	
+
+
 	@Override
 	public int compareTo(IdentityVerification o) {
 		return this.getSubmissionDate().compareTo(o.getSubmissionDate());
 	}
-	
-	public boolean equals(IdentityVerification v){
+
+	public boolean equals(IdentityVerification v){	
+		
+		if(this.reviewDate==null||v.reviewDate==null){
+			return this.type == v.type && this.verificationId == v.verificationId && this.userId == v.getUserId() && this.realName.equals(v.realName) && this.licenseNumber.equals(v.licenseNumber) && 
+					this.licenseType == v.licenseType && this.submissionDate.getTime().toString().equals(v.getSubmissionDate().getTime().toString()) &&
+					this.expireDate.getTime().toString().equals(v.expireDate.getTime().toString()) && this.state == v.state &&
+					this.reviewerId == v.reviewerId && this.recommenderId == v.recommenderId;
+		}
 		return this.type == v.type && this.verificationId == v.verificationId && this.userId == v.getUserId() && this.realName.equals(v.realName) && this.licenseNumber.equals(v.licenseNumber) && 
 				this.licenseType == v.licenseType && this.submissionDate.getTime().toString().equals(v.getSubmissionDate().getTime().toString()) &&
 				this.expireDate.getTime().toString().equals(v.expireDate.getTime().toString()) && this.state == v.state &&
 				this.reviewDate.getTime().toString().equals(v.reviewDate.getTime().toString()) && this.reviewerId == v.reviewerId && this.recommenderId == v.recommenderId;
 	}
-	
-	
+
+
 }

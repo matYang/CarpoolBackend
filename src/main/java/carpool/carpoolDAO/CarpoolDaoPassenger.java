@@ -15,7 +15,7 @@ import carpool.model.identityVerification.PassengerVerification;
 
 public class CarpoolDaoPassenger {
 	
-	public ArrayList<PassengerVerification> getPassengerVerificationsByUserId(int userId){
+	public static ArrayList<PassengerVerification> getPassengerVerificationsByUserId(int userId){
 		
 		ArrayList<PassengerVerification> plist = new ArrayList<PassengerVerification>();
 		
@@ -43,14 +43,14 @@ public class CarpoolDaoPassenger {
 		return plist;
 	}
 	
-	public PassengerVerification addPassengerToDatabases(PassengerVerification passenger){
+	public static PassengerVerification addPassengerToDatabases(PassengerVerification passenger){
 
 		Connection conn = null;
 		PreparedStatement stmt = null;	
 		ResultSet rs = null;
 
 		String query = "INSERT INTO carpoolDAOPassenger(user_Id,realName,licenseNum,licenseType,submissionDate," +
-				"expireDate,v_state,review_Id,recommender_Id,frontImgLink,backImgLink,originType,verificationType)"+"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?);";
+				"expireDate,v_state,reviewer_Id,recommender_Id,frontImgLink,backImgLink,originType,verificationType)"+"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?);";
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -79,14 +79,14 @@ public class CarpoolDaoPassenger {
 		return passenger;
 	}
 
-	public void updatePassengerVerificationInDatabases(PassengerVerification passenger) throws identityVerificationNotFound{
+	public static void updatePassengerVerificationInDatabases(PassengerVerification passenger) throws identityVerificationNotFound{
 		Connection conn = null;
 		PreparedStatement stmt = null;	
 		ResultSet rs = null;
 
 		String query = "UPDATE carpoolDAOPassenger SET user_Id=?,realName=?,licenseNum=?,licenseType=?,submissionDate=?," +
-				"expireDate=?,v_state=?,review_Id=?,recommender_Id=?,frontImgLink=?,backImgLink=?,originType=?,verificationType=?"+
-				"where v_Id=?";
+				"expireDate=?,v_state=?,reviewer_Id=?,recommender_Id=?,frontImgLink=?,backImgLink=?,originType=?,verificationType=?"+
+				" where v_Id = ?";
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
@@ -103,7 +103,7 @@ public class CarpoolDaoPassenger {
 			stmt.setString(11, passenger.getBackImgLink());
 			stmt.setInt(12, passenger.getOrigin().code);
 			stmt.setInt(13, passenger.getType().code);
-			stmt.setLong(14, passenger.getVerificationId());
+			stmt.setInt(14, passenger.getVerificationId());
 			int recordsAffected = stmt.executeUpdate();
 			if(recordsAffected==0){
 				throw new identityVerificationNotFound();
@@ -118,7 +118,7 @@ public class CarpoolDaoPassenger {
 	}
 
 	public static void deletePassengerVerificationInDatabase(long v_id){
-		String query = "DELETE from carpoolDAOPassenger where v_id = ?";
+		String query = "DELETE from carpoolDAOPassenger where v_Id = ?";
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		try{
@@ -159,7 +159,7 @@ public class CarpoolDaoPassenger {
 	}
 
 	public static PassengerVerification getPassengerVerificationById(long l,Connection...connections) throws identityVerificationNotFound{
-		String query = "SELECT * FROM carpoolDAOPassenger where v_id";
+		String query = "SELECT * FROM carpoolDAOPassenger where v_Id=?";
 		PassengerVerification passenger = null;
 		PreparedStatement stmt = null;
 		Connection conn = null;
@@ -186,10 +186,10 @@ public class CarpoolDaoPassenger {
 	}
 
 	private static PassengerVerification createPassengerVerificationByResultSet(ResultSet rs) throws SQLException {
-		return new PassengerVerification(EnumConfig.VerificationType.fromInt(rs.getInt("verificationType")),rs.getLong("v_Id"),rs.getInt("user_Id"),
+		return new PassengerVerification(EnumConfig.VerificationType.fromInt(rs.getInt("verificationType")),rs.getInt("v_Id"),rs.getInt("user_Id"),
 				rs.getString("realName"),rs.getString("licenseNum"),EnumConfig.LicenseType.fromInt(rs.getInt("licenseType")),
 				DateUtility.DateToCalendar(rs.getTimestamp("submissionDate")),DateUtility.DateToCalendar(rs.getTimestamp("expireDate")),
 				EnumConfig.VerificationState.fromInt(rs.getInt("v_state")),DateUtility.DateToCalendar(rs.getTimestamp("reviewDate")),
-				rs.getInt("reviewer_Id"),rs.getInt("recommender_Id"),rs.getString("frontImgLink"),rs.getString("backImgLink"),EnumConfig.PassengerVerificationOrigin.frontInt(rs.getInt("origin")));
+				rs.getInt("reviewer_Id"),rs.getInt("recommender_Id"),rs.getString("frontImgLink"),rs.getString("backImgLink"),EnumConfig.PassengerVerificationOrigin.frontInt(rs.getInt("originType")));
 	}
 }

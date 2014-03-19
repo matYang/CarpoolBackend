@@ -28,77 +28,77 @@ import carpool.model.representation.SearchRepresentation;
 
 
 public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
-	
+
 	/******
 	 *  the following stores user's account informations
 	 ******/
-    private int userId;
-    private String password;
-    private String name;
-    private String email;
-    private String phone;
-    private String qq;
-    private Gender gender;
-    private Calendar birthday;
-    private String imgPath;
-    private long location_Id;
-    private Location location;
-    private long match_Id;
+	private int userId;
+	private String password;
+	private String name;
+	private String email;
+	private String phone;
+	private String qq;
+	private Gender gender;
+	private Calendar birthday;
+	private String imgPath;
+	private long location_Id;
+	private Location location;
+	private long match_Id;
 	private Calendar lastLogin;
-    private Calendar creationTime;
-    
-    /*****
-     * the followings are for user's relations
-     ******/
-    private ArrayList<Message> historyList;
-    private ArrayList<Message> watchList;
-    private ArrayList<User> socialList;
-    private ArrayList<Transaction> transactionList;
-    private ArrayList<Notification> notificationList;
-    
+	private Calendar creationTime;
 
-    /*****
-     * the followings are user's state information
-     *****/
-    private boolean emailActivated;
-    private boolean phoneActivated;
-    private boolean emailNotice;
-    private boolean phoneNotice;
-    private UserState state;
-    private SearchRepresentation searchRepresentation;
+	/*****
+	 * the followings are for user's relations
+	 ******/
+	private ArrayList<Message> historyList;
+	private ArrayList<Message> watchList;
+	private ArrayList<User> socialList;
+	private ArrayList<Transaction> transactionList;
+	private ArrayList<Notification> notificationList;
 
-    
-    /*****
-     * the following stores user's statistics
-     *****/
-    private int level;
-    private int averageScore;
-    private int totalTranscations;
-    
-    
-    private long passengerVerificationId;
-    private long driverVerificationId;
-    private PassengerVerification passengerVerification;
-    private DriverVerification driverVerification;
 
-    
-    /*****
-     * the follows are user's account information
-     *****/
-    private String accountId;
-    private String accountPass;
-    private String accountToken;
-    private BigDecimal accountValue;
-    
-    
-    /*****
-     * protected constructor to disallow raw initialization and serialization, but allow easier testing
-     *****/
-    protected User(){}
- 
+	/*****
+	 * the followings are user's state information
+	 *****/
+	private boolean emailActivated;
+	private boolean phoneActivated;
+	private boolean emailNotice;
+	private boolean phoneNotice;
+	private UserState state;
+	private SearchRepresentation searchRepresentation;
 
-    /*****
-     * Constructor for user registration
+
+	/*****
+	 * the following stores user's statistics
+	 *****/
+	private int level;
+	private int averageScore;
+	private int totalTranscations;
+
+
+	private long passengerVerificationId;
+	private long driverVerificationId;
+	private PassengerVerification passengerVerification;
+	private DriverVerification driverVerification;
+
+
+	/*****
+	 * the follows are user's account information
+	 *****/
+	private String accountId;
+	private String accountPass;
+	private String accountToken;
+	private BigDecimal accountValue;
+
+
+	/*****
+	 * protected constructor to disallow raw initialization and serialization, but allow easier testing
+	 *****/
+	protected User(){}
+
+
+	/*****
+	 * Constructor for user registration
 	 *****/
 	public User(String password, String email, Location location, Gender g) {
 		super();
@@ -112,39 +112,39 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.name = "无名氏";
 		this.phone = "";
 		this.qq = "";
-	    this.gender = g;
-	    this.birthday = DateUtility.getCurTimeInstance();
-	    this.imgPath = g == Gender.female ? CarpoolConfig.img_default_avatar_female : CarpoolConfig.img_default_avatar_male;
-	    this.lastLogin = DateUtility.getCurTimeInstance();
-	    this.creationTime = DateUtility.getCurTimeInstance();
-	    
-	    this.historyList = new ArrayList<Message>();
-	    this.watchList = new ArrayList<Message>();
-	    this.socialList = new ArrayList<User>();
-	    this.transactionList = new ArrayList<Transaction>();
-	    this.notificationList = new ArrayList<Notification>();
-  
-	    this.emailActivated = false;
-	    this.phoneActivated = false;
-	    this.emailNotice = false;
-	    this.phoneNotice = false;
-	    this.state = EnumConfig.UserState.normal;
-	    this.searchRepresentation = CarpoolConfig.getDefaultSearchRepresentation();
-	    
-	    this.level = 0;
-	    this.averageScore = 0;
-	    this.totalTranscations = 0;
+		this.gender = g;
+		this.birthday = DateUtility.getCurTimeInstance();
+		this.imgPath = g == Gender.female ? CarpoolConfig.img_default_avatar_female : CarpoolConfig.img_default_avatar_male;
+		this.lastLogin = DateUtility.getCurTimeInstance();
+		this.creationTime = DateUtility.getCurTimeInstance();
 
-	    this.passengerVerificationId = -1l;
-	    this.driverVerificationId = -1l;
-	    this.passengerVerification = null;
-	    this.driverVerification = null;
-	    
-	    this.accountId = "";
-	    this.accountPass = "";
-	    this.accountToken = "";
-	    this.accountValue = BigDecimal.valueOf(0l);
-	    
+		this.historyList = new ArrayList<Message>();
+		this.watchList = new ArrayList<Message>();
+		this.socialList = new ArrayList<User>();
+		this.transactionList = new ArrayList<Transaction>();
+		this.notificationList = new ArrayList<Notification>();
+
+		this.emailActivated = false;
+		this.phoneActivated = false;
+		this.emailNotice = false;
+		this.phoneNotice = false;
+		this.state = EnumConfig.UserState.normal;
+		this.searchRepresentation = CarpoolConfig.getDefaultSearchRepresentation();
+
+		this.level = 0;
+		this.averageScore = 0;
+		this.totalTranscations = 0;
+
+		this.passengerVerificationId = -1l;
+		this.driverVerificationId = -1l;
+		this.passengerVerification = null;
+		this.driverVerification = null;
+
+		this.accountId = "";
+		this.accountPass = "";
+		this.accountToken = "";
+		this.accountValue = BigDecimal.valueOf(0l);
+
 	}
 
 
@@ -156,7 +156,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 			String imgPath, Location location, Calendar lastLogin,
 			Calendar creationTime, boolean emailActivated,
 			boolean phoneActivated, boolean emailNotice, boolean phoneNotice,
-			 EnumConfig.UserState state, SearchRepresentation searchRepresentation,
+			EnumConfig.UserState state, SearchRepresentation searchRepresentation,
 			int level, int averageScore, int totalTranscations,
 			long passengerVerificationId, long driverVerificationId,
 			PassengerVerification passengerVerification,
@@ -194,16 +194,16 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.accountPass = accountPass;
 		this.accountToken = accountToken;
 		this.accountValue = accountValue;
-		
+
 		this.historyList = new ArrayList<Message>();
-	    this.watchList = new ArrayList<Message>();
-	    this.socialList = new ArrayList<User>();
-	    this.transactionList = new ArrayList<Transaction>();
-	    this.notificationList = new ArrayList<Notification>();
+		this.watchList = new ArrayList<Message>();
+		this.socialList = new ArrayList<User>();
+		this.transactionList = new ArrayList<Transaction>();
+		this.notificationList = new ArrayList<Notification>();
 
 	}
 
-	
+
 
 	public int getUserId() {
 		return userId;
@@ -300,7 +300,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.location = location;
 		this.location_Id = location.getId();
 	}
-		
+
 	public Calendar getLastLogin() {
 		return lastLogin;
 	}
@@ -366,7 +366,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.notificationList = notificationList;
 	}
 
-	
+
 	public boolean isEmailActivated() {
 		return emailActivated;
 	}
@@ -456,7 +456,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.totalTranscations = totalTranscations;
 	}
 
-	
+
 
 	public long getPassengerVerificationId() {
 		return passengerVerificationId;
@@ -551,7 +551,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	public void setAccountValue(BigDecimal accountValue) {
 		this.accountValue = accountValue;
 	}
-	
+
 
 	public boolean isPasswordCorrect(String password) {
 		return this.password.equals(password);
@@ -569,19 +569,19 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 
 
 	/** 
-     * check if user can be logged in
-     * Precondition: email has been activated, and state is in normal
-     */
-    public boolean isAbleToLogin(){
-        return this.isEmailActivated() && this.state == EnumConfig.UserState.normal;
-    }
+	 * check if user can be logged in
+	 * Precondition: email has been activated, and state is in normal
+	 */
+	public boolean isAbleToLogin(){
+		return this.isEmailActivated() && this.state == EnumConfig.UserState.normal;
+	}
 
 
-    @Override
+	@Override
 	public JSONObject toJSON(){
 		JSONObject jsonUser = new JSONObject();
 		try {
-			
+
 			jsonUser.put("userId", this.getUserId());
 			jsonUser.put("name", this.getName());
 			jsonUser.put("email", this.getEmail());
@@ -600,23 +600,23 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 			jsonUser.put("socialList", JSONFactory.toJSON(this.getSocialList()));
 			jsonUser.put("transactionList", JSONFactory.toJSON(this.getTransactionList()));
 			jsonUser.put("notificationList", JSONFactory.toJSON(this.getNotificationList()));
-			
+
 			jsonUser.put("emailActivated", this.isEmailActivated());
 			jsonUser.put("phoneActivated", this.isPhoneActivated());
 			jsonUser.put("emailNotice", this.isEmailNotice());
 			jsonUser.put("phoneNotice", this.isPhoneNotice());
-			
+
 			jsonUser.put("state", this.getState().code);
 			jsonUser.put("searchRepresentation", this.getSearchRepresentation().toJSON());
 			jsonUser.put("level", this.getLevel());
 			jsonUser.put("averageScore", this.getAverageScore());
 			jsonUser.put("totalTranscations", this.getTotalTranscations());
-			
+
 			jsonUser.put("passengerVerificationId", this.getPassengerVerificationId());
 			jsonUser.put("driverVerificationId", this.getDriverVerificationId());
 			jsonUser.put("passengerVerification", this.getPassengerVerification().toJSON());
 			jsonUser.put("driverVerification", this.getDriverVerification().toJSON());
-			
+
 			jsonUser.put("accountId", this.getAccountId());
 			jsonUser.put("accountPass", this.getAccountPass());
 			jsonUser.put("accountToken", this.getAccountToken());
@@ -625,12 +625,12 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		return jsonUser;
 	}
 
 
-    
+
 
 	@Override
 	public String toString() {
@@ -665,47 +665,56 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		return this.getName().compareTo(anotherUser.getName());
 	}
 
-    public boolean equals(User newUser) throws ValidationException{       	
-    	return newUser !=null && this.userId == newUser.getUserId() 
-    			              && this.name.equals(newUser.getName())
-    			              && this.gender.equals(newUser.getGender())
-    			              && this.location.equals(newUser.getLocation())
-    			              && this.emailActivated==newUser.emailActivated
-    			              && this.emailNotice==newUser.emailNotice
-    			              && this.phoneActivated==newUser.phoneActivated
-    			              && this.phoneNotice== newUser.phoneNotice
-    			              && this.password.equals(newUser.getPassword())
-    			              && this.isAbleToLogin()==newUser.isAbleToLogin()
-    			              && this.validate()==newUser.validate()
-    			              && this.accountToken.equals(newUser.getAccountToken())
-    			              && this.accountValue.toString().equals(newUser.getAccountValue().toString())
-    			              && this.getAge()==newUser.getAge()
-    			              && this.averageScore==newUser.getAverageScore()
-    			              && this.birthday.getTime().toString().equals(newUser.getBirthday().getTime().toString())
-    			              && this.creationTime.getTime().toString().equals(newUser.getCreationTime().getTime().toString())
-    			              && this.passengerVerificationId == newUser.passengerVerificationId
-    			              && this.driverVerificationId == newUser.driverVerificationId
-    			              && this.passengerVerification.equals(newUser.passengerVerification)
-    			              && this.driverVerification.equals(newUser.driverVerification)
-    			              && this.gender.code==newUser.getGender().code
-    			              && HelperOperator.isArrayListEqual(this.historyList, newUser.getHistoryList())
-    			              && this.imgPath.equals(newUser.getImgPath())
-    			              && this.lastLogin.getTime().toString().equals(newUser.getLastLogin().getTime().toString())
-    			              && this.level==newUser.getLevel()
-    			              && this.phone.equals(newUser.getPhone())
-    			              && this.qq.equals(newUser.getQq())
-    			              && this.state.code==newUser.getState().code
-    			              && HelperOperator.isArrayListEqual(this.watchList, newUser.getWatchList())
-    			              && HelperOperator.isArrayListEqual(this.socialList, newUser.getSocialList());
-    	                      
-    	
-    }
+	public boolean equals(User newUser) throws ValidationException{  
+
+		boolean d_verificationEqualFlag = false;
+		boolean p_verificationEqualFlag = false;
+
+		if(this.passengerVerification==null) p_verificationEqualFlag = newUser.passengerVerification==null;    	
+		if(this.driverVerification==null) d_verificationEqualFlag = newUser.driverVerification==null;
+		if(this.passengerVerification!=null && newUser.passengerVerification!=null)
+			p_verificationEqualFlag = this.passengerVerification.equals(newUser.passengerVerification);
+		if(this.driverVerification!=null && newUser.driverVerification!=null)
+			d_verificationEqualFlag = this.driverVerification.equals(newUser.driverVerification);
+
+		return newUser !=null && this.userId == newUser.getUserId() 
+				&& this.name.equals(newUser.getName())
+				&& this.gender.equals(newUser.getGender())
+				&& this.location.equals(newUser.getLocation())
+				&& this.emailActivated==newUser.emailActivated
+				&& this.emailNotice==newUser.emailNotice
+				&& this.phoneActivated==newUser.phoneActivated
+				&& this.phoneNotice== newUser.phoneNotice
+				&& this.password.equals(newUser.getPassword())
+				&& this.isAbleToLogin()==newUser.isAbleToLogin()
+				&& this.validate()==newUser.validate()
+				&& this.accountToken.equals(newUser.getAccountToken())
+				&& this.accountValue.toString().equals(newUser.getAccountValue().toString())
+				&& this.getAge()==newUser.getAge()
+				&& this.averageScore==newUser.getAverageScore()
+				&& this.birthday.getTime().toString().equals(newUser.getBirthday().getTime().toString())
+				&& this.creationTime.getTime().toString().equals(newUser.getCreationTime().getTime().toString())				
+				&& p_verificationEqualFlag
+				&& d_verificationEqualFlag
+				&& this.gender.code==newUser.getGender().code
+				&& HelperOperator.isArrayListEqual(this.historyList, newUser.getHistoryList())
+				&& this.imgPath.equals(newUser.getImgPath())
+				&& this.lastLogin.getTime().toString().equals(newUser.getLastLogin().getTime().toString())
+				&& this.level==newUser.getLevel()
+				&& this.phone.equals(newUser.getPhone())
+				&& this.qq.equals(newUser.getQq())
+				&& this.state.code==newUser.getState().code
+				&& HelperOperator.isArrayListEqual(this.watchList, newUser.getWatchList())
+				&& HelperOperator.isArrayListEqual(this.socialList, newUser.getSocialList());
+
+
+	}
 	@Override
 	public boolean validate() throws ValidationException{
 		//TODO remove true
 		return true || Validator.isEmailFormatValid(this.email) && Validator.isNameFormatValid(this.name) && Validator.isPasswordFormatValid(this.password) && Validator.isPhoneFormatValid(this.phone) && Validator.isQqFormatValid(this.qq);
 	}
-	
+
 	public boolean validate_create() throws ValidationException{
 		if (!Validator.isEmailFormatValid(this.email)){
 			throw new ValidationException("邮箱格式不正确");
@@ -715,7 +724,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		}
 		return true;
 	}
-	
+
 	public String getPassword() {
 		return  this.password;
 	}

@@ -25,7 +25,7 @@ public class DriverVerification extends IdentityVerification{
 	
 
 
-	public DriverVerification(VerificationType type, long verificationId, int userId, String realName, String licenseNumber,
+	public DriverVerification(VerificationType type, int verificationId, int userId, String realName, String licenseNumber,
 			LicenseType licenseType, Calendar submissionDate, Calendar expireDate, VerificationState state,
 			Calendar reviewDate, int reviewerId, int recommenderId, Calendar licenseIssueDate, String licenseImgLink) {
 		super(type, verificationId, userId, realName, licenseNumber, licenseType, submissionDate, expireDate, state, reviewDate, reviewerId, recommenderId);
