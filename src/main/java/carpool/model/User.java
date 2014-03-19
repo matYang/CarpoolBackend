@@ -152,19 +152,16 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	 * full constructor used for SQL retrieval
 	 *****/
 	public User(int userId, String password, String name, String email,
-			String phone, String qq, Gender gender, Calendar birthday,
-			String imgPath, long location_Id, Location location, long match_Id,
-			Calendar lastLogin, Calendar creationTime,
-			ArrayList<Message> historyList, ArrayList<Message> watchList,
-			ArrayList<User> socialList, ArrayList<Transaction> transactionList,
-			ArrayList<Notification> notificationList, boolean emailActivated,
+			String phone, String qq, carpool.configurations.EnumConfig.Gender gender, Calendar birthday,
+			String imgPath, Location location, Calendar lastLogin,
+			Calendar creationTime, boolean emailActivated,
 			boolean phoneActivated, boolean emailNotice, boolean phoneNotice,
 			UserState state, SearchRepresentation searchRepresentation,
 			int level, int averageScore, int totalTranscations,
 			long passengerVerificationId, long driverVerificationId,
 			PassengerVerification passengerVerification,
 			DriverVerification driverVerification, String accountId,
-			String accountPass, String accountToken, BigDecimal accountValue) {
+			String accountPass, String accountToken, BigDecimal accountValue, long match_Id) {
 		super();
 		this.userId = userId;
 		this.password = password;
@@ -175,16 +172,11 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.gender = gender;
 		this.birthday = birthday;
 		this.imgPath = imgPath;
-		this.location_Id = location_Id;
+		this.location_Id = location.getId();
 		this.location = location;
 		this.match_Id = match_Id;
 		this.lastLogin = lastLogin;
 		this.creationTime = creationTime;
-		this.historyList = historyList;
-		this.watchList = watchList;
-		this.socialList = socialList;
-		this.transactionList = transactionList;
-		this.notificationList = notificationList;
 		this.emailActivated = emailActivated;
 		this.phoneActivated = phoneActivated;
 		this.emailNotice = emailNotice;
@@ -202,6 +194,13 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.accountPass = accountPass;
 		this.accountToken = accountToken;
 		this.accountValue = accountValue;
+		
+		this.historyList = new ArrayList<Message>();
+	    this.watchList = new ArrayList<Message>();
+	    this.socialList = new ArrayList<User>();
+	    this.transactionList = new ArrayList<Transaction>();
+	    this.notificationList = new ArrayList<Notification>();
+
 	}
 
 	

@@ -10,7 +10,6 @@ import carpool.configurations.EnumConfig.LicenseType;
 import carpool.configurations.EnumConfig.VerificationState;
 import carpool.configurations.EnumConfig.VerificationType;
 import carpool.interfaces.PseudoModel;
-import carpool.model.Letter;
 
 public abstract class IdentityVerification implements PseudoModel, Comparable<IdentityVerification>{
 	
