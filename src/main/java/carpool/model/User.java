@@ -614,8 +614,8 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 
 			jsonUser.put("passengerVerificationId", this.getPassengerVerificationId());
 			jsonUser.put("driverVerificationId", this.getDriverVerificationId());
-			jsonUser.put("passengerVerification", this.getPassengerVerification().toJSON());
-			jsonUser.put("driverVerification", this.getDriverVerification().toJSON());
+			jsonUser.put("passengerVerification", this.getPassengerVerification() == null ? new JSONObject() : this.getPassengerVerification().toJSON());
+			jsonUser.put("driverVerification", this.getDriverVerification() == null ? new JSONObject() : this.getDriverVerification().toJSON());
 
 			jsonUser.put("accountId", this.getAccountId());
 			jsonUser.put("accountPass", this.getAccountPass());
