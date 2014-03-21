@@ -176,7 +176,8 @@ public class UserDaoService{
 	
 	
 	public static void addDriverVerification(int userId, DriverVerification verification) throws UserNotFoundException, LocationNotFoundException{
-		//TODO
+		CarpoolDaoDriver.addDriverToDatabases(verification);
+		//update user
 	}
 	
 	public static void addPassengerVerification(int userId, PassengerVerification verification) throws UserNotFoundException, LocationNotFoundException{

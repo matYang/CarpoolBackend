@@ -161,7 +161,7 @@ public class UserDriverVerificationResource extends PseudoResource{
 			else{
 				throw new ValidationException("驾照类型错误");
 			}
-            if (realName == null || licenseNumber == null || licenseImgLink == null || realName.length() == 0 || licenseNumber.length() == 0 || licenseImgLink.length() == 0){
+            if (realName == null || licenseNumber == null || licenseImgLink == null || realName.length() == 0 || licenseNumber.length() == 0){
             	throw new ValidationException("验证信息输入不完整");
             }
             
