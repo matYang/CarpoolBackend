@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.VerificationState;
 import carpool.exception.identityVerification.identityVerificationNotFound;
 import carpool.model.identityVerification.DriverVerification;
 
@@ -173,6 +174,10 @@ public static ArrayList<DriverVerification> getDriverVerificationsByUserId(int u
 			rs = stmt.executeQuery();
 			if(rs.next()){
 				driver = createDriverVerificationByResultSet(rs);
+				if (driver.getState() == VerificationState.verified && driver.hasExpired()){
+					driver.setState(VerificationState.expired);
+					//TODO update driver
+				}
 			}else{
 				throw new identityVerificationNotFound();
 			}
@@ -181,7 +186,8 @@ public static ArrayList<DriverVerification> getDriverVerificationsByUserId(int u
 			DebugLog.d(e);
 		}finally  {
 			CarpoolDaoBasic.closeResources(conn, stmt, rs,CarpoolDaoBasic.shouldConnectionClose(connections));
-		} 
+		}
+	
 		return driver;
 	}
 

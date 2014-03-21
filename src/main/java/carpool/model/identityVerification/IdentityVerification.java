@@ -122,6 +122,12 @@ public abstract class IdentityVerification implements PseudoModel, Comparable<Id
 	public void setVerificationId(int verificationId) {
 		this.verificationId = verificationId;
 	}
+	public boolean hasExpired(){
+		if (DateUtility.compareday(this.expireDate, DateUtility.getCurTimeInstance()) == -1){
+			return true;
+		}
+		return false;
+	}
 
 
 	@Override
