@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import carpool.common.DateUtility;
 import carpool.common.HelperOperator;
 import carpool.common.Validator;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.ServerConfig;
 import carpool.configurations.EnumConfig.*;
 import carpool.exception.validation.ValidationException;
 import carpool.factory.JSONFactory;

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import carpool.common.Parser;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.ServerConfig;
 import carpool.configurations.EnumConfig;
 import carpool.configurations.EnumConfig.MessageType;
 import carpool.common.DateUtility;
@@ -419,7 +419,7 @@ public class CarpoolDaoMessage{
 	public static ArrayList<Message> getRecentMessages() throws LocationNotFoundException{
 		ArrayList<Message> retVal = new ArrayList<Message>();
 		ArrayList<Integer> ilist = new ArrayList<Integer>();
-		String query = "SELECT * from carpoolDAOMessage ORDER BY creationTime DESC LIMIT " + CarpoolConfig.max_recents + ";";
+		String query = "SELECT * from carpoolDAOMessage ORDER BY creationTime DESC LIMIT " + ServerConfig.max_recents + ";";
 
 		PreparedStatement stmt = null;
 		Connection conn = null;

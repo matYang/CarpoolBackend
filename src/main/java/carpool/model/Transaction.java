@@ -11,7 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import carpool.common.DateUtility;
 import carpool.common.HelperOperator;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.ServerConfig;
 import carpool.configurations.EnumConfig.DayTimeSlot;
 import carpool.configurations.EnumConfig.MessageState;
 import carpool.configurations.EnumConfig.PaymentMethod;
@@ -25,7 +25,7 @@ import carpool.interfaces.PseudoValidatable;
 
 public class Transaction implements PseudoModel, PseudoValidatable, Comparable<Transaction>{
 		
-	public final int category = CarpoolConfig.category_DM;
+	public final int category = ServerConfig.category_DM;
 	
 	private int transactionId;
 	

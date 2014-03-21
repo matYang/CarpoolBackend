@@ -43,7 +43,8 @@ import org.imgscalr.Scalr;
 
 import carpool.common.DebugLog;
 import carpool.common.HelperOperator;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.ImageConfig;
+import carpool.configurations.ServerConfig;
 import carpool.configurations.EnumConfig;
 import carpool.dbservice.*;
 import carpool.encryption.ImgCrypto;
@@ -57,7 +58,7 @@ import carpool.model.*;
 import carpool.resources.PseudoResource;
 
 
-public class ImgResource extends PseudoResource{
+public class UserImgResource extends PseudoResource{
 	
 	
 	@Put
@@ -100,12 +101,10 @@ public class ImgResource extends PseudoResource{
 			id = Integer.parseInt(this.getReqAttr("id"));
 			this.validateAuthentication(id);
 			
-			DebugLog.d("initial validation passed");
 			DiskFileItemFactory factory = new DiskFileItemFactory(); 
-	        factory.setSizeThreshold(1024000); 
+	        factory.setSizeThreshold(ImageConfig.img_FactorySize); 
 	        RestletFileUpload upload = new RestletFileUpload(factory); 
 	        
-	        DebugLog.d("Waning: creating file items");
 	        List<FileItem> items = upload.parseRepresentation(entity); 
 	        DebugLog.d("Temp files created, fildItem list generated");
 	        /*
@@ -115,7 +114,7 @@ public class ImgResource extends PseudoResource{
 	                DebugLog.d(fi.getName()); 
 	        } 
 			*/
-//			InputStream inputStream = entity.getStream();
+
             BufferedImage bufferedImage = ImageIO.read(items.get(0).getInputStream());
             
             bufferedImage = cropImageToRatio(bufferedImage);
@@ -123,11 +122,11 @@ public class ImgResource extends PseudoResource{
             bufferedImage = Scalr.resize(bufferedImage, Scalr.Method.SPEED, Scalr.Mode.FIT_TO_WIDTH, 200, 200, Scalr.OP_ANTIALIAS);
             DebugLog.d("img rescale completed into buffer");
             
-    		String userProfile = CarpoolConfig.profileImgPrefix;
-    		String imgSize = CarpoolConfig.imgSize_m;
+    		String userProfile = ImageConfig.profileImgPrefix;
+    		String imgSize = ImageConfig.imgSize_m;
     		String imgName = userProfile+imgSize+id;
     		DebugLog.d("creating new file on EC2");
-            imgFile = new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png");
+            imgFile = new File(ServerConfig.pathToSearchHistoryFolder+imgName+".png");
             DebugLog.d("dumping img into buffer");
             
             ImageIO.write(bufferedImage, "png", imgFile);
@@ -138,12 +137,10 @@ public class ImgResource extends PseudoResource{
             DebugLog.d("img uploaded, retriving user");
             User user = UserDaoService.getUserById(id);
             user.setImgPath(path);
-            DebugLog.d("updating user");
             UserDaoService.updateUser(user);
             
             jsonObject = JSONFactory.toJSON(user);
 			setStatus(Status.SUCCESS_OK);
-			DebugLog.d("success response ready");
 
         } catch (PseudoException e){
         	DebugLog.d(e);
@@ -154,7 +151,6 @@ public class ImgResource extends PseudoResource{
             return this.doException(e);
         }
 
-		DebugLog.d("return");
 		Representation result = new JsonRepresentation(jsonObject);
 
 		this.addCORSHeader();

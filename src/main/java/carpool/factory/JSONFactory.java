@@ -10,7 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DebugLog;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.DatabaseConfig;
 import carpool.configurations.EnumConfig.Gender;
 import carpool.configurations.EnumConfig.PaymentMethod;
 import carpool.configurations.EnumConfig.UserState;
@@ -161,20 +161,20 @@ public class JSONFactory {
 			return new JSONArray();
 		}
 
-		if (entireMap.get(CarpoolConfig.UserSRDeparture) != null){
-			JSONArray jsonArray = toJSONArray(entireMap.get(CarpoolConfig.UserSRDeparture));
+		if (entireMap.get(DatabaseConfig.UserSRDeparture) != null){
+			JSONArray jsonArray = toJSONArray(entireMap.get(DatabaseConfig.UserSRDeparture));
 			array.add(jsonArray);				
 		}
-		if (entireMap.get(CarpoolConfig.UserSRArrival) != null){
-			JSONArray jsonArray = toJSONArray(entireMap.get(CarpoolConfig.UserSRArrival));
+		if (entireMap.get(DatabaseConfig.UserSRArrival) != null){
+			JSONArray jsonArray = toJSONArray(entireMap.get(DatabaseConfig.UserSRArrival));
 			array.add(jsonArray);				
 		}
-		if (entireMap.get(CarpoolConfig.DatabasesDeparture) != null){
-			JSONArray jsonArray = toJSONArray(entireMap.get(CarpoolConfig.DatabasesDeparture));
+		if (entireMap.get(DatabaseConfig.DatabasesDeparture) != null){
+			JSONArray jsonArray = toJSONArray(entireMap.get(DatabaseConfig.DatabasesDeparture));
 			array.add(jsonArray);				
 		}
-		if (entireMap.get(CarpoolConfig.DatabasesArrival) != null){
-			JSONArray jsonArray = toJSONArray(entireMap.get(CarpoolConfig.DatabasesArrival));
+		if (entireMap.get(DatabaseConfig.DatabasesArrival) != null){
+			JSONArray jsonArray = toJSONArray(entireMap.get(DatabaseConfig.DatabasesArrival));
 			array.add(jsonArray);				
 		}
 

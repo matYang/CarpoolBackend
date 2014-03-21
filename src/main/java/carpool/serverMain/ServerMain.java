@@ -8,7 +8,7 @@ import org.restlet.Server;
 import org.restlet.data.Protocol;
 
 import carpool.common.DebugLog;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.ServerConfig;
 import carpool.configurations.EnumConfig.Gender;
 import carpool.dbservice.LocationDaoService;
 import carpool.factory.JSONFactory;
@@ -73,7 +73,6 @@ public class ServerMain {
 
 
 	public static void main(String... args) throws Exception {
-		CarpoolConfig.initConfig();
 		DebugLog.initializeLogger();
 		LocationDaoService.init();
 		DebugLog.d("Excuting");

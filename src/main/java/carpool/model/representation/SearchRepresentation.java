@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import carpool.common.DateUtility;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.ServerConfig;
 import carpool.configurations.EnumConfig;
 import carpool.configurations.EnumConfig.DayTimeSlot;
 import carpool.configurations.EnumConfig.MessageType;
@@ -49,7 +49,7 @@ public class SearchRepresentation implements PseudoRepresentation{
 	//separated by "+"
 	public SearchRepresentation(String serializedSearchString){
 		
-		String[] representationArray = serializedSearchString.split(CarpoolConfig.urlSeperatorRegx);		
+		String[] representationArray = serializedSearchString.split(ServerConfig.urlSeperatorRegx);		
 		this.isRoundTrip = Boolean.parseBoolean(representationArray[0]);
 		this.departureMatch_Id = Long.parseLong(representationArray[1],10);
 		this.arrivalMatch_Id = Long.parseLong(representationArray[2],10);
@@ -145,8 +145,8 @@ public class SearchRepresentation implements PseudoRepresentation{
 
 	@Override
 	public String toSerializedString(){
-		return this.isRoundTrip + CarpoolConfig.urlSeperator + this.departureMatch_Id  + CarpoolConfig.urlSeperator + this.arrivalMatch_Id + CarpoolConfig.urlSeperator + 
-				DateUtility.castToAPIFormat(this.departureDate)  + CarpoolConfig.urlSeperator + DateUtility.castToAPIFormat(this.arrivalDate)  + CarpoolConfig.urlSeperator + this.targetType.code + CarpoolConfig.urlSeperator + this.departureTimeSlot.code + CarpoolConfig.urlSeperator + this.arrivalTimeSlot.code+ CarpoolConfig.urlSeperator+DateUtility.castToAPIFormat(this.timeStamp);
+		return this.isRoundTrip + ServerConfig.urlSeperator + this.departureMatch_Id  + ServerConfig.urlSeperator + this.arrivalMatch_Id + ServerConfig.urlSeperator + 
+				DateUtility.castToAPIFormat(this.departureDate)  + ServerConfig.urlSeperator + DateUtility.castToAPIFormat(this.arrivalDate)  + ServerConfig.urlSeperator + this.targetType.code + ServerConfig.urlSeperator + this.departureTimeSlot.code + ServerConfig.urlSeperator + this.arrivalTimeSlot.code+ ServerConfig.urlSeperator+DateUtility.castToAPIFormat(this.timeStamp);
 	}
 	
 	@Override

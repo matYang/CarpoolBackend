@@ -15,7 +15,8 @@ import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.common.DateUtility;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.DatabaseConfig;
+import carpool.configurations.ServerConfig;
 import carpool.configurations.EnumConfig.DayTimeSlot;
 import carpool.configurations.EnumConfig.Gender;
 import carpool.configurations.EnumConfig.MessageType;
@@ -34,7 +35,7 @@ public class StatisticAnalysisServiceTest {
 	public void testTimeStampConverter(){
 		Calendar oldr = Calendar.getInstance(TimeZone.getTimeZone("Asia/Shanghai"));
 		oldr.add(Calendar.HOUR_OF_DAY, 16);	
-		Calendar test = Calendar.getInstance(TimeZone.getTimeZone(CarpoolConfig.timeZoneStandard));
+		Calendar test = Calendar.getInstance(TimeZone.getTimeZone(ServerConfig.timeZoneStandard));
 		test.add(Calendar.HOUR_OF_DAY, 16);
 		if(DateUtility.convertToStandard(oldr).HOUR_OF_DAY-test.HOUR_OF_DAY==0){
 			//Passed;
@@ -82,16 +83,16 @@ public class StatisticAnalysisServiceTest {
 		int userId3 = user3.getUserId();
 		int userId4 = user4.getUserId();
 		
-		SearchRepresentation sr = CarpoolConfig.getDefaultSearchRepresentation();
+		SearchRepresentation sr = ServerConfig.getDefaultSearchRepresentation();
 		sr.setDepartureMatch_Id(did3);
 		sr.setArrivalMatch_Id(did5);
-		SearchRepresentation sr2 = CarpoolConfig.getDefaultSearchRepresentation();
+		SearchRepresentation sr2 = ServerConfig.getDefaultSearchRepresentation();
 		sr2.setDepartureMatch_Id(did3);
 		sr2.setArrivalMatch_Id(did5);
-		SearchRepresentation sr3 = CarpoolConfig.getDefaultSearchRepresentation();
+		SearchRepresentation sr3 = ServerConfig.getDefaultSearchRepresentation();
 		sr3.setDepartureMatch_Id(did3);		
 		sr3.setArrivalMatch_Id(did5);
-		SearchRepresentation sr4 = CarpoolConfig.getDefaultSearchRepresentation();
+		SearchRepresentation sr4 = ServerConfig.getDefaultSearchRepresentation();
 				
 		AwsMain.storeSearchHistory(sr, userId);
 		AwsMain.storeSearchHistory(sr2, userId2);
@@ -158,16 +159,16 @@ public class StatisticAnalysisServiceTest {
 		int userId3 = user3.getUserId();
 		int userId4 = user4.getUserId();
 		
-		SearchRepresentation sr = CarpoolConfig.getDefaultSearchRepresentation();
+		SearchRepresentation sr = ServerConfig.getDefaultSearchRepresentation();
 		sr.setDepartureMatch_Id(did3);
 		sr.setArrivalMatch_Id(did5);
-		SearchRepresentation sr2 = CarpoolConfig.getDefaultSearchRepresentation();
+		SearchRepresentation sr2 = ServerConfig.getDefaultSearchRepresentation();
 		sr2.setDepartureMatch_Id(did3);
 		sr2.setArrivalMatch_Id(did5);
-		SearchRepresentation sr3 = CarpoolConfig.getDefaultSearchRepresentation();
+		SearchRepresentation sr3 = ServerConfig.getDefaultSearchRepresentation();
 		sr3.setDepartureMatch_Id(did3);		
 		sr3.setArrivalMatch_Id(did5);
-		SearchRepresentation sr4 = CarpoolConfig.getDefaultSearchRepresentation();
+		SearchRepresentation sr4 = ServerConfig.getDefaultSearchRepresentation();
 				
 		AwsMain.storeSearchHistory(sr, userId);
 		AwsMain.storeSearchHistory(sr2, userId2);
@@ -223,16 +224,16 @@ public class StatisticAnalysisServiceTest {
 		map = StatisticAnalysisOfDataService.GetTheEntireMap();
 		//UserSRDeparture
 		ArrayList<Entry<Long,Integer>>list1 = new ArrayList<Entry<Long,Integer>>();
-		list1 = map.get(CarpoolConfig.UserSRDeparture);
+		list1 = map.get(DatabaseConfig.UserSRDeparture);
 		//UserSRArrival
 		ArrayList<Entry<Long,Integer>>list2 = new ArrayList<Entry<Long,Integer>>();
-		list2 = map.get(CarpoolConfig.UserSRArrival);
+		list2 = map.get(DatabaseConfig.UserSRArrival);
 		//DatabasesDeparture
 		ArrayList<Entry<Long,Integer>>list3 = new ArrayList<Entry<Long,Integer>>();
-		list3 = map.get(CarpoolConfig.DatabasesDeparture);
+		list3 = map.get(DatabaseConfig.DatabasesDeparture);
 		//DatabasesArrival
 		ArrayList<Entry<Long,Integer>>list4 = new ArrayList<Entry<Long,Integer>>();
-		list4 = map.get(CarpoolConfig.DatabasesArrival);
+		list4 = map.get(DatabaseConfig.DatabasesArrival);
 		if(list1.size()==2&&list1.get(0).getValue()==3&&list1.get(1).getValue()==1){
 			//Passed;
 		}else{
@@ -295,16 +296,16 @@ public class StatisticAnalysisServiceTest {
 		int userId3 = user3.getUserId();
 		int userId4 = user4.getUserId();
 		
-		SearchRepresentation sr = CarpoolConfig.getDefaultSearchRepresentation();
+		SearchRepresentation sr = ServerConfig.getDefaultSearchRepresentation();
 		sr.setDepartureMatch_Id(did3);
 		sr.setArrivalMatch_Id(did5);
-		SearchRepresentation sr2 = CarpoolConfig.getDefaultSearchRepresentation();
+		SearchRepresentation sr2 = ServerConfig.getDefaultSearchRepresentation();
 		sr2.setDepartureMatch_Id(did3);
 		sr2.setArrivalMatch_Id(did5);
-		SearchRepresentation sr3 = CarpoolConfig.getDefaultSearchRepresentation();
+		SearchRepresentation sr3 = ServerConfig.getDefaultSearchRepresentation();
 		sr3.setDepartureMatch_Id(did3);		
 		sr3.setArrivalMatch_Id(did5);
-		SearchRepresentation sr4 = CarpoolConfig.getDefaultSearchRepresentation();
+		SearchRepresentation sr4 = ServerConfig.getDefaultSearchRepresentation();
 				
 		AwsMain.storeSearchHistory(sr, userId);
 		AwsMain.storeSearchHistory(sr2, userId2);
@@ -358,16 +359,16 @@ public class StatisticAnalysisServiceTest {
 		
 		//UserSRDeparture
 				ArrayList<Entry<Long,Integer>>list1 = new ArrayList<Entry<Long,Integer>>();
-				list1 = StatisticAnalysisOfDataService.getSpecificList(CarpoolConfig.UserSRDeparture);
+				list1 = StatisticAnalysisOfDataService.getSpecificList(DatabaseConfig.UserSRDeparture);
 				//UserSRArrival
 				ArrayList<Entry<Long,Integer>>list2 = new ArrayList<Entry<Long,Integer>>();
-				list2 = StatisticAnalysisOfDataService.getSpecificList(CarpoolConfig.UserSRArrival);
+				list2 = StatisticAnalysisOfDataService.getSpecificList(DatabaseConfig.UserSRArrival);
 				//DatabasesDeparture
 				ArrayList<Entry<Long,Integer>>list3 = new ArrayList<Entry<Long,Integer>>();
-				list3 = StatisticAnalysisOfDataService.getSpecificList(CarpoolConfig.DatabasesDeparture);
+				list3 = StatisticAnalysisOfDataService.getSpecificList(DatabaseConfig.DatabasesDeparture);
 				//DatabasesArrival
 				ArrayList<Entry<Long,Integer>>list4 = new ArrayList<Entry<Long,Integer>>();
-				list4 = StatisticAnalysisOfDataService.getSpecificList(CarpoolConfig.DatabasesArrival);
+				list4 = StatisticAnalysisOfDataService.getSpecificList(DatabaseConfig.DatabasesArrival);
 				if(list1.size()==2&&list1.get(0).getValue()==3&&list1.get(1).getValue()==1){
 					//Passed;
 				}else{

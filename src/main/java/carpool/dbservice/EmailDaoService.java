@@ -7,7 +7,7 @@ import carpool.asyncTask.relayTask.EmailRelayTask;
 import carpool.asyncTask.relayTask.SESRelayTask;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.ServerConfig;
 import carpool.configurations.EnumConfig.EmailEvent;
 import carpool.carpoolDAO.*;
 import carpool.encryption.EmailCrypto;
@@ -54,7 +54,7 @@ public class EmailDaoService {
 		String encryptedEmailKey = EmailCrypto.encrypt(userId, authCode);
 		
 		try {
-			SESRelayTask emailTask = new SESRelayTask(newEmail, EmailEvent.activeateAccount, "http://"+CarpoolConfig.domainName+"/#emailActivation/"+encryptedEmailKey);
+			SESRelayTask emailTask = new SESRelayTask(newEmail, EmailEvent.activeateAccount, "http://"+ServerConfig.domainName+"/#emailActivation/"+encryptedEmailKey);
 			ExecutorProvider.executeRelay(emailTask);
 		} catch (Exception e) {
 			DebugLog.d(e);
@@ -122,7 +122,7 @@ public class EmailDaoService {
 			String authCode = AuthFactory.forgetPassword_setAuthCode(userId);
 			
 			String encryptedEmailKey = EmailCrypto.encrypt(userId, authCode);
-			SESRelayTask eTask = new SESRelayTask(email, EmailEvent.forgotPassword, CarpoolConfig.domainName+"/#forgetPassword/"+encryptedEmailKey);
+			SESRelayTask eTask = new SESRelayTask(email, EmailEvent.forgotPassword, ServerConfig.domainName+"/#forgetPassword/"+encryptedEmailKey);
 			ExecutorProvider.executeRelay(eTask);
 			return true;
 		} catch (Exception e) {

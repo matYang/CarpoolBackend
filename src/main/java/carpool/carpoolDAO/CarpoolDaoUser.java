@@ -361,32 +361,6 @@ public class CarpoolDaoUser {
 		return user;
 	}
 
-	//	//tranverse
-	//	private static User addHistoryListToUser(User user) throws UserNotFoundException {
-	//		ArrayList<Message> historyList = new ArrayList<Message>();
-	//		String query = "SELECT * from carpoolDAOMessage WHERE ownerId = ?";
-	//		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-	//			stmt.setInt(1, user.getUserId());
-	//			ResultSet rs = stmt.executeQuery();
-	//			while(rs.next()){
-	//				historyList.add(CarpoolDaoMessage.createMessageByResultSet(rs, ));
-	//			}
-	//		}catch(SQLException e){
-	//			DebugLog.d(e);
-	//		}
-	//		query = "SELECT * FROM carpoolDAOMessage JOIN Transaction ON ( Transaction.messageId = carpoolDAOMessage.messageId AND Transaction.initUserId = ?)";
-	//		try(PreparedStatement stmt = CarpoolDaoBasic.getSQLConnection().prepareStatement(query)){
-	//			stmt.setInt(1, user.getUserId());
-	//			ResultSet rs = stmt.executeQuery();
-	//			while(rs.next()){
-	//				historyList.add(CarpoolDaoMessage.createMessageByResultSet(rs));
-	//			}
-	//		}catch(SQLException e){
-	//			DebugLog.d(e);
-	//		}
-	//		user.setHistoryList(historyList);
-	//		return user;
-	//	}
 
 
 	public static boolean hasUserInSocialList(int mainUser, int subUser,Connection...connections){

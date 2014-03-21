@@ -23,7 +23,9 @@ import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.DatabaseConfig;
+import carpool.configurations.ImageConfig;
+import carpool.configurations.ServerConfig;
 import carpool.configurations.EnumConfig.DayTimeSlot;
 import carpool.configurations.EnumConfig.Gender;
 import carpool.configurations.EnumConfig.MessageType;
@@ -50,10 +52,10 @@ public class AwsS3Test {
 	public void testUploadImg() throws IOException{
 		CarpoolDaoBasic.clearBothDatabase();
 		int userId = 1;
-		String userProfile = CarpoolConfig.profileImgPrefix;
-		String imgSize = CarpoolConfig.imgSize_m;
+		String userProfile = ImageConfig.profileImgPrefix;
+		String imgSize = ImageConfig.imgSize_m;
 		String imgName = userProfile+imgSize+userId;
-		File file = new File(CarpoolConfig.pathToSearchHistoryFolder+imgName+".png");
+		File file = new File(ServerConfig.pathToSearchHistoryFolder+imgName+".png");
 		AwsMain.uploadProfileImg(userId, file, imgName, false);
 	}
 
@@ -119,8 +121,8 @@ public class AwsS3Test {
 		SearchRepresentation SR6 = new SearchRepresentation(false,dm,am2,dt2,at2,type,timeSlot3,timeSlot3);
 
 		Jedis redis = CarpoolDaoBasic.getJedis();
-		String rediskey = CarpoolConfig.redisSearchHistoryPrefix+userId;
-		int upper = CarpoolConfig.redisSearchHistoryUpbound;
+		String rediskey = DatabaseConfig.redisSearchHistoryPrefix+userId;
+		int upper = DatabaseConfig.redisSearchHistoryUpbound;
 		//For this test, we set the upper to be 6
 
 		AwsMain.storeSearchHistory(SR, userId);			
@@ -260,8 +262,8 @@ public class AwsS3Test {
 		AwsMain.storeSearchHistory(SR4, userId);
 		AwsMain.storeSearchHistory(SR5, userId);
 
-		String rediskey = CarpoolConfig.redisSearchHistoryPrefix+userId;
-		int upper = CarpoolConfig.redisSearchHistoryUpbound;
+		String rediskey = DatabaseConfig.redisSearchHistoryPrefix+userId;
+		int upper = DatabaseConfig.redisSearchHistoryUpbound;
 		Jedis jedis = CarpoolDaoBasic.getJedis();
 		int storage = jedis.lrange(rediskey, 0, upper-1).size();
 		CarpoolDaoBasic.returnJedis(jedis);
@@ -382,7 +384,7 @@ public class AwsS3Test {
 		int preuser2 = AwsMain.getUserSearchHistory(userId2).size();
 		AwsMain.migrateAlltheUsersSearchHistory();
 		//Test for user
-		String rediskey = CarpoolConfig.redisSearchHistoryPrefix+userId;		
+		String rediskey = DatabaseConfig.redisSearchHistoryPrefix+userId;		
 		int storage = redis.lrange(rediskey, 0,redis.llen(rediskey)-1).size();
 		if(storage==0){
 			//Passed;
@@ -390,7 +392,7 @@ public class AwsS3Test {
 			fail();
 		}
 		//Test for user2
-		rediskey = CarpoolConfig.redisSearchHistoryPrefix+userId2;		
+		rediskey = DatabaseConfig.redisSearchHistoryPrefix+userId2;		
 		storage = redis.lrange(rediskey, 0,redis.llen(rediskey)-1).size();
 		if(storage==0){
 			//Passed;

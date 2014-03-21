@@ -31,7 +31,8 @@ import redis.clients.jedis.Jedis;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.DatabaseConfig;
+import carpool.configurations.ServerConfig;
 import carpool.model.representation.SearchRepresentation;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -49,8 +50,8 @@ import com.amazonaws.services.s3.model.S3Object;
 
 public class AwsMain {
 
-	private static final String myAccessKeyID = CarpoolConfig.AccessKeyID;
-	private static final String mySecretKey = CarpoolConfig.SecretKey;
+	private static final String myAccessKeyID = ServerConfig.AccessKeyID;
+	private static final String mySecretKey = ServerConfig.SecretKey;
 	private static final String bucketName = "Badstudent";
 	private static final AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 
@@ -130,12 +131,12 @@ public class AwsMain {
 
 	public static boolean migrateAlltheUsersSearchHistory(){
 		Jedis redis = CarpoolDaoBasic.getJedis();
-		Set<String> keyset = redis.keys(CarpoolConfig.redisSearchHistoryPrefix + "*");
+		Set<String> keyset = redis.keys(DatabaseConfig.redisSearchHistoryPrefix + "*");
 		CarpoolDaoBasic.returnJedis(redis);
 		
 		for (String key : keyset){
 			//key.replaceAll(CarpoolConfig.redisSearchHistoryPrefix, "");
-			int userId = Integer.parseInt(key.substring(CarpoolConfig.redisSearchHistoryPrefix.length()));
+			int userId = Integer.parseInt(key.substring(DatabaseConfig.redisSearchHistoryPrefix.length()));
 			migrateUserSearchHistory(userId);
 		}
 
@@ -194,9 +195,9 @@ public class AwsMain {
 		
 		S3Object object = null;
 		//check
-		if(redis.llen(rediskey) >= CarpoolConfig.redisSearchHistoryUpbound){
+		if(redis.llen(rediskey) >= DatabaseConfig.redisSearchHistoryUpbound){
 			AmazonS3 s3Client = new AmazonS3Client(myCredentials);
-			List<String> appendString = redis.lrange(rediskey, 0, CarpoolConfig.redisSearchHistoryUpbound-1);
+			List<String> appendString = redis.lrange(rediskey, 0, DatabaseConfig.redisSearchHistoryUpbound-1);
 			String fileName = getUserSHFileName(userId);
 			File file = new File(getUserSHLocalFileName(userId));
 
@@ -279,7 +280,7 @@ public class AwsMain {
 	
 	private static ArrayList<SearchRepresentation> getUserSearchHistoryFromRedis(int userId){
 		Jedis redis = CarpoolDaoBasic.getJedis();
-		List<String> appendString = redis.lrange(getUserSHRedisKey(userId), 0, CarpoolConfig.redisSearchHistoryUpbound-1);
+		List<String> appendString = redis.lrange(getUserSHRedisKey(userId), 0, DatabaseConfig.redisSearchHistoryUpbound-1);
 		CarpoolDaoBasic.returnJedis(redis);
 		
 		ArrayList<SearchRepresentation> srList = new ArrayList<SearchRepresentation>();
@@ -291,7 +292,7 @@ public class AwsMain {
 	}
 	
 	private static String getUserSHRedisKey(int userId){
-		return CarpoolConfig.redisSearchHistoryPrefix+userId;
+		return DatabaseConfig.redisSearchHistoryPrefix+userId;
 	}
 	
 	private static String getUserSHFileName(int userId){
@@ -299,7 +300,7 @@ public class AwsMain {
 	}
 	
 	private static String getUserSHLocalFileName(int userId){
-		return CarpoolConfig.pathToSearchHistoryFolder + userId + CarpoolConfig.searchHistoryFileSufix;	
+		return ServerConfig.pathToSearchHistoryFolder + userId + ServerConfig.searchHistoryFileSufix;	
 	}
 	
 	private static String getUserImageKey(int userId, String imageName){

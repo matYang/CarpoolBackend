@@ -16,7 +16,7 @@ import carpool.aws.AwsMain;
 import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.common.DateUtility;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.DatabaseConfig;
 import carpool.configurations.EnumConfig;
 import carpool.configurations.EnumConfig.AdminRoutineAction;
 import carpool.configurations.EnumConfig.DayTimeSlot;
@@ -75,7 +75,7 @@ public class AdminStatResource extends PseudoResource{
 
 				resultArr = JSONFactory.toJSON(entireMap);	
 			}else if(this.getAttribute("type").equals("usrd")){
-				map = StatisticAnalysisOfDataService.getSpecificList(CarpoolConfig.UserSRDeparture);
+				map = StatisticAnalysisOfDataService.getSpecificList(DatabaseConfig.UserSRDeparture);
 
 				//For Test			
 				//							HashMap<Long,Integer> UserSRDeparture = new HashMap<Long,Integer>();
@@ -86,7 +86,7 @@ public class AdminStatResource extends PseudoResource{
 
 				resultArr = JSONFactory.toJSONArray(map);	
 			}else if(this.getAttribute("type").equals("usra")){
-				map = StatisticAnalysisOfDataService.getSpecificList(CarpoolConfig.UserSRArrival);
+				map = StatisticAnalysisOfDataService.getSpecificList(DatabaseConfig.UserSRArrival);
 
 				//For Test			
 				//							HashMap<Long,Integer> UserSRArrival = new HashMap<Long,Integer>();			
@@ -99,7 +99,7 @@ public class AdminStatResource extends PseudoResource{
 
 				resultArr = JSONFactory.toJSONArray(map);
 			}else if(this.getAttribute("type").equals("dd")){
-				map = StatisticAnalysisOfDataService.getSpecificList(CarpoolConfig.DatabasesDeparture);
+				map = StatisticAnalysisOfDataService.getSpecificList(DatabaseConfig.DatabasesDeparture);
 
 				//For Test			
 				//								HashMap<Long,Integer> DatabasesDeparture = new HashMap<Long,Integer>();			
@@ -112,7 +112,7 @@ public class AdminStatResource extends PseudoResource{
 
 				resultArr = JSONFactory.toJSONArray(map);
 			}else if(this.getAttribute("type").equals("da")){
-				map = StatisticAnalysisOfDataService.getSpecificList(CarpoolConfig.DatabasesArrival);
+				map = StatisticAnalysisOfDataService.getSpecificList(DatabaseConfig.DatabasesArrival);
 
 				//For Test			
 				//							HashMap<Long,Integer> DatabasesArrival = new HashMap<Long,Integer>();			

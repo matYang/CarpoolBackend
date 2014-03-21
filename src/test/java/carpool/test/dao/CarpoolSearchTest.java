@@ -12,7 +12,7 @@ import carpool.carpoolDAO.CarpoolDaoMessage;
 import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.ServerConfig;
 import carpool.configurations.EnumConfig.DayTimeSlot;
 import carpool.configurations.EnumConfig.Gender;
 import carpool.configurations.EnumConfig.MessageState;

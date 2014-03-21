@@ -9,17 +9,17 @@ import redis.clients.jedis.Jedis;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.DatabaseConfig;
 
 public class AuthFactory {
 	
 	public static final String emailActivation_getKey(int userId){
-		return CarpoolConfig.key_emailActivationAuth + userId;
+		return DatabaseConfig.key_emailActivationAuth + userId;
 	}
 	
 	public static final String emailActivation_setAuthCode(int userId){
 		Jedis jedis = CarpoolDaoBasic.getJedis();
-		String authCode = RandomStringUtils.randomAlphanumeric(CarpoolConfig.emailActivation_sequenceLength) + CarpoolConfig.redisSeperator + DateUtility.getTimeStamp();
+		String authCode = RandomStringUtils.randomAlphanumeric(DatabaseConfig.emailActivation_sequenceLength) + DatabaseConfig.redisSeperator + DateUtility.getTimeStamp();
 		jedis.set(emailActivation_getKey(userId), authCode);
 		CarpoolDaoBasic.returnJedis(jedis);
 		return authCode;
@@ -32,11 +32,11 @@ public class AuthFactory {
 				return false;
 			}else{
 				String storedAuthCode = jedis.get(emailActivation_getKey(userId));
-				String separate[] = storedAuthCode.split(CarpoolConfig.redisSeperatorRegex);
+				String separate[] = storedAuthCode.split(DatabaseConfig.redisSeperatorRegex);
 				String storedTimeStamp = separate[1];
 
 				//check for expiration
-				if((DateUtility.getCurTime() - Long.parseLong(storedTimeStamp)) > CarpoolConfig.emailActivation_expireThreshold){
+				if((DateUtility.getCurTime() - Long.parseLong(storedTimeStamp)) > DatabaseConfig.emailActivation_expireThreshold){
 					//expired, delete record and return false
 					jedis.del(emailActivation_getKey(userId));
 					return false;
@@ -60,12 +60,12 @@ public class AuthFactory {
 	
 	
 	private static final String forgetPassword_getKey(int userId){
-		return CarpoolConfig.key_forgetPasswordAuth + userId;
+		return DatabaseConfig.key_forgetPasswordAuth + userId;
 	}
 	
 	public static final String forgetPassword_setAuthCode(int userId){
 		Jedis jedis = CarpoolDaoBasic.getJedis();
-		String authCode = RandomStringUtils.randomAlphanumeric(CarpoolConfig.forgetPassword_sequenceLength) + CarpoolConfig.redisSeperator + DateUtility.getTimeStamp();
+		String authCode = RandomStringUtils.randomAlphanumeric(DatabaseConfig.forgetPassword_sequenceLength) + DatabaseConfig.redisSeperator + DateUtility.getTimeStamp();
 		jedis.set(forgetPassword_getKey(userId), authCode);
 		CarpoolDaoBasic.returnJedis(jedis);
 		return authCode;
@@ -78,11 +78,11 @@ public class AuthFactory {
 				return false;
 			}else{
 				String storedAuthCode = jedis.get(forgetPassword_getKey(userId));
-				String separate[] = storedAuthCode.split(CarpoolConfig.redisSeperatorRegex);
+				String separate[] = storedAuthCode.split(DatabaseConfig.redisSeperatorRegex);
 				String storedTimeStamp = separate[1];
 				
 				//check for expiration
-				if((DateUtility.getCurTime() - Long.parseLong(storedTimeStamp )) > CarpoolConfig.forgetPassword_expireThreshold){
+				if((DateUtility.getCurTime() - Long.parseLong(storedTimeStamp )) > DatabaseConfig.forgetPassword_expireThreshold){
 					//expired, delete record and return false
 					jedis.del(forgetPassword_getKey(userId));
 					return false;
@@ -110,8 +110,8 @@ public class AuthFactory {
 	 */
 	public static final String session_openSession(int userId){
 		Jedis jedis = CarpoolDaoBasic.getJedis();
-		String sessionString = RandomStringUtils.randomAlphanumeric(CarpoolConfig.session_sequenceLength) + CarpoolConfig.redisSeperator + userId;
-		String authCode = userId + CarpoolConfig.redisSeperator + DateUtility.getTimeStamp();
+		String sessionString = RandomStringUtils.randomAlphanumeric(DatabaseConfig.session_sequenceLength) + DatabaseConfig.redisSeperator + userId;
+		String authCode = userId + DatabaseConfig.redisSeperator + DateUtility.getTimeStamp();
 				
 		jedis.set(sessionString, authCode);
 		CarpoolDaoBasic.returnJedis(jedis);
@@ -131,9 +131,9 @@ public class AuthFactory {
 				//if session does not exist, return -1
 				return -1;
 			}
-			String id = idTimeStamp.split(CarpoolConfig.redisSeperatorRegex)[0];
-			String timeStamp = idTimeStamp.split(CarpoolConfig.redisSeperatorRegex)[1];
-			if((DateUtility.getCurTime() - Long.parseLong(timeStamp)) > CarpoolConfig.session_expireThreshold){
+			String id = idTimeStamp.split(DatabaseConfig.redisSeperatorRegex)[0];
+			String timeStamp = idTimeStamp.split(DatabaseConfig.redisSeperatorRegex)[1];
+			if((DateUtility.getCurTime() - Long.parseLong(timeStamp)) > DatabaseConfig.session_expireThreshold){
 				//expired
 				jedis.del(sessionString);
 				return -1;
@@ -165,20 +165,20 @@ public class AuthFactory {
 				//if session does not exist, return -1
 				return false;
 			}else{
-				String separate[] = idTimeStamp.split(CarpoolConfig.redisSeperatorRegex);
+				String separate[] = idTimeStamp.split(DatabaseConfig.redisSeperatorRegex);
 				String id = separate[0];
 				String timeStamp = separate[1];
 				if(!id.equals(challengeUserId + "")){
 					return false;
 				}
-				if((DateUtility.getCurTime() - Long.parseLong(timeStamp)) > CarpoolConfig.session_expireThreshold){
+				if((DateUtility.getCurTime() - Long.parseLong(timeStamp)) > DatabaseConfig.session_expireThreshold){
 					//if expired, clean up and return false
 					jedis.del(sessionString);
 					return false;
 				}
-				if ((DateUtility.getCurTime() - Long.parseLong(timeStamp)) > CarpoolConfig.session_updateThreshold){
+				if ((DateUtility.getCurTime() - Long.parseLong(timeStamp)) > DatabaseConfig.session_updateThreshold){
 					//if should update, udpate only the time stamp in the value pair
-					jedis.set(sessionString, id + CarpoolConfig.redisSeperator + DateUtility.getTimeStamp());
+					jedis.set(sessionString, id + DatabaseConfig.redisSeperator + DateUtility.getTimeStamp());
 				}
 				return true;
 			}

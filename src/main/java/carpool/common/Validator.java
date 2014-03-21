@@ -3,7 +3,7 @@ package carpool.common;
 
 import java.util.regex.*;
 
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.ValidationConfig;
 
 
 public class Validator {
@@ -24,9 +24,9 @@ public class Validator {
 
 	public static boolean isEmailFormatValid(String email){
 
-		Pattern emailPattern = Pattern.compile(CarpoolConfig.RegexEmailPattern);
+		Pattern emailPattern = Pattern.compile(ValidationConfig.RegexEmailPattern);
 		try{
-			if (emailPattern.matcher(email).matches() && email.length()<=CarpoolConfig.maxEmailLength) {
+			if (emailPattern.matcher(email).matches() && email.length()<=ValidationConfig.maxEmailLength) {
 				return true;
 			}else{
 				return false;
@@ -38,7 +38,7 @@ public class Validator {
 	}
 
 	public static boolean isQqFormatValid(String qq){
-		if (qq == null || qq.length() < CarpoolConfig.qqMinLength || qq.length() > CarpoolConfig.qqMaxLength){
+		if (qq == null || qq.length() < ValidationConfig.qqMinLength || qq.length() > ValidationConfig.qqMaxLength){
 			return false;
 		}else{
 			for (int i = 0; i < qq.length(); i++) {
@@ -51,9 +51,9 @@ public class Validator {
 	} 
 
 	public static boolean isNameFormatValid(String userName){
-		Pattern NamePattern = Pattern.compile(CarpoolConfig.RegexNamePattern);
-		Pattern WhiteSpacePattern = Pattern.compile(CarpoolConfig.RegexNameWhiteSpacePattern);
-		if (userName == null || userName.length() == 0 || userName.length() > CarpoolConfig.maxUserNameLength){
+		Pattern NamePattern = Pattern.compile(ValidationConfig.RegexNamePattern);
+		Pattern WhiteSpacePattern = Pattern.compile(ValidationConfig.RegexNameWhiteSpacePattern);
+		if (userName == null || userName.length() == 0 || userName.length() > ValidationConfig.maxUserNameLength){
 			return false;
 		}	
 		if(WhiteSpacePattern.matcher(userName).matches()){
@@ -66,11 +66,11 @@ public class Validator {
 	}
 
 	public static boolean isPasswordFormatValid(String password){
-		if (password == null || password.length() < CarpoolConfig.minPasswordLength || password.length() > CarpoolConfig.maxPasswordLength){
+		if (password == null || password.length() < ValidationConfig.minPasswordLength || password.length() > ValidationConfig.maxPasswordLength){
 			return false;
 		}
 		
-		Pattern PasswordPattern = Pattern.compile(CarpoolConfig.RegexPwPattern);
+		Pattern PasswordPattern = Pattern.compile(ValidationConfig.RegexPwPattern);
 		if(PasswordPattern.matcher(password).matches()){
 			return true;
 		}

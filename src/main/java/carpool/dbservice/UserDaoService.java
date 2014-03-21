@@ -18,6 +18,8 @@ import carpool.exception.transaction.TransactionNotFoundException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.exception.validation.ValidationException;
 import carpool.model.*;
+import carpool.model.identityVerification.DriverVerification;
+import carpool.model.identityVerification.PassengerVerification;
 import carpool.model.representation.SearchRepresentation;
 import carpool.model.representation.UserSearchRepresentation;
 
@@ -170,6 +172,15 @@ public class UserDaoService{
 		User user = getUserById(id);
 		user.setSearchRepresentation(userSearch);
 		updateUser(user);
+	}
+	
+	
+	public static void addDriverVerification(int userId, DriverVerification verification) throws UserNotFoundException, LocationNotFoundException{
+		//TODO
+	}
+	
+	public static void addPassengerVerification(int userId, PassengerVerification verification) throws UserNotFoundException, LocationNotFoundException{
+		//TODO
 	}
 
 

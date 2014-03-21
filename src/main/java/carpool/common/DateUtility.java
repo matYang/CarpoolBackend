@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.ServerConfig;
 
 public class DateUtility {
 	
@@ -15,7 +15,7 @@ public class DateUtility {
 	
 	
 	public static Calendar getCurTimeInstance(){
-		return Calendar.getInstance(TimeZone.getTimeZone(CarpoolConfig.timeZoneIdNY));
+		return Calendar.getInstance(TimeZone.getTimeZone(ServerConfig.timeZoneIdNY));
 	}
 	
 	public static long getCurTime(){

@@ -8,7 +8,7 @@ import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoUser;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.ServerConfig;
 import carpool.exception.PseudoException;
 import carpool.exception.user.UserNotFoundException;
 import carpool.exception.validation.ValidationException;

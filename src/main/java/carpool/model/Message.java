@@ -6,7 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import carpool.common.DateUtility;
 import carpool.common.HelperOperator;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.ServerConfig;
 import carpool.configurations.EnumConfig;
 import carpool.configurations.EnumConfig.DayTimeSlot;
 import carpool.configurations.EnumConfig.Gender;
@@ -21,7 +21,7 @@ import carpool.interfaces.PseudoValidatable;
 
 public class Message implements PseudoModel, PseudoValidatable, Comparable<Message>{
 
-	public final int category = CarpoolConfig.category_DM;
+	public final int category = ServerConfig.category_DM;
 
 	/*****
 	 * Message's relations

@@ -13,7 +13,8 @@ import org.json.JSONObject;
 import carpool.common.DateUtility;
 import carpool.common.HelperOperator;
 import carpool.common.Validator;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.ImageConfig;
+import carpool.configurations.ServerConfig;
 import carpool.configurations.EnumConfig;
 import carpool.configurations.EnumConfig.Gender;
 import carpool.configurations.EnumConfig.UserSearchState;
@@ -114,7 +115,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.qq = "";
 		this.gender = g;
 		this.birthday = DateUtility.getCurTimeInstance();
-		this.imgPath = g == Gender.female ? CarpoolConfig.img_default_avatar_female : CarpoolConfig.img_default_avatar_male;
+		this.imgPath = g == Gender.female ? ImageConfig.img_default_avatar_female : ImageConfig.img_default_avatar_male;
 		this.lastLogin = DateUtility.getCurTimeInstance();
 		this.creationTime = DateUtility.getCurTimeInstance();
 
@@ -129,7 +130,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.emailNotice = false;
 		this.phoneNotice = false;
 		this.state = EnumConfig.UserState.normal;
-		this.searchRepresentation = CarpoolConfig.getDefaultSearchRepresentation();
+		this.searchRepresentation = ServerConfig.getDefaultSearchRepresentation();
 
 		this.level = 0;
 		this.averageScore = 0;

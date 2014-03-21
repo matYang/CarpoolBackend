@@ -33,7 +33,7 @@ import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.common.HelperOperator;
 import carpool.common.Parser;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.DatabaseConfig;
 import carpool.configurations.EnumConfig;
 import carpool.configurations.EnumConfig.DayTimeSlot;
 import carpool.configurations.EnumConfig.Gender;
@@ -72,9 +72,9 @@ public class CarpoolUserTest {
 		HikariConfig sqlConfig = new HikariConfig();
 		
 		sqlConfig.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
-		sqlConfig.addDataSourceProperty("url", "jdbc:mysql://"+CarpoolConfig.jdbcUri+":3306/test?allowMultiQueries=true&&characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes");
+		sqlConfig.addDataSourceProperty("url", "jdbc:mysql://"+DatabaseConfig.jdbcUri+":3306/test?allowMultiQueries=true&&characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes");
 		sqlConfig.addDataSourceProperty("user", "root");
-		sqlConfig.addDataSourceProperty("password", CarpoolConfig.sqlPass);
+		sqlConfig.addDataSourceProperty("password", DatabaseConfig.sqlPass);
 		sqlConfig.setPoolName("SQLPool");
 		sqlConfig.setMaxLifetime(1800000l);
 		sqlConfig.setAutoCommit(true);

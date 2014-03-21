@@ -14,7 +14,7 @@ import org.apache.log4j.RollingFileAppender;
 import org.json.JSONObject;
 
 import carpool.aws.AwsMain;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.ServerConfig;
 import carpool.factory.JSONFactory;
 import carpool.interfaces.PseudoModel;
 import carpool.log4j.log4j;
@@ -39,6 +39,7 @@ public class DebugLog {
 	public static void initializeLogger(){		
 		log4j.configure();		
 	}
+	
 	public static void d(Exception e){
 		//using reflection to get caller name, 500x faster than stack trace
 		//if not accessible, do:  right click on project -> configure build path -> remove JRE system library -> add Library -> JRE System Library (Default) -> OK, clean & recompile
@@ -52,8 +53,11 @@ public class DebugLog {
 	}
 	
 	public static void d(PseudoModel p){
-		JSONObject json = JSONFactory.toJSON(p);
-		log(json.toString());
+		if (ServerConfig.isOnLocal){
+			JSONObject json = JSONFactory.toJSON(p);
+			log(json.toString());
+		}
+
 	}
 
 	private static void log(String message){

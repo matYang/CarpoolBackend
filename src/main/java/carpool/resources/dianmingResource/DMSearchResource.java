@@ -16,7 +16,7 @@ import org.json.JSONArray;
 
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.ServerConfig;
 import carpool.configurations.EnumConfig;
 import carpool.configurations.EnumConfig.UserSearchState;
 import carpool.dbservice.*;
@@ -54,7 +54,7 @@ public class DMSearchResource extends PseudoResource{
 				login = false;
 			}
 			
-			SearchRepresentation sr = srStr != null ? new SearchRepresentation(srStr) : CarpoolConfig.getDefaultSearchRepresentation();
+			SearchRepresentation sr = srStr != null ? new SearchRepresentation(srStr) : ServerConfig.getDefaultSearchRepresentation();
 			
 			//no need to valdiate location anymore, as an id will only have match or no-match
 			ArrayList<Message> searchResult = new ArrayList<Message>();

@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.carpoolDAO.CarpoolDaoLocation;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.ServerConfig;
 import carpool.exception.location.LocationException;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.validation.ValidationException;

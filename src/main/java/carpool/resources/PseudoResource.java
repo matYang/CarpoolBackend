@@ -15,7 +15,9 @@ import org.restlet.data.*;
 import org.json.JSONObject;
 
 import carpool.common.DebugLog;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.DatabaseConfig;
+import carpool.configurations.ServerConfig;
+import carpool.configurations.ValidationConfig;
 import carpool.dbservice.AuthDaoService;
 import carpool.encryption.SessionCrypto;
 import carpool.exception.PseudoException;
@@ -51,13 +53,13 @@ public class PseudoResource extends ServerResource{
 	}
 	
 	public void checkEntity(Representation entity) throws EntityTooLargeException{
-		if (entity != null && entity.getSize() > CarpoolConfig.max_PostLength){
+		if (entity != null && entity.getSize() > ValidationConfig.max_PostLength){
 			throw new EntityTooLargeException();
 		}
 	}
 	
 	public void checkFileEntity(Representation entity) throws NullPointerException, EntityTooLargeException{
-		if (entity != null && entity.getSize() > CarpoolConfig.max_FileLength){
+		if (entity != null && entity.getSize() > ValidationConfig.max_FileLength){
 			throw new EntityTooLargeException();
 		}
 	}
@@ -69,7 +71,7 @@ public class PseudoResource extends ServerResource{
 	 *  
 	 ******************/
 	public boolean validateAuthentication(int userId) throws PseudoException{
-		return !CarpoolConfig.cookieEnabled ? true : UserAuthenticationResource.validateCookieSession(userId, this.getSessionString());
+		return !ServerConfig.cookieEnabled ? true : UserAuthenticationResource.validateCookieSession(userId, this.getSessionString());
 	}
 
 	
@@ -217,7 +219,7 @@ public class PseudoResource extends ServerResource{
      *  
      ******************/
     protected boolean validateAuthentication() throws PseudoException{
-		return !CarpoolConfig.cookieEnabled ? true : validateCookieSession();
+		return !ServerConfig.cookieEnabled ? true : validateCookieSession();
 	}
 
 	protected String generateAuthenticationSessionString(int userId) throws PseudoException{
@@ -242,14 +244,14 @@ public class PseudoResource extends ServerResource{
 		//first check header for auth, if not in header, then check for cookies for auth
 		Series<Header> requestHeaders = (Series<Header>) getRequest().getAttributes().get("org.restlet.http.headers");
 		if (requestHeaders != null) {
-			if (requestHeaders.getFirstValue(CarpoolConfig.cookie_userSession, true) != null){
-				sessionString.add(requestHeaders.getFirstValue(CarpoolConfig.cookie_userSession, true));
+			if (requestHeaders.getFirstValue(ServerConfig.cookie_userSession, true) != null){
+				sessionString.add(requestHeaders.getFirstValue(ServerConfig.cookie_userSession, true));
 			}
 		}
 		if (sessionString.size() == 0){
 			Series<Cookie> cookies = this.getRequest().getCookies();
 			for( Cookie cookie : cookies){ 
-				if (cookie.getName().equals(CarpoolConfig.cookie_userSession)){
+				if (cookie.getName().equals(ServerConfig.cookie_userSession)){
 					sessionString.add(cookie.getValue()); 
 				}
 			} 
@@ -274,7 +276,7 @@ public class PseudoResource extends ServerResource{
 	}
 	
 	protected int getUserIdFromSessionString(String sessionString)throws PseudoException{
-		String userIdStr = sessionString.split(CarpoolConfig.redisSeperatorRegex)[1];
+		String userIdStr = sessionString.split(DatabaseConfig.redisSeperatorRegex)[1];
 		int userId = -1;
 		try{
 			userId = Integer.parseInt(userIdStr);
@@ -334,8 +336,8 @@ public class PseudoResource extends ServerResource{
         String encryptedString = generateSesstionString(userId);
         CookieSetting newCookieSetting;
         try{
-        	 newCookieSetting = new CookieSetting(0, CarpoolConfig.cookie_userSession, encryptedString);
-        	 newCookieSetting.setMaxAge(CarpoolConfig.cookie_maxAge);
+        	 newCookieSetting = new CookieSetting(0, ServerConfig.cookie_userSession, encryptedString);
+        	 newCookieSetting.setMaxAge(ServerConfig.cookie_maxAge);
         }
         catch (Exception e){
 			throw new SessionEncodingException();

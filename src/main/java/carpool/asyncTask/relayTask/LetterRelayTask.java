@@ -13,7 +13,7 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONObject;
 
 import carpool.common.DebugLog;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.LogConfig;
 import carpool.factory.JSONFactory;
 import carpool.interfaces.PseudoAsyncTask;
 import carpool.model.Letter;
@@ -68,7 +68,7 @@ public class LetterRelayTask implements PseudoAsyncTask{
 		} 
 
 		if (response.getStatusLine().getStatusCode() != 200){
-			DebugLog.d(CarpoolConfig.log_errKeyword + " sending letter failed with status: " + response.getStatusLine().getStatusCode());
+			DebugLog.d(LogConfig.log_errKeyword + " sending letter failed with status: " + response.getStatusLine().getStatusCode());
 		}
 	    return response.getStatusLine().getStatusCode() == 200 ? true : false;
 	}

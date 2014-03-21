@@ -10,7 +10,7 @@ import java.sql.Statement;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.DatabaseConfig;
 import carpool.common.DebugLog;
 import carpool.dbservice.LocationDaoService;
 import carpool.exception.location.LocationException;
@@ -32,14 +32,14 @@ public class CarpoolDaoBasic {
 		jedisConfig.setTestOnBorrow(false);
 		jedisConfig.setMinIdle(5);
 		jedisConfig.setMaxWait(4000l);
-		jedisPool = new JedisPool(jedisConfig, CarpoolConfig.redisUri, 6379);
+		jedisPool = new JedisPool(jedisConfig, DatabaseConfig.redisUri, 6379);
 		
 		
 		HikariConfig sqlConfig = new HikariConfig();
 		sqlConfig.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
-		sqlConfig.addDataSourceProperty("url", "jdbc:mysql://"+CarpoolConfig.jdbcUri+":3306/test?allowMultiQueries=true&&characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes");
+		sqlConfig.addDataSourceProperty("url", "jdbc:mysql://"+DatabaseConfig.jdbcUri+":3306/test?allowMultiQueries=true&&characterSetResults=UTF-8&characterEncoding=UTF-8&useUnicode=yes");
 		sqlConfig.addDataSourceProperty("user", "root");
-		sqlConfig.addDataSourceProperty("password", CarpoolConfig.sqlPass);
+		sqlConfig.addDataSourceProperty("password", DatabaseConfig.sqlPass);
 		sqlConfig.setPoolName("SQLPool");
 		sqlConfig.setMaxLifetime(1800000l);
 		sqlConfig.setAutoCommit(true);

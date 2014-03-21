@@ -9,7 +9,7 @@ import redis.clients.jedis.Jedis;
 import carpool.aws.AwsMain;
 import carpool.carpoolDAO.CarpoolDaoBasic;
 import carpool.common.DateUtility;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.DatabaseConfig;
 import carpool.model.representation.SearchRepresentation;
 
 public class RedisCleaner {
@@ -30,11 +30,11 @@ public class RedisCleaner {
 	public static void cleanEmailActivationRecords(){
 		Jedis jedis = CarpoolDaoBasic.getJedis();
 		//this is the set of keys that holds the email activation records, check for the timestamp to see if it is expired, if expired just delete the key-value pair
-		Set<String> keyset = jedis.keys(CarpoolConfig.key_emailActivationAuth + "*");
+		Set<String> keyset = jedis.keys(DatabaseConfig.key_emailActivationAuth + "*");
 		for (String key : keyset){			
-			long time = Long.parseLong(jedis.get(key).split(CarpoolConfig.redisSeperatorRegex)[1]);
+			long time = Long.parseLong(jedis.get(key).split(DatabaseConfig.redisSeperatorRegex)[1]);
 			long cur = DateUtility.getCurTime();
-			if(cur - time >= CarpoolConfig.emailActivation_expireThreshold){
+			if(cur - time >= DatabaseConfig.emailActivation_expireThreshold){
 				jedis.del(key);
 			}	
 		}		
@@ -47,11 +47,11 @@ public class RedisCleaner {
 	public static void cleanForgotPasswordRecords(){
 		Jedis jedis = CarpoolDaoBasic.getJedis();
 		//this is the set of keys that holds the forgot password records, check for the timestamp to see if it is expired, if expired just delete the key-value pair
-		Set<String> keyset = jedis.keys(CarpoolConfig.key_forgetPasswordAuth + "*");
+		Set<String> keyset = jedis.keys(DatabaseConfig.key_forgetPasswordAuth + "*");
 		for (String key : keyset){
-			long time = Long.parseLong(jedis.get(key).split(CarpoolConfig.redisSeperatorRegex)[1]);
+			long time = Long.parseLong(jedis.get(key).split(DatabaseConfig.redisSeperatorRegex)[1]);
 			long cur = DateUtility.getCurTime();
-			if(cur - time >= CarpoolConfig.forgetPassword_expireThreshold){
+			if(cur - time >= DatabaseConfig.forgetPassword_expireThreshold){
 				jedis.del(key);
 			}			
 		}	

@@ -10,7 +10,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import carpool.common.DebugLog;
-import carpool.configurations.CarpoolConfig;
+import carpool.configurations.EmailConfig;
 import carpool.configurations.EnumConfig.EmailEvent;
 import carpool.interfaces.PseudoAsyncTask;
 
@@ -24,13 +24,13 @@ public class SESRelayTask implements PseudoAsyncTask{
 	
 	public SESRelayTask(String receiver, EmailEvent event, String payload){
 		this.receiver = receiver;
-		Entry<String, String> entry = CarpoolConfig.emailEventMap.get(event);
+		Entry<String, String> entry = EmailConfig.emailEventMap.get(event);
 		if (entry == null){
 			DebugLog.d("SESRelay Fatal: null entry from emailEventMap with given evt");
 			throw new RuntimeException();
 		}
 		this.subject = entry.getKey();
-		this.body = entry.getValue().replaceAll(CarpoolConfig.htmlTemplateURLTarget, payload);
+		this.body = entry.getValue().replaceAll(EmailConfig.htmlTemplateURLTarget, payload);
 	}
 
 	public boolean execute(){
@@ -43,7 +43,7 @@ public class SESRelayTask implements PseudoAsyncTask{
 		try{
 			Properties props = System.getProperties();
 			props.put("mail.transport.protocol", "smtp");
-			props.put("mail.smtp.port", CarpoolConfig.SMTP_PORT); 
+			props.put("mail.smtp.port", EmailConfig.SMTP_PORT); 
 			props.put("mail.smtp.auth", "true");
 			props.put("mail.smtp.starttls.enable", "true");
 			props.put("mail.smtp.starttls.required", "true");
@@ -52,7 +52,7 @@ public class SESRelayTask implements PseudoAsyncTask{
 			Session session = Session.getDefaultInstance(props);
 
 			MimeMessage msg = new MimeMessage(session);
-			msg.setFrom(new InternetAddress(CarpoolConfig.SMTP_FROM));
+			msg.setFrom(new InternetAddress(EmailConfig.SMTP_FROM));
 			msg.setRecipient(Message.RecipientType.TO, new InternetAddress(this.receiver));
 			msg.setSubject(this.subject);
 			msg.setContent(this.body,"text/html");
@@ -60,7 +60,7 @@ public class SESRelayTask implements PseudoAsyncTask{
 			Transport transport = session.getTransport();
 
 			try{
-				transport.connect(CarpoolConfig.SMTP_HOST, CarpoolConfig.SMTP_USERNAME, CarpoolConfig.SMTP_PASSWORD);
+				transport.connect(EmailConfig.SMTP_HOST, EmailConfig.SMTP_USERNAME, EmailConfig.SMTP_PASSWORD);
 
 				transport.sendMessage(msg, msg.getAllRecipients());
 			} catch (Exception e) {
