@@ -73,18 +73,23 @@ public class UserPassengerVerificationResource extends PseudoResource{
                     BufferedImage bufferedImage = ImageIO.read(fi.getInputStream());
                     bufferedImage = Scalr.resize(bufferedImage, Scalr.Method.SPEED, Scalr.Mode.FIT_TO_WIDTH, 200, 200, Scalr.OP_ANTIALIAS);
                     String imgName;
-                    if (fi.getFieldName().equals("")){
+                    String path;
+                    if (fi.getFieldName().equals("image_personalId_1")){
                     	imgName = ImageConfig.passengerVerificationFrontImgPrefix + ImageConfig.imgSize_m + id;
+                    	imgFile = new File(ServerConfig.pathToSearchHistoryFolder + imgName + ".png");
+                        ImageIO.write(bufferedImage, "png", imgFile);
+                        //warning: can only call this upload once, as it will delete the image file before it exits
+                        path = FileService.uploadPassengerVerificationLicenseFrontImg(id, imgFile, imgName);
                     }
                     else{
                     	imgName = ImageConfig.passengerVerificationBackImgPrefix  + ImageConfig.imgSize_m + id;
+                    	imgFile = new File(ServerConfig.pathToSearchHistoryFolder + imgName + ".png");
+                        ImageIO.write(bufferedImage, "png", imgFile);
+                        //warning: can only call this upload once, as it will delete the image file before it exits
+                        path = FileService.uploadPassengerVerificationLicenseBackImg(id, imgFile, imgName);
                     }
-            		
-                    imgFile = new File(ServerConfig.pathToSearchHistoryFolder + imgName + ".png");
-                    ImageIO.write(bufferedImage, "png", imgFile);
                     
-                    //warning: can only call this upload once, as it will delete the image file before it exits
-                    String path = FileService.uploadUserProfileImg(id, imgFile, imgName);
+                    
                     props.put(fi.getFieldName(), path);
                 }
             }
@@ -94,7 +99,6 @@ public class UserPassengerVerificationResource extends PseudoResource{
             String licenseNumber = props.get("id_number");
             String frontImgLink = props.get("image_personalId_1");
             String backImgLink = props.get("image_personalId_2");
-            LicenseType licenseType;
             
             if (realName == null || licenseNumber == null || frontImgLink == null || backImgLink == null || realName.length() == 0 || licenseNumber.length() == 0){
             	throw new ValidationException("验证信息输入不完整");

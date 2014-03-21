@@ -21,4 +21,20 @@ public class FileService {
 	public static String uploadUserProfileImg(int userId, File file, String baseFileName){
 		return AwsMain.uploadProfileImg(userId, file, baseFileName);
 	}
+	
+	
+	public static String uploadDriverVerificationLicenseImg(int userId, File file, String baseFileName){
+		//TODO
+		return null;
+	}
+	
+	public static String uploadPassengerVerificationLicenseFrontImg(int userId, File file, String baseFileName){
+		//TODO
+		return null;
+	}
+	
+	public static String uploadPassengerVerificationLicenseBackImg(int userId, File file, String baseFileName){
+		//TODO
+		return null;
+	}
 }

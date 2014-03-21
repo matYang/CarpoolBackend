@@ -175,13 +175,18 @@ public class UserDaoService{
 	}
 	
 	
-	public static void addDriverVerification(int userId, DriverVerification verification) throws UserNotFoundException, LocationNotFoundException{
-		CarpoolDaoDriver.addDriverToDatabases(verification);
-		//update user
+	public static void addDriverVerification(int userId, DriverVerification verification) throws UserNotFoundException, LocationNotFoundException, ValidationException{
+		DriverVerification driverVerification = CarpoolDaoDriver.addDriverToDatabases(verification);
+		User user = getUserById(userId);
+		user.setDriverVerificationId(driverVerification.getVerificationId());
+		updateUser(user);
 	}
 	
-	public static void addPassengerVerification(int userId, PassengerVerification verification) throws UserNotFoundException, LocationNotFoundException{
-		//TODO
+	public static void addPassengerVerification(int userId, PassengerVerification verification) throws UserNotFoundException, LocationNotFoundException, ValidationException{
+		PassengerVerification passengerVerification = CarpoolDaoPassenger.addPassengerToDatabases(verification);
+		User user = getUserById(userId);
+		user.setDriverVerificationId(passengerVerification.getVerificationId());
+		updateUser(user);
 	}
 
 
