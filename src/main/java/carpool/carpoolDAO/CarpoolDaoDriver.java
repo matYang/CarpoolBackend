@@ -176,7 +176,7 @@ public static ArrayList<DriverVerification> getDriverVerificationsByUserId(int u
 				driver = createDriverVerificationByResultSet(rs);
 				if (driver.getState() == VerificationState.verified && driver.hasExpired()){
 					driver.setState(VerificationState.expired);
-					//TODO update driver
+					CarpoolDaoDriver.updateDriverVerificationInDatabases(driver);
 				}
 			}else{
 				throw new identityVerificationNotFound();

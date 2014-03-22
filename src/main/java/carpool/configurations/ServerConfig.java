@@ -63,6 +63,12 @@ public class ServerConfig {
 	public static final String timeZoneIdNY = "America/New_York";
 	public static final String timeZoneIdCH = "asia/shanghai";
 	public static final String timeZoneStandard = "UTC";
-
+	
+	/* AWS Bucket*/
+	public static final String ProfileBucket = "Badstudent";
+	public static final String DriverVerificationBucket = "DriverVerification";
+	public static final String PassengerVerificationBucket = "PassengerVerification";
+	
+	
 	
 }

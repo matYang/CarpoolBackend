@@ -56,7 +56,7 @@ public class AwsS3Test {
 		String imgSize = ImageConfig.imgSize_m;
 		String imgName = userProfile+imgSize+userId;
 		File file = new File(ServerConfig.pathToSearchHistoryFolder+imgName+".png");
-		AwsMain.uploadProfileImg(userId, file, imgName, false);
+		AwsMain.uploadImg(userId, file, imgName, ServerConfig.ProfileBucket,false);
 	}
 
 	@Test
@@ -417,6 +417,40 @@ public class AwsS3Test {
 		CarpoolDaoBasic.returnJedis(redis);
 
 	}
+	
+	@Test
+	public void testUpLoadDriverAndPassengerImgs(){
+		CarpoolDaoBasic.clearBothDatabase();
+		//Driver 1
+		int userId = 1;
+		String driver_1_Profile = ImageConfig.driverVerificationImgPrefix;
+		String imgSize = ImageConfig.imgSize_m;
+		String imgName = driver_1_Profile+imgSize+userId;
+		File file = new File(ServerConfig.pathToSearchHistoryFolder+imgName+".png");
+		AwsMain.uploadImg(userId, file, imgName, ServerConfig.DriverVerificationBucket,false);
+		
+		//Driver 2
+		int user2Id = 2;
+		String driver_2_Profile = ImageConfig.driverVerificationImgPrefix;		
+		imgName = driver_2_Profile+imgSize+user2Id;
+		file = new File(ServerConfig.pathToSearchHistoryFolder+imgName+".png");
+		AwsMain.uploadImg(user2Id, file, imgName, ServerConfig.DriverVerificationBucket,false);
+		
+		//Passenger Front
+		int user3Id = 3;
+		String driver_3_Profile = ImageConfig.passengerVerificationFrontImgPrefix;		
+		imgName = driver_3_Profile+imgSize+user3Id;
+		file = new File(ServerConfig.pathToSearchHistoryFolder+imgName+".png");
+		AwsMain.uploadImg(user3Id, file, imgName, ServerConfig.PassengerVerificationBucket,false);
+		
+		//Passenger Back
+		driver_3_Profile = ImageConfig.passengerVerificationBackImgPrefix;		
+		imgName = driver_3_Profile+imgSize+user3Id;
+		file = new File(ServerConfig.pathToSearchHistoryFolder+imgName+".png");
+		AwsMain.uploadImg(user3Id, file, imgName, ServerConfig.PassengerVerificationBucket,false);
+		
+	}
 
+	
 
 }

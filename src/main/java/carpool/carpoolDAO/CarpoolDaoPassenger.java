@@ -176,7 +176,7 @@ public class CarpoolDaoPassenger {
 				passenger = createPassengerVerificationByResultSet(rs);
 				if (passenger.getState() == VerificationState.verified && passenger.hasExpired()){
 					passenger.setState(VerificationState.expired);
-					//TODO update passenger
+					CarpoolDaoPassenger.updatePassengerVerificationInDatabases(passenger);
 				}
 			}else{
 				throw new identityVerificationNotFound();

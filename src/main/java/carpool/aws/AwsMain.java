@@ -52,7 +52,7 @@ public class AwsMain {
 
 	private static final String myAccessKeyID = ServerConfig.AccessKeyID;
 	private static final String mySecretKey = ServerConfig.SecretKey;
-	private static final String bucketName = "Badstudent";
+	private static final String ProfileBucket = ServerConfig.ProfileBucket;	
 	private static final AWSCredentials myCredentials = new BasicAWSCredentials(myAccessKeyID, mySecretKey);
 
 	static Logger logger = Logger.getLogger(AwsMain.class);
@@ -64,7 +64,7 @@ public class AwsMain {
 		
 		try{
 			file.createNewFile();
-			s3Client.putObject(new PutObjectRequest(bucketName,getUserSHFileName(userId),file));
+			s3Client.putObject(new PutObjectRequest(ProfileBucket,getUserSHFileName(userId),file));
 		} catch(AmazonS3Exception e){
 			e.printStackTrace();  
 			DebugLog.d(e);
@@ -91,7 +91,7 @@ public class AwsMain {
 		try{
 			//initialize the new empty file
 			file.createNewFile();
-			object = s3Client.getObject(new GetObjectRequest(bucketName,getUserSHFileName(userId)));
+			object = s3Client.getObject(new GetObjectRequest(ProfileBucket,getUserSHFileName(userId)));
 			writeS3ToFile(object, file);			
 
 			//Get redis SRH of each user
@@ -101,7 +101,7 @@ public class AwsMain {
 
 			//Write to file			
 			writeSHToFile(appendString, file);		
-			s3Client.putObject(new PutObjectRequest(bucketName,getUserSHFileName(userId),file)); 
+			s3Client.putObject(new PutObjectRequest(ProfileBucket,getUserSHFileName(userId),file)); 
 
 			//clean redis
 			redis.del(rediskey);
@@ -150,7 +150,7 @@ public class AwsMain {
 		
 		S3Object object = null;
 		AmazonS3 s3Client = new AmazonS3Client(myCredentials);
-		GetObjectRequest req = new GetObjectRequest(bucketName, getUserSHFileName(userId));
+		GetObjectRequest req = new GetObjectRequest(ProfileBucket, getUserSHFileName(userId));
 
 		try{
 			file.createNewFile();
@@ -204,10 +204,10 @@ public class AwsMain {
 			try{
 				file.createNewFile();
 
-				object = s3Client.getObject(new GetObjectRequest(bucketName,fileName));
+				object = s3Client.getObject(new GetObjectRequest(ProfileBucket,fileName));
 				writeS3ToFile(object, file);
 				writeSHToFile(appendString, file);
-				s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
+				s3Client.putObject(new PutObjectRequest(ProfileBucket,fileName,file)); 
 				
 				//clean redis
 				redis.del(rediskey);
@@ -215,7 +215,7 @@ public class AwsMain {
 				if(e.getErrorCode().equals("NoSuchKey")){
 					try{
 						writeSHToFile(appendString, file);
-						s3Client.putObject(new PutObjectRequest(bucketName,fileName,file)); 
+						s3Client.putObject(new PutObjectRequest(ProfileBucket,fileName,file)); 
 						
 						//clean redis
 						redis.del(rediskey);
@@ -246,20 +246,20 @@ public class AwsMain {
 		}
 	}		
 	
-	public static String uploadProfileImg(int userId, File file, String imgName){
-		return uploadProfileImg(userId, file, imgName, true);
+	public static String uploadImg(int userId, File file, String imgName, String Bucket){
+		return uploadImg(userId, file, imgName, Bucket,true);
 	}
 	
 	
 	//the boolean shouldDelete is used for testing so that the sample is not deleted every time
-	public static String uploadProfileImg(int userId, File file, String imgName, boolean shouldDelete){
+	public static String uploadImg(int userId, File file, String imgName, String Bucket,boolean shouldDelete){
 
 		AmazonS3Client s3Client = new AmazonS3Client(myCredentials);		
 		URL s = null;
 		try{
 			String tempImageKey = getUserImageKey(userId, imgName);
-			s3Client.putObject(new PutObjectRequest(bucketName,tempImageKey,file).withCannedAcl(CannedAccessControlList.PublicRead));
-			s = s3Client.getUrl(bucketName, tempImageKey);			
+			s3Client.putObject(new PutObjectRequest(Bucket,tempImageKey,file).withCannedAcl(CannedAccessControlList.PublicRead));
+			s = s3Client.getUrl(Bucket, tempImageKey);			
 		} catch(AmazonS3Exception e){
 			e.printStackTrace();
 			DebugLog.d(e);
@@ -276,8 +276,6 @@ public class AwsMain {
 
 	}
 
-	
-	
 	private static ArrayList<SearchRepresentation> getUserSearchHistoryFromRedis(int userId){
 		Jedis redis = CarpoolDaoBasic.getJedis();
 		List<String> appendString = redis.lrange(getUserSHRedisKey(userId), 0, DatabaseConfig.redisSearchHistoryUpbound-1);
