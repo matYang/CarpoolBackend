@@ -53,7 +53,7 @@ public static ArrayList<DriverVerification> getDriverVerificationsByUserId(int u
 		ResultSet rs = null;
 
 		String query = "INSERT INTO carpoolDAODriver(user_Id,realName,licenseNum,licenseType,submissionDate," +
-				"expireDate,v_state,reviewer_Id,recommender_Id,licenseIssueDate,licenseImgLink,verificationType)"+"VALUES(?,?,?,?,?,?,?,?,?,?,?,?);";
+				"expireDate,v_state,reviewDate,reviewer_Id,recommender_Id,licenseIssueDate,licenseImgLink,verificationType)"+"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?);";
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -64,11 +64,12 @@ public static ArrayList<DriverVerification> getDriverVerificationsByUserId(int u
 			stmt.setString(5, DateUtility.toSQLDateTime(driver.getSubmissionDate()));
 			stmt.setString(6, DateUtility.toSQLDateTime(driver.getExpireDate()));
 			stmt.setInt(7, driver.getState().code);
-			stmt.setInt(8, driver.getReviewerId());
-			stmt.setInt(9, driver.getRecommenderId());
-			stmt.setString(10, DateUtility.toSQLDateTime(driver.getLicenseIssueDate()));
-			stmt.setString(11, driver.getLicenseImgLink());
-			stmt.setInt(12, driver.getType().code);
+			stmt.setString(8,DateUtility.toSQLDateTime(driver.getReviewDateDate()));
+			stmt.setInt(9, driver.getReviewerId());
+			stmt.setInt(10, driver.getRecommenderId());
+			stmt.setString(11, DateUtility.toSQLDateTime(driver.getLicenseIssueDate()));
+			stmt.setString(12, driver.getLicenseImgLink());
+			stmt.setInt(13, driver.getType().code);
 			stmt.executeUpdate();
 			rs = stmt.getGeneratedKeys();
 			rs.next();
@@ -87,7 +88,7 @@ public static ArrayList<DriverVerification> getDriverVerificationsByUserId(int u
 		ResultSet rs = null;
 
 		String query = "UPDATE carpoolDAODriver SET user_Id=?,realName=?,licenseNum=?,licenseType=?,submissionDate=?," +
-				"expireDate=?,v_state=?,reviewer_Id=?,recommender_Id=?,licenseIssueDate=?,licenseImgLink=?,verificationType=?"+
+				"expireDate=?,v_state=?,reviewDate=?,reviewer_Id=?,recommender_Id=?,licenseIssueDate=?,licenseImgLink=?,verificationType=?"+
 				" WHERE v_Id = ?";
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
@@ -99,12 +100,13 @@ public static ArrayList<DriverVerification> getDriverVerificationsByUserId(int u
 			stmt.setString(5, DateUtility.toSQLDateTime(driver.getSubmissionDate()));
 			stmt.setString(6, DateUtility.toSQLDateTime(driver.getExpireDate()));
 			stmt.setInt(7, driver.getState().code);
-			stmt.setInt(8, driver.getReviewerId());
-			stmt.setInt(9, driver.getRecommenderId());
-			stmt.setString(10, DateUtility.toSQLDateTime(driver.getLicenseIssueDate()));
-			stmt.setString(11, driver.getLicenseImgLink());
-			stmt.setInt(12, driver.getType().code);
-			stmt.setInt(13, driver.getVerificationId());
+			stmt.setString(8,DateUtility.toSQLDateTime(driver.getReviewDateDate()));
+			stmt.setInt(9, driver.getReviewerId());
+			stmt.setInt(10, driver.getRecommenderId());
+			stmt.setString(11, DateUtility.toSQLDateTime(driver.getLicenseIssueDate()));
+			stmt.setString(12, driver.getLicenseImgLink());
+			stmt.setInt(13, driver.getType().code);
+			stmt.setInt(14, driver.getVerificationId());
 			int recordsAffected = stmt.executeUpdate();
 			if(recordsAffected==0){
 				throw new identityVerificationNotFound();

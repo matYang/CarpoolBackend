@@ -51,7 +51,7 @@ public class CarpoolDaoPassenger {
 		ResultSet rs = null;
 
 		String query = "INSERT INTO carpoolDAOPassenger(user_Id,realName,licenseNum,licenseType,submissionDate," +
-				"expireDate,v_state,reviewer_Id,recommender_Id,frontImgLink,backImgLink,originType,verificationType)"+"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?);";
+				"expireDate,v_state,reviewDate,reviewer_Id,recommender_Id,frontImgLink,backImgLink,originType,verificationType)"+"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -62,12 +62,13 @@ public class CarpoolDaoPassenger {
 			stmt.setString(5, DateUtility.toSQLDateTime(passenger.getSubmissionDate()));
 			stmt.setString(6, DateUtility.toSQLDateTime(passenger.getExpireDate()));
 			stmt.setInt(7, passenger.getState().code);
-			stmt.setInt(8, passenger.getReviewerId());
-			stmt.setInt(9, passenger.getRecommenderId());
-			stmt.setString(10, passenger.getFrontImgLink());
-			stmt.setString(11, passenger.getBackImgLink());
-			stmt.setInt(12, passenger.getOrigin().code);
-			stmt.setInt(13, passenger.getType().code);
+			stmt.setString(8,DateUtility.toSQLDateTime(passenger.getReviewDateDate()));
+			stmt.setInt(9, passenger.getReviewerId());
+			stmt.setInt(10, passenger.getRecommenderId());
+			stmt.setString(11, passenger.getFrontImgLink());
+			stmt.setString(12, passenger.getBackImgLink());
+			stmt.setInt(13, passenger.getOrigin().code);
+			stmt.setInt(14, passenger.getType().code);
 			stmt.executeUpdate();
 			rs = stmt.getGeneratedKeys();
 			rs.next();
@@ -86,7 +87,7 @@ public class CarpoolDaoPassenger {
 		ResultSet rs = null;
 
 		String query = "UPDATE carpoolDAOPassenger SET user_Id=?,realName=?,licenseNum=?,licenseType=?,submissionDate=?," +
-				"expireDate=?,v_state=?,reviewer_Id=?,recommender_Id=?,frontImgLink=?,backImgLink=?,originType=?,verificationType=?"+
+				"expireDate=?,v_state=?,reviewDate=?,reviewer_Id=?,recommender_Id=?,frontImgLink=?,backImgLink=?,originType=?,verificationType=?"+
 				" where v_Id = ?";
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
@@ -98,13 +99,14 @@ public class CarpoolDaoPassenger {
 			stmt.setString(5, DateUtility.toSQLDateTime(passenger.getSubmissionDate()));
 			stmt.setString(6, DateUtility.toSQLDateTime(passenger.getExpireDate()));
 			stmt.setInt(7, passenger.getState().code);
-			stmt.setInt(8, passenger.getReviewerId());
-			stmt.setInt(9, passenger.getRecommenderId());
-			stmt.setString(10, passenger.getFrontImgLink());
-			stmt.setString(11, passenger.getBackImgLink());
-			stmt.setInt(12, passenger.getOrigin().code);
-			stmt.setInt(13, passenger.getType().code);
-			stmt.setInt(14, passenger.getVerificationId());
+			stmt.setString(8,DateUtility.toSQLDateTime(passenger.getReviewDateDate()));
+			stmt.setInt(9, passenger.getReviewerId());
+			stmt.setInt(10, passenger.getRecommenderId());
+			stmt.setString(11, passenger.getFrontImgLink());
+			stmt.setString(12, passenger.getBackImgLink());
+			stmt.setInt(13, passenger.getOrigin().code);
+			stmt.setInt(14, passenger.getType().code);
+			stmt.setInt(15, passenger.getVerificationId());
 			int recordsAffected = stmt.executeUpdate();
 			if(recordsAffected==0){
 				throw new identityVerificationNotFound();
