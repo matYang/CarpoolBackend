@@ -137,7 +137,7 @@ public static ArrayList<DriverVerification> getDriverVerificationsByUserId(int u
 		} 
 	}
 
-	public static ArrayList<DriverVerification> getAllDriverVerifications(){
+	public static ArrayList<DriverVerification> getDriverVerifications(VerificationState... states){
 		String query = "SELECT * from carpoolDAODriver";
 		ArrayList<DriverVerification> dlist = new ArrayList<DriverVerification>();
 
@@ -161,7 +161,7 @@ public static ArrayList<DriverVerification> getDriverVerificationsByUserId(int u
 		return dlist;
 	}
 
-	public static DriverVerification getDriverVerificationById(long l,Connection...connections) throws identityVerificationNotFound{
+	public static DriverVerification getDriverVerificationById(int l,Connection...connections) throws identityVerificationNotFound{
 		String query = "SELECT * FROM carpoolDAODriver where v_Id = ?";
 		DriverVerification driver = null;
 		PreparedStatement stmt = null;

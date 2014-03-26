@@ -265,8 +265,8 @@ public class CarpoolDPVerificationTest {
 			ArrayList<DriverVerification> dlist = new ArrayList<DriverVerification>();
 			ArrayList<PassengerVerification> plist = new ArrayList<PassengerVerification>();
 
-			dlist = CarpoolDaoDriver.getAllDriverVerifications();
-			plist = CarpoolDaoPassenger.getAllPassengerVerifications();
+			dlist = CarpoolDaoDriver.getDriverVerifications();
+			plist = CarpoolDaoPassenger.getPassengerVerifications();
 
 			if(dlist.size()==2&&dlist.get(0).equals(driver)&&dlist.get(1).equals(driverTest)){
 				//Passed;
@@ -352,8 +352,8 @@ public class CarpoolDPVerificationTest {
 			ArrayList<DriverVerification> dlist = new ArrayList<DriverVerification>();
 			ArrayList<PassengerVerification> plist = new ArrayList<PassengerVerification>();
 
-			dlist = CarpoolDaoDriver.getAllDriverVerifications();
-			plist = CarpoolDaoPassenger.getAllPassengerVerifications();
+			dlist = CarpoolDaoDriver.getDriverVerifications();
+			plist = CarpoolDaoPassenger.getPassengerVerifications();
 
 			if(dlist.size()==1&&dlist.get(0).equals(driverTest)){
 				//Passed;
@@ -370,8 +370,8 @@ public class CarpoolDPVerificationTest {
 			CarpoolDaoDriver.deleteDriverVerificationInDatabase(driverTest.getVerificationId());			
 			CarpoolDaoPassenger.deletePassengerVerificationInDatabase(passengerTest.getVerificationId());
 
-			dlist = CarpoolDaoDriver.getAllDriverVerifications();
-			plist = CarpoolDaoPassenger.getAllPassengerVerifications();
+			dlist = CarpoolDaoDriver.getDriverVerifications();
+			plist = CarpoolDaoPassenger.getPassengerVerifications();
 
 			if(dlist.size()==0){
 				//Passed;

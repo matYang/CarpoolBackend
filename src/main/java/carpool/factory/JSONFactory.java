@@ -21,6 +21,8 @@ import carpool.model.Message;
 import carpool.model.Notification;
 import carpool.model.Transaction;
 import carpool.model.User;
+import carpool.model.identityVerification.DriverVerification;
+import carpool.model.identityVerification.PassengerVerification;
 import carpool.model.representation.DefaultLocationRepresentation;
 import carpool.model.representation.SearchRepresentation;
 
@@ -58,6 +60,12 @@ public class JSONFactory {
 		}
 		else if (obj instanceof DefaultLocationRepresentation){
 			return ((DefaultLocationRepresentation)obj).toJSON();
+		}
+		else if (obj instanceof DriverVerification){
+			return ((DriverVerification)obj).toJSON();
+		}
+		else if (obj instanceof PassengerVerification){
+			return ((PassengerVerification)obj).toJSON();
 		}
 		else{
 			return new JSONObject();

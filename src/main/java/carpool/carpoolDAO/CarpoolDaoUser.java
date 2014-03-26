@@ -342,8 +342,8 @@ public class CarpoolDaoUser {
 		DriverVerification driver = null;
 		PassengerVerification passenger = null;
 		try{	
-			driver = CarpoolDaoDriver.getDriverVerificationById(rs.getLong("driverVerification_Id"),connections);		
-			passenger = CarpoolDaoPassenger.getPassengerVerificationById(rs.getLong("passengerVerification_Id"),connections);	
+			driver = CarpoolDaoDriver.getDriverVerificationById(rs.getInt("driverVerification_Id"),connections);		
+			passenger = CarpoolDaoPassenger.getPassengerVerificationById(rs.getInt("passengerVerification_Id"),connections);	
 
 		}catch(identityVerificationNotFound ex){}
 		try {
@@ -353,7 +353,7 @@ public class CarpoolDaoUser {
 					DateUtility.DateToCalendar(rs.getTimestamp("lastLogin")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
 					rs.getBoolean("emailActivated"),rs.getBoolean("phoneActivated"),rs.getBoolean("emailNotice"),rs.getBoolean("phoneNotice"),
 					EnumConfig.UserState.fromInt(rs.getInt("state")),new SearchRepresentation(rs.getString("searchRepresentation")),
-					rs.getInt("level"),rs.getInt("averageScore"),rs.getInt("totalTranscations"),rs.getLong("passengerVerification_Id"),rs.getLong("driverVerification_Id"),passenger,driver,
+					rs.getInt("level"),rs.getInt("averageScore"),rs.getInt("totalTranscations"),rs.getInt("passengerVerification_Id"),rs.getInt("driverVerification_Id"),passenger,driver,
 					rs.getString("accountId"),rs.getString("accountPass"),rs.getString("accountToken"),new BigDecimal(rs.getString("accountValue")),rs.getLong("match_Id"));
 		} catch (Exception e) {
 			e.printStackTrace();

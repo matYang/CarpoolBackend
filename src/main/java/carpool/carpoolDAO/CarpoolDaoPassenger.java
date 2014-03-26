@@ -137,7 +137,7 @@ public class CarpoolDaoPassenger {
 		} 
 	}
 
-	public static ArrayList<PassengerVerification> getAllPassengerVerifications(){
+	public static ArrayList<PassengerVerification> getPassengerVerifications(VerificationState... states){
 		String query = "SELECT * FROM carpoolDAOPassenger;";
 		ArrayList<PassengerVerification> plist = new ArrayList<PassengerVerification>();
 
@@ -161,7 +161,7 @@ public class CarpoolDaoPassenger {
 		return plist;
 	}
 
-	public static PassengerVerification getPassengerVerificationById(long l,Connection...connections) throws identityVerificationNotFound{
+	public static PassengerVerification getPassengerVerificationById(int l,Connection...connections) throws identityVerificationNotFound{
 		String query = "SELECT * FROM carpoolDAOPassenger where v_Id=?";
 		PassengerVerification passenger = null;
 		PreparedStatement stmt = null;

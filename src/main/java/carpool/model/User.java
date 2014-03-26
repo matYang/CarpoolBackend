@@ -77,8 +77,8 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 	private int totalTranscations;
 
 
-	private long passengerVerificationId;
-	private long driverVerificationId;
+	private int passengerVerificationId;
+	private int driverVerificationId;
 	private PassengerVerification passengerVerification;
 	private DriverVerification driverVerification;
 
@@ -136,8 +136,8 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 		this.averageScore = 0;
 		this.totalTranscations = 0;
 
-		this.passengerVerificationId = -1l;
-		this.driverVerificationId = -1l;
+		this.passengerVerificationId = -1;
+		this.driverVerificationId = -1;
 		this.passengerVerification = null;
 		this.driverVerification = null;
 
@@ -159,7 +159,7 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 			boolean phoneActivated, boolean emailNotice, boolean phoneNotice,
 			EnumConfig.UserState state, SearchRepresentation searchRepresentation,
 			int level, int averageScore, int totalTranscations,
-			long passengerVerificationId, long driverVerificationId,
+			int passengerVerificationId, int driverVerificationId,
 			PassengerVerification passengerVerification,
 			DriverVerification driverVerification, String accountId,
 			String accountPass, String accountToken, BigDecimal accountValue, long match_Id) {
@@ -459,22 +459,22 @@ public class User implements PseudoModel, PseudoValidatable, Comparable<User>{
 
 
 
-	public long getPassengerVerificationId() {
+	public int getPassengerVerificationId() {
 		return passengerVerificationId;
 	}
 
 
-	public void setPassengerVerificationId(long passengerVerificationId) {
+	public void setPassengerVerificationId(int passengerVerificationId) {
 		this.passengerVerificationId = passengerVerificationId;
 	}
 
 
-	public long getDriverVerificationId() {
+	public int getDriverVerificationId() {
 		return driverVerificationId;
 	}
 
 
-	public void setDriverVerificationId(long driverVerificationId) {
+	public void setDriverVerificationId(int driverVerificationId) {
 		this.driverVerificationId = driverVerificationId;
 	}
 
