@@ -17,15 +17,15 @@ import carpool.model.identityVerification.DriverVerification;
 
 
 public class CarpoolDaoDriver {
-	
-public static ArrayList<DriverVerification> getDriverVerificationsByUserId(int userId){
-		
+
+	public static ArrayList<DriverVerification> getDriverVerificationsByUserId(int userId){
+
 		ArrayList<DriverVerification> dlist = new ArrayList<DriverVerification>();
-		
+
 		Connection conn = null;
 		PreparedStatement stmt = null;	
 		ResultSet rs = null;
-		
+
 		String query = "SELECT * FROM carpoolDAODriver where user_Id = ?";
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
@@ -41,8 +41,8 @@ public static ArrayList<DriverVerification> getDriverVerificationsByUserId(int u
 		} finally  {
 			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
 		}  
-		
-		
+
+
 		return dlist;
 	}
 
@@ -147,10 +147,19 @@ public static ArrayList<DriverVerification> getDriverVerificationsByUserId(int u
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
-
 			rs = stmt.executeQuery();
+			DriverVerification driver = null;
 			while(rs.next()){				
-				dlist.add(createDriverVerificationByResultSet(rs));
+				driver = createDriverVerificationByResultSet(rs);
+				if(states.length <= 0){
+					//Get All
+					dlist.add(driver);
+				}else{
+					VerificationState state = driver.getState();
+					if(ContainsVerificationState(states,state)){
+						dlist.add(driver);
+					}
+				}				
 			}			
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -159,6 +168,14 @@ public static ArrayList<DriverVerification> getDriverVerificationsByUserId(int u
 			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
 		}  
 		return dlist;
+	}
+
+	private static boolean ContainsVerificationState(
+			VerificationState[] states, VerificationState state) {
+		for(int i = 0; i < states.length; i++){
+			if(states[0].equals(state))return true;
+		}
+		return false;
 	}
 
 	public static DriverVerification getDriverVerificationById(int l,Connection...connections) throws identityVerificationNotFound{
@@ -189,7 +206,7 @@ public static ArrayList<DriverVerification> getDriverVerificationsByUserId(int u
 		}finally  {
 			CarpoolDaoBasic.closeResources(conn, stmt, rs,CarpoolDaoBasic.shouldConnectionClose(connections));
 		}
-	
+
 		return driver;
 	}
 

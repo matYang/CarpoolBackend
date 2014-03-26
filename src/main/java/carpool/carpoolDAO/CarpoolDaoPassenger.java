@@ -15,15 +15,15 @@ import carpool.exception.identityVerification.identityVerificationNotFound;
 import carpool.model.identityVerification.PassengerVerification;
 
 public class CarpoolDaoPassenger {
-	
+
 	public static ArrayList<PassengerVerification> getPassengerVerificationsByUserId(int userId){
-		
+
 		ArrayList<PassengerVerification> plist = new ArrayList<PassengerVerification>();
-		
+
 		Connection conn = null;
 		PreparedStatement stmt = null;	
 		ResultSet rs = null;
-		
+
 		String query = "SELECT * FROM carpoolDAOPassenger where user_Id = ?";
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
@@ -39,11 +39,11 @@ public class CarpoolDaoPassenger {
 		} finally  {
 			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
 		}  
-		
-		
+
+
 		return plist;
 	}
-	
+
 	public static PassengerVerification addPassengerToDatabases(PassengerVerification passenger){
 
 		Connection conn = null;
@@ -147,10 +147,20 @@ public class CarpoolDaoPassenger {
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query);
-
 			rs = stmt.executeQuery();
-			while(rs.next()){				
-				plist.add(createPassengerVerificationByResultSet(rs));
+			PassengerVerification passenger = null;
+			while(rs.next()){
+				passenger = createPassengerVerificationByResultSet(rs);
+				if(states.length <= 0){
+					//Get All
+					plist.add(passenger);
+				}else{
+					VerificationState state = passenger.getState();
+					if(ContainsVerificationState(states,state)){
+						plist.add(passenger);
+					}
+				}
+
 			}			
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -159,6 +169,14 @@ public class CarpoolDaoPassenger {
 			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
 		}  
 		return plist;
+	}
+
+	private static boolean ContainsVerificationState(
+			VerificationState[] states, VerificationState state) {
+		for(int i = 0; i < states.length; i++){
+			if(states[0].equals(state))return true;
+		}
+		return false;
 	}
 
 	public static PassengerVerification getPassengerVerificationById(int l,Connection...connections) throws identityVerificationNotFound{
