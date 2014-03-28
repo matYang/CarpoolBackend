@@ -11,6 +11,7 @@ import carpool.configurations.ServerConfig;
 import carpool.resources.adminResource.AdminRoutineResource;
 import carpool.resources.adminResource.AdminStateChangeResource;
 import carpool.resources.adminResource.AdminStatResource;
+import carpool.resources.adminResource.AdminVerificationResource;
 import carpool.resources.dianmingResource.*;
 import carpool.resources.generalResource.*;
 import carpool.resources.letterResource.LetterResource;
@@ -225,6 +226,9 @@ public class RoutingService extends Application {
 		String StatAnalysisPrefix = "/stat";
 		//	API for admin to analyze statistic of data service: /api/v1.0/admin/stat		
 		router.attach(ServerConfig.applicationPrefix + ServerConfig.versionPrefix + adminServicePrefix + StatAnalysisPrefix + "/{type}", AdminStatResource.class);
+		String VerificationPrefix = "/verification";
+		//	API for admin to verification management: /api/v1.0/admin/verification		
+		router.attach(ServerConfig.applicationPrefix + ServerConfig.versionPrefix + adminServicePrefix + VerificationPrefix, AdminVerificationResource.class);
 
 		return router;
 	}
