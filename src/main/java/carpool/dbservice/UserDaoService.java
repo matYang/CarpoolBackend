@@ -185,7 +185,7 @@ public class UserDaoService{
 	public static void addPassengerVerification(int userId, PassengerVerification verification) throws UserNotFoundException, LocationNotFoundException, ValidationException{
 		PassengerVerification passengerVerification = CarpoolDaoPassenger.addPassengerToDatabases(verification);
 		User user = getUserById(userId);
-		user.setDriverVerificationId(passengerVerification.getVerificationId());
+		user.setPassengerVerificationId(passengerVerification.getVerificationId());
 		updateUser(user);
 	}
 
