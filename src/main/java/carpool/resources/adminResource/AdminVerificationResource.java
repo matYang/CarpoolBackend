@@ -70,7 +70,6 @@ public class AdminVerificationResource extends PseudoResource {
 	
 	@Post
 	public Representation changeLocation(Representation entity) {
-		JSONObject response = new JSONObject();
 		JSONObject request = new JSONObject();
 		String access_admin = "";
 		int typeIndex = -1;

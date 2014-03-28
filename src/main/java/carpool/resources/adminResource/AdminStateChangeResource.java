@@ -88,6 +88,6 @@ public class AdminStateChangeResource extends PseudoResource{
         return result;
     }
     
-
+    String access_admin = "";
     
 }
