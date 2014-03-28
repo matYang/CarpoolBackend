@@ -144,22 +144,22 @@ public class CarpoolDaoDriver {
 		PreparedStatement stmt = null;
 		Connection conn = null;
 		ResultSet rs = null;
+
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
+			
+			if(states.length > 0){
+				query += " where v_state =" + states[0];
+				for(int i = 1; i < states.length; i++){
+					query += " or v_state =" + states[i];
+				}
+			}
+			
 			stmt = conn.prepareStatement(query);
 			rs = stmt.executeQuery();
-			DriverVerification driver = null;
+			
 			while(rs.next()){				
-				driver = createDriverVerificationByResultSet(rs);
-				if(states.length <= 0){
-					//Get All
-					dlist.add(driver);
-				}else{
-					VerificationState state = driver.getState();
-					if(ContainsVerificationState(states,state)){
-						dlist.add(driver);
-					}
-				}				
+				dlist.add(createDriverVerificationByResultSet(rs));		
 			}			
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -168,15 +168,7 @@ public class CarpoolDaoDriver {
 			CarpoolDaoBasic.closeResources(conn, stmt, rs,true);
 		}  
 		return dlist;
-	}
-
-	private static boolean ContainsVerificationState(
-			VerificationState[] states, VerificationState state) {
-		for(int i = 0; i < states.length; i++){
-			if(states[0].equals(state))return true;
-		}
-		return false;
-	}
+	}	
 
 	public static DriverVerification getDriverVerificationById(int l,Connection...connections) throws identityVerificationNotFound{
 		String query = "SELECT * FROM carpoolDAODriver where v_Id = ?";
