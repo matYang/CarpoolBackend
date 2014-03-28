@@ -1,17 +1,23 @@
 package carpool.dbservice.admin;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import carpool.carpoolDAO.*;
 import carpool.cleanRoutineTask.MessageCleaner;
 import carpool.cleanRoutineTask.TransactionCleaner;
 import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.LicenseType;
 import carpool.configurations.EnumConfig.MessageState;
+import carpool.configurations.EnumConfig.PassengerVerificationOrigin;
 import carpool.configurations.EnumConfig.TransactionState;
 import carpool.configurations.EnumConfig.UserState;
 import carpool.configurations.EnumConfig.VerificationState;
+import carpool.configurations.EnumConfig.VerificationType;
 import carpool.dbservice.NotificationDaoService;
+import carpool.dbservice.UserDaoService;
 import carpool.exception.*;
+import carpool.exception.identityVerification.identityVerificationNotFound;
 import carpool.exception.location.LocationException;
 import carpool.exception.location.LocationNotFoundException;
 import carpool.exception.validation.ValidationException;
@@ -65,25 +71,73 @@ public class AdminService {
 		return CarpoolDaoDriver.getDriverVerifications(VerificationState.pending);
 	}
 	
-	public static void decideDriverVerification(int verificationId, boolean isVerified) throws PseudoException{
-		DriverVerification driverVerification = CarpoolDaoDriver.getDriverVerificationById(verificationId);
-		//only change state if it is currently pending
-		if (driverVerification.getState() == VerificationState.pending){
-			driverVerification.setState(isVerified ? VerificationState.verified : VerificationState.rejected);
-			CarpoolDaoDriver.updateDriverVerificationInDatabases(driverVerification);
-		}
-	}
 	
 	public static ArrayList<PassengerVerification>  getPendingPassengerVerification() throws PseudoException{
 		return CarpoolDaoPassenger.getPassengerVerifications(VerificationState.pending);
 		
 	}
 	
-	public static void decidePassengerVerification(int verificationId, boolean isVerified) throws PseudoException{
+	
+	public static void rejectDriverVerification(int verificationId, int reviewId) throws identityVerificationNotFound{
+		DriverVerification driverVerification = CarpoolDaoDriver.getDriverVerificationById(verificationId);
+		//only change state if it is currently pending
+		if (driverVerification.getState() == VerificationState.pending){
+			driverVerification.setState(VerificationState.rejected);
+			driverVerification.setReviewDate(Calendar.getInstance());
+			driverVerification.setReviewerId(reviewId);
+			CarpoolDaoDriver.updateDriverVerificationInDatabases(driverVerification);
+		}
+	}
+	
+	public static void rejectPassengerVerification(int verificationId, int reviewId) throws PseudoException{
 		PassengerVerification passengerVerification = CarpoolDaoPassenger.getPassengerVerificationById(verificationId);
 		//only change state if it is currently pending
 		if (passengerVerification.getState() == VerificationState.pending){
-			passengerVerification.setState(isVerified ? VerificationState.verified : VerificationState.rejected);
+			passengerVerification.setState(VerificationState.rejected);
+			passengerVerification.setReviewDate(Calendar.getInstance());
+			passengerVerification.setReviewerId(reviewId);
+			CarpoolDaoPassenger.updatePassengerVerificationInDatabases(passengerVerification);
+		}
+	}
+
+	
+	//id, issue date, expire date, review id, review date
+	public static void verifyDriverVerification(int verificationId, Calendar issueDate, Calendar expireDate, int reviewId) throws PseudoException{
+		DriverVerification driverVerification = CarpoolDaoDriver.getDriverVerificationById(verificationId);
+		//only change state if it is currently pending
+		if (driverVerification.getState() == VerificationState.pending){
+			driverVerification.setState(VerificationState.verified);
+			
+			driverVerification.setLicenseIssueDate(issueDate);
+			driverVerification.setExpireDate(expireDate);
+			
+			driverVerification.setReviewDate(Calendar.getInstance());
+			driverVerification.setReviewerId(reviewId);
+			CarpoolDaoDriver.updateDriverVerificationInDatabases(driverVerification);
+			
+			//if verified, check if original user has passenger verification, if not, automatically add the passenger verification
+			User user = UserDaoService.getUserById(driverVerification.getUserId());
+			if (user.getPassengerVerification() == null || user.getPassengerVerification().getState() == VerificationState.expired || user.getPassengerVerification().getState() == VerificationState.rejected){
+				PassengerVerification passengerVerification = new PassengerVerification(driverVerification);
+				
+				passengerVerification = CarpoolDaoPassenger.addPassengerToDatabases(passengerVerification);
+				user.setPassengerVerificationId(passengerVerification.getVerificationId());
+				UserDaoService.updateUser(user);
+			}
+		}
+	}
+	
+	//id, expire date, review id, review date
+	public static void verifyPassengerVerification(int verificationId, Calendar expireDate, int reviewId) throws PseudoException{
+		PassengerVerification passengerVerification = CarpoolDaoPassenger.getPassengerVerificationById(verificationId);
+		//only change state if it is currently pending
+		if (passengerVerification.getState() == VerificationState.pending){
+			passengerVerification.setState(VerificationState.verified);
+			
+			passengerVerification.setExpireDate(expireDate);
+			
+			passengerVerification.setReviewDate(Calendar.getInstance());
+			passengerVerification.setReviewerId(reviewId);
 			CarpoolDaoPassenger.updatePassengerVerificationInDatabases(passengerVerification);
 		}
 	}

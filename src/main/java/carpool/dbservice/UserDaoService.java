@@ -9,6 +9,7 @@ import carpool.common.*;
 import carpool.configurations.EnumConfig;
 import carpool.configurations.EnumConfig.Gender;
 import carpool.configurations.EnumConfig.NotificationEvent;
+import carpool.configurations.EnumConfig.VerificationState;
 import carpool.carpoolDAO.*;
 import carpool.exception.PseudoException;
 import carpool.exception.validation.ValidationException;
@@ -176,15 +177,22 @@ public class UserDaoService{
 	
 	
 	public static void addDriverVerification(int userId, DriverVerification verification) throws UserNotFoundException, LocationNotFoundException, ValidationException{
-		DriverVerification driverVerification = CarpoolDaoDriver.addDriverToDatabases(verification);
 		User user = getUserById(userId);
+		//if user has pending or verified verification, do not start new verification
+		if (user.getDriverVerification() != null && (user.getDriverVerification().getState() == VerificationState.pending || user.getDriverVerification().getState() == VerificationState.verified)){
+			throw new ValidationException("已有等待审核或已经通过的司机认证");
+		}
+		DriverVerification driverVerification = CarpoolDaoDriver.addDriverToDatabases(verification);
 		user.setDriverVerificationId(driverVerification.getVerificationId());
 		updateUser(user);
 	}
 	
 	public static void addPassengerVerification(int userId, PassengerVerification verification) throws UserNotFoundException, LocationNotFoundException, ValidationException{
-		PassengerVerification passengerVerification = CarpoolDaoPassenger.addPassengerToDatabases(verification);
 		User user = getUserById(userId);
+		if (user.getPassengerVerification() != null && (user.getPassengerVerification().getState() == VerificationState.pending || user.getPassengerVerification().getState() == VerificationState.verified)){
+			throw new ValidationException("已有等待审核或已经通过的乘客认证");
+		}
+		PassengerVerification passengerVerification = CarpoolDaoPassenger.addPassengerToDatabases(verification);
 		user.setPassengerVerificationId(passengerVerification.getVerificationId());
 		updateUser(user);
 	}

@@ -98,10 +98,10 @@ public abstract class IdentityVerification implements PseudoModel, Comparable<Id
 	public void setState(VerificationState state) {
 		this.state = state;
 	}
-	public Calendar getReviewDateDate() {
+	public Calendar getReviewDate() {
 		return reviewDate;
 	}
-	public void setReviewDateDate(Calendar reviewDateDate) {
+	public void setReviewDate(Calendar reviewDateDate) {
 		this.reviewDate = reviewDateDate;
 	}
 	public int getReviewerId() {
@@ -143,7 +143,7 @@ public abstract class IdentityVerification implements PseudoModel, Comparable<Id
 			jsonVerification .put("submissionDate", DateUtility.castToAPIFormat(this.getSubmissionDate()));
 			jsonVerification .put("expireDate", DateUtility.castToAPIFormat(this.getExpireDate()));
 			jsonVerification .put("state", this.getState().code);
-			jsonVerification .put("reviewDate", DateUtility.castToAPIFormat(this.getReviewDateDate()));
+			jsonVerification .put("reviewDate", DateUtility.castToAPIFormat(this.getReviewDate()));
 			jsonVerification .put("reviewerId", this.getReviewerId());
 			jsonVerification .put("recommenderId", this.getRecommenderId());
 

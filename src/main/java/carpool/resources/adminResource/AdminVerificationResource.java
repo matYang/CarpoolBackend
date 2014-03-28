@@ -13,6 +13,7 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.Put;
 
+import carpool.common.DateUtility;
 import carpool.configurations.EnumConfig;
 import carpool.configurations.EnumConfig.AdminRoutineAction;
 import carpool.configurations.EnumConfig.VerificationType;
@@ -92,10 +93,21 @@ public class AdminVerificationResource extends PseudoResource {
 			
 			VerificationType verificationType = VerificationType.fromInt(typeIndex);
 			if (verificationType == VerificationType.driver){
-				AdminService.decideDriverVerification(verificationId, isVerified);
+				//TODO review Ids
+				if (isVerified){
+					AdminService.rejectDriverVerification(verificationId, 1);
+				}
+				else{
+					AdminService.verifyDriverVerification(verificationId, DateUtility.castFromAPIFormat(request.getString("issueDate")), DateUtility.castFromAPIFormat(request.getString("expireDate")), 1);
+				}
 			}
 			else if (verificationType == VerificationType.passenger){
-				AdminService.decidePassengerVerification(verificationId, isVerified);
+				if (isVerified){
+					AdminService.rejectPassengerVerification(verificationId, 1);
+				}
+				else{
+					AdminService.verifyPassengerVerification(verificationId, DateUtility.castFromAPIFormat(request.getString("expireDate")), 1);
+				}
 			}
 
 		} catch (PseudoException e){

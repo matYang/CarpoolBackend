@@ -64,7 +64,7 @@ public class CarpoolDaoDriver {
 			stmt.setString(5, DateUtility.toSQLDateTime(driver.getSubmissionDate()));
 			stmt.setString(6, DateUtility.toSQLDateTime(driver.getExpireDate()));
 			stmt.setInt(7, driver.getState().code);
-			stmt.setString(8,DateUtility.toSQLDateTime(driver.getReviewDateDate()));
+			stmt.setString(8,DateUtility.toSQLDateTime(driver.getReviewDate()));
 			stmt.setInt(9, driver.getReviewerId());
 			stmt.setInt(10, driver.getRecommenderId());
 			stmt.setString(11, DateUtility.toSQLDateTime(driver.getLicenseIssueDate()));
@@ -100,7 +100,7 @@ public class CarpoolDaoDriver {
 			stmt.setString(5, DateUtility.toSQLDateTime(driver.getSubmissionDate()));
 			stmt.setString(6, DateUtility.toSQLDateTime(driver.getExpireDate()));
 			stmt.setInt(7, driver.getState().code);
-			stmt.setString(8,DateUtility.toSQLDateTime(driver.getReviewDateDate()));
+			stmt.setString(8,DateUtility.toSQLDateTime(driver.getReviewDate()));
 			stmt.setInt(9, driver.getReviewerId());
 			stmt.setInt(10, driver.getRecommenderId());
 			stmt.setString(11, DateUtility.toSQLDateTime(driver.getLicenseIssueDate()));

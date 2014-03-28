@@ -16,7 +16,8 @@ public class DriverVerification extends IdentityVerification{
 
 	private Calendar licenseIssueDate;
 	private String licenseImgLink;
-
+	
+	//id, issue date, expire date, review id, review date
 	public DriverVerification(int userId, String realName, String licenseNumber, LicenseType licenseType, String licenseImgLink) {
 		super(VerificationType.driver,  -1, userId, realName, licenseNumber, licenseType, Calendar.getInstance(), Calendar.getInstance(), VerificationState.pending, Calendar.getInstance(), -1, -1);
 		this.licenseIssueDate = Calendar.getInstance();

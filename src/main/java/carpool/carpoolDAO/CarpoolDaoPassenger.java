@@ -62,7 +62,7 @@ public class CarpoolDaoPassenger {
 			stmt.setString(5, DateUtility.toSQLDateTime(passenger.getSubmissionDate()));
 			stmt.setString(6, DateUtility.toSQLDateTime(passenger.getExpireDate()));
 			stmt.setInt(7, passenger.getState().code);
-			stmt.setString(8,DateUtility.toSQLDateTime(passenger.getReviewDateDate()));
+			stmt.setString(8,DateUtility.toSQLDateTime(passenger.getReviewDate()));
 			stmt.setInt(9, passenger.getReviewerId());
 			stmt.setInt(10, passenger.getRecommenderId());
 			stmt.setString(11, passenger.getFrontImgLink());
@@ -99,7 +99,7 @@ public class CarpoolDaoPassenger {
 			stmt.setString(5, DateUtility.toSQLDateTime(passenger.getSubmissionDate()));
 			stmt.setString(6, DateUtility.toSQLDateTime(passenger.getExpireDate()));
 			stmt.setInt(7, passenger.getState().code);
-			stmt.setString(8,DateUtility.toSQLDateTime(passenger.getReviewDateDate()));
+			stmt.setString(8,DateUtility.toSQLDateTime(passenger.getReviewDate()));
 			stmt.setInt(9, passenger.getReviewerId());
 			stmt.setInt(10, passenger.getRecommenderId());
 			stmt.setString(11, passenger.getFrontImgLink());
