@@ -149,9 +149,9 @@ public class CarpoolDaoPassenger {
 			conn = CarpoolDaoBasic.getSQLConnection();
 
 			if(states.length > 0){
-				query += " where v_state =" + states[0];
+				query += " where v_state =" + states[0].code;
 				for(int i = 1; i < states.length; i++){
-					query += " or v_state =" + states[i];
+					query += " or v_state =" + states[i].code;
 				}
 			}
 
