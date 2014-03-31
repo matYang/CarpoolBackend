@@ -113,17 +113,20 @@ public class AdminService {
 			
 			driverVerification.setReviewDate(Calendar.getInstance());
 			driverVerification.setReviewerId(reviewId);
-			CarpoolDaoDriver.updateDriverVerificationInDatabases(driverVerification);
 			
 			//if verified, check if original user has passenger verification, if not, automatically add the passenger verification
 			User user = UserDaoService.getUserById(driverVerification.getUserId());
 			if (user.getPassengerVerification() == null || user.getPassengerVerification().getState() == VerificationState.expired || user.getPassengerVerification().getState() == VerificationState.rejected){
 				PassengerVerification passengerVerification = new PassengerVerification(driverVerification);
-				
 				passengerVerification = CarpoolDaoPassenger.addPassengerToDatabases(passengerVerification);
+				
+				//associate auto-generated passenger verification with driver verification
+				driverVerification.setAssociatedPassengerVerificationId(passengerVerification.getVerificationId());
 				user.setPassengerVerificationId(passengerVerification.getVerificationId());
 				UserDaoService.updateUser(user);
 			}
+			
+			CarpoolDaoDriver.updateDriverVerificationInDatabases(driverVerification);
 		}
 	}
 	
@@ -131,7 +134,7 @@ public class AdminService {
 	public static void verifyPassengerVerification(int verificationId, Calendar expireDate, int reviewId) throws PseudoException{
 		PassengerVerification passengerVerification = CarpoolDaoPassenger.getPassengerVerificationById(verificationId);
 		//only change state if it is currently pending
-		if (passengerVerification.getState() == VerificationState.pending){
+		if (passengerVerification.getState() == VerificationState.pending && passengerVerification.getOrigin() == PassengerVerificationOrigin.passenger){
 			passengerVerification.setState(VerificationState.verified);
 			
 			passengerVerification.setExpireDate(expireDate);

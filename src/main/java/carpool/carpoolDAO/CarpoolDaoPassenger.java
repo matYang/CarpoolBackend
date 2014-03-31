@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import carpool.common.DateUtility;
 import carpool.common.DebugLog;
 import carpool.configurations.EnumConfig;
+import carpool.configurations.EnumConfig.PassengerVerificationOrigin;
 import carpool.configurations.EnumConfig.VerificationState;
 import carpool.exception.identityVerification.identityVerificationNotFound;
 import carpool.model.identityVerification.PassengerVerification;
@@ -185,7 +186,8 @@ public class CarpoolDaoPassenger {
 			rs = stmt.executeQuery();
 			if(rs.next()){
 				passenger = createPassengerVerificationByResultSet(rs);
-				if (passenger.getState() == VerificationState.verified && passenger.hasExpired()){
+				//only check if passengner-generated verification has expired, auto-generated ones are left for driver verification to check
+				if (passenger.getState() == VerificationState.verified && passenger.getOrigin() == PassengerVerificationOrigin.passenger && passenger.hasExpired()){
 					passenger.setState(VerificationState.expired);
 					CarpoolDaoPassenger.updatePassengerVerificationInDatabases(passenger);
 				}

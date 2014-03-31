@@ -13,6 +13,7 @@ import carpool.configurations.EnumConfig;
 import carpool.configurations.EnumConfig.VerificationState;
 import carpool.exception.identityVerification.identityVerificationNotFound;
 import carpool.model.identityVerification.DriverVerification;
+import carpool.model.identityVerification.PassengerVerification;
 
 
 
@@ -188,6 +189,9 @@ public class CarpoolDaoDriver {
 				if (driver.getState() == VerificationState.verified && driver.hasExpired()){
 					driver.setState(VerificationState.expired);
 					CarpoolDaoDriver.updateDriverVerificationInDatabases(driver);
+					PassengerVerification passengerVerification = CarpoolDaoPassenger.getPassengerVerificationById(driver.getAssociatedPassengerVerificationId(), connections);
+					passengerVerification.setState(VerificationState.expired);
+					CarpoolDaoPassenger.updatePassengerVerificationInDatabases(passengerVerification);
 				}
 			}else{
 				throw new identityVerificationNotFound();
