@@ -186,8 +186,8 @@ public class CarpoolDaoPassenger {
 			rs = stmt.executeQuery();
 			if(rs.next()){
 				passenger = createPassengerVerificationByResultSet(rs);
-				//only check if passengner-generated verification has expired, auto-generated ones are left for driver verification to check
-				if (passenger.getState() == VerificationState.verified && passenger.getOrigin() == PassengerVerificationOrigin.passenger && passenger.hasExpired()){
+				//check no matter if passengner-generated verification has expired, auto-generated ones will also be left for driver verification to check
+				if (passenger.getState() == VerificationState.verified && passenger.hasExpired()){
 					passenger.setState(VerificationState.expired);
 					CarpoolDaoPassenger.updatePassengerVerificationInDatabases(passenger);
 				}

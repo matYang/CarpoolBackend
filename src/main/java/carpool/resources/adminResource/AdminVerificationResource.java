@@ -70,7 +70,7 @@ public class AdminVerificationResource extends PseudoResource {
 	
 	
 	@Post
-	public Representation changeLocation(Representation entity) {
+	public Representation verify(Representation entity) {
 		JSONObject request = new JSONObject();
 		String access_admin = "";
 		int typeIndex = -1;
@@ -93,8 +93,8 @@ public class AdminVerificationResource extends PseudoResource {
 			
 			VerificationType verificationType = VerificationType.fromInt(typeIndex);
 			if (verificationType == VerificationType.driver){
-				//TODO review Ids
-				if (isVerified){
+				//TODO reviewer ids
+				if (!isVerified){
 					AdminService.rejectDriverVerification(verificationId, 1);
 				}
 				else{
@@ -102,7 +102,7 @@ public class AdminVerificationResource extends PseudoResource {
 				}
 			}
 			else if (verificationType == VerificationType.passenger){
-				if (isVerified){
+				if (!isVerified){
 					AdminService.rejectPassengerVerification(verificationId, 1);
 				}
 				else{

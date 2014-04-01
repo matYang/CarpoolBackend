@@ -116,7 +116,7 @@ public class AdminService {
 			
 			//if verified, check if original user has passenger verification, if not, automatically add the passenger verification
 			User user = UserDaoService.getUserById(driverVerification.getUserId());
-			if (user.getPassengerVerification() == null || user.getPassengerVerification().getState() == VerificationState.expired || user.getPassengerVerification().getState() == VerificationState.rejected){
+			if (user.getPassengerVerification() == null || user.getPassengerVerification().getState() != VerificationState.verified){
 				PassengerVerification passengerVerification = new PassengerVerification(driverVerification);
 				passengerVerification = CarpoolDaoPassenger.addPassengerToDatabases(passengerVerification);
 				

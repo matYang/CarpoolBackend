@@ -341,19 +341,29 @@ public class CarpoolDaoUser {
 		Location location = CarpoolDaoLocation.getLocationById(rs.getLong("location_Id"),connections);
 		DriverVerification driver = null;
 		PassengerVerification passenger = null;
+		/*
 		try{	
 			driver = CarpoolDaoDriver.getDriverVerificationById(rs.getInt("driverVerification_Id"),connections);		
 			passenger = CarpoolDaoPassenger.getPassengerVerificationById(rs.getInt("passengerVerification_Id"),connections);	
 
 		}catch(identityVerificationNotFound ex){}
+		*/
 		try {
+			int pvId = rs.getInt("passengerVerification_Id");
+			int dvId = rs.getInt("driverVerification_Id");
+			if (pvId > 0){
+				passenger = CarpoolDaoPassenger.getPassengerVerificationById(pvId,connections);	
+			}
+			if (dvId > 0){
+				driver = CarpoolDaoDriver.getDriverVerificationById(dvId,connections);
+			}
 			user = new User(rs.getInt("userId"),SessionCrypto.decrypt(rs.getString("password")), rs.getString("name"),
 					rs.getString("email"),rs.getString("phone"),rs.getString("qq"),EnumConfig.Gender.fromInt(rs.getInt("gender")),
 					DateUtility.DateToCalendar(rs.getTimestamp("birthday")),rs.getString("imgPath"),location,
 					DateUtility.DateToCalendar(rs.getTimestamp("lastLogin")),DateUtility.DateToCalendar(rs.getTimestamp("creationTime")),
 					rs.getBoolean("emailActivated"),rs.getBoolean("phoneActivated"),rs.getBoolean("emailNotice"),rs.getBoolean("phoneNotice"),
 					EnumConfig.UserState.fromInt(rs.getInt("state")),new SearchRepresentation(rs.getString("searchRepresentation")),
-					rs.getInt("level"),rs.getInt("averageScore"),rs.getInt("totalTranscations"),rs.getInt("passengerVerification_Id"),rs.getInt("driverVerification_Id"),passenger,driver,
+					rs.getInt("level"),rs.getInt("averageScore"),rs.getInt("totalTranscations"),pvId,dvId,passenger,driver,
 					rs.getString("accountId"),rs.getString("accountPass"),rs.getString("accountToken"),new BigDecimal(rs.getString("accountValue")),rs.getLong("match_Id"));
 		} catch (Exception e) {
 			e.printStackTrace();
