@@ -54,7 +54,7 @@ public class CarpoolDaoDriver {
 		ResultSet rs = null;
 
 		String query = "INSERT INTO carpoolDAODriver(user_Id,realName,licenseNum,licenseType,submissionDate," +
-				"expireDate,v_state,reviewDate,reviewer_Id,recommender_Id,licenseIssueDate,licenseImgLink,verificationType)"+"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?);";
+				"expireDate,v_state,reviewDate,reviewer_Id,recommender_Id,licenseIssueDate,licenseImgLink,verificationType,associatedPV_Id)"+"VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
 			stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -71,6 +71,7 @@ public class CarpoolDaoDriver {
 			stmt.setString(11, DateUtility.toSQLDateTime(driver.getLicenseIssueDate()));
 			stmt.setString(12, driver.getLicenseImgLink());
 			stmt.setInt(13, driver.getType().code);
+			stmt.setInt(14, driver.getAssociatedPassengerVerificationId());
 			stmt.executeUpdate();
 			rs = stmt.getGeneratedKeys();
 			rs.next();
@@ -89,7 +90,7 @@ public class CarpoolDaoDriver {
 		ResultSet rs = null;
 
 		String query = "UPDATE carpoolDAODriver SET user_Id=?,realName=?,licenseNum=?,licenseType=?,submissionDate=?," +
-				"expireDate=?,v_state=?,reviewDate=?,reviewer_Id=?,recommender_Id=?,licenseIssueDate=?,licenseImgLink=?,verificationType=?"+
+				"expireDate=?,v_state=?,reviewDate=?,reviewer_Id=?,recommender_Id=?,licenseIssueDate=?,licenseImgLink=?,verificationType=?,associatedPV_Id=?"+
 				" WHERE v_Id = ?";
 		try{
 			conn = CarpoolDaoBasic.getSQLConnection();
@@ -107,7 +108,8 @@ public class CarpoolDaoDriver {
 			stmt.setString(11, DateUtility.toSQLDateTime(driver.getLicenseIssueDate()));
 			stmt.setString(12, driver.getLicenseImgLink());
 			stmt.setInt(13, driver.getType().code);
-			stmt.setInt(14, driver.getVerificationId());
+			stmt.setInt(14, driver.getAssociatedPassengerVerificationId());
+			stmt.setInt(15, driver.getVerificationId());
 			int recordsAffected = stmt.executeUpdate();
 			if(recordsAffected==0){
 				throw new identityVerificationNotFound();
@@ -211,7 +213,7 @@ public class CarpoolDaoDriver {
 				rs.getString("realName"),rs.getString("licenseNum"),EnumConfig.LicenseType.fromInt(rs.getInt("licenseType")),
 				DateUtility.DateToCalendar(rs.getTimestamp("submissionDate")),DateUtility.DateToCalendar(rs.getTimestamp("expireDate")),
 				EnumConfig.VerificationState.fromInt(rs.getInt("v_state")),DateUtility.DateToCalendar(rs.getTimestamp("reviewDate")),
-				rs.getInt("reviewer_Id"),rs.getInt("recommender_Id"),DateUtility.DateToCalendar(rs.getTimestamp("licenseIssueDate")),rs.getString("licenseImgLink"));
+				rs.getInt("reviewer_Id"),rs.getInt("recommender_Id"),DateUtility.DateToCalendar(rs.getTimestamp("licenseIssueDate")),rs.getString("licenseImgLink"),rs.getInt("associatedPV_Id"));
 	}
 
 }
