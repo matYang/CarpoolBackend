@@ -15,12 +15,12 @@
   <repositories>
   	 <repository>
 	    <id>opencast-public</id>
-	    <url>http://repository.opencastproject.org/nexus/content/repositories/public/</url>
+	    <url>https://repository.opencastproject.org/nexus/content/repositories/public/</url>
 	 </repository>
 	 
 	 <repository>
 	    <id>restlet-releases</id>
-	    <url>http://maven.restlet.org/</url>
+	    <url>https://maven.restlet.org/</url>
 	  </repository>
   </repositories>
   
